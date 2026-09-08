@@ -6,7 +6,6 @@ Trabalho de Conclusão de Curso 2 — Engenharia de Software, Faculdade de Ciên
 
 **Autores:** Matheus de Siqueira Brant e Caio Magalhães Lamego
 **Orientadora:** Profa. Dra. Elaine Venson
-**TCC 1 (monografia):** [link]&nbsp;·&nbsp;**Prova de conceito:** [link]
 
 ---
 
