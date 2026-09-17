@@ -32,7 +32,7 @@ for i in $(seq -w 1 "$K"); do
   WT="workspace/wt-$i"
   if [ ! -d "$WT/node_modules" ]; then
     echo "[4/4] Instalando dependencias em $WT (demora)..."
-    ( cd "$WT" && npm ci --no-audit --no-fund )
+    ( cd "$WT" && npm install --no-audit --no-fund )
   fi
 done
 
