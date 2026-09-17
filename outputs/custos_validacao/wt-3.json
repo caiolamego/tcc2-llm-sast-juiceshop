@@ -1,0 +1,54 @@
+{
+  "T0_compilacao": {
+    "comando": [
+      "npx",
+      "tsc",
+      "--noEmit"
+    ],
+    "passou": true,
+    "duracao_s": 1.6
+  },
+  "T2_arquivo_unico": {
+    "comando": [
+      "node",
+      "--import",
+      "./test/server/helpers/test-env.mjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-force-exit",
+      "test/server/b2bOrder.unit.test.ts"
+    ],
+    "passou": true,
+    "duracao_s": 0.8
+  },
+  "T3_suite_unitaria": {
+    "comando": [
+      "npm",
+      "run",
+      "test:server"
+    ],
+    "passou": true,
+    "duracao_s": 2.1
+  },
+  "T4_api": {
+    "comando": [
+      "npm",
+      "run",
+      "test:api"
+    ],
+    "passou": false,
+    "duracao_s": 13.3
+  },
+  "T5_desafio_cypress": {
+    "comando": [
+      "npx",
+      "cypress",
+      "run",
+      "--spec",
+      "test/cypress/e2e/b2bOrder.spec.ts"
+    ],
+    "passou": true,
+    "duracao_s": 7.4
+  }
+}
