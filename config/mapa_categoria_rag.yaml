@@ -1,0 +1,33 @@
+# PROPOSTA -- revisar quando os 7 documentos da base RAG forem escritos
+# (F5 / Adendo M6). Mapeia sigla_vuln -> nome do arquivo em knowledge_base/
+# (sem extensao). Ainda nao confirmado contra o conteudo real dos
+# documentos, porque eles ainda nao foram escritos.
+#
+# Arquivos ja previstos na estrutura (F1.3):
+#   injection, broken_access_control, cryptographic_failures,
+#   authentication_failures, security_misconfiguration,
+#   cross_site_scripting, vulnerable_components
+
+SQLI: injection
+CMDI: injection
+CODEINJ: injection
+XSS: cross_site_scripting
+IDOR: broken_access_control
+SSRF: broken_access_control
+PATHTRAV: broken_access_control
+WEAKCRYPTO: cryptographic_failures
+WEAKRAND: cryptographic_failures
+HARDCRED: cryptographic_failures
+DESER: security_misconfiguration
+REDOS: security_misconfiguration
+OPENREDIR: broken_access_control
+INFOEXPOSURE: security_misconfiguration
+# INTEGRITY nao tem doc correspondente nos 7 previstos em F1.3 -- as CWEs
+# (1357, 353, 829) sao sobre confiar em componente externo nao verificado,
+# o que e conceitualmente mais proximo de "Software Supply Chain
+# Failures" (OWASP 2025 A03) do que de qualquer um dos 7 docs existentes.
+# Decisao pendente: criar knowledge_base/integrity_failures.md (8o doc),
+# ou tratar como "sem RAG" ate decidir. Por ora, null = sem contexto
+# recuperado para essas 5 issues quando as estrategias P3/P4 rodarem.
+INTEGRITY: null
+OUTRO: null
