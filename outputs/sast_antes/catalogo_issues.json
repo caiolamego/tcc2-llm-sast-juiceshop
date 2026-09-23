@@ -2,249 +2,12 @@
   {
     "caso_id": "JS001",
     "assinatura": "fp:requires login",
-    "check_id": "yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag",
-    "arquivo": ".github/workflows/ci.yml",
-    "linha_inicio": 188,
-    "linha_fim": 188,
-    "severidade": "WARNING",
-    "mensagem": "GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.",
-    "cwe": [
-      "CWE-1357: Reliance on Insufficiently Trustworthy Component",
-      "CWE-353: Missing Support for Integrity Check"
-    ],
-    "owasp_2021": [
-      "A08:2021 - Software and Data Integrity Failures",
-      "A08:2025 - Software and Data Integrity Failures"
-    ],
-    "owasp_2025": "A08",
-    "sigla_vuln": "INTEGRITY",
-    "categoria_rag": null,
-    "trecho": "requires login",
-    "linhas_arquivo": 390,
-    "modo_contexto": "janela_contexto",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS002",
-    "assinatura": "fp:requires login",
-    "check_id": "yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell",
-    "arquivo": ".github/workflows/ci.yml",
-    "linha_inicio": 358,
-    "linha_fim": 358,
-    "severidade": "ERROR",
-    "mensagem": "A `run:` step pipes the output of `curl` or `wget` directly into a shell interpreter. This is the \"curl | bash\" install pattern — if the remote server is compromised or the URL is hijacked, an attacker can execute arbitrary code in your CI runner. Consider downloading the file first, verifying its checksum or signature, and then executing it.",
-    "cwe": [
-      "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-    ],
-    "owasp_2021": [
-      "A03:2021 - Injection",
-      "A03:2025 - Injection"
-    ],
-    "owasp_2025": "A05",
-    "sigla_vuln": "CMDI",
-    "categoria_rag": "injection",
-    "trecho": "requires login",
-    "linhas_arquivo": 390,
-    "modo_contexto": "janela_contexto",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS003",
-    "assinatura": "fp:requires login",
-    "check_id": "yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag",
-    "arquivo": ".github/workflows/codeql-analysis.yml",
-    "linha_inicio": 23,
-    "linha_fim": 23,
-    "severidade": "WARNING",
-    "mensagem": "GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.",
-    "cwe": [
-      "CWE-1357: Reliance on Insufficiently Trustworthy Component",
-      "CWE-353: Missing Support for Integrity Check"
-    ],
-    "owasp_2021": [
-      "A08:2021 - Software and Data Integrity Failures",
-      "A08:2025 - Software and Data Integrity Failures"
-    ],
-    "owasp_2025": "A08",
-    "sigla_vuln": "INTEGRITY",
-    "categoria_rag": null,
-    "trecho": "requires login",
-    "linhas_arquivo": 36,
-    "modo_contexto": "arquivo_completo",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS004",
-    "assinatura": "fp:requires login",
-    "check_id": "yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag",
-    "arquivo": ".github/workflows/image_actions.yml",
-    "linha_inicio": 30,
-    "linha_fim": 30,
-    "severidade": "WARNING",
-    "mensagem": "GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.",
-    "cwe": [
-      "CWE-1357: Reliance on Insufficiently Trustworthy Component",
-      "CWE-353: Missing Support for Integrity Check"
-    ],
-    "owasp_2021": [
-      "A08:2021 - Software and Data Integrity Failures",
-      "A08:2025 - Software and Data Integrity Failures"
-    ],
-    "owasp_2025": "A08",
-    "sigla_vuln": "INTEGRITY",
-    "categoria_rag": null,
-    "trecho": "requires login",
-    "linhas_arquivo": 47,
-    "modo_contexto": "arquivo_completo",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS005",
-    "assinatura": "fp:requires login",
-    "check_id": "yaml.github-actions.security.run-shell-injection.run-shell-injection",
-    "arquivo": ".github/workflows/update-challenges-ebook.yml",
-    "linha_inicio": 22,
-    "linha_fim": 25,
-    "severidade": "ERROR",
-    "mensagem": "Using variable interpolation `${{...}}` with `github` context data in a `run:` step could allow an attacker to inject their own code into the runner. This would allow them to steal secrets and code. `github` context data can have arbitrary user input and should be treated as untrusted. Instead, use an intermediate environment variable with `env:` to store the data and use the environment variable in the `run:` script. Be sure to use double-quotes the environment variable, like this: \"$ENVVAR\".",
-    "cwe": [
-      "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-    ],
-    "owasp_2021": [
-      "A01:2017 - Injection",
-      "A03:2021 - Injection",
-      "A05:2025 - Injection"
-    ],
-    "owasp_2025": "A05",
-    "sigla_vuln": "CMDI",
-    "categoria_rag": "injection",
-    "trecho": "requires login",
-    "linhas_arquivo": 35,
-    "modo_contexto": "arquivo_completo",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS006",
-    "assinatura": "fp:requires login",
-    "check_id": "yaml.github-actions.security.run-shell-injection.run-shell-injection",
-    "arquivo": ".github/workflows/update-challenges-www-legacy.yml",
-    "linha_inicio": 27,
-    "linha_fim": 34,
-    "severidade": "ERROR",
-    "mensagem": "Using variable interpolation `${{...}}` with `github` context data in a `run:` step could allow an attacker to inject their own code into the runner. This would allow them to steal secrets and code. `github` context data can have arbitrary user input and should be treated as untrusted. Instead, use an intermediate environment variable with `env:` to store the data and use the environment variable in the `run:` script. Be sure to use double-quotes the environment variable, like this: \"$ENVVAR\".",
-    "cwe": [
-      "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-    ],
-    "owasp_2021": [
-      "A01:2017 - Injection",
-      "A03:2021 - Injection",
-      "A05:2025 - Injection"
-    ],
-    "owasp_2025": "A05",
-    "sigla_vuln": "CMDI",
-    "categoria_rag": "injection",
-    "trecho": "requires login",
-    "linhas_arquivo": 55,
-    "modo_contexto": "arquivo_completo",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS007",
-    "assinatura": "fp:requires login",
-    "check_id": "yaml.github-actions.security.run-shell-injection.run-shell-injection",
-    "arquivo": ".github/workflows/update-challenges-www.yml",
-    "linha_inicio": 27,
-    "linha_fim": 34,
-    "severidade": "ERROR",
-    "mensagem": "Using variable interpolation `${{...}}` with `github` context data in a `run:` step could allow an attacker to inject their own code into the runner. This would allow them to steal secrets and code. `github` context data can have arbitrary user input and should be treated as untrusted. Instead, use an intermediate environment variable with `env:` to store the data and use the environment variable in the `run:` script. Be sure to use double-quotes the environment variable, like this: \"$ENVVAR\".",
-    "cwe": [
-      "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-    ],
-    "owasp_2021": [
-      "A01:2017 - Injection",
-      "A03:2021 - Injection",
-      "A05:2025 - Injection"
-    ],
-    "owasp_2025": "A05",
-    "sigla_vuln": "CMDI",
-    "categoria_rag": "injection",
-    "trecho": "requires login",
-    "linhas_arquivo": 55,
-    "modo_contexto": "arquivo_completo",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS008",
-    "assinatura": "fp:requires login",
-    "check_id": "package_managers.npm.npm-missing-minimum-release-age.npm-missing-minimum-release-age",
-    "arquivo": ".npmrc",
-    "linha_inicio": 1,
-    "linha_fim": 1,
-    "severidade": "MEDIUM",
-    "mensagem": "This .npmrc does not set a minimum release age or sets it too low. Newly published packages can be malicious or unstable. Add `min-release-age = 7` to wait 7 days before resolving newly published package versions. Added in: v11.10 Reference: https://github.blog/changelog/2026-02-18-npm-bulk-trusted-publishing-config-and-script-security-now-generally-available/",
-    "cwe": [
-      "CWE-829: Inclusion of Functionality from Untrusted Control Sphere"
-    ],
-    "owasp_2021": [
-      "A08:2021 - Software and Data Integrity Failures"
-    ],
-    "owasp_2025": "A08",
-    "sigla_vuln": "INTEGRITY",
-    "categoria_rag": null,
-    "trecho": "requires login",
-    "linhas_arquivo": 1,
-    "modo_contexto": "arquivo_completo",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS009",
-    "assinatura": "fp:requires login",
-    "check_id": "package_managers.npm.npm-missing-minimum-release-age.npm-missing-minimum-release-age",
-    "arquivo": "frontend/.npmrc",
-    "linha_inicio": 1,
-    "linha_fim": 1,
-    "severidade": "MEDIUM",
-    "mensagem": "This .npmrc does not set a minimum release age or sets it too low. Newly published packages can be malicious or unstable. Add `min-release-age = 7` to wait 7 days before resolving newly published package versions. Added in: v11.10 Reference: https://github.blog/changelog/2026-02-18-npm-bulk-trusted-publishing-config-and-script-security-now-generally-available/",
-    "cwe": [
-      "CWE-829: Inclusion of Functionality from Untrusted Control Sphere"
-    ],
-    "owasp_2021": [
-      "A08:2021 - Software and Data Integrity Failures"
-    ],
-    "owasp_2025": "A08",
-    "sigla_vuln": "INTEGRITY",
-    "categoria_rag": null,
-    "trecho": "requires login",
-    "linhas_arquivo": 1,
-    "modo_contexto": "arquivo_completo",
-    "marcador_juiceshop": null,
-    "elegivel": true,
-    "motivo_exclusao": null
-  },
-  {
-    "caso_id": "JS010",
-    "assinatura": "fp:requires login",
     "check_id": "javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
     "arquivo": "lib/insecurity.ts",
     "linha_inicio": 54,
     "linha_fim": 54,
     "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
     "mensagem": "A hard-coded credential was detected. It is not recommended to store credentials in source-code, as this risks secrets being leaked and used by either an internal or external malicious adversary. It is recommended to use environment variables to securely provide credentials or retrieve credentials from a secure vault or HSM (Hardware Security Module).",
     "cwe": [
       "CWE-798: Use of Hard-coded Credentials"
@@ -264,13 +27,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS011",
+    "caso_id": "JS002",
     "assinatura": "fp:requires login",
     "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
     "arquivo": "routes/fileServer.ts",
     "linha_inicio": 33,
     "linha_fim": 33,
     "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
     "mensagem": "The application processes user-input, this is passed to res.sendFile which can allow an attacker to arbitrarily read files on the system through path traversal. It is recommended to perform input validation in addition to canonicalizing the path. This allows you to validate the path against the intended directory it should be accessing.",
     "cwe": [
       "CWE-73: External Control of File Name or Path"
@@ -290,13 +54,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS012",
+    "caso_id": "JS003",
     "assinatura": "fp:requires login",
     "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
     "arquivo": "routes/keyServer.ts",
     "linha_inicio": 14,
     "linha_fim": 14,
     "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
     "mensagem": "The application processes user-input, this is passed to res.sendFile which can allow an attacker to arbitrarily read files on the system through path traversal. It is recommended to perform input validation in addition to canonicalizing the path. This allows you to validate the path against the intended directory it should be accessing.",
     "cwe": [
       "CWE-73: External Control of File Name or Path"
@@ -316,13 +81,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS013",
+    "caso_id": "JS004",
     "assinatura": "fp:requires login",
     "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
     "arquivo": "routes/logfileServer.ts",
     "linha_inicio": 14,
     "linha_fim": 14,
     "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
     "mensagem": "The application processes user-input, this is passed to res.sendFile which can allow an attacker to arbitrarily read files on the system through path traversal. It is recommended to perform input validation in addition to canonicalizing the path. This allows you to validate the path against the intended directory it should be accessing.",
     "cwe": [
       "CWE-73: External Control of File Name or Path"
@@ -342,13 +108,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS014",
+    "caso_id": "JS005",
     "assinatura": "fp:requires login",
     "check_id": "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection",
     "arquivo": "routes/login.ts",
     "linha_inicio": 34,
     "linha_fim": 34,
     "severidade": "ERROR",
+    "severidade_normalizada": "ALTA",
     "mensagem": "Detected a sequelize statement that is tainted by user-input. This could lead to SQL injection if the variable is user-controlled and is not properly sanitized. In order to prevent SQL injection, it is recommended to use parameterized queries or prepared statements.",
     "cwe": [
       "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
@@ -369,13 +136,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS015",
+    "caso_id": "JS006",
     "assinatura": "fp:requires login",
     "check_id": "javascript.express.security.injection.tainted-sql-string.tainted-sql-string",
     "arquivo": "routes/login.ts",
     "linha_inicio": 34,
     "linha_fim": 34,
     "severidade": "ERROR",
+    "severidade_normalizada": "ALTA",
     "mensagem": "Detected user input used to manually construct a SQL string. This is usually bad practice because manual construction could accidentally result in a SQL injection. An attacker could use a SQL injection to steal or modify contents of the database. Instead, use a parameterized query which is available by default in most database engines. Alternatively, consider using an object-relational mapper (ORM) such as Sequelize which will protect your queries.",
     "cwe": [
       "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
@@ -396,13 +164,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS016",
+    "caso_id": "JS007",
     "assinatura": "fp:requires login",
     "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
     "arquivo": "routes/quarantineServer.ts",
     "linha_inicio": 14,
     "linha_fim": 14,
     "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
     "mensagem": "The application processes user-input, this is passed to res.sendFile which can allow an attacker to arbitrarily read files on the system through path traversal. It is recommended to perform input validation in addition to canonicalizing the path. This allows you to validate the path against the intended directory it should be accessing.",
     "cwe": [
       "CWE-73: External Control of File Name or Path"
@@ -422,13 +191,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS017",
+    "caso_id": "JS008",
     "assinatura": "fp:requires login",
     "check_id": "javascript.express.security.audit.express-open-redirect.express-open-redirect",
     "arquivo": "routes/redirect.ts",
     "linha_inicio": 19,
     "linha_fim": 19,
     "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
     "mensagem": "The application redirects to a URL specified by user-supplied input `query` that is not validated. This could redirect users to malicious locations. Consider using an allow-list approach to validate URLs, or warn users they are being redirected to a third-party website.",
     "cwe": [
       "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
@@ -448,13 +218,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS018",
+    "caso_id": "JS009",
     "assinatura": "fp:requires login",
     "check_id": "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection",
     "arquivo": "routes/search.ts",
     "linha_inicio": 23,
     "linha_fim": 23,
     "severidade": "ERROR",
+    "severidade_normalizada": "ALTA",
     "mensagem": "Detected a sequelize statement that is tainted by user-input. This could lead to SQL injection if the variable is user-controlled and is not properly sanitized. In order to prevent SQL injection, it is recommended to use parameterized queries or prepared statements.",
     "cwe": [
       "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
@@ -475,13 +246,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS019",
+    "caso_id": "JS010",
     "assinatura": "fp:requires login",
     "check_id": "javascript.express.security.injection.tainted-sql-string.tainted-sql-string",
     "arquivo": "routes/search.ts",
     "linha_inicio": 23,
     "linha_fim": 23,
     "severidade": "ERROR",
+    "severidade_normalizada": "ALTA",
     "mensagem": "Detected user input used to manually construct a SQL string. This is usually bad practice because manual construction could accidentally result in a SQL injection. An attacker could use a SQL injection to steal or modify contents of the database. Instead, use a parameterized query which is available by default in most database engines. Alternatively, consider using an object-relational mapper (ORM) such as Sequelize which will protect your queries.",
     "cwe": [
       "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
@@ -502,13 +274,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS020",
+    "caso_id": "JS011",
     "assinatura": "fp:requires login",
     "check_id": "javascript.lang.security.audit.code-string-concat.code-string-concat",
     "arquivo": "routes/userProfile.ts",
     "linha_inicio": 61,
     "linha_fim": 61,
     "severidade": "ERROR",
+    "severidade_normalizada": "ALTA",
     "mensagem": "Found data from an Express or Next web request flowing to `eval`. If this data is user-controllable this can lead to execution of arbitrary system commands in the context of your application process. Avoid `eval` whenever possible.",
     "cwe": [
       "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
@@ -528,13 +301,14 @@
     "motivo_exclusao": null
   },
   {
-    "caso_id": "JS021",
+    "caso_id": "JS012",
     "assinatura": "fp:requires login",
     "check_id": "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing",
     "arquivo": "server.ts",
     "linha_inicio": 269,
     "linha_fim": 269,
     "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
     "mensagem": "Directory listing/indexing is enabled, which may lead to disclosure of sensitive directories and files. It is recommended to disable directory listing unless it is a public resource. If you need directory listing, ensure that sensitive files are inaccessible when querying the resource.",
     "cwe": [
       "CWE-548: Exposure of Information Through Directory Listing"

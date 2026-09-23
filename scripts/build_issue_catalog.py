@@ -3,7 +3,10 @@
 aplicando o protocolo de filtragem deterministico da Decisao D1. Roda uma
 unica vez por execucao do baseline -- NAO chama o semgrep de novo, so le o
 JSON ja gerado. Grava outputs/sast_antes/catalogo_issues.json com TODOS os
-findings (elegiveis e excluidos, cada um com o motivo), para auditoria.
+findings (elegiveis e excluidos, cada um com o motivo), para auditoria, e
+outputs/sast_antes/catalogo_meta.json com os totais de cada etapa (brutos,
+duplicatas removidas, total apos dedupe) -- sem isso esses numeros so
+existiam no print do terminal e se perdiam (ver caderno, F3.6).
 
 Uso:
     python scripts/build_issue_catalog.py [--worktree workspace/wt-1]
@@ -24,6 +27,7 @@ from pipeline.sast.semgrep_client import carregar_resultados, assinatura, Findin
 
 BASELINE_JSON = RAIZ_REPO / "outputs" / "sast_antes" / "baseline_raw.json"
 SAIDA = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_issues.json"
+SAIDA_META = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_meta.json"
 
 MAPA_CWE = RAIZ_REPO / "config" / "mapa_cwe_vuln.yaml"
 MAPA_OWASP = RAIZ_REPO / "config" / "mapa_owasp.yaml"
@@ -37,6 +41,12 @@ SEVERIDADES_ACEITAS = {
     # mais baixo em qualquer esquema (INFO / LOW), mantendo a intencao
     # original do D1 ("ERROR e WARNING") sob os dois nomes possiveis.
     "ERROR", "WARNING", "CRITICAL", "HIGH", "MEDIUM",
+}
+# Normaliza os dois esquemas em 2 buckets, para relatorios nao mostrarem
+# "WARNING" e "MEDIUM" como se fossem niveis diferentes (sao o mesmo).
+NORMALIZACAO_SEVERIDADE = {
+    "ERROR": "ALTA", "HIGH": "ALTA", "CRITICAL": "ALTA",
+    "WARNING": "MEDIA", "MEDIUM": "MEDIA",
 }
 LIMITE_ARQUIVO_COMPLETO = 250  # linhas -- ver Decisao D3
 
@@ -103,7 +113,8 @@ def main() -> None:
         raise SystemExit(f"Baseline nao encontrado: {BASELINE_JSON}. Rode F3.2 primeiro.")
 
     findings = carregar_resultados(BASELINE_JSON, worktree)
-    print(f"Findings brutos carregados: {len(findings)}")
+    findings_brutos = len(findings)
+    print(f"Findings brutos carregados: {findings_brutos}")
 
     vistos: set[tuple[str, str]] = set()  # dedupe por (check_id, path) -- passo 5 do D1
     catalogo: list[dict] = []
@@ -138,6 +149,7 @@ def main() -> None:
             "linha_inicio": f.start_line,
             "linha_fim": f.end_line,
             "severidade": f.severity,
+            "severidade_normalizada": NORMALIZACAO_SEVERIDADE.get(f.severity),
             "mensagem": f.message,
             "cwe": list(f.cwe),
             "owasp_2021": list(f.owasp),
@@ -165,6 +177,16 @@ def main() -> None:
     SAIDA.parent.mkdir(parents=True, exist_ok=True)
     SAIDA.write_text(json.dumps(catalogo, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Catalogo gravado em {SAIDA}")
+
+    meta = {
+        "findings_brutos": findings_brutos,
+        "duplicatas_removidas": duplicatas,
+        "total_apos_dedup": len(catalogo),
+        "elegiveis": len(elegiveis),
+        "excluidos": len(catalogo) - len(elegiveis),
+    }
+    SAIDA_META.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"Metadados gravados em {SAIDA_META}")
 
 
 if __name__ == "__main__":

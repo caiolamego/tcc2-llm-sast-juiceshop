@@ -33,9 +33,10 @@
    ```
    node_modules/, build/, dist/, frontend/dist/, frontend/node_modules/,
    coverage/, test/, data/static/codefixes/, vagrant/, screenshots/,
-   logs/, frontend/src/assets/private/three.js, *.min.js, *.map
+   logs/, frontend/src/assets/private/three.js, .github/, .npmrc,
+   *.min.js, *.map
    ```
-   `data/static/codefixes/` é excluído especificamente como mitigação de contaminação de treinamento (Parte 0, Risco 3). `logs/` e `three.js` foram adicionados após identificar, na execução de referência, que eram respectivamente um artefato de runtime e uma biblioteca de terceiros vendorizada — nenhum dos dois é código-fonte da aplicação.
+   `data/static/codefixes/` é excluído especificamente como mitigação de contaminação de treinamento (Parte 0, Risco 3). `logs/` e `three.js` foram adicionados após identificar, na execução de referência, que eram respectivamente um artefato de runtime e uma biblioteca de terceiros vendorizada — nenhum dos dois é código-fonte da aplicação. `.github/` e `.npmrc` foram adicionados após a execução de F3.6 revelar que 9 dos 21 findings elegíveis (43%) caíam em workflows de CI/CD e configuração do npm — a mesma fronteira de escopo do Adendo M1 (vulnerabilidades de supply chain/dependências fora do escopo), só identificada mais tarde porque os rulesets usados cobrem YAML incidentalmente. Nenhum dos dois é testável pela suíte automatizada do Juice Shop.
 
 2. **Manter apenas findings de `metadata.category == "security"`.**
 
@@ -49,12 +50,17 @@
 
 ### Resultado da execução de referência
 
+> **Nota de reconciliação.** A primeira exclusão de `.github/`/`.npmrc` derrubou os findings brutos de 30 para 15 (queda de 15, não os 9 esperados pela contagem pós-dedupe da execução anterior). Reconciliado: dos 30 brutos originais, 15 já eram código de aplicação (idênticos aos 15 desta execução) e 15 eram de `.github/`/`.npmrc`, dos quais só 9 sobreviviam à deduplicação (6 eram duplicatas internas, mesma regra disparando mais de uma vez no mesmo arquivo de workflow). As siglas `CMDI` e `INTEGRITY` desapareceram por completo da lista final — 100% dos achados dessas duas categorias estavam em configuração de CI/CD, nenhum na aplicação.
+
 | Etapa | Contagem |
 |---|---|
-| Findings brutos (após exclusão de caminhos) | 30 |
-| Após deduplicação (passo 5) | 21 |
-| Elegíveis após filtragem completa (passos 2–4) | 21 |
+| Findings brutos (após exclusão de caminhos, incl. `.github/`/`.npmrc`) | 15 |
+| Duplicatas removidas (passo 5) | 3 |
+| Após deduplicação | 12 |
+| Elegíveis após filtragem completa (passos 2–4) | 12 |
 | Excluídos | 0 |
+| Fora do código de aplicação | 0 |
+| Com marcador `vuln-code-snippet` (ground truth parcial) | 5 de 12 |
 
 ## 4. Taxonomias e mapeamentos
 
