@@ -185,6 +185,76 @@ O item 3 (escopo) ainda está em aberto — aguardando a contagem exata de quant
 
 ---
 
+### 2026-10-07 — Correção do hash do commit fixado do alvo
+
+- Observado: o protocolo e o CLAUDE.md citavam o commit 8ff89794…, mas o runner da F4 registrou f915bddd… em commit_alvo.
+- Verificado: o espelho workspace/juice-shop.git não contém o objeto 8ff89794 (cat-file: could not get object info). O commit f915bddd8 é "Bump to v20.1.1", o commit de lançamento da versão. JUICESHOP_COMMIT no .env já estava correto.
+- Causa: hash errado transcrito na documentação (sem efeito sobre as execuções).
+- Ação: documentação corrigida. Todas as execuções (baseline SAST, custos de validação, cenários da F4) rodaram em f915bddd.
+- Pendência: catalogo_meta.json e os JSON de custo não registram o commit do alvo.
+
+---
+
+### 2026-10-07 — Semgrep sem login devolve "requires login" no fingerprint e no código (F3, descoberto na F5)
+
+**Sintoma:** as 12 issues do `catalogo_issues.json` tinham a mesma `assinatura` (`fp:requires login`) e o campo `trecho` igual a `requires login`.
+
+**Causa:** sem autenticação no Semgrep, `extra.fingerprint` e `extra.lines` vêm preenchidos com o texto literal `requires login` em todos os resultados (conferido em `outputs/sast_antes/baseline_raw.json`). `semgrep_client.assinatura()` usava o fingerprint sempre que ele não estava vazio, e o catálogo copiava `extra.lines` como trecho.
+
+**Efeito:** (1) critério R: comparar alertas antes/depois por assinatura confundiria os 12 findings entre si; um alerta qualquer restante no arquivo faria todas as correções parecerem não resolvidas, ou o inverso. (2) Trecho de código: o catálogo não tinha o campo exigido pela Seção 3.5 do TCC 1. O prompt não foi afetado, porque o builder da F5 lê o código do worktree.
+
+**Correção (decisão do grupo):** `assinatura = sha256(check_id + "|" + caminho_relativo)`, que não depende de fingerprint nem do código. `requires login` passa a ser tratado como campo ausente em `_parse`. O trecho é lido do arquivo no worktree (`start.line`–`end.line`, 3 linhas de folga de cada lado), com `trecho_linha_inicio`/`trecho_linha_fim`. Catálogo regenerado a partir do `baseline_raw.json` existente, sem rodar o Semgrep de novo: assinaturas distintas passaram de 1 para 12. Os demais campos (caso_id, check_id, arquivo, sigla, OWASP, marcador) ficaram idênticos e o relatório do baseline não mudou. `catalogo_meta.json` passou a registrar `commit_alvo` e `semgrep_versao`.
+
+**Impacto na reprodutibilidade:** sim. Muda o identificador de comparação antes/depois. Limitação a registrar: com a assinatura por (regra, arquivo), se a mesma regra continuar disparando em outro ponto do mesmo arquivo depois da correção, o alerta conta como não removido (R=0). É coerente com a deduplicação por (check_id, path) do protocolo, mas é conservador.
+
+**Fase do guia:** F3.2, F3.4 (D6); afeta F6/F7 (critério R).
+
+---
+
+### 2026-10-07 — Teste do StackOverflow com 403 permanente; T4 com linha de base (F4/F5)
+
+**Sintoma:** ao incluir o T4 (`test:api`) no runner, o cenário 1 da F4.3 (sem alteração) passou a falhar sempre: 548 de 555 testes passam, 6 são pulados, 1 falha: `test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question "Less verbose access logs using expressjs/morgan" ...`, com `403 !== 200`.
+
+**Causa:** o teste busca a página real do StackOverflow, que agora responde 403 a requisições automatizadas em todas as tentativas. Antes registrado como falha intermitente ("falha às vezes"); hoje é permanente. Com o T4 bloqueante, nenhuma correção conseguiria F=1.
+
+**Correção (decisão do grupo, opção 2):** linha de base de referência. `scripts/baseline_testes.py` roda T3 e T4 num worktree sem alteração e grava `outputs/baseline_testes.json` (commit do alvo, data, versão do Node, nome de cada teste falho). No runner, cada tier de teste passa quando o conjunto de testes falhos está contido no da linha de base; cada validação registra `testes_falhos_novos`. Nenhum teste é pulado por nome. Os nomes vêm do reporter JUnit do `node --test`, chamado com os mesmos argumentos dos scripts `test:server`/`test:api` do `package.json` (o `npm run ... --` colocaria as flags depois do glob). O runner confere que a linha de base foi gerada no mesmo commit do worktree.
+
+**Achado no mesmo dia:** `test/api/erasure-request.test.ts :: ... POST erasure request does not actually delete the user` falhou 1 vez em 8 execuções do T4 sem alteração (`socket hang up`, ECONNRESET). Por não estar na linha de base, essa falha derrubou o cenário 1 numa rodada. A linha de base de uma execução só não captura testes intermitentes. **Em aberto para o grupo:** gerar a linha de base com N execuções (união das falhas), ou repetir uma vez o tier quando só aparecem falhas novas.
+
+**Impacto na reprodutibilidade:** sim. F passa a depender de `outputs/baseline_testes.json`, que deve ser versionado junto com os resultados e regenerado se o commit do alvo, o Node ou a rede mudarem.
+
+**Fase do guia:** F4.2, F4.3 (D5).
+
+---
+
+### 2026-10-07 — Porta fixa 43210 em `chat.test.ts` limita o T4 em paralelo (F4/F5)
+
+**Sintoma:** investigação de porta para rodar o T4 em vários worktrees ao mesmo tempo.
+
+**Causa:** o `test:api` não sobe servidor numa porta: cada arquivo cria o app em memória (supertest, SQLite `:memory:`). Mas importar `server.ts` dispara `validatePreconditions`, que verifica se `process.env.PORT ?? 3000` está livre e dá `process.exit(1)` se não estiver (`lib/startup/validatePreconditions.ts:66`). Isso resolve com `PORT` por worktree (o runner usa `3100 + N` para `wt-N`). O limite que sobra: `test/api/chat.test.ts:14` abre um servidor falso de LLM na porta fixa `43210`, sem variável de ambiente. Dois worktrees rodando T4 ao mesmo tempo podem colidir.
+
+**Correção:** nenhuma no alvo (não alteramos o Juice Shop). Opções para a F6: rodar o T4 em série (um worktree por vez, com lock), mantendo T0–T3 em paralelo; ou aceitar o risco e registrar. Paralelismo do T4 ainda não testado.
+
+**Impacto na reprodutibilidade:** potencial. Execução paralela do T4 pode gerar falhas espúrias de porta ocupada.
+
+**Fase do guia:** F4.2 (D4); afeta F6.
+
+---
+
+### 2026-10-07 — Edições múltiplas no mesmo arquivo: bug no applier do guia (F5.5)
+
+**Sintoma:** encontrado na leitura do código de referência da F5.5, antes de rodar.
+
+**Causa:** o `aplicar()` do guia lê o arquivo do disco a cada edição e guarda `(alvo, conteudo_novo)` numa lista. Com duas edições no mesmo arquivo, a segunda parte do conteúdo original e, na escrita, sobrescreve a primeira: só a última edição sobrevive, e o patch fica parcialmente aplicado sem nenhum aviso.
+
+**Correção:** `src/pipeline/patching/applier.py` acumula o conteúdo em memória por arquivo (dicionário), aplicando cada edição sobre o resultado da anterior, e só escreve depois de validar todas (atomicidade preservada). Testado: duas edições no mesmo arquivo aplicadas juntas; segunda edição inválida deixa o arquivo intacto.
+
+**Impacto na reprodutibilidade:** não (corrigido antes de qualquer execução real). Sem a correção, a TAP e o F seriam afetados para respostas com mais de uma edição por arquivo.
+
+**Fase do guia:** F5.5 (D3). O trecho de código do guia deve ser atualizado.
+
+---
+
 <!--
 Próxima entrada:
 
