@@ -1,10 +1,13 @@
 {
-  "executado_em": "2026-10-07T18:48:49+00:00",
+  "executado_em": "2026-10-07T19:51:50+00:00",
   "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
   "config": {
     "timeout_t0_s": 120,
     "timeout_t2_s": 60,
-    "timeout_t3_s": 300
+    "timeout_t3_s": 300,
+    "timeout_t4_s": 300,
+    "rodar_t4": true,
+    "arquivo_linha_de_base": "outputs/baseline_testes.json"
   },
   "cenarios": [
     {
@@ -17,7 +20,7 @@
       "obtido": {
         "passou": true,
         "tier_falha": null,
-        "duracao_s": 3.28,
+        "duracao_s": 22.38,
         "tiers": [
           {
             "tier": "T0",
@@ -27,8 +30,11 @@
               "--noEmit"
             ],
             "passou": true,
-            "duracao_s": 1.35,
+            "duracao_s": 1.64,
             "motivo": null,
+            "codigo_saida": 0,
+            "testes_falhos": [],
+            "testes_falhos_novos": [],
             "saida": ""
           },
           {
@@ -41,30 +47,74 @@
               "tsx",
               "--test",
               "--test-force-exit",
+              "--test-reporter=spec",
+              "--test-reporter-destination=stdout",
+              "--test-reporter=junit",
               "test/server/keyServer.unit.test.ts"
             ],
             "passou": true,
-            "duracao_s": 0.09,
+            "duracao_s": 0.11,
             "motivo": null,
-            "saida": "▶ keyServer\n  ✔ should serve requested file from folder /encryptionkeys (0.3935ms)\n  ✔ should raise error for slashes in filename (0.084292ms)\n✔ keyServer (0.795ms)\nℹ tests 2\nℹ suites 1\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 70.328709\n"
+            "codigo_saida": 0,
+            "testes_falhos": [],
+            "testes_falhos_novos": [],
+            "saida": "▶ keyServer\n  ✔ should serve requested file from folder /encryptionkeys (0.446833ms)\n  ✔ should raise error for slashes in filename (0.091125ms)\n✔ keyServer (0.884708ms)\nℹ tests 2\nℹ suites 1\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 80.776583\n"
           },
           {
             "tier": "T3",
             "comando": [
-              "npm",
-              "run",
-              "test:server"
+              "node",
+              "--import",
+              "./test/server/helpers/test-env.mjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-force-exit",
+              "--test-reporter=spec",
+              "--test-reporter-destination=stdout",
+              "--test-reporter=junit",
+              "test/server/**/*.unit.test.ts"
             ],
             "passou": true,
-            "duracao_s": 1.83,
+            "duracao_s": 2.56,
             "motivo": null,
-            "saida": "lenge\" is solved when the 56px.png transpixel is requested (0.051583ms)\n    ✔ \"extraLanguageChallenge\" is solved when the Klingon translation file is requested (0.058ms)\n    ✔ \"retrieveBlueprintChallenge\" is solved when the blueprint file is requested (0.065959ms)\n    ✔ \"missingEncodingChallenge\" is solved when the crazy cat photo is requested (0.07475ms)\n    ✔ \"accessLogDisclosureChallenge\" is solved when any server access log file is requested (0.07725ms)\n  ✔ accessControlChallenges (0.711292ms)\n  ▶ \"errorHandlingChallenge\"\n    ✔ is solved when an error occurs on a response with OK 200 status code (0.088917ms)\n    ▶ is solved when an error occurs on a response with error\n      ✔ 402 status code (0.057458ms)\n      ✔ 403 status code (0.04275ms)\n      ✔ 404 status code (0.054125ms)\n      ✔ 500 status code (0.040792ms)\n    ✔ is solved when an error occurs on a response with error (0.233167ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.040833ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.05425ms)\n      ✔ 402 status code (0.035167ms)\n      ✔ 404 status code (0.038625ms)\n      ✔ 500 status code (0.089042ms)\n    ✔ is not solved when no error occurs on a response with error (0.432625ms)\n    ✔ should pass occurred error on to next route (0.103583ms)\n  ✔ \"errorHandlingChallenge\" (0.957458ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (0.205333ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.057375ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.063667ms)\n    ✔ \"changeProductChallenge\" (0.365083ms)\n  ✔ databaseRelatedChallenges (0.408042ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (0.602917ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.150458ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (0.882167ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (0.233209ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (0.213166ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (0.352375ms)\n  ✔ jwtChallenges (2.502583ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.083208ms)\n    ✔ should return 1 for identical strings even if they are short (0.035291ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.035083ms)\n    ✔ should return 0 for completely different strings (0.036791ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.04225ms)\n  ✔ diceCoefficient (0.284958ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.075958ms)\n    ✔ should return false if similarity is below threshold (0.046458ms)\n  ✔ checkSystemPromptSimilarity (0.1535ms)\n✔ verify (6.715584ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (0.494792ms)\n    ✔ fails when supplied webhook is not a valid URL (7.834792ms)\n    ✔ submits POST with payload to existing URL (18.8545ms)\n  ✔ notify (27.788625ms)\n✔ webhook (27.959792ms)\n▶ xml\n  ✔ should parse a simple XML string (159.495458ms)\n  ✔ should expand internal entities (1.229167ms)\n  ✔ should throw error on malformed XML (2.001958ms)\n  ✔ should timeout on entity expansion bomb (1.039125ms)\n✔ xml (164.225833ms)\nℹ tests 335\nℹ suites 109\nℹ pass 333\nℹ fail 0\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 1749.444666\n"
+            "codigo_saida": 0,
+            "testes_falhos": [],
+            "testes_falhos_novos": [],
+            "saida": "nge\" is solved when the 56px.png transpixel is requested (0.098459ms)\n    ✔ \"extraLanguageChallenge\" is solved when the Klingon translation file is requested (0.095417ms)\n    ✔ \"retrieveBlueprintChallenge\" is solved when the blueprint file is requested (0.122375ms)\n    ✔ \"missingEncodingChallenge\" is solved when the crazy cat photo is requested (0.132958ms)\n    ✔ \"accessLogDisclosureChallenge\" is solved when any server access log file is requested (0.1395ms)\n  ✔ accessControlChallenges (1.246292ms)\n  ▶ \"errorHandlingChallenge\"\n    ✔ is solved when an error occurs on a response with OK 200 status code (0.157167ms)\n    ▶ is solved when an error occurs on a response with error\n      ✔ 402 status code (0.096667ms)\n      ✔ 403 status code (0.067166ms)\n      ✔ 404 status code (0.095375ms)\n      ✔ 500 status code (0.061792ms)\n    ✔ is solved when an error occurs on a response with error (0.388292ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.071917ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.093083ms)\n      ✔ 402 status code (0.062792ms)\n      ✔ 404 status code (0.070958ms)\n      ✔ 500 status code (0.064583ms)\n    ✔ is not solved when no error occurs on a response with error (0.365959ms)\n    ✔ should pass occurred error on to next route (0.09425ms)\n  ✔ \"errorHandlingChallenge\" (1.164708ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (0.260208ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.079833ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.077375ms)\n    ✔ \"changeProductChallenge\" (0.466708ms)\n  ✔ databaseRelatedChallenges (0.521291ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (0.949166ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.220666ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (1.470167ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (0.391666ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (0.289833ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (0.58775ms)\n  ✔ jwtChallenges (4.004041ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.114542ms)\n    ✔ should return 1 for identical strings even if they are short (0.0445ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.047667ms)\n    ✔ should return 0 for completely different strings (0.05025ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.054041ms)\n  ✔ diceCoefficient (0.387375ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.11175ms)\n    ✔ should return false if similarity is below threshold (0.068708ms)\n  ✔ checkSystemPromptSimilarity (0.226125ms)\n✔ verify (10.170458ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (0.455625ms)\n    ✔ fails when supplied webhook is not a valid URL (11.6195ms)\n    ✔ submits POST with payload to existing URL (25.563666ms)\n  ✔ notify (38.316333ms)\n✔ webhook (38.564042ms)\n▶ xml\n  ✔ should parse a simple XML string (253.850083ms)\n  ✔ should expand internal entities (2.244167ms)\n  ✔ should throw error on malformed XML (3.292792ms)\n  ✔ should timeout on entity expansion bomb (1.890292ms)\n✔ xml (262.15625ms)\nℹ tests 335\nℹ suites 109\nℹ pass 333\nℹ fail 0\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 2529.58175\n"
+          },
+          {
+            "tier": "T4",
+            "comando": [
+              "node",
+              "--import",
+              "./test/api/helpers/test-env.mjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-force-exit",
+              "--test-reporter=spec",
+              "--test-reporter-destination=stdout",
+              "--test-reporter=junit",
+              "test/api/**/*.test.ts"
+            ],
+            "passou": true,
+            "duracao_s": 18.05,
+            "motivo": "so_falhas_da_linha_de_base",
+            "codigo_saida": 1,
+            "testes_falhos": [
+              "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available"
+            ],
+            "testes_falhos_novos": [],
+            "saida": "rbidden via API even when authenticated (1.808167ms)\n  ✔ DELETE existing user is forbidden via API even when authenticated (1.421042ms)\n✔ /api/Users/:id (18.442208ms)\n▶ /rest/user/whoami\n  ✔ GET own user id and email on who-am-i request (18.665792ms)\n  ✔ GET who-am-i request returns nothing on missing auth token (4.261167ms)\n  ✔ GET who-am-i request returns nothing on invalid auth token (6.132417ms)\n  ✔ GET who-am-i request returns nothing on broken auth token (3.6995ms)\n  ✔ GET who-am-i request returns nothing on expired auth token (3.247916ms)\n  ✔ GET who-am-i with fields parameter returns only requested fields (31.922291ms)\n  ✔ GET who-am-i with fields parameter does not return password by default (18.653167ms)\n  ✔ GET who-am-i with fields parameter can be tricked into returning password (15.311917ms)\n✔ /rest/user/whoami (102.19775ms)\n▶ /snippets/fixes/:key\n  ✔ GET fixes for unknown challenge key throws error (21.257958ms)\n  ✔ GET fixes for existing challenge key (10.32175ms)\n✔ /snippets/fixes/:key (628.533667ms)\n▶ /snippets/fixes\n  ✔ POST fix for non-existing challenge key throws error (25.777666ms)\n  ✔ POST wrong fix for existing challenge key gives negative verdict and explanation (9.826208ms)\n  ✔ POST non-existing fix for existing challenge key gives negative verdict and no explanation (10.895833ms)\n  ✔ POST correct fix for existing challenge key gives positive verdict and explanation (40.065333ms)\n✔ /snippets/fixes (86.96875ms)\n▶ /snippets/:challenge\n  ✔ GET code snippet retrieval for unknown challenge key throws error (22.468208ms)\n  ✔ GET code snippet retrieval for challenge without code snippet throws error (9.862625ms)\n  ✔ GET code snippet retrieval for challenge with code snippet (8.762584ms)\n✔ /snippets/:challenge (607.200667ms)\n▶ snippets/verdict\n  ✔ should check for the incorrect lines (25.96475ms)\n  ✔ should check for the correct lines (36.626166ms)\n  ✔ POST with unknown challenge key returns 404 (25.358125ms)\n  ✔ POST without selectedLines returns false verdict (8.3965ms)\n  ✔ POST with empty selectedLines array returns false verdict (9.049458ms)\n✔ snippets/verdict (105.888792ms)\n▶ snippets/verdict (hint progression for loginAdminChallenge)\n  ✔ returns no hint on the first wrong attempt (6.523459ms)\n  ✔ returns the first hint text on the second wrong attempt (7.542709ms)\n  ✔ returns a line-number hint after all text hints are exhausted (25.175041ms)\n✔ snippets/verdict (hint progression for loginAdminChallenge) (39.51275ms)\n▶ /api/Wallets\n  ✔ GET wallet is forbidden via public API (8.572416ms)\n  ✔ GET wallet retrieves wallet amount of requesting user (26.45ms)\n  ✔ PUT wallet is forbidden via public API (5.621792ms)\n  ✔ PUT charge wallet from credit card of requesting user (33.966834ms)\n  ✔ PUT charge wallet from foreign credit card is forbidden (12.0375ms)\n  ✔ PUT charge wallet without credit card is forbidden (5.810917ms)\n  ✔ GET wallet balance for user without a wallet returns 404 (52.261042ms)\n✔ /api/Wallets (704.955875ms)\n﹣ /rest/web3/walletExploitAddress (0.369375ms) # ALCHEMY_API_KEY not set\nℹ tests 555\nℹ suites 114\nℹ pass 548\nℹ fail 1\nℹ cancelled 0\nℹ skipped 6\nℹ todo 0\nℹ duration_ms 17978.682375\n\n✖ failing tests:\n\ntest at test/api/internet-resources.test.ts:2:4679\n✖ StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available (111.350167ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  403 !== 200\n  \n      at TestContext.<anonymous> (test/api/internet-resources.test.ts:78:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 403,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
           }
         ],
         "t2_pulado": false,
         "testes_t2": [
           "test/server/keyServer.unit.test.ts"
-        ]
+        ],
+        "testes_falhos_novos": [],
+        "linha_de_base": "outputs/baseline_testes.json"
       },
       "confere": true,
       "worktree_restaurado": true
@@ -79,7 +129,7 @@
       "obtido": {
         "passou": false,
         "tier_falha": "T0",
-        "duracao_s": 0.44,
+        "duracao_s": 0.53,
         "tiers": [
           {
             "tier": "T0",
@@ -89,15 +139,20 @@
               "--noEmit"
             ],
             "passou": false,
-            "duracao_s": 0.44,
+            "duracao_s": 0.53,
             "motivo": "falha",
+            "codigo_saida": 2,
+            "testes_falhos": [],
+            "testes_falhos_novos": [],
             "saida": "routes/keyServer.ts(22,18): error TS1109: Expression expected.\n"
           }
         ],
         "t2_pulado": false,
         "testes_t2": [
           "test/server/keyServer.unit.test.ts"
-        ]
+        ],
+        "testes_falhos_novos": [],
+        "linha_de_base": "outputs/baseline_testes.json"
       },
       "confere": true,
       "worktree_restaurado": true
@@ -112,7 +167,7 @@
       "obtido": {
         "passou": false,
         "tier_falha": "T2",
-        "duracao_s": 1.43,
+        "duracao_s": 1.58,
         "tiers": [
           {
             "tier": "T0",
@@ -122,8 +177,11 @@
               "--noEmit"
             ],
             "passou": true,
-            "duracao_s": 1.33,
+            "duracao_s": 1.44,
             "motivo": null,
+            "codigo_saida": 0,
+            "testes_falhos": [],
+            "testes_falhos_novos": [],
             "saida": ""
           },
           {
@@ -136,18 +194,32 @@
               "tsx",
               "--test",
               "--test-force-exit",
+              "--test-reporter=spec",
+              "--test-reporter-destination=stdout",
+              "--test-reporter=junit",
               "test/server/keyServer.unit.test.ts"
             ],
             "passou": false,
-            "duracao_s": 0.1,
+            "duracao_s": 0.13,
             "motivo": "falha",
-            "saida": "▶ keyServer\n  ✖ should serve requested file from folder /encryptionkeys (0.983666ms)\n  ✔ should raise error for slashes in filename (0.091458ms)\n✖ keyServer (1.416959ms)\nℹ tests 2\nℹ suites 1\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 71.56375\n\n✖ failing tests:\n\ntest at test/server/keyServer.unit.test.ts:2:1182\n✖ should serve requested file from folder /encryptionkeys (0.983666ms)\n  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /encryptionkeys[/\\\\]test.file/. Input:\n  \n  '/Users/caio/Projects/tcc2-llm-sast-juiceshop/workspace/wt-1/encryptionkeys/outro.arquivo'\n  \n      at TestContext.<anonymous> (/Users/caio/Projects/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/keyServer.unit.test.ts:27:12)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1889:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '/Users/caio/Projects/tcc2-llm-sast-juiceshop/workspace/wt-1/encryptionkeys/outro.arquivo',\n    expected: /encryptionkeys[/\\\\]test.file/,\n    operator: 'match',\n    diff: 'simple'\n  }\n"
+            "codigo_saida": 1,
+            "testes_falhos": [
+              "test/server/keyServer.unit.test.ts :: keyServer > should serve requested file from folder /encryptionkeys"
+            ],
+            "testes_falhos_novos": [
+              "test/server/keyServer.unit.test.ts :: keyServer > should serve requested file from folder /encryptionkeys"
+            ],
+            "saida": "▶ keyServer\n  ✖ should serve requested file from folder /encryptionkeys (1.04475ms)\n  ✔ should raise error for slashes in filename (0.10175ms)\n✖ keyServer (1.514833ms)\nℹ tests 2\nℹ suites 1\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 82.907209\n\n✖ failing tests:\n\ntest at test/server/keyServer.unit.test.ts:2:1182\n✖ should serve requested file from folder /encryptionkeys (1.04475ms)\n  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /encryptionkeys[/\\\\]test.file/. Input:\n  \n  'encryptionkeys/outro.arquivo'\n  \n      at TestContext.<anonymous> (test/server/keyServer.unit.test.ts:27:12)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1889:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'encryptionkeys/outro.arquivo',\n    expected: /encryptionkeys[/\\\\]test.file/,\n    operator: 'match',\n    diff: 'simple'\n  }\n"
           }
         ],
         "t2_pulado": false,
         "testes_t2": [
           "test/server/keyServer.unit.test.ts"
-        ]
+        ],
+        "testes_falhos_novos": [
+          "test/server/keyServer.unit.test.ts :: keyServer > should serve requested file from folder /encryptionkeys"
+        ],
+        "linha_de_base": "outputs/baseline_testes.json"
       },
       "confere": true,
       "worktree_restaurado": true

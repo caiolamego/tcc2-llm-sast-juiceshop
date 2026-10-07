@@ -1,0 +1,46 @@
+{
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "gerado_em": "2026-10-07T19:47:43+00:00",
+  "node": "v26.7.0",
+  "worktree": "wt-1",
+  "tiers": {
+    "T3": {
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/**/*.unit.test.ts"
+      ],
+      "codigo_saida": 0,
+      "duracao_s": 1.66,
+      "testes_falhos": []
+    },
+    "T4": {
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/api/**/*.test.ts"
+      ],
+      "codigo_saida": 1,
+      "duracao_s": 12.21,
+      "testes_falhos": [
+        "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available"
+      ]
+    }
+  }
+}
