@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 import subprocess
 from dataclasses import dataclass, asdict
 from pathlib import Path
@@ -27,18 +26,24 @@ class Finding:
         return asdict(self)
 
 
-def _normalizar(codigo: str) -> str:
-    """Remove ruido de formatacao para gerar assinatura estavel."""
-    sem_comentarios = re.sub(r"//.*?$|/\*.*?\*/", "", codigo, flags=re.S | re.M)
-    return re.sub(r"\s+", " ", sem_comentarios).strip()
+# Sem login, o Semgrep devolve este texto no lugar de extra.fingerprint e de
+# extra.lines (caderno, 2026-10-07). Tratado como campo ausente.
+SENTINELA_SEM_LOGIN = "requires login"
 
 
 def assinatura(f: Finding) -> str:
-    """Chave estavel de comparacao antes/depois (D6)."""
-    if f.fingerprint:
-        return f"fp:{f.fingerprint}"
-    bruto = f"{f.check_id}|{f.path}|{_normalizar(f.code)}"
-    return "hash:" + hashlib.sha256(bruto.encode()).hexdigest()[:16]
+    """Chave estavel de comparacao antes/depois (D6): sha256(check_id|caminho).
+
+    Decisao do grupo (2026-10-07): nao depende do fingerprint (ausente sem
+    login) nem do codigo (que a propria correcao altera). Coerente com a
+    deduplicacao por (check_id, path) do protocolo (passo 5).
+    """
+    bruto = f"{f.check_id}|{f.path}"
+    return hashlib.sha256(bruto.encode("utf-8")).hexdigest()
+
+
+def _sem_sentinela(valor: str) -> str:
+    return "" if valor.strip() == SENTINELA_SEM_LOGIN else valor
 
 
 def ler_exclusoes(caminho: Path) -> list[str]:
@@ -104,6 +109,6 @@ def _parse(r: dict, raiz: Path) -> Finding:
         cwe=tuple(meta.get("cwe", []) or []),
         owasp=tuple(meta.get("owasp", []) or []),
         category=meta.get("category", ""),
-        code=extra.get("lines", ""),
-        fingerprint=extra.get("fingerprint", ""),
+        code=_sem_sentinela(extra.get("lines", "")),
+        fingerprint=_sem_sentinela(extra.get("fingerprint", "")),
     )

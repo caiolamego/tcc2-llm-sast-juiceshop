@@ -19,6 +19,7 @@ from pathlib import Path
 
 RAIZ_REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ_REPO / "src"))
+from pipeline.caminhos import rel  # noqa: E402
 from pipeline.target.workspace import PoolWorktrees  # noqa: E402
 from pipeline.validation.runner import ConfigValidacao, validar  # noqa: E402
 
@@ -107,7 +108,7 @@ def main() -> None:
     saida.write_text(json.dumps({
         "executado_em": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "commit_alvo": commit,
-        "config": cfg.__dict__,
+        "config": {k: rel(v) if isinstance(v, Path) else v for k, v in cfg.__dict__.items()},
         "cenarios": registros,
     }, indent=2, ensure_ascii=False), encoding="utf-8")
 

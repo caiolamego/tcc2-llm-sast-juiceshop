@@ -16,10 +16,12 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 import yaml
+from dotenv import dotenv_values
 
 RAIZ_REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ_REPO / "src"))
@@ -49,6 +51,10 @@ NORMALIZACAO_SEVERIDADE = {
     "WARNING": "MEDIA", "MEDIUM": "MEDIA",
 }
 LIMITE_ARQUIVO_COMPLETO = 250  # linhas -- ver Decisao D3
+# Folga do trecho gravado no catalogo (Secao 3.5 do TCC 1). O Semgrep sem
+# login devolve 'requires login' em extra.lines, entao o trecho e lido do
+# arquivo no worktree (caderno, 2026-10-07).
+FOLGA_TRECHO = 3
 
 
 def carregar_yaml(caminho: Path) -> dict:
@@ -99,6 +105,24 @@ def contexto_do_arquivo(worktree: Path, caminho_relativo: str) -> tuple[int, str
     return total, modo
 
 
+def extrair_trecho(worktree: Path, caminho_relativo: str, inicio: int, fim: int) -> tuple[str, int, int]:
+    """Linhas inicio-FOLGA .. fim+FOLGA do arquivo (1-indexado, inclusivo)."""
+    linhas = (worktree / caminho_relativo).read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
+    a = max(1, inicio - FOLGA_TRECHO)
+    b = min(len(linhas), fim + FOLGA_TRECHO)
+    return "".join(linhas[a - 1:b]), a, b
+
+
+def commit_do_worktree(worktree: Path) -> str:
+    """Commit em que o worktree esta, conferido contra JUICESHOP_COMMIT do .env."""
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=worktree, capture_output=True,
+                          text=True, check=True, timeout=30).stdout.strip()
+    esperado = dotenv_values(RAIZ_REPO / ".env").get("JUICESHOP_COMMIT")
+    if esperado and head != esperado:
+        raise SystemExit(f"{worktree.name} esta em {head}, mas o .env fixa {esperado}")
+    return head
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--worktree", default="workspace/wt-1")
@@ -112,6 +136,8 @@ def main() -> None:
     if not BASELINE_JSON.exists():
         raise SystemExit(f"Baseline nao encontrado: {BASELINE_JSON}. Rode F3.2 primeiro.")
 
+    commit_alvo = commit_do_worktree(worktree)
+    versao_semgrep = json.loads(BASELINE_JSON.read_text(encoding="utf-8")).get("version")
     findings = carregar_resultados(BASELINE_JSON, worktree)
     findings_brutos = len(findings)
     print(f"Findings brutos carregados: {findings_brutos}")
@@ -136,6 +162,8 @@ def main() -> None:
         owasp_2025 = mapa_owasp.get(owasp_2021) if elegivel and owasp_2021 else None
         categoria_rag = mapa_rag.get(sigla_vuln) if elegivel and sigla_vuln else None
 
+        trecho, trecho_ini, trecho_fim = extrair_trecho(worktree, f.path, f.start_line, f.end_line)
+
         if elegivel:
             total_linhas, modo_contexto = contexto_do_arquivo(worktree, f.path)
         else:
@@ -156,7 +184,9 @@ def main() -> None:
             "owasp_2025": owasp_2025,
             "sigla_vuln": sigla_vuln,
             "categoria_rag": categoria_rag,
-            "trecho": f.code,
+            "trecho": trecho,
+            "trecho_linha_inicio": trecho_ini,
+            "trecho_linha_fim": trecho_fim,
             "linhas_arquivo": total_linhas,
             "modo_contexto": modo_contexto,
             "marcador_juiceshop": None,   # preenchido em F3.5
@@ -176,9 +206,11 @@ def main() -> None:
 
     SAIDA.parent.mkdir(parents=True, exist_ok=True)
     SAIDA.write_text(json.dumps(catalogo, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"Catalogo gravado em {SAIDA}")
+    print(f"Catalogo gravado em {SAIDA.relative_to(RAIZ_REPO)}")
 
     meta = {
+        "commit_alvo": commit_alvo,
+        "semgrep_versao": versao_semgrep,
         "findings_brutos": findings_brutos,
         "duplicatas_removidas": duplicatas,
         "total_apos_dedup": len(catalogo),
@@ -186,7 +218,7 @@ def main() -> None:
         "excluidos": len(catalogo) - len(elegiveis),
     }
     SAIDA_META.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"Metadados gravados em {SAIDA_META}")
+    print(f"Metadados gravados em {SAIDA_META.relative_to(RAIZ_REPO)}")
 
 
 if __name__ == "__main__":
