@@ -63,7 +63,7 @@ def subir_servidor(cwd: Path) -> subprocess.Popen:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--worktree", default="workspace/wt-01")
+    ap.add_argument("--worktree", default="workspace/wt-1")
     args = ap.parse_args()
 
     wt = Path(args.worktree).resolve()

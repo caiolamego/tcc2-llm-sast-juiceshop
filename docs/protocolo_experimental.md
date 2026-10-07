@@ -6,7 +6,7 @@
 |---|---|
 | Projeto | OWASP Juice Shop |
 | Versão | v20.1.1 |
-| Commit fixado | `8ff89794d2188005e23ed0649aadb7b6faae1b36` |
+| Commit fixado | `f915bddd82790d0f3018902d36ae9b4241a5f51f` |
 | Node.js exigido (`engines`) | `22 - 26` |
 | Node.js confirmado no ambiente | **pendente** — `node --version` nunca retornou com sucesso nas tentativas registradas no caderno; confirmar antes de fechar esta seção |
 | npm | `11.19.0` |

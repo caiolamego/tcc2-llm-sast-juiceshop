@@ -1,0 +1,156 @@
+{
+  "executado_em": "2026-10-07T18:48:49+00:00",
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "config": {
+    "timeout_t0_s": 120,
+    "timeout_t2_s": 60,
+    "timeout_t3_s": 300
+  },
+  "cenarios": [
+    {
+      "cenario": "1_sem_alteracao",
+      "worktree": "wt-1",
+      "esperado": {
+        "passou": true,
+        "tier_falha": null
+      },
+      "obtido": {
+        "passou": true,
+        "tier_falha": null,
+        "duracao_s": 3.28,
+        "tiers": [
+          {
+            "tier": "T0",
+            "comando": [
+              "npx",
+              "tsc",
+              "--noEmit"
+            ],
+            "passou": true,
+            "duracao_s": 1.35,
+            "motivo": null,
+            "saida": ""
+          },
+          {
+            "tier": "T2",
+            "comando": [
+              "node",
+              "--import",
+              "./test/server/helpers/test-env.mjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-force-exit",
+              "test/server/keyServer.unit.test.ts"
+            ],
+            "passou": true,
+            "duracao_s": 0.09,
+            "motivo": null,
+            "saida": "▶ keyServer\n  ✔ should serve requested file from folder /encryptionkeys (0.3935ms)\n  ✔ should raise error for slashes in filename (0.084292ms)\n✔ keyServer (0.795ms)\nℹ tests 2\nℹ suites 1\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 70.328709\n"
+          },
+          {
+            "tier": "T3",
+            "comando": [
+              "npm",
+              "run",
+              "test:server"
+            ],
+            "passou": true,
+            "duracao_s": 1.83,
+            "motivo": null,
+            "saida": "lenge\" is solved when the 56px.png transpixel is requested (0.051583ms)\n    ✔ \"extraLanguageChallenge\" is solved when the Klingon translation file is requested (0.058ms)\n    ✔ \"retrieveBlueprintChallenge\" is solved when the blueprint file is requested (0.065959ms)\n    ✔ \"missingEncodingChallenge\" is solved when the crazy cat photo is requested (0.07475ms)\n    ✔ \"accessLogDisclosureChallenge\" is solved when any server access log file is requested (0.07725ms)\n  ✔ accessControlChallenges (0.711292ms)\n  ▶ \"errorHandlingChallenge\"\n    ✔ is solved when an error occurs on a response with OK 200 status code (0.088917ms)\n    ▶ is solved when an error occurs on a response with error\n      ✔ 402 status code (0.057458ms)\n      ✔ 403 status code (0.04275ms)\n      ✔ 404 status code (0.054125ms)\n      ✔ 500 status code (0.040792ms)\n    ✔ is solved when an error occurs on a response with error (0.233167ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.040833ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.05425ms)\n      ✔ 402 status code (0.035167ms)\n      ✔ 404 status code (0.038625ms)\n      ✔ 500 status code (0.089042ms)\n    ✔ is not solved when no error occurs on a response with error (0.432625ms)\n    ✔ should pass occurred error on to next route (0.103583ms)\n  ✔ \"errorHandlingChallenge\" (0.957458ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (0.205333ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.057375ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.063667ms)\n    ✔ \"changeProductChallenge\" (0.365083ms)\n  ✔ databaseRelatedChallenges (0.408042ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (0.602917ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.150458ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (0.882167ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (0.233209ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (0.213166ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (0.352375ms)\n  ✔ jwtChallenges (2.502583ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.083208ms)\n    ✔ should return 1 for identical strings even if they are short (0.035291ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.035083ms)\n    ✔ should return 0 for completely different strings (0.036791ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.04225ms)\n  ✔ diceCoefficient (0.284958ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.075958ms)\n    ✔ should return false if similarity is below threshold (0.046458ms)\n  ✔ checkSystemPromptSimilarity (0.1535ms)\n✔ verify (6.715584ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (0.494792ms)\n    ✔ fails when supplied webhook is not a valid URL (7.834792ms)\n    ✔ submits POST with payload to existing URL (18.8545ms)\n  ✔ notify (27.788625ms)\n✔ webhook (27.959792ms)\n▶ xml\n  ✔ should parse a simple XML string (159.495458ms)\n  ✔ should expand internal entities (1.229167ms)\n  ✔ should throw error on malformed XML (2.001958ms)\n  ✔ should timeout on entity expansion bomb (1.039125ms)\n✔ xml (164.225833ms)\nℹ tests 335\nℹ suites 109\nℹ pass 333\nℹ fail 0\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 1749.444666\n"
+          }
+        ],
+        "t2_pulado": false,
+        "testes_t2": [
+          "test/server/keyServer.unit.test.ts"
+        ]
+      },
+      "confere": true,
+      "worktree_restaurado": true
+    },
+    {
+      "cenario": "2_erro_sintaxe",
+      "worktree": "wt-1",
+      "esperado": {
+        "passou": false,
+        "tier_falha": "T0"
+      },
+      "obtido": {
+        "passou": false,
+        "tier_falha": "T0",
+        "duracao_s": 0.44,
+        "tiers": [
+          {
+            "tier": "T0",
+            "comando": [
+              "npx",
+              "tsc",
+              "--noEmit"
+            ],
+            "passou": false,
+            "duracao_s": 0.44,
+            "motivo": "falha",
+            "saida": "routes/keyServer.ts(22,18): error TS1109: Expression expected.\n"
+          }
+        ],
+        "t2_pulado": false,
+        "testes_t2": [
+          "test/server/keyServer.unit.test.ts"
+        ]
+      },
+      "confere": true,
+      "worktree_restaurado": true
+    },
+    {
+      "cenario": "3_quebra_comportamento",
+      "worktree": "wt-1",
+      "esperado": {
+        "passou": false,
+        "tier_falha": "T2"
+      },
+      "obtido": {
+        "passou": false,
+        "tier_falha": "T2",
+        "duracao_s": 1.43,
+        "tiers": [
+          {
+            "tier": "T0",
+            "comando": [
+              "npx",
+              "tsc",
+              "--noEmit"
+            ],
+            "passou": true,
+            "duracao_s": 1.33,
+            "motivo": null,
+            "saida": ""
+          },
+          {
+            "tier": "T2",
+            "comando": [
+              "node",
+              "--import",
+              "./test/server/helpers/test-env.mjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-force-exit",
+              "test/server/keyServer.unit.test.ts"
+            ],
+            "passou": false,
+            "duracao_s": 0.1,
+            "motivo": "falha",
+            "saida": "▶ keyServer\n  ✖ should serve requested file from folder /encryptionkeys (0.983666ms)\n  ✔ should raise error for slashes in filename (0.091458ms)\n✖ keyServer (1.416959ms)\nℹ tests 2\nℹ suites 1\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 71.56375\n\n✖ failing tests:\n\ntest at test/server/keyServer.unit.test.ts:2:1182\n✖ should serve requested file from folder /encryptionkeys (0.983666ms)\n  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /encryptionkeys[/\\\\]test.file/. Input:\n  \n  '/Users/caio/Projects/tcc2-llm-sast-juiceshop/workspace/wt-1/encryptionkeys/outro.arquivo'\n  \n      at TestContext.<anonymous> (/Users/caio/Projects/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/keyServer.unit.test.ts:27:12)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1889:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '/Users/caio/Projects/tcc2-llm-sast-juiceshop/workspace/wt-1/encryptionkeys/outro.arquivo',\n    expected: /encryptionkeys[/\\\\]test.file/,\n    operator: 'match',\n    diff: 'simple'\n  }\n"
+          }
+        ],
+        "t2_pulado": false,
+        "testes_t2": [
+          "test/server/keyServer.unit.test.ts"
+        ]
+      },
+      "confere": true,
+      "worktree_restaurado": true
+    }
+  ]
+}
