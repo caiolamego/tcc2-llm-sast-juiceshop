@@ -1,0 +1,14 @@
+rules:
+  - id: tcc.xml.security.external-entity-expansion
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Parser XML habilita carregamento de DTD externa e substituicao de
+      entidades. Para XML nao confiavel, isso pode expor arquivos ou causar DoS.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-611: Improper Restriction of XML External Entity Reference"
+      confidence: MEDIUM
+    pattern: |
+      const $OPTION = $LIB.ParseOption.XML_PARSE_NOENT | $LIB.ParseOption.XML_PARSE_DTDLOAD | ...

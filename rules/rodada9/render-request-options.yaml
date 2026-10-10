@@ -1,0 +1,13 @@
+rules:
+  - id: tcc.template.security.render-request-options
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Corpo da requisicao propagado como opcoes de renderizacao. Verificar se
+      layout controlado pelo cliente seleciona arquivos fora dos templates.
+      Protecoes externas e o comportamento do motor exigem revisao manual.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe: ['CWE-73: External Control of File Name or Path']
+    pattern: '$RES.render($VIEW, {...$REQ.body, ...}, ...)'

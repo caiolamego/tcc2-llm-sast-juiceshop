@@ -1,0 +1,11 @@
+[
+  {
+    "regra": "javascript.lang.security.audit.code-string-concat.code-string-concat",
+    "arquivo": "routes/userProfile.ts",
+    "inicio": 61,
+    "fim": 61,
+    "status": "confirmado",
+    "desafios": ["usernameXssChallenge", "sstiChallenge"],
+    "motivo": "Revisao explicita da divergencia entre baseline antigo e default revisado: conservar associacao SSTI versionada na rodada 6, alerta e069d02afca88512. O username controlado e persistido por updateUserProfile.ts:38, extraido em userProfile.ts:52-56 e avaliado via eval em 61; condicionado ao desafio habilitado. Mesmo finding e mesma causa, sem novo desafio. Baseline permanece intacto; transferencia usa a revisao atual da matriz 12, nao a associacao anterior do baseline."
+  }
+]

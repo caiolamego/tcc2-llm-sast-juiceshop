@@ -1,0 +1,28 @@
+rules:
+  - id: tcc.business.security.optional-mode-role-update
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Dois modos da requisicao sao tratados em ifs independentes antes de uma
+      atualizacao de role. Verifique se um modo ausente ou desconhecido pode
+      alcancar a mudanca de privilegio sem passar pelas precondicoes.
+    metadata:
+      category: security
+      cwe: ['CWE-841: Improper Enforcement of Behavioral Workflow']
+      confidence: MEDIUM
+    patterns:
+      - pattern-inside: |
+          if ($REQ.body.$MODE === $FIRST) { ... }
+          ...
+          if ($REQ.body.$MODE === $SECOND) { ... }
+          ...
+      - metavariable-comparison:
+          metavariable: $FIRST
+          comparison: $FIRST != $SECOND
+      - pattern: '$ENTITY.update({..., role: $ROLE, ...})'
+      - pattern-not-inside: |
+          if ($REQ.body.$MODE !== $FIRST && $REQ.body.$MODE !== $SECOND) {
+            ...
+            return ...;
+          }
+          ...

@@ -1,0 +1,13 @@
+rules:
+  - id: tcc.crypto.security.md5-hash
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      MD5 nao e adequado para armazenar senhas. Verifique o uso deste hash e,
+      para senhas, use uma funcao de derivacao apropriada com salt.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-916: Use of Password Hash With Insufficient Computational Effort"
+      confidence: LOW
+    pattern: $CRYPTO.createHash('md5')

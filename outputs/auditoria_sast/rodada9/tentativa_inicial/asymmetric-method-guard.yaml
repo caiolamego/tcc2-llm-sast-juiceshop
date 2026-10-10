@@ -1,0 +1,22 @@
+rules:
+  - id: tcc.authorization.security.asymmetric-method-guard
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      DELETE possui bloqueio mas nao foi observado PUT no mesmo escopo.
+      Sinal de auditoria, nao prova de falha: verificar API gerada, middlewares
+      globais e roteadores externos antes de confirmar atualizacao desprotegida.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe: ['CWE-862: Missing Authorization']
+    patterns:
+      - pattern: '$APP.delete($PATH, $SEC.denyAll())'
+      - pattern-not-inside: |
+          ...
+          $APP.put($PATH, ...);
+          ...
+      - pattern-not-inside: |
+          ...
+          $APP.use($PATH, ...);
+          ...

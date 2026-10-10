@@ -1,0 +1,21 @@
+rules:
+  - id: tcc.integrity.security.encoded-numeric-value
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Valor numerico derivado de Z85, uma codificacao sem autenticidade.
+      Revisar integridade e uso sensivel; validacao de formato nao e assinatura.
+      Uma verificacao externa pode tornar este alerta falso positivo.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe: ['CWE-345: Insufficient Verification of Data Authenticity']
+    mode: taint
+    pattern-sources:
+      - patterns:
+          - pattern-inside: |
+              import * as $CODEC from 'z85';
+              ...
+          - pattern: $CODEC.decode(...)
+    pattern-sinks:
+      - pattern: parseInt(...)

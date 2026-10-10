@@ -1,0 +1,18 @@
+rules:
+  - id: tcc.finale.security.generated-default-writes
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Recurso Finale gera escrita por padrao a partir do modelo. Auditar campos
+      de identidade/papel, middleware e hooks ANTES da persistencia; este alerta
+      de superficie de mass assignment nao comprova vulnerabilidade sozinho.
+    metadata:
+      category: security
+      cwe: ['CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes']
+      confidence: LOW
+    patterns:
+      - pattern-inside: |
+          import * as $REST from 'finale-rest';
+          ...
+      - pattern: '$REST.resource({model: $MODEL, endpoints: $ENDPOINTS, ...})'
+      - pattern-not: '$REST.resource({..., actions: $ACTIONS, ...})'

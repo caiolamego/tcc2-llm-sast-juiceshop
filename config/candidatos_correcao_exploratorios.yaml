@@ -1,0 +1,85 @@
+# Unidades de causa/patch, nao contagem de desafios nem novo catalogo JS001-JS012.
+# Cada referencia e um alerta CONFIRMADO na matriz; todos os testes de regressao
+# de seguranca ainda precisam ser escritos antes de tentar correcoes com a LLM.
+perfil_candidato: [p/default, rules/angular-sanitizer-bypass.yaml, rules/mongodb-untrusted-multi-update.yaml, rules/redirect-substring-allowlist.yaml]
+casos:
+  - id: EXP001
+    causa: SQL injection na autenticacao
+    desafios: [loginAdminChallenge, loginBenderChallenge, loginJimChallenge]
+    alertas: ['default|routes/login.ts|34']
+    prioridade: piloto
+  - id: EXP002
+    causa: SQL injection na busca de produtos
+    desafios: [unionSqlInjectionChallenge, dbSchemaChallenge]
+    alertas: ['default|routes/search.ts|23']
+    prioridade: posterior
+  - id: EXP003
+    causa: listagem publica do FTP
+    desafios: [directoryListingChallenge]
+    alertas: ['default|server.ts|269']
+    prioridade: posterior
+  - id: EXP004
+    causa: listagem e leitura publica de logs
+    desafios: [accessLogDisclosureChallenge]
+    alertas: ['default|server.ts|281', 'default|routes/logfileServer.ts|14']
+    prioridade: posterior
+  - id: EXP005
+    causa: extensao validada antes de remover null byte codificado
+    desafios: [nullByteChallenge]
+    alertas: ['default|routes/fileServer.ts|33']
+    prioridade: posterior
+  - id: EXP006
+    causa: selecao remota de campo sensivel na resposta
+    desafios: [passwordHashLeakChallenge]
+    alertas: ['default|routes/currentUser.ts|31']
+    prioridade: posterior
+  - id: EXP007
+    causa: URL externa aceita por substring da allowlist
+    desafios: [redirectChallenge]
+    alertas: ['custom-rules|lib/insecurity.ts|135', 'default|routes/redirect.ts|19']
+    prioridade: piloto
+  - id: EXP008
+    causa: seletor MongoDB controlado pelo corpo com multi true
+    desafios: [noSqlReviewsChallenge]
+    alertas: ['custom-rules|routes/updateProductReviews.ts|17']
+    prioridade: piloto
+  - id: EXP009
+    causa: descricao de produto exibida como HTML confiavel
+    desafios: [restfulXssChallenge]
+    alertas: ['custom-rules|frontend/src/app/search-result/search-result.component.ts|110']
+    prioridade: posterior
+  - id: EXP010
+    causa: parametro q exibido como HTML confiavel
+    desafios: [localXssChallenge, xssBonusChallenge]
+    alertas: ['custom-rules|frontend/src/app/search-result/search-result.component.ts|143']
+    prioridade: piloto
+  - id: EXP011
+    causa: feedback persistido exibido como HTML confiavel em duas telas
+    desafios: [persistedXssFeedbackChallenge]
+    alertas: ['custom-rules|frontend/src/app/about/about.component.ts|119', 'custom-rules|frontend/src/app/administration/administration.component.ts|91']
+    prioridade: posterior
+  - id: EXP012
+    causa: email persistido exibido como HTML confiavel
+    desafios: [persistedXssUserChallenge]
+    alertas: ['custom-rules|frontend/src/app/administration/administration.component.ts|73']
+    prioridade: posterior
+  - id: EXP013
+    causa: IP do header exibido como HTML confiavel
+    desafios: [httpHeaderXssChallenge]
+    alertas: ['custom-rules|frontend/src/app/last-login-ip/last-login-ip.component.ts|39']
+    prioridade: posterior
+  - id: EXP014
+    causa: ID de rastreio exibido como HTML confiavel
+    desafios: [reflectedXssChallenge]
+    alertas: ['custom-rules|frontend/src/app/track-result/track-result.component.ts|48']
+    prioridade: posterior
+  - id: EXP015
+    causa: nome de usuario interpolado em JavaScript executavel
+    desafios: [usernameXssChallenge]
+    alertas: ['default|routes/userProfile.ts|61|javascript.browser.security.eval-detected.eval-detected']
+    prioridade: posterior
+  - id: EXP016
+    causa: legenda concatenada dentro de tag script
+    desafios: [videoXssChallenge]
+    alertas: ['default|routes/videoHandler.ts|71']
+    prioridade: posterior

@@ -1,0 +1,11 @@
+# Terceira e ultima rodada exploratoria de regras nesta selecao.
+regras_candidatas:
+  resetPasswordMortyChallenge: [tcc.express.security.trust-all-proxies-rate-limit]
+
+triagem:
+  - regra: tcc.express.security.trust-all-proxies-rate-limit
+    arquivo: server.ts
+    linha: 342
+    status: confirmado
+    desafios: [resetPasswordMortyChallenge]
+    motivo: app.enable('trust proxy') confia em todos os proxies; o rate limiter do reset de senha usa header de IP ou req.ip, derivado de X-Forwarded-For. Sem normalizacao desse header no proxy de borda, a chave pode ser escolhida pelo cliente. O alerta abrange a linha vulneravel 346 marcada pelo Juice Shop; a exploracao depende do deployment.

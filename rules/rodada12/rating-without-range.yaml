@@ -1,0 +1,17 @@
+rules:
+  - id: tcc.validation.security.rating-without-range
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: Rating inteiro sem validate no modelo; conferir intervalo permitido e controles anteriores. allowNull nao verifica valor minimo.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe: ['CWE-20: Improper Input Validation']
+    patterns:
+      - pattern: '$MODEL.init({..., rating: $DEF, ...}, ...)'
+      - metavariable-pattern:
+          metavariable: $DEF
+          patterns:
+            - pattern: '{type: $T.INTEGER, ...}'
+            - pattern-not: '{..., validate: $VALIDATION, ...}'
+      - focus-metavariable: $DEF

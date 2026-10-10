@@ -1,0 +1,1695 @@
+{
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "semgrep_versao": "1.177.0",
+  "alertas_brutos": 124,
+  "triagem": {
+    "fora_escopo": 46,
+    "falso_positivo": 21,
+    "confirmado": 55,
+    "inconclusivo": 2
+  },
+  "desafios_confirmados": 50,
+  "desafios_total": 113,
+  "novos_desafios_confirmados": [],
+  "anteriores_nao_reencontrados": [],
+  "avisos": [
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/registerAdminChallenge_2.ts:1:\n `/* Generated API endpoints */\n  finale.initialize({ app, sequelize: seq })\n\n  const autoModels = [\n    { name: 'Product', exclude: [], model: ProductModel },\n    { name: 'Feedback', exclude: [], model: FeedbackModel },\n    { name: 'BasketItem', exclude: [], model: BasketItemModel },\n    { name: 'Challenge', exclude: [], model: ChallengeModel, include: [ChallengeDependencyModel] },\n    { name: 'Complaint', exclude: [], model: ComplaintModel },\n    { name: 'Recycle', exclude: [], model: RecycleModel },\n    { name: 'SecurityQuestion', exclude: [], model: SecurityQuestionModel },\n    { name: 'SecurityAnswer', exclude: [], model: SecurityAnswerModel },\n    { name: 'Address', exclude: [], model: AddressModel },\n    { name: 'PrivacyRequest', exclude: [], model: PrivacyRequestModel },\n    { name: 'Card', exclude: [], model: CardModel },\n    { name: 'Quantity', exclude: [], model: QuantityModel },\n    { name: 'Hint', exclude: [], model: HintModel }\n  ]\n\n  for (const { name, exclude, model, include } of autoModels) {\n    const resource = finale.resource({\n      model,\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\n      excludeAttributes: exclude,\n      pagination: false,\n      include\n    })` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/registerAdminChallenge_2.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/registerAdminChallenge_4.ts:1:\n `/* Generated API endpoints */\n  finale.initialize({ app, sequelize: seq })\n\n  const autoModels = [\n    { name: 'User', exclude: ['password', 'totpSecret', 'role'], model: UserModel },\n    { name: 'Product', exclude: [], model: ProductModel },\n    { name: 'Feedback', exclude: [], model: FeedbackModel },\n    { name: 'BasketItem', exclude: [], model: BasketItemModel },\n    { name: 'Challenge', exclude: [], model: ChallengeModel, include: [ChallengeDependencyModel] },\n    { name: 'Complaint', exclude: [], model: ComplaintModel },\n    { name: 'Recycle', exclude: [], model: RecycleModel },\n    { name: 'SecurityQuestion', exclude: [], model: SecurityQuestionModel },\n    { name: 'SecurityAnswer', exclude: [], model: SecurityAnswerModel },\n    { name: 'Address', exclude: [], model: AddressModel },\n    { name: 'PrivacyRequest', exclude: [], model: PrivacyRequestModel },\n    { name: 'Card', exclude: [], model: CardModel },\n    { name: 'Quantity', exclude: [], model: QuantityModel },\n    { name: 'Hint', exclude: [], model: HintModel }\n  ]\n\n  for (const { name, exclude, model, include } of autoModels) {\n    const resource = finale.resource({\n      model,\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\n      excludeAttributes: exclude,\n      pagination: false,\n      include\n    })\n\n    // create a wallet when a new user is registered using API\n    if (name === 'User') {\n      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => {\n        WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\n          console.log(err)\n        })\n        return context.continue\n      })\n    }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/registerAdminChallenge_4.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/registerAdminChallenge_3_correct.ts:1:\n `/* Generated API endpoints */\n  finale.initialize({ app, sequelize: seq })\n\n  const autoModels = [\n    { name: 'User', exclude: ['password', 'totpSecret'], model: UserModel },\n    { name: 'Product', exclude: [], model: ProductModel },\n    { name: 'Feedback', exclude: [], model: FeedbackModel },\n    { name: 'BasketItem', exclude: [], model: BasketItemModel },\n    { name: 'Challenge', exclude: [], model: ChallengeModel, include: [ChallengeDependencyModel] },\n    { name: 'Complaint', exclude: [], model: ComplaintModel },\n    { name: 'Recycle', exclude: [], model: RecycleModel },\n    { name: 'SecurityQuestion', exclude: [], model: SecurityQuestionModel },\n    { name: 'SecurityAnswer', exclude: [], model: SecurityAnswerModel },\n    { name: 'Address', exclude: [], model: AddressModel },\n    { name: 'PrivacyRequest', exclude: [], model: PrivacyRequestModel },\n    { name: 'Card', exclude: [], model: CardModel },\n    { name: 'Quantity', exclude: [], model: QuantityModel },\n    { name: 'Hint', exclude: [], model: HintModel }\n  ]\n\n  for (const { name, exclude, model, include } of autoModels) {\n    const resource = finale.resource({\n      model,\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\n      excludeAttributes: exclude,\n      pagination: false,\n      include\n    })\n\n    // create a wallet when a new user is registered using API\n    if (name === 'User') {\n      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => {\n        WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\n          console.log(err)\n        })\n        context.instance.role = 'customer'\n        return context.continue\n      })\n    }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/registerAdminChallenge_3_correct.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/registerAdminChallenge_1.ts:1:\n `/* Generated API endpoints */\n  finale.initialize({ app, sequelize: seq })\n\n  const autoModels = [\n    { name: 'User', exclude: ['password', 'totpSecret'], model: UserModel },\n    { name: 'Product', exclude: [], model: ProductModel },\n    { name: 'Feedback', exclude: [], model: FeedbackModel },\n    { name: 'BasketItem', exclude: [], model: BasketItemModel },\n    { name: 'Challenge', exclude: [], model: ChallengeModel, include: [ChallengeDependencyModel] },\n    { name: 'Complaint', exclude: [], model: ComplaintModel },\n    { name: 'Recycle', exclude: [], model: RecycleModel },\n    { name: 'SecurityQuestion', exclude: [], model: SecurityQuestionModel },\n    { name: 'SecurityAnswer', exclude: [], model: SecurityAnswerModel },\n    { name: 'Address', exclude: [], model: AddressModel },\n    { name: 'PrivacyRequest', exclude: [], model: PrivacyRequestModel },\n    { name: 'Card', exclude: [], model: CardModel },\n    { name: 'Quantity', exclude: [], model: QuantityModel },\n    { name: 'Hint', exclude: [], model: HintModel }\n  ]\n\n  for (const { name, exclude, model, include } of autoModels) {\n    const resource = finale.resource({\n      model,\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\n      excludeAttributes: exclude,\n      pagination: false,\n      include\n    })\n\n    // create a wallet when a new user is registered using API\n    if (name === 'User') {\n      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => {\n        WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\n          console.log(err)\n        })\n        context.instance.role = context.instance.role ? context.instance.role : 'customer'\n        return context.continue\n      })\n    }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/registerAdminChallenge_1.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/weakPasswordChallenge_3.ts:1:\n `User.init(\n      password: {\n        type: DataTypes.STRING,\n        set (clearTextPassword: string) {\n          validatePasswordHasAtLeastOneNumber(clearTextPassword)\n          validatePasswordHasAtLeastOneSpecialChar(clearTextPassword)\n          validatePasswordHasAtLeastOneUpperCaseChar(clearTextPassword)\n          validatePasswordHasAtLeastOneLowerCaseChar(clearTextPassword)\n          validatePasswordHasAtLeastTenChar(clearTextPassword)\n          this.setDataValue('password', security.hash(clearTextPassword))\n        }\n      },` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/weakPasswordChallenge_3.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/weakPasswordChallenge_2.ts:1:\n `User.init(\n      password: {\n        type: DataTypes.STRING,\n        set (clearTextPassword: string) {\n          validatePasswordHasAtLeastOneNumber(clearTextPassword)\n          validatePasswordHasAtLeastOneSpecialChar(clearTextPassword)\n          validatePasswordHasAtLeastOneUpperCaseChar(clearTextPassword)\n          validatePasswordHasAtLeastOneLowerCaseChar(clearTextPassword)\n          validatePasswordHasAtLeastTenChar(clearTextPassword)\n          validatePasswordIsNotInTopOneMillionCommonPasswordsList(clearTextPassword)\n          this.setDataValue('password', security.hash(clearTextPassword))\n        }\n      },` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/weakPasswordChallenge_2.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/weakPasswordChallenge_1_correct.ts:1:\n `User.init(\n      password: {\n        type: DataTypes.STRING,\n        set (clearTextPassword: string) {\n          validatePasswordHasAtLeastTenChar(clearTextPassword)\n          validatePasswordIsNotInTopOneMillionCommonPasswordsList(clearTextPassword)\n          this.setDataValue('password', security.hash(clearTextPassword))\n        }\n      },` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/weakPasswordChallenge_1_correct.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/weakPasswordChallenge_4.ts:1:\n `User.init(\n      password: {\n        type: DataTypes.STRING,\n        set (clearTextPassword: string) {\n          validatePasswordIsNotInTopOneMillionCommonPasswordsList(clearTextPassword)\n          this.setDataValue('password', security.hash(clearTextPassword))\n        }\n      },` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/weakPasswordChallenge_4.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginAdminChallenge_1.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    if (req.body.email.match(/.*['-;].*/) || req.body.password.match(/.*['-;].*/)) {\n      res.status(451).send(res.__('SQL Injection detected.'))\n    }\n    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginAdminChallenge_1.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginBenderChallenge_1.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    if (req.body.email.match(/.*['-;].*/) || req.body.password.match(/.*['-;].*/)) {\n      res.status(451).send(res.__('SQL Injection detected.'))\n    }\n    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginBenderChallenge_1.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginJimChallenge_4.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    if (req.body.email.match(/.*['-;].*/) || req.body.password.match(/.*['-;].*/)) {\n      res.status(451).send(res.__('SQL Injection detected.'))\n    }\n    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginJimChallenge_4.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginAdminChallenge_3.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = $1 AND password = $2 AND deletedAt IS NULL`,\n      { bind: [ req.body.email, req.body.password ], model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginAdminChallenge_3.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginAdminChallenge_4_correct.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = $1 AND password = $2 AND deletedAt IS NULL`,\n      { bind: [ req.body.email, security.hash(req.body.password) ], model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginAdminChallenge_4_correct.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginJimChallenge_1_correct.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = $1 AND password = $2 AND deletedAt IS NULL`,\n      { bind: [ req.body.email, security.hash(req.body.password) ], model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginJimChallenge_1_correct.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginAdminChallenge_2.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = $1 AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`,\n      { bind: [ req.body.email ], model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginAdminChallenge_2.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginBenderChallenge_2_correct.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = $mail AND password = $pass AND deletedAt IS NULL`,\n      { bind: { mail: req.body.email, pass: security.hash(req.body.password) }, model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginBenderChallenge_2_correct.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginBenderChallenge_4.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: models.User, plain: false })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginBenderChallenge_4.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginJimChallenge_2.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: models.User, plain: false })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginJimChallenge_2.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginBenderChallenge_3.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = :mail AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`,\n      { replacements: { mail: req.body.email }, model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginBenderChallenge_3.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/loginJimChallenge_3.ts:1:\n `export function login () {\n  function afterLogin (user: User, res: Response, next: NextFunction) {\n    BasketModel.findOrCreate({ where: { UserId: user.id } })\n      .then(([basket]: [BasketModel, boolean]) => {\n        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\n        const token = security.authorize(authenticatedUser)\n        security.authenticatedUsers.put(token, authenticatedUser)\n        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }\n\n  return (req: Request, res: Response, next: NextFunction) => {\n    models.sequelize.query(`SELECT * FROM Users WHERE email = ? AND password = ? AND deletedAt IS NULL`,\n      { replacements: [ req.body.email, req.body.password ], model: models.User, plain: true })\n      .then((authenticatedUser) => {\n        const user = utils.queryResultToJson(authenticatedUser)\n        if (user.data?.id && user.data.totpSecret !== '') {\n          res.status(401).json({\n            status: 'totp_token_required',\n            data: {\n              tmpToken: security.authorize({\n                userId: user.data.id,\n                type: 'password_valid_needs_second_factor_token'\n              })\n            }\n          })\n        } else if (user.data?.id) {\n          afterLogin(user.data, res, next)\n        } else {\n          res.status(401).send(res.__('Invalid email or password.'))\n        }\n      }).catch((error: Error) => {\n        next(error)\n      })\n  }` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/loginJimChallenge_3.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/ci.yml",
+            "start": {
+              "line": 281,
+              "col": 41,
+              "offset": 13289
+            },
+            "end": {
+              "line": 281,
+              "col": 44,
+              "offset": 13292
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/ci.yml:281:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `${{` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/ci.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/ci.yml",
+          "start": {
+            "line": 281,
+            "col": 41,
+            "offset": 13289
+          },
+          "end": {
+            "line": 281,
+            "col": 44,
+            "offset": 13292
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/ci.yml",
+            "start": {
+              "line": 281,
+              "col": 41,
+              "offset": 13289
+            },
+            "end": {
+              "line": 281,
+              "col": 44,
+              "offset": 13292
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/ci.yml:281:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell', `${{` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/ci.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/ci.yml",
+          "start": {
+            "line": 281,
+            "col": 41,
+            "offset": 13289
+          },
+          "end": {
+            "line": 281,
+            "col": 44,
+            "offset": 13292
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+            "start": {
+              "line": 49,
+              "col": 32,
+              "offset": 1082
+            },
+            "end": {
+              "line": 49,
+              "col": 50,
+              "offset": 1100
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml:49:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ github.workspace` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+          "start": {
+            "line": 49,
+            "col": 32,
+            "offset": 1082
+          },
+          "end": {
+            "line": 49,
+            "col": 50,
+            "offset": 1100
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+            "start": {
+              "line": 49,
+              "col": 32,
+              "offset": 1082
+            },
+            "end": {
+              "line": 49,
+              "col": 50,
+              "offset": 1100
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml:49:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell', `{ github.workspace` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+          "start": {
+            "line": 49,
+            "col": 32,
+            "offset": 1082
+          },
+          "end": {
+            "line": 49,
+            "col": 50,
+            "offset": 1100
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+            "start": {
+              "line": 64,
+              "col": 64,
+              "offset": 1871
+            },
+            "end": {
+              "line": 65,
+              "col": 24,
+              "offset": 1938
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml:64:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `\"R`Ty Update bundle analysis screenshot\" -s\ngit push origin master\n` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+          "start": {
+            "line": 64,
+            "col": 64,
+            "offset": 1871
+          },
+          "end": {
+            "line": 65,
+            "col": 24,
+            "offset": 1938
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+            "start": {
+              "line": 64,
+              "col": 64,
+              "offset": 1871
+            },
+            "end": {
+              "line": 65,
+              "col": 24,
+              "offset": 1938
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml:64:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell', `\"R`Ty Update bundle analysis screenshot\" -s\ngit push origin master\n` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/frontend-bundle-analysis.yml",
+          "start": {
+            "line": 64,
+            "col": 64,
+            "offset": 1871
+          },
+          "end": {
+            "line": 65,
+            "col": 24,
+            "offset": 1938
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+            "start": {
+              "line": 25,
+              "col": 41,
+              "offset": 806
+            },
+            "end": {
+              "line": 25,
+              "col": 44,
+              "offset": 809
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+            "start": {
+              "line": 26,
+              "col": 41,
+              "offset": 806
+            },
+            "end": {
+              "line": 26,
+              "col": 44,
+              "offset": 809
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/release.yml:25:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `${{` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+          "start": {
+            "line": 25,
+            "col": 41,
+            "offset": 806
+          },
+          "end": {
+            "line": 25,
+            "col": 44,
+            "offset": 809
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+          "start": {
+            "line": 26,
+            "col": 41,
+            "offset": 806
+          },
+          "end": {
+            "line": 26,
+            "col": 44,
+            "offset": 809
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+            "start": {
+              "line": 25,
+              "col": 41,
+              "offset": 806
+            },
+            "end": {
+              "line": 25,
+              "col": 44,
+              "offset": 809
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+            "start": {
+              "line": 26,
+              "col": 41,
+              "offset": 806
+            },
+            "end": {
+              "line": 26,
+              "col": 44,
+              "offset": 809
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/release.yml:25:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell', `${{` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+          "start": {
+            "line": 25,
+            "col": 41,
+            "offset": 806
+          },
+          "end": {
+            "line": 25,
+            "col": 44,
+            "offset": 809
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+          "start": {
+            "line": 26,
+            "col": 41,
+            "offset": 806
+          },
+          "end": {
+            "line": 26,
+            "col": 44,
+            "offset": 809
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+            "start": {
+              "line": 38,
+              "col": 27,
+              "offset": 1053
+            },
+            "end": {
+              "line": 38,
+              "col": 48,
+              "offset": 1074
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/release.yml:38:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ matrix.node-version` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+          "start": {
+            "line": 38,
+            "col": 27,
+            "offset": 1053
+          },
+          "end": {
+            "line": 38,
+            "col": 48,
+            "offset": 1074
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+            "start": {
+              "line": 38,
+              "col": 27,
+              "offset": 1053
+            },
+            "end": {
+              "line": 38,
+              "col": 48,
+              "offset": 1074
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/release.yml:38:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell', `{ matrix.node-version` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/release.yml",
+          "start": {
+            "line": 38,
+            "col": 27,
+            "offset": 1053
+          },
+          "end": {
+            "line": 38,
+            "col": 48,
+            "offset": 1074
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/update-challenges-ebook.yml",
+            "start": {
+              "line": 24,
+              "col": 62,
+              "offset": 586
+            },
+            "end": {
+              "line": 24,
+              "col": 65,
+              "offset": 589
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/update-challenges-ebook.yml:24:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `${{` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/update-challenges-ebook.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/update-challenges-ebook.yml",
+          "start": {
+            "line": 24,
+            "col": 62,
+            "offset": 586
+          },
+          "end": {
+            "line": 24,
+            "col": 65,
+            "offset": 589
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/.github/workflows/update-challenges-ebook.yml",
+            "start": {
+              "line": 24,
+              "col": 62,
+              "offset": 586
+            },
+            "end": {
+              "line": 24,
+              "col": 65,
+              "offset": 589
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/.github/workflows/update-challenges-ebook.yml:24:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell', `${{` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/.github/workflows/update-challenges-ebook.yml",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/.github/workflows/update-challenges-ebook.yml",
+          "start": {
+            "line": 24,
+            "col": 62,
+            "offset": 586
+          },
+          "end": {
+            "line": 24,
+            "col": 65,
+            "offset": 589
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_1.ts",
+            "start": {
+              "line": 11,
+              "col": 5,
+              "offset": 0
+            },
+            "end": {
+              "line": 11,
+              "col": 6,
+              "offset": 1
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_1.ts:11:\n `}` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_1.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_1.ts",
+          "start": {
+            "line": 11,
+            "col": 5,
+            "offset": 0
+          },
+          "end": {
+            "line": 11,
+            "col": 6,
+            "offset": 1
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_2_correct.ts",
+            "start": {
+              "line": 15,
+              "col": 19,
+              "offset": 0
+            },
+            "end": {
+              "line": 15,
+              "col": 25,
+              "offset": 6
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_2_correct.ts",
+            "start": {
+              "line": 35,
+              "col": 5,
+              "offset": 0
+            },
+            "end": {
+              "line": 35,
+              "col": 6,
+              "offset": 1
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_2_correct.ts:15:\n `: tool` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_2_correct.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_2_correct.ts",
+          "start": {
+            "line": 15,
+            "col": 19,
+            "offset": 0
+          },
+          "end": {
+            "line": 15,
+            "col": 25,
+            "offset": 6
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_2_correct.ts",
+          "start": {
+            "line": 35,
+            "col": 5,
+            "offset": 0
+          },
+          "end": {
+            "line": 35,
+            "col": 6,
+            "offset": 1
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_3.ts",
+            "start": {
+              "line": 15,
+              "col": 5,
+              "offset": 0
+            },
+            "end": {
+              "line": 15,
+              "col": 6,
+              "offset": 1
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_3.ts:15:\n `}` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_3.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_3.ts",
+          "start": {
+            "line": 15,
+            "col": 5,
+            "offset": 0
+          },
+          "end": {
+            "line": 15,
+            "col": 6,
+            "offset": 1
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_4.ts",
+            "start": {
+              "line": 16,
+              "col": 5,
+              "offset": 0
+            },
+            "end": {
+              "line": 16,
+              "col": 6,
+              "offset": 1
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_4.ts:16:\n `}` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_4.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/chatbotPromptInjectionChallenge_4.ts",
+          "start": {
+            "line": 16,
+            "col": 5,
+            "offset": 0
+          },
+          "end": {
+            "line": 16,
+            "col": 6,
+            "offset": 1
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_2.ts",
+            "start": {
+              "line": 44,
+              "col": 38,
+              "offset": 0
+            },
+            "end": {
+              "line": 44,
+              "col": 45,
+              "offset": 7
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_2.ts:44:\n `: any[]` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_2.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_2.ts",
+          "start": {
+            "line": 44,
+            "col": 38,
+            "offset": 0
+          },
+          "end": {
+            "line": 44,
+            "col": 45,
+            "offset": 7
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_3.ts",
+            "start": {
+              "line": 44,
+              "col": 37,
+              "offset": 0
+            },
+            "end": {
+              "line": 44,
+              "col": 44,
+              "offset": 7
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_3.ts:44:\n `: any[]` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_3.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_3.ts",
+          "start": {
+            "line": 44,
+            "col": 37,
+            "offset": 0
+          },
+          "end": {
+            "line": 44,
+            "col": 44,
+            "offset": 7
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_4.ts",
+            "start": {
+              "line": 44,
+              "col": 37,
+              "offset": 0
+            },
+            "end": {
+              "line": 44,
+              "col": 44,
+              "offset": 7
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_4.ts:44:\n `: any[]` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_4.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/restfulXssChallenge_4.ts",
+          "start": {
+            "line": 44,
+            "col": 37,
+            "offset": 0
+          },
+          "end": {
+            "line": 44,
+            "col": 44,
+            "offset": 7
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_1.ts",
+            "start": {
+              "line": 22,
+              "col": 1,
+              "offset": 0
+            },
+            "end": {
+              "line": 22,
+              "col": 2,
+              "offset": 1
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_1.ts:22:\n `]` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_1.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_1.ts",
+          "start": {
+            "line": 22,
+            "col": 1,
+            "offset": 0
+          },
+          "end": {
+            "line": 22,
+            "col": 2,
+            "offset": 1
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_2.ts",
+            "start": {
+              "line": 23,
+              "col": 1,
+              "offset": 0
+            },
+            "end": {
+              "line": 23,
+              "col": 2,
+              "offset": 1
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_2.ts:23:\n `]` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_2.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_2.ts",
+          "start": {
+            "line": 23,
+            "col": 1,
+            "offset": 0
+          },
+          "end": {
+            "line": 23,
+            "col": 2,
+            "offset": 1
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_3_correct.ts",
+            "start": {
+              "line": 18,
+              "col": 1,
+              "offset": 0
+            },
+            "end": {
+              "line": 18,
+              "col": 2,
+              "offset": 1
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_3_correct.ts:18:\n `]` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_3_correct.ts",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/data/static/codefixes/tokenSaleChallenge_3_correct.ts",
+          "start": {
+            "line": 18,
+            "col": 1,
+            "offset": 0
+          },
+          "end": {
+            "line": 18,
+            "col": 2,
+            "offset": 1
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/deluxe-user/deluxe-user.component.html",
+            "start": {
+              "line": 6,
+              "col": 1,
+              "offset": 0
+            },
+            "end": {
+              "line": 6,
+              "col": 14,
+              "offset": 13
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/deluxe-user/deluxe-user.component.html",
+            "start": {
+              "line": 10,
+              "col": 1,
+              "offset": 0
+            },
+            "end": {
+              "line": 10,
+              "col": 2,
+              "offset": 1
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/frontend/src/app/deluxe-user/deluxe-user.component.html:6:\n `@if (error) {` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/deluxe-user/deluxe-user.component.html",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/deluxe-user/deluxe-user.component.html",
+          "start": {
+            "line": 6,
+            "col": 1,
+            "offset": 0
+          },
+          "end": {
+            "line": 6,
+            "col": 14,
+            "offset": 13
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/deluxe-user/deluxe-user.component.html",
+          "start": {
+            "line": 10,
+            "col": 1,
+            "offset": 0
+          },
+          "end": {
+            "line": 10,
+            "col": 2,
+            "offset": 1
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/order-completion/order-completion.component.html",
+            "start": {
+              "line": 15,
+              "col": 41,
+              "offset": 0
+            },
+            "end": {
+              "line": 15,
+              "col": 77,
+              "offset": 36
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/frontend/src/app/order-completion/order-completion.component.html:15:\n `&& orderDetails.eta !== undefined) {` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/order-completion/order-completion.component.html",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/order-completion/order-completion.component.html",
+          "start": {
+            "line": 15,
+            "col": 41,
+            "offset": 0
+          },
+          "end": {
+            "line": 15,
+            "col": 77,
+            "offset": 36
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+            "start": {
+              "line": 42,
+              "col": 31,
+              "offset": 0
+            },
+            "end": {
+              "line": 42,
+              "col": 57,
+              "offset": 26
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+            "start": {
+              "line": 47,
+              "col": 24,
+              "offset": 0
+            },
+            "end": {
+              "line": 47,
+              "col": 50,
+              "offset": 26
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+            "start": {
+              "line": 58,
+              "col": 36,
+              "offset": 0
+            },
+            "end": {
+              "line": 58,
+              "col": 108,
+              "offset": 72
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+            "start": {
+              "line": 160,
+              "col": 32,
+              "offset": 0
+            },
+            "end": {
+              "line": 160,
+              "col": 55,
+              "offset": 23
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html:42:\n `&& !couponControl.dirty) {` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+          "start": {
+            "line": 42,
+            "col": 31,
+            "offset": 0
+          },
+          "end": {
+            "line": 42,
+            "col": 57,
+            "offset": 26
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+          "start": {
+            "line": 47,
+            "col": 24,
+            "offset": 0
+          },
+          "end": {
+            "line": 47,
+            "col": 50,
+            "offset": 26
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+          "start": {
+            "line": 58,
+            "col": 36,
+            "offset": 0
+          },
+          "end": {
+            "line": 58,
+            "col": 108,
+            "offset": 72
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/payment/payment.component.html",
+          "start": {
+            "line": 160,
+            "col": 32,
+            "offset": 0
+          },
+          "end": {
+            "line": 160,
+            "col": 55,
+            "offset": 23
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/photo-wall/photo-wall.component.html",
+            "start": {
+              "line": 82,
+              "col": 40,
+              "offset": 0
+            },
+            "end": {
+              "line": 82,
+              "col": 85,
+              "offset": 45
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/frontend/src/app/photo-wall/photo-wall.component.html:82:\n `&& imagePreview && form.get('image').valid) {` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/photo-wall/photo-wall.component.html",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/photo-wall/photo-wall.component.html",
+          "start": {
+            "line": 82,
+            "col": 40,
+            "offset": 0
+          },
+          "end": {
+            "line": 82,
+            "col": 85,
+            "offset": 45
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/privacy-policy/privacy-policy.component.html",
+            "start": {
+              "line": 58,
+              "col": 25,
+              "offset": 0
+            },
+            "end": {
+              "line": 58,
+              "col": 39,
+              "offset": 14
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/frontend/src/app/privacy-policy/privacy-policy.component.html:58:\n `& Cookies Data` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/privacy-policy/privacy-policy.component.html",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/privacy-policy/privacy-policy.component.html",
+          "start": {
+            "line": 58,
+            "col": 25,
+            "offset": 0
+          },
+          "end": {
+            "line": 58,
+            "col": 39,
+            "offset": 14
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+            "start": {
+              "line": 26,
+              "col": 43,
+              "offset": 0
+            },
+            "end": {
+              "line": 26,
+              "col": 89,
+              "offset": 46
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+            "start": {
+              "line": 37,
+              "col": 84,
+              "offset": 0
+            },
+            "end": {
+              "line": 37,
+              "col": 120,
+              "offset": 36
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+            "start": {
+              "line": 53,
+              "col": 36,
+              "offset": 0
+            },
+            "end": {
+              "line": 53,
+              "col": 60,
+              "offset": 24
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+            "start": {
+              "line": 60,
+              "col": 29,
+              "offset": 0
+            },
+            "end": {
+              "line": 60,
+              "col": 90,
+              "offset": 61
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+            "start": {
+              "line": 68,
+              "col": 65,
+              "offset": 0
+            },
+            "end": {
+              "line": 68,
+              "col": 104,
+              "offset": 39
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+            "start": {
+              "line": 75,
+              "col": 37,
+              "offset": 0
+            },
+            "end": {
+              "line": 75,
+              "col": 43,
+              "offset": 6
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html:26:\n `&& challenge().disabledEnv !== 'safetyMode') {` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+          "start": {
+            "line": 26,
+            "col": 43,
+            "offset": 0
+          },
+          "end": {
+            "line": 26,
+            "col": 89,
+            "offset": 46
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+          "start": {
+            "line": 37,
+            "col": 84,
+            "offset": 0
+          },
+          "end": {
+            "line": 37,
+            "col": 120,
+            "offset": 36
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+          "start": {
+            "line": 53,
+            "col": 36,
+            "offset": 0
+          },
+          "end": {
+            "line": 53,
+            "col": 60,
+            "offset": 24
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+          "start": {
+            "line": 60,
+            "col": 29,
+            "offset": 0
+          },
+          "end": {
+            "line": 60,
+            "col": 90,
+            "offset": 61
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+          "start": {
+            "line": 68,
+            "col": 65,
+            "offset": 0
+          },
+          "end": {
+            "line": 68,
+            "col": 104,
+            "offset": 39
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/score-board/components/challenge-card/challenge-card.component.html",
+          "start": {
+            "line": 75,
+            "col": 37,
+            "offset": 0
+          },
+          "end": {
+            "line": 75,
+            "col": 43,
+            "offset": 6
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/sidenav/sidenav.component.html",
+            "start": {
+              "line": 42,
+              "col": 23,
+              "offset": 0
+            },
+            "end": {
+              "line": 42,
+              "col": 43,
+              "offset": 20
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/sidenav/sidenav.component.html",
+            "start": {
+              "line": 278,
+              "col": 27,
+              "offset": 0
+            },
+            "end": {
+              "line": 278,
+              "col": 56,
+              "offset": 29
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/frontend/src/app/sidenav/sidenav.component.html:42:\n `&& isAccounting()) {` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/sidenav/sidenav.component.html",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/sidenav/sidenav.component.html",
+          "start": {
+            "line": 42,
+            "col": 23,
+            "offset": 0
+          },
+          "end": {
+            "line": 42,
+            "col": 43,
+            "offset": 20
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/sidenav/sidenav.component.html",
+          "start": {
+            "line": 278,
+            "col": 27,
+            "offset": 0
+          },
+          "end": {
+            "line": 278,
+            "col": 56,
+            "offset": 29
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/wallet/wallet.component.html",
+            "start": {
+              "line": 24,
+              "col": 35,
+              "offset": 0
+            },
+            "end": {
+              "line": 24,
+              "col": 71,
+              "offset": 36
+            }
+          },
+          {
+            "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/wallet/wallet.component.html",
+            "start": {
+              "line": 29,
+              "col": 35,
+              "offset": 0
+            },
+            "end": {
+              "line": 29,
+              "col": 97,
+              "offset": 62
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line /tmp/tcc-juiceshop-audit/frontend/src/app/wallet/wallet.component.html:24:\n `&& balanceControl.errors.required) {` was unexpected",
+      "path": "/tmp/tcc-juiceshop-audit/frontend/src/app/wallet/wallet.component.html",
+      "spans": [
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/wallet/wallet.component.html",
+          "start": {
+            "line": 24,
+            "col": 35,
+            "offset": 0
+          },
+          "end": {
+            "line": 24,
+            "col": 71,
+            "offset": 36
+          }
+        },
+        {
+          "file": "/tmp/tcc-juiceshop-audit/frontend/src/app/wallet/wallet.component.html",
+          "start": {
+            "line": 29,
+            "col": 35,
+            "offset": 0
+          },
+          "end": {
+            "line": 29,
+            "col": 97,
+            "offset": 62
+          }
+        }
+      ]
+    }
+  ],
+  "scan_sha256": "5fdbc6567cb2d3065df26a8f91911a01b6f01aaa824d11056c59e0c7196cf814",
+  "matriz_historica_sha256": "91924c67c8f562944cc0fa9cabc4e56fedd9b663f46a2db2350663dbc0a6d868",
+  "revisao_sha256": "42a89762c4c598ac3669822fc31c3fee374bafb1e0f7abda91066137c8818d99",
+  "criterio": "Mesma regra normalizada, arquivo e intervalo no commit limpo, ou revisao explicita. Fora de escopo nao conta como FP. Confirmacoes condicionais historicas preservadas."
+}

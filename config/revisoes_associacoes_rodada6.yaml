@@ -1,0 +1,26 @@
+# Apenas ocorrencias exploratorias; o alerta equivalente do baseline fica intacto.
+- alerta_id: c1fb5ed14fbf04bb
+  triagem_anterior:
+    status: confirmado
+    motivo: Codigo extraido de username persistido passa para eval quando o desafio esta habilitado.
+    desafios_confirmados: [usernameXssChallenge]
+    sem_marcador: true
+  desafios_adicionais: [sstiChallenge]
+  motivo: >-
+    updateUserProfile.ts:38 persiste req.body.username; userProfile.ts:52-61 extrai
+    a expressao do username e executa eval no servidor quando usernameXssChallenge
+    esta habilitado. routes/verify.ts:96-97 e o teste Cypress profile.spec.ts
+    vinculam esse caminho a sstiChallenge. O hook isolado nao e a evidencia:
+    a entrada persistida alcanca avaliacao de codigo. Revisao estatica, sem executar payload.
+- alerta_id: e069d02afca88512
+  triagem_anterior:
+    status: confirmado
+    motivo: Mesmo ponto de avaliacao de string derivada de username persistido.
+    desafios_confirmados: [usernameXssChallenge]
+    sem_marcador: true
+  desafios_adicionais: [sstiChallenge]
+  motivo: >-
+    Segunda regra do perfil default no mesmo eval de userProfile.ts:61.
+    Entrada controlada persiste via updateUserProfile.ts:38 e e avaliada no
+    servidor; verify.ts:96-97 e Cypress profile.spec.ts associam o caminho a SSTI.
+    Mesma causa, sem novo alerta bruto nem novo caso independente de correcao.

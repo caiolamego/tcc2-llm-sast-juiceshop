@@ -1,0 +1,60 @@
+regras_candidatas:
+  forgedReviewChallenge: [tcc.mongodb.security.unscoped-document-write]
+  freeDeluxeChallenge: [tcc.business.security.optional-mode-role-update]
+
+triagem:
+  - regra: tcc.business.security.optional-mode-role-update
+    arquivo: routes/deluxe.ts
+    linha: 43
+    status: confirmado
+    desafios: [freeDeluxeChallenge]
+    sem_marcador: true
+    motivo: >-
+      Os ifs de paymentMode wallet e card sao opcionais; modo ausente, null ou
+      desconhecido chega a user.update com role deluxe sem consultar os meios
+      de pagamento. server.ts:629 e appendUserId vinculam a conta autenticada,
+      mas nao rejeitam modo desconhecido. Testes isolados do codigo real da rota,
+      com banco e autenticacao simulados e hooks desativados, reproduzem os tres
+      casos; controles de wallet valido, saldo insuficiente e cartao inexistente
+      seguem os ramos previstos. Nao e um teste HTTP de integracao nem de cobranca real.
+  - regra: tcc.mongodb.security.unscoped-document-write
+    arquivo: routes/updateProductReviews.ts
+    linha: 18
+    status: confirmado
+    desafios: [forgedReviewChallenge]
+    motivo: >-
+      req.body.id seleciona o documento sem autor no filtro. server.ts:634 exige
+      autenticacao, mas user so e usado apos a escrita pelo hook do desafio.
+      Teste isolado do codigo real, com colecao em memoria, modifica uma avaliacao
+      de outro autor com ID escalar e modified=1, sem operadores NoSQL.
+      Falta de autorizacao e distinta da injecao/multi-update ja catalogada no
+      mesmo trecho. Nao reclassificamos o alerta antigo nem contamos outro local.
+  - regra: tcc.mongodb.security.unscoped-document-write
+    arquivo: routes/likeProductReviews.ts
+    linha: 36
+    status: falso_positivo
+    desafios: []
+    motivo: >-
+      Curtir avaliacao de outra pessoa e operacao permitida; nao exige que o usuario
+      seja o autor. A rota verifica usuario autenticado e likedBy antes de incrementar.
+      A possivel condicao de corrida e outro mecanismo: este alerta de ausencia de
+      escopo de proprietario nao confirma timingAttackChallenge.
+  - regra: tcc.mongodb.security.unscoped-document-write
+    arquivo: routes/likeProductReviews.ts
+    linha: 51
+    status: falso_positivo
+    desafios: []
+    motivo: >-
+      Atualiza likedBy com a identidade autenticada no fluxo de curtida permitido
+      a outros usuarios. Nao ha requisito de propriedade da avaliacao nessa operacao.
+      Nenhuma confirmacao de condicao de corrida foi inferida pela coincidencia de arquivo.
+  - regra: tcc.mongodb.security.unscoped-document-write
+    arquivo: routes/orderHistory.ts
+    linha: 36
+    status: falso_positivo
+    desafios: []
+    motivo: >-
+      server.ts:625 protege a alteracao de status por security.isAccounting().
+      O papel contabil pode operar pedidos de outros usuarios; o filtro por dono
+      nao e requisito dessa rota. test/api/order-history.test.ts documenta rejeicao
+      de customer/admin e permissao de accountant. Regra intraprocedural nao ve esse controle.

@@ -1,0 +1,22 @@
+rules:
+  - id: tcc.identity.security.masked-email-selector
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Email com caracteres substituidos por asterisco chega ao seletor de dados.
+      Mascaramento pode gerar colisoes; use identidade unica para autorizacao.
+    metadata:
+      category: security
+      cwe: ['CWE-863: Incorrect Authorization']
+      confidence: MEDIUM
+    mode: taint
+    pattern-sources:
+      - pattern: $VALUE.replace($PATTERN, '*')
+    pattern-sinks:
+      - patterns:
+          - pattern: '$COLLECTION.find({email: $EMAIL})'
+          - pattern: '$COLLECTION.find($FILTER)'
+          - metavariable-regex:
+              metavariable: $FILTER
+              regex: '^\{\s*email\s*:\s*[^,{}]+\s*,?\s*\}$'
+          - focus-metavariable: $EMAIL

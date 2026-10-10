@@ -1,0 +1,300 @@
+# Revisao manual exploratoria. Nenhuma destas decisoes altera o baseline oficial.
+# Um alerta nao listado permanece pendente, mesmo quando cai num marcador.
+regras_candidatas:
+  noSqlReviewsChallenge: [tcc.mongodb.security.untrusted-id-multi-update]
+  forgedReviewChallenge: [tcc.mongodb.security.untrusted-id-multi-update]
+  redirectChallenge: [tcc.redirect.security.substring-allowlist]
+  restfulXssChallenge: [tcc.angular.security.bypass-security-trust-html]
+  localXssChallenge: [tcc.angular.security.bypass-security-trust-html]
+  xssBonusChallenge: [tcc.angular.security.bypass-security-trust-html]
+
+triagem:
+  - regra: javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection
+    arquivo: routes/login.ts
+    linha: 34
+    status: confirmado
+    desafios: [loginAdminChallenge, loginBenderChallenge, loginJimChallenge]
+    motivo: Consulta SQL monta a clausula WHERE com email controlado pela requisicao.
+  - regra: javascript.express.security.injection.tainted-sql-string.tainted-sql-string
+    arquivo: routes/login.ts
+    linha: 34
+    status: confirmado
+    desafios: [loginAdminChallenge, loginBenderChallenge, loginJimChallenge]
+    motivo: Mesmo ponto de SQL injection, reportado por segunda regra.
+  - regra: javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection
+    arquivo: routes/search.ts
+    linha: 23
+    status: confirmado
+    desafios: [unionSqlInjectionChallenge, dbSchemaChallenge]
+    motivo: Consulta SQL interpola criterios de busca sem parametrizacao.
+  - regra: javascript.express.security.injection.tainted-sql-string.tainted-sql-string
+    arquivo: routes/search.ts
+    linha: 23
+    status: confirmado
+    desafios: [unionSqlInjectionChallenge, dbSchemaChallenge]
+    motivo: Mesmo ponto de SQL injection, reportado por segunda regra.
+  - regra: javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing
+    arquivo: server.ts
+    linha: 269
+    status: confirmado
+    desafios: [directoryListingChallenge]
+    motivo: Middleware publica listagem do diretorio FTP.
+  - regra: javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing
+    arquivo: server.ts
+    linha: 281
+    status: confirmado
+    desafios: [accessLogDisclosureChallenge]
+    motivo: Middleware publica listagem dos logs de acesso.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/search-result/search-result.component.ts
+    linha: 110
+    status: confirmado
+    desafios: [restfulXssChallenge]
+    motivo: Descricao de produto exibida como HTML confiavel sem sanitizacao.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/search-result/search-result.component.ts
+    linha: 143
+    status: confirmado
+    desafios: [localXssChallenge, xssBonusChallenge]
+    motivo: Query param q inserido como HTML confiavel sem sanitizacao.
+  - regra: tcc.mongodb.security.untrusted-id-multi-update
+    arquivo: routes/updateProductReviews.ts
+    linha: 17
+    status: confirmado
+    desafios: [noSqlReviewsChallenge]
+    motivo: Seletor _id recebe valor bruto da requisicao e a operacao permite multi true; nao comprova sozinho o defeito de autorizacao do desafio Forged Review.
+  - regra: tcc.redirect.security.substring-allowlist
+    arquivo: lib/insecurity.ts
+    linha: 135
+    status: confirmado
+    desafios: [redirectChallenge]
+    motivo: URL candidata e aceita quando apenas contem uma URL permitida como substring.
+  - regra: javascript.browser.security.eval-detected.eval-detected
+    arquivo: routes/captcha.ts
+    linha: 22
+    status: falso_positivo
+    desafios: []
+    motivo: Expressao e formada por numeros aleatorios e operadores fixos, sem entrada controlada pelo usuario.
+  - regra: javascript.express.security.audit.xss.pug.explicit-unescape.template-explicit-unescape
+    arquivo: views/promotionVideo.pug
+    linha: 75
+    status: falso_positivo
+    desafios: []
+    motivo: A regra interpreta o operador JavaScript != como interpolacao Pug !=.
+  - regra: generic.secrets.security.detected-generic-secret.detected-generic-secret
+    arquivo: data/static/users.yml
+    linha: 151
+    status: confirmado
+    desafios: []
+    motivo: O arquivo de dados de inicializacao contem um segredo TOTP de conta administrativa em texto claro; nao foi associado automaticamente a um desafio especifico.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/about/about.component.ts
+    linha: 119
+    status: confirmado
+    desafios: [persistedXssFeedbackChallenge]
+    sem_marcador: true
+    motivo: O payload do teste oficial <<script>Foo</script>iframe... vira iframe perigoso com sanitize-html 1.4.2; o comentario persistido e exibido como HTML confiavel na pagina About.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/administration/administration.component.ts
+    linha: 73
+    status: confirmado
+    desafios: [persistedXssUserChallenge]
+    sem_marcador: true
+    motivo: O email persistido nao e sanitizado quando o desafio esta habilitado e e inserido em HTML confiavel na pagina administrativa.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/administration/administration.component.ts
+    linha: 91
+    status: confirmado
+    desafios: [persistedXssFeedbackChallenge]
+    sem_marcador: true
+    motivo: Mesmo feedback persistido e exibido como HTML confiavel; teste oficial e teste isolado confirmam bypass de sanitizacao com a versao 1.4.2.
+  - regra: generic.secrets.security.detected-jwt-token.detected-jwt-token
+    arquivo: frontend/src/app/app.guard.spec.ts
+    linha: 46
+    status: falso_positivo
+    desafios: []
+    motivo: Token JWT publico de exemplo usado somente em teste unitario, nao credencial da aplicacao.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/data-export/data-export.component.ts
+    linha: 57
+    status: falso_positivo
+    desafios: []
+    motivo: A imagem SVG do CAPTCHA e gerada pelo servidor com svg-captcha sem conteudo controlado pelo solicitante.
+  - regra: generic.secrets.security.detected-jwt-token.detected-jwt-token
+    arquivo: frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+    linha: 72
+    status: falso_positivo
+    desafios: []
+    motivo: JWT sintetico com IP de exemplo em teste unitario.
+  - regra: generic.secrets.security.detected-jwt-token.detected-jwt-token
+    arquivo: frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+    linha: 78
+    status: falso_positivo
+    desafios: []
+    motivo: JWT sintetico sem IP em teste unitario.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/last-login-ip/last-login-ip.component.ts
+    linha: 39
+    status: confirmado
+    desafios: [httpHeaderXssChallenge]
+    sem_marcador: true
+    motivo: O header true-client-ip e persistido sem sanitizacao quando o desafio esta ativo, entra no JWT e e exibido como HTML confiavel.
+  - regra: generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var
+    arquivo: frontend/src/app/navbar/navbar.component.html
+    linha: 17
+    status: falso_positivo
+    desafios: []
+    motivo: Em template Angular, alt={{applicationName}} e binding de propriedade com escaping; nao e interpolacao textual de HTML cru.
+  - regra: generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var
+    arquivo: frontend/src/app/purchase-basket/purchase-basket.component.html
+    linha: 15
+    status: falso_positivo
+    desafios: []
+    motivo: Em template Angular, alt={{element.name}} e binding de propriedade com escaping.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/score-board/score-board.component.ts
+    linha: 82
+    status: falso_positivo
+    desafios: []
+    motivo: Descricao do desafio vem do catalogo estatico do proprio projeto, nao de entrada do usuario.
+  - regra: tcc.angular.security.bypass-security-trust-html
+    arquivo: frontend/src/app/track-result/track-result.component.ts
+    linha: 48
+    status: confirmado
+    desafios: [reflectedXssChallenge]
+    sem_marcador: true
+    motivo: O ID da rota pode retornar no resultado da API e e exibido em innerHTML apos bypass da sanitizacao.
+  - regra: javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop
+    arquivo: frontend/src/hacking-instructor/helpers/helpers.ts
+    linha: 49
+    status: falso_positivo
+    desafios: []
+    motivo: O loop apenas le uma cadeia de propriedades de configuracao; nao escreve em objetos nem polui prototipos.
+  - regra: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
+    arquivo: lib/codingChallenges.ts
+    linha: 76
+    status: falso_positivo
+    desafios: []
+    motivo: challengeKey vem das chaves de desafios extraidas de comentarios do proprio codigo, nao de entrada remota.
+  - regra: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
+    arquivo: lib/codingChallenges.ts
+    linha: 78
+    status: falso_positivo
+    desafios: []
+    motivo: Mesmo uso de chave interna de desafio em regex dinamica; nao ha entrada remota demonstrada.
+  - regra: javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key
+    arquivo: lib/insecurity.ts
+    linha: 42
+    status: confirmado
+    desafios: []
+    motivo: Chave literal usada em crypto.createHmac no codigo de producao; achado incidental sem mapeamento seguro a desafio.
+  - regra: javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
+    arquivo: lib/insecurity.ts
+    linha: 54
+    status: confirmado
+    desafios: []
+    motivo: jwt.sign usa privateKey, que e uma chave RSA privada literal definida no mesmo arquivo; nao foi equiparada automaticamente a um desafio.
+  - regra: javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key
+    arquivo: lib/insecurity.ts
+    linha: 150
+    status: confirmado
+    desafios: []
+    motivo: HMAC do token deluxe reutiliza a privateKey RSA literal embutida no codigo.
+  - regra: javascript.express.security.audit.remote-property-injection.remote-property-injection
+    arquivo: routes/currentUser.ts
+    linha: 31
+    status: confirmado
+    desafios: [passwordHashLeakChallenge]
+    sem_marcador: true
+    motivo: Parametro fields da query escolhe propriedades de user.data e pode incluir password, enviado na resposta JSON.
+  - regra: javascript.express.security.audit.express-res-sendfile.express-res-sendfile
+    arquivo: routes/fileServer.ts
+    linha: 33
+    status: confirmado
+    desafios: [nullByteChallenge]
+    sem_marcador: true
+    motivo: A extensao .md e checada antes de remover %00; teste HTTP local de package.json.bak%2500.md retornou 200 e serviu backup que sem sufixo recebe 403. Nao demonstra traversal fora de ftp.
+  - regra: javascript.express.security.audit.express-res-sendfile.express-res-sendfile
+    arquivo: routes/keyServer.ts
+    linha: 14
+    status: confirmado
+    desafios: []
+    motivo: Rota publica serve arquivos de encryptionkeys por nome e server.ts ainda expoe listagem desse diretorio; e exposicao de chaves, nao prova de path traversal.
+  - regra: javascript.express.security.audit.express-res-sendfile.express-res-sendfile
+    arquivo: routes/logfileServer.ts
+    linha: 14
+    status: confirmado
+    desafios: [accessLogDisclosureChallenge]
+    sem_marcador: true
+    motivo: Rota publica serve arquivos de logs sem autenticacao; o middleware anterior so registra desafios e chama next.
+  - regra: javascript.express.security.audit.express-res-sendfile.express-res-sendfile
+    arquivo: routes/quarantineServer.ts
+    linha: 14
+    status: inconclusivo
+    desafios: []
+    motivo: Rota serve arquivos da quarentena sem autenticacao, mas nao foi demonstrado acesso fora do diretorio nem impacto de arquivo especifico.
+  - regra: javascript.express.security.audit.express-open-redirect.express-open-redirect
+    arquivo: routes/redirect.ts
+    linha: 19
+    status: confirmado
+    desafios: [redirectChallenge]
+    sem_marcador: true
+    motivo: res.redirect recebe URL da query; a validacao em lib/insecurity.ts usa includes e pode aceitar destino externo nao permitido.
+  - regra: javascript.express.security.audit.possible-user-input-redirect.unknown-value-in-redirect
+    arquivo: routes/redirect.ts
+    linha: 19
+    status: confirmado
+    desafios: [redirectChallenge]
+    sem_marcador: true
+    motivo: Mesmo sink de redirecionamento confirmado em conjunto com a allowlist vulneravel.
+  - regra: javascript.browser.security.eval-detected.eval-detected
+    arquivo: routes/userProfile.ts
+    linha: 61
+    status: confirmado
+    desafios: [usernameXssChallenge]
+    sem_marcador: true
+    motivo: Codigo extraido de username persistido passa para eval quando o desafio esta habilitado.
+  - regra: javascript.lang.security.audit.code-string-concat.code-string-concat
+    arquivo: routes/userProfile.ts
+    linha: 61
+    status: confirmado
+    desafios: [usernameXssChallenge]
+    sem_marcador: true
+    motivo: Mesmo ponto de avaliacao de string derivada de username persistido.
+  - regra: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
+    arquivo: routes/videoHandler.ts
+    linha: 57
+    status: falso_positivo
+    desafios: []
+    motivo: A string de ataque aparece apenas na verificacao do desafio, nao e inserida no HTML nesta linha.
+  - regra: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
+    arquivo: routes/videoHandler.ts
+    linha: 71
+    status: confirmado
+    desafios: [videoXssChallenge]
+    sem_marcador: true
+    motivo: Conteudo do arquivo VTT e concatenado sem escaping dentro de uma tag script; exploracao depende de controlar o arquivo de legendas.
+  - regra: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring
+    arquivo: server.ts
+    linha: 157
+    status: falso_positivo
+    desafios: []
+    motivo: O primeiro argumento de console.error e uma string estatica concatenada com name; nao ha formato interpretado.
+  - regra: javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing
+    arquivo: server.ts
+    linha: 273
+    status: falso_positivo
+    desafios: []
+    motivo: O diretorio .well-known contem apenas security.txt, recurso publicamente destinado a descoberta; a listagem nao demonstra exposicao sensivel.
+  - regra: javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing
+    arquivo: server.ts
+    linha: 277
+    status: confirmado
+    desafios: []
+    motivo: Rota publica lista o diretorio encryptionkeys que contem chaves usadas pela aplicacao.
+  - regra: generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var
+    arquivo: views/dataErasureForm.hbs
+    linha: 38
+    status: falso_positivo
+    desafios: []
+    motivo: Teste isolado com Handlebars 4.7.7 e parser HTML mostrou que caracteres como = sao escapados; payload onfocus=alert(1) nao cria atributo executavel. Permite alterar atributos booleanos, mas nao comprova CWE-79.

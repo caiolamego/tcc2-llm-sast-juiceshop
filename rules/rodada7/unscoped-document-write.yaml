@@ -1,0 +1,28 @@
+rules:
+  - id: tcc.mongodb.security.unscoped-document-write
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Escrita seleciona documento somente pelo _id recebido. Revisar autorizacao
+      do proprietario antes da escrita; autenticacao e validacao do formato do
+      identificador nao substituem essa verificacao.
+    metadata:
+      category: security
+      cwe: ['CWE-639: Authorization Bypass Through User-Controlled Key']
+      confidence: MEDIUM
+    mode: taint
+    pattern-sources:
+      - pattern: $REQ.body.$FIELD
+      - pattern: $REQ.params.$FIELD
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: '$COLLECTION.update({_id: $ID}, $CHANGE, ...)'
+              - pattern: '$COLLECTION.updateOne({_id: $ID}, $CHANGE, ...)'
+          - pattern-either:
+              - pattern: '$COLLECTION.update($FILTER, $CHANGE, ...)'
+              - pattern: '$COLLECTION.updateOne($FILTER, $CHANGE, ...)'
+          - metavariable-regex:
+              metavariable: $FILTER
+              regex: '^\{\s*_id\s*(?::\s*[^,{}]+)?\s*,?\s*\}$'
+          - focus-metavariable: $ID
