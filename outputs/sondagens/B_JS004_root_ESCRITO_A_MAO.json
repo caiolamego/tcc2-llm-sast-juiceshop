@@ -1,0 +1,51 @@
+{
+  "AVISO": "Correcao ESCRITA A MAO para sondar o oraculo R; nao e saida da LLM e nao entra em nenhuma metrica.",
+  "origem_patch": "ESCRITO_A_MAO",
+  "caso": "JS004",
+  "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+  "arquivo": "routes/logfileServer.ts",
+  "patch": "outputs/sondagens/B_JS004_root_ESCRITO_A_MAO.diff",
+  "diff": "diff --git a/routes/logfileServer.ts b/routes/logfileServer.ts\nindex 7ef6160d7..475732dc1 100644\n--- a/routes/logfileServer.ts\n+++ b/routes/logfileServer.ts\n@@ -11,7 +11,7 @@ export function serveLogFiles () {\n     const file = params.file\n \n     if (!file.includes('/')) {\n-      res.sendFile(path.resolve('logs/', file))\n+      res.sendFile(file, { root: path.resolve('logs/') })\n     } else {\n       res.status(403)\n       next(new Error('File names cannot contain forward slashes!'))\n",
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "executado_em": "2026-10-07T21:02:08+00:00",
+  "rulesets": [
+    "p/javascript",
+    "p/typescript",
+    "p/nodejs",
+    "p/expressjs",
+    "p/owasp-top-ten"
+  ],
+  "alerta_no_antes": true,
+  "alerta_persiste": false,
+  "R": 1,
+  "alertas_novos": [],
+  "findings_antes": [
+    {
+      "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+      "linha": 14,
+      "assinatura": "888ce7156f641deb2dcf4b99738b29b4302d70bcebdd3f17e0e0d2d7c7a88892"
+    }
+  ],
+  "findings_depois": [],
+  "validacao": {
+    "passou": true,
+    "tier_falha": null,
+    "testes_falhos_novos": [],
+    "testes_falhos_intermitentes": [],
+    "reexecucoes": 0,
+    "tiers": {
+      "T0": {
+        "passou": true,
+        "motivo": null
+      },
+      "T3": {
+        "passou": true,
+        "motivo": null
+      },
+      "T4": {
+        "passou": true,
+        "motivo": "so_falhas_da_linha_de_base"
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+# ESCRITO_A_MAO -- sondagem do oraculo R (protocolo 7.3). NAO e saida da LLM.
+diff --git a/routes/quarantineServer.ts b/routes/quarantineServer.ts
+index e7a2e841f..f8cdb1bbb 100644
+--- a/routes/quarantineServer.ts
++++ b/routes/quarantineServer.ts
+@@ -11,7 +11,7 @@ export function serveQuarantineFiles () {
+     const file = params.file
+ 
+     if (!file.includes('/')) {
+-      res.sendFile(path.resolve('ftp/quarantine/', file))
++      res.sendFile(file, { root: path.resolve('ftp/quarantine/') })
+     } else {
+       res.status(403)
+       next(new Error('File names cannot contain forward slashes!'))

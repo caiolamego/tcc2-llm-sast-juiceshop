@@ -1,0 +1,51 @@
+{
+  "AVISO": "Correcao ESCRITA A MAO para sondar o oraculo R; nao e saida da LLM e nao entra em nenhuma metrica.",
+  "origem_patch": "ESCRITO_A_MAO",
+  "caso": "JS007",
+  "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+  "arquivo": "routes/quarantineServer.ts",
+  "patch": "outputs/sondagens/B_JS007_root_ESCRITO_A_MAO.diff",
+  "diff": "diff --git a/routes/quarantineServer.ts b/routes/quarantineServer.ts\nindex e7a2e841f..f8cdb1bbb 100644\n--- a/routes/quarantineServer.ts\n+++ b/routes/quarantineServer.ts\n@@ -11,7 +11,7 @@ export function serveQuarantineFiles () {\n     const file = params.file\n \n     if (!file.includes('/')) {\n-      res.sendFile(path.resolve('ftp/quarantine/', file))\n+      res.sendFile(file, { root: path.resolve('ftp/quarantine/') })\n     } else {\n       res.status(403)\n       next(new Error('File names cannot contain forward slashes!'))\n",
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "executado_em": "2026-10-07T21:02:31+00:00",
+  "rulesets": [
+    "p/javascript",
+    "p/typescript",
+    "p/nodejs",
+    "p/expressjs",
+    "p/owasp-top-ten"
+  ],
+  "alerta_no_antes": true,
+  "alerta_persiste": false,
+  "R": 1,
+  "alertas_novos": [],
+  "findings_antes": [
+    {
+      "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+      "linha": 14,
+      "assinatura": "49f4a411f4c7dc5a37555b60ecb7e8d7d6f544402b4d6159a3e105dc00a1a442"
+    }
+  ],
+  "findings_depois": [],
+  "validacao": {
+    "passou": true,
+    "tier_falha": null,
+    "testes_falhos_novos": [],
+    "testes_falhos_intermitentes": [],
+    "reexecucoes": 0,
+    "tiers": {
+      "T0": {
+        "passou": true,
+        "motivo": null
+      },
+      "T3": {
+        "passou": true,
+        "motivo": null
+      },
+      "T4": {
+        "passou": true,
+        "motivo": "so_falhas_da_linha_de_base"
+      }
+    }
+  }
+}
