@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection na consulta de autenticação do usuário.\",\"causa_da_vulnerabilidade\":\"A consulta SQL é construída concatenando diretamente os valores de entrada do usuário (email e senha) sem qualquer sanitização ou uso de parâmetros preparados, permitindo que um atacante injete código SQL malicioso.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas (prepared statements) para evitar a injeção de SQL, substituindo a concatenação direta dos valores por parâmetros vinculados na consulta.\",\"edicoes\":[{\"arquivo\":\"routes/login.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true })\",\"trecho_corrigido\":\"models.sequelize.query(`SELECT * FROM Users WHERE email = ? AND password = ? AND deletedAt IS NULL`, { replacements: [req.body.email || '', security.hash(req.body.password || '')], model: UserModel, plain: true })\"}],\"justificativa_tecnica\":\"A utilização de consultas parametrizadas impede que os dados de entrada do usuário sejam interpretados como código SQL, eliminando a possibilidade de injeção de comandos maliciosos. Essa é a prática recomendada para evitar vulnerabilidades de SQL Injection em aplicações que utilizam Sequelize ou outras bibliotecas de acesso a banco de dados.\",\"limitacoes_da_correcao\":\"A correção assume que o método 'sequelize.query' suporta o uso de parâmetros 'replacements' para consultas parametrizadas, o que é padrão no Sequelize. Não há impacto funcional na autenticação, mas é importante garantir que outras partes do código também estejam protegidas contra injeção de SQL.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 1747,
+  "tokens_saida": 363,
+  "latencia_s": 3.267,
+  "custo_usd": 0.00128,
+  "hash_prompt": "6e26b3caf8d024dfd7602191998af4a80b95baff8f115e8ac8bff56e0389a2b3",
+  "do_cache": false
+}

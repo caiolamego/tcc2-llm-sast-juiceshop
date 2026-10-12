@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade de Redirecionamento Aberto (Open Redirect) na função isRedirectAllowed.\",\"causa_da_vulnerabilidade\":\"A função isRedirectAllowed verifica se a URL de redirecionamento contém qualquer uma das URLs permitidas usando o método includes, o que permite que URLs maliciosas que contenham uma URL permitida como substring sejam consideradas válidas para redirecionamento.\",\"estrategia_de_correcao\":\"Alterar a verificação para garantir que a URL de redirecionamento seja exatamente igual a uma das URLs permitidas, evitando correspondências parciais que podem ser exploradas para redirecionamentos maliciosos.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\"trecho_corrigido\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url === allowedUrl // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\"}],\"justificativa_tecnica\":\"A verificação original usando includes permite que URLs maliciosas que contenham uma URL permitida como substring sejam aceitas, abrindo brecha para ataques de redirecionamento aberto. Ao comparar a URL inteira com as URLs da lista de permissão, garantimos que apenas URLs explicitamente permitidas sejam aceitas, mitigando o risco de redirecionamento para destinos não autorizados.\",\"limitacoes_da_correcao\":\"Esta correção assume que a lista de URLs permitidas contém todas as URLs válidas para redirecionamento. URLs que diferem em parâmetros ou fragmentos não serão permitidas a menos que estejam explicitamente na lista. Se for necessário permitir variações, a lista de permissão deve ser atualizada adequadamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 2979,
+  "tokens_saida": 444,
+  "latencia_s": 5.49,
+  "custo_usd": 0.001902,
+  "hash_prompt": "afe2e399521a8c109d2a636c670862f11d98d68770b964b164a9517ffce909c5",
+  "do_cache": false
+}
