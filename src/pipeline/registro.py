@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import threading
 from pathlib import Path
 
 from dotenv import dotenv_values
@@ -16,6 +17,7 @@ from dotenv import dotenv_values
 from pipeline.caminhos import RAIZ_REPO
 
 ARQ_EXECUCOES = RAIZ_REPO / "outputs" / "resultados_consolidados" / "execucoes.jsonl"
+_LOCK = threading.Lock()  # varios workers gravando no mesmo arquivo
 
 
 def commit_alvo(wt: Path) -> str:
@@ -31,7 +33,21 @@ def registrar_execucao(linha: dict, wt: Path, arquivo: Path = ARQ_EXECUCOES) -> 
     """Acrescenta uma linha (uma tentativa) e forca a escrita em disco."""
     registro = {**linha, "commit_alvo": commit_alvo(wt)}
     arquivo.parent.mkdir(parents=True, exist_ok=True)
-    with arquivo.open("a", encoding="utf-8") as fh:
+    with _LOCK, arquivo.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(registro, ensure_ascii=False) + "\n")
         fh.flush()
         os.fsync(fh.fileno())
+
+
+def ler_execucoes(arquivo: Path = ARQ_EXECUCOES) -> list[dict]:
+    """Linhas ja gravadas (para retomada). Linha final truncada por queda do
+    processo e ignorada."""
+    if not arquivo.exists():
+        return []
+    linhas = []
+    for bruta in arquivo.read_text(encoding="utf-8").splitlines():
+        try:
+            linhas.append(json.loads(bruta))
+        except json.JSONDecodeError:
+            continue
+    return linhas

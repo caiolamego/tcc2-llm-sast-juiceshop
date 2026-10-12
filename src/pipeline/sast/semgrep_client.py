@@ -21,10 +21,15 @@ class Finding:
     category: str
     code: str
     fingerprint: str
+    subcategory: tuple[str, ...] = ()
 
     def to_dict(self) -> dict:
         return asdict(self)
 
+
+# Rulesets do protocolo (Secao 2). Nao versionados pelo registro (D2).
+RULESETS = ["p/javascript", "p/typescript", "p/nodejs", "p/expressjs", "p/owasp-top-ten"]
+TIMEOUT_SEMGREP_S = 900
 
 # Sem login, o Semgrep devolve este texto no lugar de extra.fingerprint e de
 # extra.lines (caderno, 2026-10-07). Tratado como campo ausente.
@@ -59,18 +64,21 @@ def executar(
     rulesets: list[str],
     saida_bruta: Path | None = None,
     exclusoes: list[str] | None = None,
+    caminhos: list[str] | None = None,
 ) -> list[Finding]:
     """exclusoes: padroes tipo .gitignore, normalmente lidos de config/semgrepignore
     via ler_exclusoes(). NAO existe flag '--exclude-rule-file' no Semgrep -- cada
-    padrao vira uma flag '--exclude' separada (confirmado em F3.2)."""
+    padrao vira uma flag '--exclude' separada (confirmado em F3.2).
+    caminhos: arquivos relativos a 'alvo' para varrer so eles (padrao: tudo)."""
     cmd = ["semgrep", "--json", "--metrics=off", "--no-git-ignore"]
     for r in rulesets:
         cmd += ["--config", r]
     for padrao in (exclusoes or []):
         cmd += ["--exclude", padrao]
-    cmd.append(str(alvo))
+    cmd += caminhos if caminhos else ["."]
 
-    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=alvo)
+    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=alvo,
+                          timeout=TIMEOUT_SEMGREP_S)
     # Semgrep usa codigo 1 quando encontra findings; so >1 e erro real.
     if proc.returncode > 1:
         raise RuntimeError(f"Semgrep falhou ({proc.returncode}): {proc.stderr[:800]}")
@@ -95,8 +103,11 @@ def carregar_resultados(caminho_json: Path, raiz: Path) -> list[Finding]:
 def _parse(r: dict, raiz: Path) -> Finding:
     extra = r.get("extra", {})
     meta = extra.get("metadata", {})
+    bruto = Path(r["path"])
+    # Caminho relativo vem relativo ao cwd do semgrep (a raiz varrida).
+    absoluto = bruto if bruto.is_absolute() else raiz / bruto
     try:
-        caminho = str(Path(r["path"]).resolve().relative_to(raiz.resolve()))
+        caminho = absoluto.resolve().relative_to(raiz.resolve()).as_posix()
     except ValueError:
         caminho = r["path"]
     return Finding(
@@ -111,4 +122,5 @@ def _parse(r: dict, raiz: Path) -> Finding:
         category=meta.get("category", ""),
         code=_sem_sentinela(extra.get("lines", "")),
         fingerprint=_sem_sentinela(extra.get("fingerprint", "")),
+        subcategory=tuple(meta.get("subcategory", []) or []),
     )

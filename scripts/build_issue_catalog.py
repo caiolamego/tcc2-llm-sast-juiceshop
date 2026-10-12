@@ -25,7 +25,8 @@ from dotenv import dotenv_values
 
 RAIZ_REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ_REPO / "src"))
-from pipeline.sast.semgrep_client import carregar_resultados, assinatura, Finding  # noqa: E402
+from pipeline.sast.semgrep_client import carregar_resultados, assinatura  # noqa: E402
+from pipeline.sast.filtro import filtrar  # noqa: E402
 
 BASELINE_JSON = RAIZ_REPO / "outputs" / "sast_antes" / "baseline_raw.json"
 SAIDA = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_issues.json"
@@ -34,16 +35,10 @@ SAIDA_META = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_meta.json"
 MAPA_CWE = RAIZ_REPO / "config" / "mapa_cwe_vuln.yaml"
 MAPA_OWASP = RAIZ_REPO / "config" / "mapa_owasp.yaml"
 MAPA_RAG = RAIZ_REPO / "config" / "mapa_categoria_rag.yaml"
+# Copia de referencia das regras (ver o README da pasta): pode divergir do
+# que o registro executou na varredura.
+DIR_REGRAS = RAIZ_REPO / "config" / "semgrep-rules-referencia"
 
-SEVERIDADES_ACEITAS = {
-    # Legado (regras mais antigas): ERROR = HIGH, WARNING = MEDIUM, INFO = LOW.
-    # Atual (regras migradas): CRITICAL, HIGH, MEDIUM, LOW.
-    # Os dois esquemas coexistem na mesma execucao -- confirmado em F3.4
-    # (dois findings vieram com severidade "MEDIUM"). Excluimos so o nivel
-    # mais baixo em qualquer esquema (INFO / LOW), mantendo a intencao
-    # original do D1 ("ERROR e WARNING") sob os dois nomes possiveis.
-    "ERROR", "WARNING", "CRITICAL", "HIGH", "MEDIUM",
-}
 # Normaliza os dois esquemas em 2 buckets, para relatorios nao mostrarem
 # "WARNING" e "MEDIUM" como se fossem niveis diferentes (sao o mesmo).
 NORMALIZACAO_SEVERIDADE = {
@@ -81,17 +76,6 @@ def extrair_owasp_2021(owasp_strs: tuple[str, ...]) -> str | None:
     return None
 
 
-def filtrar(f: Finding) -> tuple[bool, str | None]:
-    """Passos 2-4 do protocolo D1. Retorna (elegivel, motivo_exclusao)."""
-    if f.category != "security":
-        return False, f"categoria '{f.category}' != security"
-    if f.severity not in SEVERIDADES_ACEITAS:
-        return False, f"severidade '{f.severity}' fora de {sorted(SEVERIDADES_ACEITAS)}"
-    if not f.cwe:
-        return False, "sem CWE mapeada"
-    return True, None
-
-
 def contexto_do_arquivo(worktree: Path, caminho_relativo: str) -> tuple[int, str]:
     """Le o arquivo no worktree para saber o total de linhas e decidir o
     modo_contexto (Decisao D3). Se o arquivo nao existir mais (raro), assume
@@ -111,6 +95,33 @@ def extrair_trecho(worktree: Path, caminho_relativo: str, inicio: int, fim: int)
     a = max(1, inicio - FOLGA_TRECHO)
     b = min(len(linhas), fim + FOLGA_TRECHO)
     return "".join(linhas[a - 1:b]), a, b
+
+
+def _padroes(no) -> list[str]:
+    """Achata os valores de 'pattern' de um bloco de pattern-sanitizers."""
+    if isinstance(no, dict):
+        achados = [no["pattern"]] if isinstance(no.get("pattern"), str) else []
+        for v in no.values():
+            if isinstance(v, (dict, list)):
+                achados += _padroes(v)
+        return achados
+    if isinstance(no, list):
+        return [p for item in no for p in _padroes(item)]
+    return []
+
+
+def info_regra(check_id: str) -> tuple[str | None, list[str] | None]:
+    """(modo_regra, saneadores_regra) pela copia de referencia.
+    check_id a.b.c.arquivo.id -> a/b/c/arquivo.yaml, regra 'id'.
+    (None, None) se a regra nao estiver na copia."""
+    *partes, id_regra = check_id.split(".")
+    arq = DIR_REGRAS.joinpath(*partes[:-1], partes[-1] + ".yaml") if partes else None
+    if not arq or not arq.exists():
+        return None, None
+    for regra in (yaml.safe_load(arq.read_text(encoding="utf-8")) or {}).get("rules", []):
+        if regra.get("id") == id_regra:
+            return regra.get("mode", "search"), _padroes(regra.get("pattern-sanitizers", []))
+    return None, None
 
 
 def commit_do_worktree(worktree: Path) -> str:
@@ -162,6 +173,7 @@ def main() -> None:
         owasp_2025 = mapa_owasp.get(owasp_2021) if elegivel and owasp_2021 else None
         categoria_rag = mapa_rag.get(sigla_vuln) if elegivel and sigla_vuln else None
 
+        modo_regra, saneadores_regra = info_regra(f.check_id)
         trecho, trecho_ini, trecho_fim = extrair_trecho(worktree, f.path, f.start_line, f.end_line)
 
         if elegivel:
@@ -173,6 +185,12 @@ def main() -> None:
             "caso_id": None,
             "assinatura": assinatura(f),
             "check_id": f.check_id,
+            # metadata.subcategory (vuln/audit/guardrail) e, como conferencia,
+            # '.audit.' no check_id. Nao coincidem neste baseline (caderno).
+            "subcategoria_regra": ",".join(f.subcategory) or None,
+            "audit_no_check_id": ".audit." in f.check_id,
+            "modo_regra": modo_regra,
+            "saneadores_regra": saneadores_regra,
             "arquivo": f.path,
             "linha_inicio": f.start_line,
             "linha_fim": f.end_line,

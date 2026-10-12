@@ -13,6 +13,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import threading
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -33,6 +34,11 @@ ARQ_PRECOS = RAIZ_REPO / "config" / "precos_llm.yaml"
 MAX_TENTATIVAS = 6
 TIMEOUT_REQUISICAO_S = 120
 MAX_TOKENS_SAIDA = 4096
+
+# Conferir orcamento, chamar e registrar acontecem sob o mesmo lock: com K
+# workers, sem isso ate K-1 chamadas passariam do limite. Serializa so as
+# chamadas reais (acertos de cache nao entram no lock).
+_LOCK_ORCAMENTO = threading.Lock()
 
 
 class OrcamentoEsgotado(RuntimeError):
@@ -147,18 +153,19 @@ class ClienteLLM:
             dados = json.loads(arq_cache.read_text(encoding="utf-8"))
             return RespostaLLM(**{**dados, "do_cache": True})
 
-        self.orcamento.conferir()
-        inicio = time.monotonic()
-        resp = self._chamar(mensagens)
-        latencia = time.monotonic() - inicio
+        with _LOCK_ORCAMENTO:
+            self.orcamento.conferir()
+            inicio = time.monotonic()
+            resp = self._chamar(mensagens)
+            latencia = time.monotonic() - inicio
 
-        uso = resp.usage
-        entrada = uso.prompt_tokens if uso else 0
-        saida = uso.completion_tokens if uso else 0
-        detalhes = getattr(uso, "prompt_tokens_details", None) if uso else None
-        entrada_cache = (getattr(detalhes, "cached_tokens", 0) or 0) if detalhes else 0
-        custo = _custo(resp.model, entrada, entrada_cache, saida)
-        self.orcamento.registrar(custo)
+            uso = resp.usage
+            entrada = uso.prompt_tokens if uso else 0
+            saida = uso.completion_tokens if uso else 0
+            detalhes = getattr(uso, "prompt_tokens_details", None) if uso else None
+            entrada_cache = (getattr(detalhes, "cached_tokens", 0) or 0) if detalhes else 0
+            custo = _custo(resp.model, entrada, entrada_cache, saida)
+            self.orcamento.registrar(custo)
 
         escolha = resp.choices[0]
         r = RespostaLLM(
