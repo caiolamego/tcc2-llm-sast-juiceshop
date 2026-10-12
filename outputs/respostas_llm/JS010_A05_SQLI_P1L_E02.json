@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection via concatenação direta de entrada do usuário em consulta SQL.\",\"causa_da_vulnerabilidade\":\"O código concatena diretamente o parâmetro 'criteria' da requisição na string da consulta SQL, permitindo que um atacante injete comandos SQL maliciosos.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas do Sequelize para evitar a concatenação direta de strings e prevenir injeção de SQL.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"models.sequelize.query(\\\"SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name\\\", { replacements: { criteria: `%${criteria}%` }, type: models.sequelize.QueryTypes.SELECT }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"Consultas parametrizadas garantem que os valores dos parâmetros sejam tratados como dados e não como parte do código SQL, eliminando a possibilidade de injeção de comandos maliciosos. O Sequelize suporta essa funcionalidade nativamente, permitindo a substituição segura dos parâmetros na consulta.\",\"limitacoes_da_correcao\":\"A correção assume que o Sequelize está configurado para aceitar consultas parametrizadas e que o restante do código manipula corretamente o resultado retornado. Não há validação adicional do conteúdo do parâmetro 'criteria', que pode ser melhorada para evitar buscas ineficazes ou abusos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 1370,
+  "tokens_saida": 358,
+  "latencia_s": 3.689,
+  "custo_usd": 0.001121,
+  "hash_prompt": "0e3352bf474cacb143ba7be4ca964374a9c0446bb6caa0ead7c8e0f8420ee3c6",
+  "do_cache": false
+}

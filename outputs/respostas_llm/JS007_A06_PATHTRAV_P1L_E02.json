@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: External Control of File Name or Path - Path Traversal\",\"causa_da_vulnerabilidade\":\"O parâmetro 'file' é obtido diretamente da requisição do usuário e passado para res.sendFile sem validação adequada, permitindo que um atacante utilize sequências como '../' para acessar arquivos fora do diretório permitido.\",\"estrategia_de_correcao\":\"Realizar a normalização do caminho do arquivo usando path.resolve e verificar se o caminho resultante está dentro do diretório permitido ('ftp/quarantine/'). Se não estiver, rejeitar a requisição com erro 403.\",\"edicoes\":[{\"arquivo\":\"routes/quarantineServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const baseDir = path.resolve('ftp/quarantine/')\\n    const resolvedPath = path.resolve(baseDir, file)\\n    if (resolvedPath.startsWith(baseDir + path.sep)) {\\n      res.sendFile(resolvedPath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"A validação original apenas verifica se o nome do arquivo contém '/', o que é insuficiente para prevenir ataques de path traversal, pois sequências como '../' podem ser usadas para escapar do diretório base. Ao resolver o caminho absoluto e garantir que ele começa com o diretório base esperado, garantimos que o arquivo servido está dentro do diretório permitido, mitigando a vulnerabilidade.\",\"limitacoes_da_correcao\":\"A correção assume que o sistema de arquivos e o path.resolve se comportam conforme esperado e que não há links simbólicos maliciosos que possam contornar a verificação. Além disso, nomes de arquivos contendo caracteres especiais ou codificados podem precisar de validação adicional dependendo do contexto.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 804,
+  "tokens_saida": 438,
+  "latencia_s": 3.985,
+  "custo_usd": 0.001022,
+  "hash_prompt": "bc2ae086148f7eed027332a4ad11e74ab88b5e27316480a1603ce3cf25eb20e0",
+  "do_cache": false
+}
