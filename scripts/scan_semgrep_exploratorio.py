@@ -26,8 +26,8 @@ SAIDA = RAIZ / "outputs/auditoria_sast"
 PERFIS = {
     "default": ["p/default"],
     "security-audit": ["p/security-audit"],
-    "angular-sanitizer-bypass": [str(RAIZ / "rules/angular-sanitizer-bypass.yaml")],
-    "custom-rules": [str(RAIZ / f"rules/{nome}.yaml") for nome in
+    "angular-sanitizer-bypass": [str(RAIZ / "rules/rodada1/angular-sanitizer-bypass.yaml")],
+    "custom-rules": [str(RAIZ / f"rules/rodada1/{nome}.yaml") for nome in
                      ("angular-sanitizer-bypass", "mongodb-untrusted-multi-update",
                       "redirect-substring-allowlist")],
     "rodada2": [str(RAIZ / "rules/rodada2")],

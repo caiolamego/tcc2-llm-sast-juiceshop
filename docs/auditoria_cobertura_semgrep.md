@@ -60,7 +60,7 @@ confundiu o operador JavaScript `!=` com sintaxe de interpolação Pug `!=`:
 este é um falso positivo evidente. Esses exemplos mostram por que o total bruto
 não pode ser usado diretamente como denominador de vulnerabilidades reais.
 
-A regra local `rules/angular-sanitizer-bypass.yaml` sinaliza usos da API
+A regra local `rules/rodada1/angular-sanitizer-bypass.yaml` sinaliza usos da API
 `bypassSecurityTrustHtml`, independentemente da origem do valor. Encontrou nove
 ocorrências em sete arquivos, inclusive os pontos marcados no Juice Shop para
 `restfulXssChallenge` e `localXssChallenge` em

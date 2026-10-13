@@ -36,7 +36,11 @@ def main():
     assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=target, text=True).strip()
     assert scan['version'] == old['semgrep_versao']
     for path, digest in old['regras_locais_sha256'].items():
-        assert sha(ROOT / path) == digest, f'Regra local alterada: {path}'
+        # Manifestos antigos registram as regras da rodada 1 na raiz de rules/.
+        rule_path = ROOT / path
+        if not rule_path.exists() and Path(path).parent == Path('rules'):
+            rule_path = ROOT / 'rules/rodada1' / Path(path).name
+        assert sha(rule_path) == digest, f'Regra local alterada: {path}'
     known = {a['regra'] for a in old['alertas']}
     exclusions = [s.strip() for s in (ROOT / 'config/semgrepignore').read_text().splitlines() if s.strip() and not s.startswith('#')]
     def outside(path):
