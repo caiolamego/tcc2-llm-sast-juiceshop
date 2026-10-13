@@ -6,7 +6,7 @@ Comandos e TZ reaproveitados de scripts/measure_validation_cost.py.
 
 Linha de base (protocolo, Secao 7.1): T2/T3/T4 passam quando o conjunto de
 testes que falharam esta contido no conjunto que ja falha no worktree sem
-alteracao (outputs/baseline_testes.json, gerado por scripts/baseline_testes.py).
+alteracao (outputs/baseline_testes.json, gerado por scripts/experiment/baseline_testes.py).
 Nenhum teste e pulado por nome. Com falhas novas, a camada roda de novo e so
 conta a intersecao das duas rodadas (Secao 7.2).
 """
@@ -228,7 +228,7 @@ def _rodar(tier: str, cmd: list[str], wt: Path, timeout_s: float,
 def rodar_suite(tier: str, wt: Path, timeout_s: float,
                 linha_de_base: set[str] | None = None) -> ResultadoTier:
     """Roda T2/T3/T4 com reporter JUnit. Sem linha_de_base, so coleta os
-    testes falhos (uso de scripts/baseline_testes.py)."""
+    testes falhos (uso de scripts/experiment/baseline_testes.py)."""
     wt = Path(wt).resolve()
     with tempfile.TemporaryDirectory(prefix=f"junit_{tier}_") as tmp:
         xml = Path(tmp) / "resultado.xml"
@@ -318,7 +318,7 @@ def _avaliar(tier: str, cmd: list[str], wt: Path, timeout_s: float, env_extra: d
 def carregar_linha_de_base(arquivo: Path, wt: Path) -> dict[str, set[str]]:
     if not arquivo.exists():
         raise FileNotFoundError(f"Linha de base ausente: {rel(arquivo)}. "
-                                "Rode scripts/baseline_testes.py")
+                                "Rode scripts/experiment/baseline_testes.py")
     dados = json.loads(arquivo.read_text(encoding="utf-8"))
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=wt, capture_output=True,
                           text=True, timeout=30).stdout.strip()

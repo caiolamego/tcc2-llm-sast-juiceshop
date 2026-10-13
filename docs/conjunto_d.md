@@ -1,6 +1,6 @@
 # Conjunto D: lista de testes
 
-Gerado por `scripts/gerar_conjunto_d.py` em 2026-10-09, a partir de `docs/criterios_conjunto_d.md`. Versão legível por máquina: `config/conjunto_d.json`.
+Gerado por `scripts/experiment/gerar_conjunto_d.py` em 2026-10-09, a partir de `docs/criterios_conjunto_d.md`. Versão legível por máquina: `config/conjunto_d.json`.
 
 Varredura: **863 blocos `it(...)`** de `test/api/` e `test/server/` inteiros, no commit `f915bddd`. Os ~27 testes gerados em laço (`redirect.unit.test.ts`, um por URL permitida) são funcionais e ficam em F. A lista foi montada sobre a suíte, sem consultar resultados de execução.
 

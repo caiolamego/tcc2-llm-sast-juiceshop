@@ -138,7 +138,7 @@ Condições fixas de execução:
 
 A suíte do Juice Shop **não passa integralmente** no commit fixado, sem nenhuma alteração: `test/api/internet-resources.test.ts` faz uma requisição real ao StackOverflow, que responde `403` de forma consistente no ambiente utilizado. Um critério F definido como "nenhum teste falhou" tornaria `F = 0` para toda e qualquer correção, zerando a TRV por motivo alheio ao experimento.
 
-**Decisão.** `F = 1` quando o conjunto de testes que falham após a correção está **contido** no conjunto que já falhava sem alteração alguma. A linha de base é gerada uma vez por `scripts/baseline_testes.py`, versionada em `outputs/baseline_testes.json` com commit do alvo, data e nome de cada teste falho, e reconferida a cada mudança de ambiente.
+**Decisão.** `F = 1` quando o conjunto de testes que falham após a correção está **contido** no conjunto que já falhava sem alteração alguma. A linha de base é gerada uma vez por `scripts/experiment/baseline_testes.py`, versionada em `outputs/baseline_testes.json` com commit do alvo, data e nome de cada teste falho, e reconferida a cada mudança de ambiente.
 
 Vantagens sobre pular o teste pelo nome: cobre qualquer teste instável ou dependente de rede sem precisar enumerá-los, e deixa registrado no repositório o estado exato do alvo. Custo: uma execução de referência (~12 s).
 

@@ -26,9 +26,9 @@ class PoolWorktrees:
         for i in range(1, k + 1):
             wt = self.raiz / f"wt-{i}"
             if not wt.is_dir():
-                raise FileNotFoundError(f"Worktree ausente: {wt}. Rode scripts/setup_target.sh")
+                raise FileNotFoundError(f"Worktree ausente: {wt}. Rode scripts/setup/setup_target.sh")
             if not (wt / "node_modules").is_dir():
-                raise FileNotFoundError(f"{wt} sem node_modules. Rode scripts/setup_target.sh")
+                raise FileNotFoundError(f"{wt} sem node_modules. Rode scripts/setup/setup_target.sh")
             self._conferir_commit(wt)
             self._livres.put(wt)
 

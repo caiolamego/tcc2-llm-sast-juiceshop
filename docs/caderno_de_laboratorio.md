@@ -35,13 +35,13 @@ Uma entrada por incidente. Não delete entradas antigas — se algo for revertid
 
 ### 2026-09-08 — `npm ci` falha na preparação do alvo (F2.2)
 
-**Sintoma:** `scripts/setup_target.sh` falhava no passo `[4/4]` (instalação de dependências) com erro do `npm ci` exigindo um lockfile existente.
+**Sintoma:** `scripts/setup/setup_target.sh` falhava no passo `[4/4]` (instalação de dependências) com erro do `npm ci` exigindo um lockfile existente.
 
 **Causa:** o repositório upstream do OWASP Juice Shop lista `package-lock.json` no próprio `.gitignore` — o lockfile não é versionado no projeto. `npm ci` exige um `package-lock.json` presente e falha sem ele. Não é incompatibilidade de plataforma: acontece em qualquer máquina.
 
 Um segundo erro apareceu ao tentar `npm install` manualmente como workaround: falhou por ter sido executado na raiz do repositório do TCC (onde não há `package.json` de aplicação), e não dentro do worktree do alvo (`workspace/wt-1`).
 
-**Correção:** `scripts/setup_target.sh` alterado de `npm ci --no-audit --no-fund` para `npm install --no-audit --no-fund`. O comando roda dentro da subshell `( cd "$WT" && ... )`, então, executado via script, sempre acontece no diretório correto — o segundo erro só ocorre se o comando for repetido manualmente fora do script.
+**Correção:** `scripts/setup/setup_target.sh` alterado de `npm ci --no-audit --no-fund` para `npm install --no-audit --no-fund`. O comando roda dentro da subshell `( cd "$WT" && ... )`, então, executado via script, sempre acontece no diretório correto — o segundo erro só ocorre se o comando for repetido manualmente fora do script.
 
 **Impacto na reprodutibilidade:** sim. Sem lockfile versionado, `npm install` resolve as versões de dependências de acordo com os ranges (`^`, `~`) do `package.json` no momento da execução — o conjunto de versões instalado pode divergir entre execuções feitas em datas diferentes, ou entre as máquinas dos dois integrantes do grupo.
 
@@ -67,7 +67,7 @@ Precisa constar na seção de Limitações do TCC 2 como fonte de não determini
 
 **Correção:** duas mudanças, de natureza diferente:
 
-- `scripts/measure_validation_cost.py` alterado para não subir servidor antes de T4 — ele passa a rodar no mesmo grupo de T0/T2/T3, sem servidor pré-iniciado. Servidor pré-iniciado fica reservado só para T5 (Cypress), que precisa de uma URL real para o navegador visitar. Resolve o item 3.
+- `scripts/experiment/measure_validation_cost.py` alterado para não subir servidor antes de T4 — ele passa a rodar no mesmo grupo de T0/T2/T3, sem servidor pré-iniciado. Servidor pré-iniciado fica reservado só para T5 (Cypress), que precisa de uma URL real para o navegador visitar. Resolve o item 3.
 - **Decisão do grupo:** padronizar `TZ=UTC` como variável de ambiente fixa em todo comando que roda testes do Juice Shop (T2 a T5), em vez de implementar comparação de baseline no runner de validação. Resolve o item 1 (confirmado: 333/333 com `TZ=UTC`, 0 falhas). Registrar em `config/config.yaml` e nos comandos de `src/pipeline/validation/runner.py` quando F4 for construído.
 
 **Impacto na reprodutibilidade:** sim.
@@ -76,7 +76,7 @@ Sobre o item 1 (fuso horário): resolvido pela padronização de `TZ=UTC`. Preci
 
 Sobre o item 2 (rede externa): **`TZ=UTC` não resolve isso.** O grupo decidiu, por ora, não implementar o mecanismo de baseline por conjunto de falhas (comparar testes que já falhavam antes da correção vs. depois) que resolveria também esse caso. Ou seja: testes com dependência de rede externa (como o do StackOverflow) continuam sendo uma fonte de ruído não tratada — se aparecerem de novo durante a execução completa do experimento, vão gerar falsos `Fⱼ = 0`. Fica como risco conhecido e aceito, não como pendência esquecida.
 
-**Correção de acompanhamento (mesmo dia):** a decisão de `TZ=UTC` tinha sido registrada aqui e no guia, mas não tinha sido de fato aplicada em `scripts/measure_validation_cost.py` — o script continuou chamando os comandos sem a variável. Confirmado numa segunda execução em `workspace/wt-1`: T3 falhou de novo com o mesmo erro de fuso horário, e T4 já mostrava só a falha de rede isolada (confirmando que a correção do conflito de porta, essa sim, funcionou). Corrigido adicionando `os.environ["TZ"] = "UTC"` logo após os imports do script, antes de qualquer `subprocess.run`/`Popen` — processos filhos herdam o ambiente do pai, então isso basta para propagar a variável para `npm`, `npx` e `node` sem precisar alterar cada chamada individualmente. **Confirmado numa terceira execução via script** (não mais manual): T0/T2/T3/T5 passaram, T3 fechou em 0 falhas — só T4 manteve a falha de rede já conhecida e aceita. Incidente encerrado.
+**Correção de acompanhamento (mesmo dia):** a decisão de `TZ=UTC` tinha sido registrada aqui e no guia, mas não tinha sido de fato aplicada em `scripts/experiment/measure_validation_cost.py` — o script continuou chamando os comandos sem a variável. Confirmado numa segunda execução em `workspace/wt-1`: T3 falhou de novo com o mesmo erro de fuso horário, e T4 já mostrava só a falha de rede isolada (confirmando que a correção do conflito de porta, essa sim, funcionou). Corrigido adicionando `os.environ["TZ"] = "UTC"` logo após os imports do script, antes de qualquer `subprocess.run`/`Popen` — processos filhos herdam o ambiente do pai, então isso basta para propagar a variável para `npm`, `npx` e `node` sem precisar alterar cada chamada individualmente. **Confirmado numa terceira execução via script** (não mais manual): T0/T2/T3/T5 passaram, T3 fechou em 0 falhas — só T4 manteve a falha de rede já conhecida e aceita. Incidente encerrado.
 
 **Fase do guia:** F2.4 → decisão nova incorporada a D6 e ao escopo de F4.
 
@@ -112,7 +112,7 @@ Sobre o item 2 (rede externa): **`TZ=UTC` não resolve isso.** O grupo decidiu, 
 
 **Causa:** confirmado contra a documentação oficial do Semgrep — a ferramenta passou a suportar dois esquemas de severidade que **coexistem na mesma execução**: o legado de 3 níveis (`ERROR`/`WARNING`/`INFO`) e o atual de 4 níveis (`CRITICAL`/`HIGH`/`MEDIUM`/`LOW`), com `ERROR = HIGH`, `WARNING = MEDIUM`, `INFO = LOW`. Regras diferentes do mesmo scan (mesmo dentro do mesmo ruleset) podem usar nomenclaturas diferentes dependendo de quando foram escritas/atualizadas no registro. O código de `build_issue_catalog.py` (`SEVERIDADES_ACEITAS = {"ERROR", "WARNING"}`) só reconhecia o esquema legado, então os 2 findings `MEDIUM` — que são exatamente o nível `WARNING` que o protocolo D1 manda manter — foram descartados por engano.
 
-**Correção:** `SEVERIDADES_ACEITAS` em `scripts/build_issue_catalog.py` ampliado para `{"ERROR", "WARNING", "CRITICAL", "HIGH", "MEDIUM"}`, cobrindo os dois esquemas e excluindo apenas o nível mais baixo em qualquer um deles (`INFO`/`LOW`). O passo 3 do protocolo de filtragem em D1 do guia também foi reescrito para descrever essa equivalência explicitamente.
+**Correção:** `SEVERIDADES_ACEITAS` em `scripts/experiment/build_issue_catalog.py` ampliado para `{"ERROR", "WARNING", "CRITICAL", "HIGH", "MEDIUM"}`, cobrindo os dois esquemas e excluindo apenas o nível mais baixo em qualquer um deles (`INFO`/`LOW`). O passo 3 do protocolo de filtragem em D1 do guia também foi reescrito para descrever essa equivalência explicitamente.
 
 **Impacto na reprodutibilidade:** sim, mesma categoria de risco já registrada na D2 (rulesets do registro não versionados) — só que desta vez não é o *conjunto* de regras que mudou, é a *taxonomia* usada para descrever severidade. Precisa constar nas Limitações do TCC 2: um protocolo de filtragem escrito contra uma única nomenclatura de severidade pode excluir findings válidos silenciosamente se a ferramenta migrar de esquema entre a escrita do protocolo e a execução. Mitigação: aceitar explicitamente ambos os esquemas, não só o observado no momento da escrita.
 
@@ -217,7 +217,7 @@ O item 3 (escopo) ainda está em aberto — aguardando a contagem exata de quant
 
 **Causa:** o teste busca a página real do StackOverflow, que agora responde 403 a requisições automatizadas em todas as tentativas. Antes registrado como falha intermitente ("falha às vezes"); hoje é permanente. Com o T4 bloqueante, nenhuma correção conseguiria F=1.
 
-**Correção (decisão do grupo, opção 2):** linha de base de referência. `scripts/baseline_testes.py` roda T3 e T4 num worktree sem alteração e grava `outputs/baseline_testes.json` (commit do alvo, data, versão do Node, nome de cada teste falho). No runner, cada tier de teste passa quando o conjunto de testes falhos está contido no da linha de base; cada validação registra `testes_falhos_novos`. Nenhum teste é pulado por nome. Os nomes vêm do reporter JUnit do `node --test`, chamado com os mesmos argumentos dos scripts `test:server`/`test:api` do `package.json` (o `npm run ... --` colocaria as flags depois do glob). O runner confere que a linha de base foi gerada no mesmo commit do worktree.
+**Correção (decisão do grupo, opção 2):** linha de base de referência. `scripts/experiment/baseline_testes.py` roda T3 e T4 num worktree sem alteração e grava `outputs/baseline_testes.json` (commit do alvo, data, versão do Node, nome de cada teste falho). No runner, cada tier de teste passa quando o conjunto de testes falhos está contido no da linha de base; cada validação registra `testes_falhos_novos`. Nenhum teste é pulado por nome. Os nomes vêm do reporter JUnit do `node --test`, chamado com os mesmos argumentos dos scripts `test:server`/`test:api` do `package.json` (o `npm run ... --` colocaria as flags depois do glob). O runner confere que a linha de base foi gerada no mesmo commit do worktree.
 
 **Achado no mesmo dia:** `test/api/erasure-request.test.ts :: ... POST erasure request does not actually delete the user` falhou 1 vez em 8 execuções do T4 sem alteração (`socket hang up`, ECONNRESET). Por não estar na linha de base, essa falha derrubou o cenário 1 numa rodada. A linha de base de uma execução só não captura testes intermitentes. **Em aberto para o grupo:** gerar a linha de base com N execuções (união das falhas), ou repetir uma vez o tier quando só aparecem falhas novas.
 
