@@ -18,6 +18,8 @@ Este documento é um diagnóstico e um plano de trabalho. Checkboxes marcadas re
 
 > **Atualização — feature 03 concluída:** dez documentos e manifesto 1.0 publicados; recuperação por CWE/categoria/fallback; P3/P4 completos; 115 testes e preflight real com 312 prompts. P1/P2/P1L e 559 artefatos históricos preservados. O contrato 2.0 protege a base; compatibilidade antiga comprovada em cópia temporária. Veja a [entrega](../features/03-rag-prompts/ENTREGA.md). Nenhuma correção real foi executada nesta feature.
 
+> **Atualização — feature 04 concluída:** calculador reutilizável, consolidação JSON/CSV, denominadores explícitos e separação de simulação/diagnóstico implementados. 153 testes passaram; dry-run e preflight foram consolidados e reproduzidos. RRIS real e pesos opcionais continuam sem entradas. A divergência preexistente do perfil remoto foi registrada e um snapshot exato recuperado. Veja a [entrega](../features/04-metricas-consolidacao/ENTREGA.md). Próximo passo: piloto real, selecionando um perfil íntegro.
+
 ## 1. Documentos que orientam o trabalho
 
 | Fonte | Como utilizar |
@@ -251,12 +253,12 @@ O guia propõe três casos × quatro estratégias, enquanto a metodologia prevê
 
 ### Entrega G — métricas e análise
 
-- [ ] Consolidar dados em CSV sem chamar a API, a partir dos registros oficiais.
-- [ ] Calcular TRV, TRI, TPF, TNINI, TFF e RRIS previstos no TCC1; incluir TAP e confirmação dinâmica quando aplicáveis.
-- [ ] Declarar denominadores: tentativa, caso, alerta, desafio e execução não são intercambiáveis.
-- [ ] Tratar explicitamente falhas técnicas, não aplicação e resultados indeterminados; não confundir ausência de medição com sucesso ou falha comprovada.
-- [ ] Gerar agregações por estratégia, caso, CWE/OWASP, tipo de regra e classificação da auditoria, admitindo dados ausentes.
-- [ ] Conferir cálculos com um conjunto pequeno de resultados conhecidos.
+- [x] Consolidar dados em CSV sem chamar a API, a partir dos registros oficiais.
+- [x] Implementar TRV, TRI, TPF, TNINI, TFF, TAP e leitor de RRIS; RRIS real aguarda evidência conjunta. TCD permanece exploratório.
+- [x] Declarar denominadores: tentativa, caso, alerta, desafio e execução não são intercambiáveis.
+- [x] Tratar explicitamente falhas técnicas, não aplicação e resultados indeterminados; não confundir ausência de medição com sucesso ou falha comprovada.
+- [x] Gerar agregações por estratégia, caso, CWE/OWASP, tipo de regra e classificação da auditoria, admitindo dados ausentes.
+- [x] Conferir cálculos com um conjunto pequeno de resultados conhecidos.
 - [ ] Aplicar o conjunto escolhido de patches aceitos em uma cópia separada, resolver conflitos de forma registrada, testar e reanalisar globalmente para RRIS.
 - [ ] Relatar incompatibilidades entre patches: aceites isolados não garantem aceite conjunto.
 - [ ] Inspecionar correções aceitas e amostra de rejeitadas; explicar alterações desnecessárias em falsos positivos, falhas de compilação e limites do SAST.

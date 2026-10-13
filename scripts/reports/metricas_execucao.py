@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Metricas de uma execucao nas tres definicoes de F (protocolo, Secao 13).
 
-Calculo anterior a F7 (src/pipeline/metrics/calculator.py ainda nao existe).
+Interface histórica; funções delegadas a pipeline.metrics. Novos CSVs usam consolidate_metrics.py.
 Formulas da F7 do guia: TRV = sum(R*F*M)/m, TRI = sum(R)/m, TPF = sum(F)/m,
 TNINI = sum(M)/m, TAP = sum(aplicavel)/m. Tentativa nao aplicada conta 0 em R,
 F e M. TCD = aceitas que derrubam >= 1 teste de D / aceitas.
@@ -46,100 +46,9 @@ def carregar(execucao: str, saida: Path = RAIZ / "outputs") -> list[dict]:
     return [l for l in linhas if l["execucao"] == execucao]
 
 
-def normalizar(l: dict) -> dict:
-    """Garante F_<def>, classificacao_<def>, testes_falhos_d_<def> e incompleto_<def>."""
-    l = dict(l)
-    l.setdefault("condicao", "desenho")
-    if "F_criterio" in l:
-        for d in DEFS:
-            l[f"incompleto_{d}"] = l.get(f"classificacao_{d}") == "indeterminada_sast"
-        l.setdefault("testes_falhos_d_sem_separacao", [])
-        return l
-    # Linha antiga: reclassificacao a posteriori.
-    l["F_sem_separacao"] = l["F"]
-    l["testes_falhos_d_sem_separacao"] = []
-    l["incompleto_sem_separacao"] = False
-    c = classificar(l.get("testes_falhos_novos") or [])
-    for d in ("marcador", "criterio"):
-        l[f"testes_falhos_d_{d}"] = c[f"d_{d}"]
-        if l["status_aplicacao"] != "aplicado":
-            l[f"F_{d}"] = None
-            l[f"incompleto_{d}"] = False
-            continue
-        tf = l.get("tier_falha")
-        so_d = bool(l.get("testes_falhos_novos")) and not c[f"f_{d}"]
-        if tf is None:
-            l[f"F_{d}"], l[f"incompleto_{d}"] = 1, False
-        elif so_d:
-            # A camada que reprovou so tinha testes de D; se havia camadas
-            # depois dela, elas nao rodaram.
-            ultima = "T4"
-            l[f"F_{d}"] = 1 if tf == ultima else None
-            l[f"incompleto_{d}"] = tf != ultima
-        else:
-            l[f"F_{d}"], l[f"incompleto_{d}"] = 0, False
-    for d in DEFS:
-        f = l[f"F_{d}"]
-        if l["status_aplicacao"] != "aplicado":
-            l[f"classificacao_{d}"] = l["classificacao_final"]
-        elif f is None:
-            l[f"classificacao_{d}"] = "indeterminada"
-        else:
-            l[f"classificacao_{d}"] = ("aceita" if l["R"] and f and l["M"] else f"rejeitada:R{l['R']}F{f}M{l['M']}")
-    return l
-
-
-def v(x):
-    return x or 0
-
-
-def indices(ls: list[dict], d: str) -> dict | None:
-    m = len(ls)
-    if not m:
-        return None
-    aceitas = [l for l in ls if l[f"classificacao_{d}"] == "aceita"]
-    ampliado = any('assinatura_ocorrencia' in l for l in ls)
-    def taxa(campo):
-        if ampliado:
-            medidos = [l[campo] for l in ls if l[campo] is not None]
-            return round(sum(medidos) / len(medidos), 4) if medidos else None
-        return round(sum(v(l[campo]) for l in ls) / m, 4)
-    return {
-        "m": m,
-        "TRV": round(sum(v(l["R"]) * v(l[f"F_{d}"]) * v(l["M"]) for l in ls) / m, 4),
-        "TRI": taxa("R"),
-        "TPF": taxa(f"F_{d}"),
-        "TNINI": taxa("M"),
-        "TAP": round(sum(l["status_aplicacao"] == "aplicado" for l in ls) / m, 4),
-        "aceitas": len(aceitas),
-        "TCD": (round(sum(bool(l[f"testes_falhos_d_{d}"]) for l in aceitas) / len(aceitas), 4)
-                if aceitas else None),
-        "indeterminadas": sum(1 for l in ls if l.get(f"incompleto_{d}")),
-        **({'denominadores_medidos': {campo:sum(l[campo] is not None for l in ls) for campo in ('R',f'F_{d}','M')}} if ampliado else {}),
-    }
-
-
-def cadeia(ls: list[dict], d: str, ordem: list[str]) -> list[dict]:
-    por_caso = defaultdict(list)
-    for l in ls:
-        por_caso[l["caso_id"]].append(l)
-    saida = []
-    for caso in sorted(por_caso):
-        for l in sorted(por_caso[caso], key=lambda x: ordem.index(x["estrategia_curta"])):
-            saida.append(l)
-            if l[f"classificacao_{d}"] == "aceita":
-                break
-    return saida
-
-
-def custos(linhas):
-    reais = [l for l in linhas if not l.get('dry_run') and l.get('modelo') != 'dry-run']
-    nc = [l for l in reais if not l.get('do_cache')]
-    return {'chamadas_reais': len(nc), 'do_cache': sum(bool(l.get('do_cache')) for l in reais),
-            'simuladas': len(linhas) - len(reais),
-            'usd': round(sum(v(l['custo_usd']) for l in nc), 6),
-            'tokens_entrada': sum(v(l['tokens_entrada']) for l in nc),
-            'tokens_saida': sum(v(l['tokens_saida']) for l in nc)}
+# API pública histórica preservada por delegação.
+from pipeline.metrics.normalizer import normalizar
+from pipeline.metrics.calculator import v, indices, cadeia, custos
 
 
 def main() -> None:

@@ -116,7 +116,7 @@ Os testes que verificam comportamento de negócio (conjunto `F`) e os que resolv
 | **TAP** | Taxa de Aplicabilidade do Patch | patches aplicáveis / m |
 | **RRIS** | Redução Relativa de Issues de Segurança | (I_antes − I_depois) / I_antes |
 
-O cálculo atual produz JSON com métricas gerais, por estratégia, por caso e por definição de F. CSVs, RRIS e as demais agregações ainda estão pendentes; a tabela inclui métricas previstas.
+O comando histórico mantém seus JSONs e cálculos. A feature 04 acrescenta consolidação verificável em JSON/CSV, por estratégia, caso, CWE/OWASP, severidade, regra, auditoria e RAG. RRIS exige evidência conjunta externa; TRV-P exige política explícita de pesos. Sem essas entradas, as métricas opcionais ficam nulas com motivo registrado.
 
 ---
 
@@ -404,3 +404,21 @@ Essa saída já contém 312 prompts, com 156 recuperações P3/P4. O comando pod
 Contratos novos usam versão 2.0 com hashes dos componentes textuais e política de contexto. RAG inclui os hashes do manifesto, índice e documentos. Contratos 1.0 sem RAG só podem ser retomados com evidências completas de mensagens/hashes equivalentes para todos os pares solicitados; seus artefatos e identidade são preservados. Não adicionar P3/P4 a saídas antigas.
 
 Veja a [entrega da feature 03](features/03-rag-prompts/ENTREGA.md) e a [cobertura por caso](outputs/feature03/cobertura_rag.json). Piloto com correções reais e cobertura específica de frontend seguem pendentes.
+
+
+## Consolidação offline de métricas
+
+```bash
+.venv/bin/python scripts/reports/consolidate_metrics.py \
+  --execucao AMP_DRY_01 \
+  --entrada outputs/feature02/AMP_DRY_01 \
+  --catalogo outputs/catalogos/ampliado_v1/catalogo_issues.json \
+  --saida outputs/feature04/AMP_DRY_01_METRICAS_NOVA \
+  --definicao-f criterio
+```
+
+Escolha uma saída nova: o comando recusa sobrescrita. Ele lê contratos, registros e artefatos arquivados; não chama LLM, executa scans ou aplica patches. Produz 13 artefatos JSON/CSV com numeradores, denominadores, motivos de indisponibilidade e manifesto. Preflight gera somente contagem de preparação, com métricas de remediação nulas. Simulações e P1L ficam separados do desenho real.
+
+No modo ampliado, TRI/TPF/TNINI usam valores medidos; as proporções mínimas sobre todas as tentativas também são exportadas. TRV mantém todas as tentativas da população. TFF acompanha o denominador de TPF. O módulo reutilizável está em `src/pipeline/metrics/`; o comando histórico permanece disponível.
+
+A [entrega da feature 04](features/04-metricas-consolidacao/ENTREGA.md) registra testes, reprodução e a divergência preexistente das regras remotas. Um [snapshot exato](outputs/feature04/preparacao/perfil_sast/perfil.json) foi recuperado do Git e usado na validação; os arquivos atuais e históricos foram preservados. Para futuras execuções SAST, selecionar um perfil íntegro explicitamente.

@@ -276,3 +276,22 @@ O preflight `AMP_RAG_PREFLIGHT_01` produziu 312 prompts e 156 recuperações P3/
 Recuperação por categoria não confirma vulnerabilidade nem especificidade da recomendação: CWE-915 seleciona documento amplo que não detalha poluição de protótipo. P3/P4 adicionam SAST e documentação juntos; eventual efeito não deve ser atribuído exclusivamente a RAG. Correções reais, custos, R/F/M e validação específica de frontend pertencem às próximas entregas.
 
 Comandos e hashes estão na [entrega](../features/03-rag-prompts/ENTREGA.md); a [cobertura](../outputs/feature03/cobertura_rag.json) preserva categoria original/recuperada, motivo, CWE e tamanhos por caso.
+
+
+## 14. Consolidação verificável — feature 04
+
+O consolidado novo usa `criterio` como definição principal de F, exportando sensibilidade para as três definições sobre a mesma cadeia observada. A primeira classificação original de aceite delimita essa cadeia; registros posteriores são conservados como pós-aceite. O comando histórico mantém a cadeia retrospectiva e seus arredondamentos.
+
+TRV inclui tentativas não aplicadas e indeterminadas no denominador da população, sem transformá-las em medições negativas. No ampliado, TRI/TPF/TNINI utilizam denominadores medidos, conforme a política da feature 02; proporções mínimas sobre todas as tentativas são suplementares. TFF usa o mesmo denominador de TPF. Ausência de medição não é falha funcional comprovada. Denominador zero resulta em valor nulo, com motivo.
+
+Casos solicitados vêm do contrato; sem conjunto histórico verificável, reporta-se apenas a taxa por casos observados. P1L, simulações e desenho real são populações separadas. Cache não constitui nova cobrança nem réplica independente. Custos conhecidos e completude são explícitos; durações acumuladas não equivalem ao tempo de parede de workers paralelos.
+
+Os agrupamentos por CWE usam conjunto composto, sem duplicação. Ausência de OWASP e classificação falsa positiva/inconclusiva não excluem tentativas. A seleção sequencial das estratégias impede interpretar taxas brutas como efeito causal.
+
+RRIS é calculada somente de evidência conjunta verificável, com scans globais comparáveis e patches aceitos identificados. Não se somam R ou aceites isolados. Diagnósticos novos, arquivos alterados com parsing limitado, diagnósticos anteriores desaparecidos sem evidência de cobertura e falhas operacionais tornam a comparação indeterminada. Limitação estática idêntica em arquivos inalterados é registrada. Falha funcional conjunta impede chamar o conjunto de remediação validada, mesmo havendo redução estática.
+
+Publicação ocorre em saída nova, com lock, revalidação de fontes e promoção exclusiva. O manifesto registra hashes e políticas, sem timestamp de geração. Os cálculos históricos foram reproduzidos em cópias; as evidências oficiais anteriores não foram regravadas.
+
+A validação encontrou divergência preexistente no YAML remoto do perfil atual. Um snapshot exato do Git, com os hashes do manifesto original, foi arquivado na preparação da feature 04; a divergência permanece registrada. Isso não altera a metodologia nem o detector histórico. Novos scans precisam selecionar um perfil íntegro.
+
+Veja [especificação](../features/04-metricas-consolidacao/README.md) e [entrega](../features/04-metricas-consolidacao/ENTREGA.md).

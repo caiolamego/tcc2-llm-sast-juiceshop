@@ -9,6 +9,32 @@ import yaml
 from pipeline.catalogo import digest, exigir
 
 
+def bytes_regras(path: Path) -> bytes:
+    """Verifica a sanitização reversível de exemplos em snapshots históricos."""
+    path = Path(path)
+    raw = path.read_bytes()
+    sidecar = path.with_suffix(path.suffix + '.sanitizacao.json')
+    if not sidecar.exists():
+        return raw
+    meta = json.loads(sidecar.read_text())
+    exigir(meta.get('schema_versao') == '1.0', 'Sanitização incompatível')
+    exigir(hashlib.sha256(raw).hexdigest() == meta['sha256_sanitizado'], 'Snapshot sanitizado alterado')
+    # Somente o domínio do exemplo Slack pode ser transformado.
+    exigir(meta.get('substituicao') == {
+        'original': 'https://hooks.slack.com/',
+        'sanitizado': 'https://hooks.slack.example.invalid/',
+        'ocorrencias': 1,
+    }, 'Transformação de sanitização inválida')
+    exigir(raw.count(b'https://hooks.slack.example.invalid/') == 1, 'Exemplo sanitizado divergente')
+    original = raw.replace(b'https://hooks.slack.example.invalid/', b'https://hooks.slack.com/')
+    exigir(hashlib.sha256(original).hexdigest() == meta['sha256_original'], 'Hash histórico divergente')
+    return original
+
+
+def digest_regras(path: Path) -> str:
+    return hashlib.sha256(bytes_regras(path)).hexdigest()
+
+
 @dataclass
 class Perfil:
     caminho: Path
@@ -32,7 +58,7 @@ class Perfil:
     def conferir(self):
         exigir(digest(self.caminho) == self.hash, 'Manifesto do perfil alterado')
         for config in self.dados['configs']:
-            exigir(digest(self.caminho.parent / config['arquivo']) == config['sha256'], 'Regras congeladas alteradas')
+            exigir(digest_regras(self.caminho.parent / config['arquivo']) == config['sha256'], 'Regras congeladas alteradas')
 
 
 def carregar(path: Path) -> Perfil:
@@ -49,8 +75,8 @@ def carregar(path: Path) -> Perfil:
     for item in configs:
         p = Path(item['arquivo'])
         exigir(not p.is_absolute() and '..' not in p.parts, 'Caminho de regra inválido')
-        exigir(digest(path.parent / p) == item['sha256'], 'Hash de regra inválido')
-        rules = yaml.safe_load((path.parent / p).read_text())['rules']
+        exigir(digest_regras(path.parent / p) == item['sha256'], 'Hash de regra inválido')
+        rules = yaml.safe_load(bytes_regras(path.parent / p).decode('utf-8'))['rules']
         actual.extend(r['id'] for r in rules)
     exigir(len(set(actual)) == len(actual) and sorted(actual) == d['id_regras'], 'IDs duplicados/divergentes')
     return Perfil(path, d, digest(path))
