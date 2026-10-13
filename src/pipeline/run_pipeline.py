@@ -187,6 +187,9 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         if validar_catalogo(amp.catalogo.caminho).hashes != amp.catalogo.hashes:
             raise ValueError('Catálogo alterado após preflight')
     prompt = builder.montar(issue, wt, estrategia)
+    if amp:
+        from pipeline.execucao_ampliada import conferir_prompt_contrato
+        conferir_prompt_contrato(amp,prompt,args.estrategias+args.diagnosticos)
     gravar_json(s.d("prompts") / f"{tid}.json", prompt.to_dict())
 
     if args.dry_run:
@@ -219,8 +222,8 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         "estrategia_prompt": prompt.estrategia,
         # desenho = estrategia do TCC 1 (P1-P4); diagnostico = P1L (protocolo, Secao 12)
         "condicao": "diagnostico" if estrategia in builder.DIAGNOSTICOS else "desenho",
-        "usa_rag": prompt.usa_rag,
-        "arquivo_rag_recuperado": prompt.arquivo_rag_recuperado,
+        **prompt.metadados_rag(),
+        "categoria_rag": issue.get("categoria_rag"),
         "roteiro_status": prompt.roteiro_status, "roteiro_sha256": prompt.roteiro_sha256,
         "modelo": llm["modelo"], "seed": llm["seed"], "system_fingerprint": llm["system_fingerprint"],
         "hash_prompt": prompt.hash_prompt, "do_cache": llm["do_cache"],

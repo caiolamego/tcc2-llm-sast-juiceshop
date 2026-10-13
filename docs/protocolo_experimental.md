@@ -259,3 +259,20 @@ TRV mantém indeterminados no denominador como tentativas sem remediação valid
 auxiliares ampliadas utilizam valores medidos e denominadores explícitos. Os cálculos
 históricos ficam preservados. F continua medindo a cobertura atual do servidor, sem
 alegar validação integral de frontend.
+
+
+## 13. RAG simplificado e preparação das quatro estratégias — feature 03
+
+A base documental 1.0 contém dez documentos originais em português, com exemplos genéricos JS/TS e referências específicas a OWASP, CWE, Node.js, Angular e Sequelize. Os documentos não incorporam soluções do alvo ou patches anteriores. O manifesto congela bytes do índice, documentos e corpos. Frontmatter e fontes são excluídos dos prompts; corpos de até 20.000 caracteres não são truncados.
+
+A recuperação percorre `cwe_ids` na ordem registrada (ou extrai IDs da lista histórica `cwe`), seleciona a primeira CWE mapeada, depois usa `categoria_rag` se conhecida e por último `generico`. Não consulta auditoria, desafios ou respostas anteriores. Os mapas e o catálogo das features anteriores permanecem intactos. `categoria_rag` e `rag_categoria_recuperada` são registradas separadamente.
+
+P3 inclui tarefa, código, o mesmo bloco SAST de P1L, corpo recuperado, restrições e formato. P4 acrescenta o roteiro existente após o contexto. Papel, restrições, formato, política de janela e mensagens/hashes P1/P2/P1L foram preservados. A base completa é revalidada em cada uso; indisponibilidade não impede estratégias sem RAG.
+
+Novas execuções utilizam contrato 2.0: componentes textuais e política de contexto são identificados por hash, com demais campos científicos preservados. Execuções RAG incluem manifesto, índice e documentos; alteração impede retomada. Para contrato 1.0 sem RAG, a equivalência exige campos científicos, hashes de roteiro/validação e mensagens/hashes de todos os pares caso/estratégia. O contrato antigo não é migrado nem regravado; evidência incompleta exige nova saída. Não adicionar P3/P4 à saída antiga.
+
+O preflight `AMP_RAG_PREFLIGHT_01` produziu 312 prompts e 156 recuperações P3/P4 para os 78 casos. Todos selecionaram por CWE. Os 21 falsos positivos e 49 casos sem OWASP foram mantidos. Fallback e múltiplas CWEs foram testados com fixtures; não há esses casos no conjunto oficial. Oito diagnósticos preexistentes de parsing foram preservados. Nenhum cliente LLM, patch ou teste funcional foi executado nessa preparação.
+
+Recuperação por categoria não confirma vulnerabilidade nem especificidade da recomendação: CWE-915 seleciona documento amplo que não detalha poluição de protótipo. P3/P4 adicionam SAST e documentação juntos; eventual efeito não deve ser atribuído exclusivamente a RAG. Correções reais, custos, R/F/M e validação específica de frontend pertencem às próximas entregas.
+
+Comandos e hashes estão na [entrega](../features/03-rag-prompts/ENTREGA.md); a [cobertura](../outputs/feature03/cobertura_rag.json) preserva categoria original/recuperada, motivo, CWE e tamanhos por caso.

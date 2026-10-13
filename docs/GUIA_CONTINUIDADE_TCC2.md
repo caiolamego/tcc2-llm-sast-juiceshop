@@ -6,15 +6,17 @@
 **Orientadora:** Profa. Dra. Elaine Venson.  
 **Branch examinada:** `semgrep-findings`, após integração da `main`, considerando também as alterações locais de reorganização ainda sem commit.
 
-> **Situação atual:** o pipeline já executou correções reais sobre o catálogo histórico. A auditoria ampliou os achados, mas esse conjunto ainda não alimenta o experimento. As prioridades são fechar e integrar o novo catálogo, preservar as evidências, completar RAG/P3/P4 e executar a avaliação final.
+> **Situação atual — 13/10/2026:** o catálogo ampliado de 78 casos já foi integrado, e P1/P2/P3/P4 geraram 312 prompts no preflight sem API. O próximo trabalho é preparar o piloto de correções reais e delimitar a cobertura funcional/dinâmica, especialmente frontend. Os diagnósticos iniciais abaixo preservam o contexto anterior às features 01–03.
 
 Este documento é um diagnóstico e um plano de trabalho. Checkboxes marcadas representam implementações ou evidências encontradas; não significam que o ambiente foi reproduzido integralmente nesta máquina. Atualize os itens com links para as evidências de conclusão.
 
 
-> **Atualização — feature 01 concluída:** o [catálogo ampliado](../outputs/catalogos/ampliado_v1/catalogo_issues.json) foi gerado e validado com 78 casos por ocorrência e 46 exclusões. Veja a [entrega](../features/01-catalogo-ampliado/ENTREGA.md). O pipeline ainda consome os 12 casos históricos; a integração continua pendente. O diagnóstico abaixo preserva o estado inicial da análise, e os checklists foram atualizados apenas nos itens comprovados.
+> **Atualização — feature 01 concluída:** o [catálogo ampliado](../outputs/catalogos/ampliado_v1/catalogo_issues.json) foi gerado e validado com 78 casos por ocorrência e 46 exclusões. Veja a [entrega](../features/01-catalogo-ampliado/ENTREGA.md). Nessa etapa, o pipeline ainda consumia os 12 casos históricos e a integração estava pendente. O diagnóstico abaixo preserva o estado inicial da análise, e os checklists foram atualizados apenas nos itens comprovados.
 
 
-> **Atualização — feature 02 concluída:** seleção de catálogo/perfil/saída, reprodução dos 78 casos, comparação por ocorrência e contrato de retomada foram implementados. O preflight real gerou 156 prompts P1/P2. O dry-run de dois casos percorreu as etapas; uma simulação teve F=0 por teste dependente de número de linha. Veja a [entrega](../features/02-integracao-catalogo/ENTREGA.md). O modo histórico permanece como padrão, e RAG/validação específica de frontend seguem pendentes.
+> **Atualização — feature 02 concluída:** seleção de catálogo/perfil/saída, reprodução dos 78 casos, comparação por ocorrência e contrato de retomada foram implementados. O preflight real gerou 156 prompts P1/P2. O dry-run de dois casos percorreu as etapas; uma simulação teve F=0 por teste dependente de número de linha. Veja a [entrega](../features/02-integracao-catalogo/ENTREGA.md). O modo histórico permanece como padrão. Essa entrega antecedeu RAG; a validação específica de frontend segue pendente.
+
+> **Atualização — feature 03 concluída:** dez documentos e manifesto 1.0 publicados; recuperação por CWE/categoria/fallback; P3/P4 completos; 115 testes e preflight real com 312 prompts. P1/P2/P1L e 559 artefatos históricos preservados. O contrato 2.0 protege a base; compatibilidade antiga comprovada em cópia temporária. Veja a [entrega](../features/03-rag-prompts/ENTREGA.md). Nenhuma correção real foi executada nesta feature.
 
 ## 1. Documentos que orientam o trabalho
 
@@ -39,8 +41,8 @@ O objetivo é avaliar um fluxo que integra SAST, LLM e testes para remover alert
 |---|---|---|
 | P1 | Código associado ao alerta e instrução simples | Implementada e executada |
 | P2 | P1 e roteiro de análise em etapas | Implementada e executada |
-| P3 | Código, diagnóstico SAST e contexto documental recuperado | Pendente |
-| P4 | P3 e roteiro de análise em etapas | Pendente |
+| P3 | Código, diagnóstico SAST e contexto documental recuperado | Implementada; preflight sem API validado |
+| P4 | P3 e roteiro de análise em etapas | Implementada; preflight sem API validado |
 | P1L | P1 com localização e identificação explícita do alerta | Diagnóstico adicional implementado; não substitui P3/P4 |
 
 Um template é reutilizado para vários casos; cada tentativa recebe um prompt montado com seus dados. Não é necessário escrever manualmente um prompt exclusivo para cada issue. P1/P2 podem gerar mensagens iguais para alertas no mesmo arquivo, pois não incluem o diagnóstico explícito.
@@ -113,8 +115,8 @@ Foram encontradas **115 referências a artefatos ausentes dentre 230 referência
 
 | Local | Responsabilidade e atenção necessária |
 |---|---|
-| [run_pipeline.py](../src/pipeline/run_pipeline.py) | Orquestra casos, estratégias, validações e retomada. Ainda aponta para o catálogo histórico. |
-| [prompts/builder.py](../src/pipeline/prompts/builder.py) | Monta P1/P2/P1L; bloqueia P3/P4. Criar só um índice não basta: falta a montagem RAG. |
+| [run_pipeline.py](../src/pipeline/run_pipeline.py) | Orquestra casos, estratégias, validações e retomada; modo histórico padrão, ampliado por seleção explícita. |
+| [prompts/builder.py](../src/pipeline/prompts/builder.py) | Monta P1/P2/P3/P4/P1L. RAG exige base completa e manifesto consistente. |
 | [llm/openai_client.py](../src/pipeline/llm/openai_client.py) | API, cache, custos e orçamento. |
 | [llm/schema.py](../src/pipeline/llm/schema.py) | Estrutura esperada da correção. |
 | [patching/applier.py](../src/pipeline/patching/applier.py) | Valida e aplica edições por âncora. |
@@ -157,7 +159,7 @@ Hoje, a cadeia para pelo aceite sob a definição mais estrita, `sem_separacao`,
 | F2 — ambiente | Scripts e medições históricas | Recriar ambiente e worktrees nesta máquina, conferir versões |
 | F3 — SAST e catálogo | Histórico pronto; auditoria ampliada pronta | Gerar e congelar catálogo experimental ampliado |
 | F4 — worktrees e validação | Implementado para o fluxo histórico | Cobrir novos arquivos, frontend e mecanismos adicionais |
-| F5 — LLM/prompts/RAG | Parcial | Completar base documental, recuperação, P3/P4 |
+| F5 — LLM/prompts/RAG | Implementada; preparação validada sem API | Piloto real das quatro estratégias pendente |
 | F6 — orquestração | Implementada | Integrar catálogo, identidade e rulesets novos; testar retomada |
 | F7 — métricas | Parcial | CSVs, agregações, RRIS e tratamento explícito de indeterminados |
 | F8 — piloto das quatro estratégias | Pendente | Executar piloto com artefatos completos e inspeção manual |
@@ -223,16 +225,16 @@ O guia propõe três casos × quatro estratégias, enquanto a metodologia prevê
 
 ### Entrega E — completar a comparação de prompts
 
-- [ ] Criar `knowledge_base/` com documentos necessários às categorias do catálogo final e um contexto genérico.
-- [ ] Registrar fontes, versão/hash dos documentos e cuidados específicos do ecossistema JS/TS.
-- [ ] Usar exemplos genéricos de mitigação; não fornecer soluções oficiais do Juice Shop nos prompts.
-- [ ] Implementar recuperação determinística por categoria e montagem efetiva de P3/P4 no builder.
-- [ ] Registrar documento recuperado, fallback, versão e hash do prompt em cada tentativa.
-- [ ] Gerar e revisar prompts para todos os casos sem chamar a API.
-- [ ] Manter restrições, formato JSON e política de contexto consistentes entre estratégias.
+- [x] Criar `knowledge_base/` com documentos necessários às categorias do catálogo final e um contexto genérico.
+- [x] Registrar fontes, versão/hash dos documentos e cuidados específicos do ecossistema JS/TS.
+- [x] Usar exemplos genéricos de mitigação; não fornecer soluções oficiais do Juice Shop nos prompts.
+- [x] Implementar recuperação determinística por categoria e montagem efetiva de P3/P4 no builder.
+- [x] Registrar documento recuperado, fallback, versão e hash do prompt em cada tentativa.
+- [x] Gerar e revisar prompts para todos os casos sem chamar a API.
+- [x] Manter restrições, formato JSON e política de contexto consistentes entre estratégias.
 - [ ] Congelar os templates e parâmetros antes da execução final; manter P1L como condição diagnóstica separada.
 
-**Pronto quando:** as quatro estratégias geram mensagens completas para o catálogo, inclusive casos sem CWE/contexto específico; testes de recuperação verificam categoria correta e fallback. O P3/P4 atual tem bloqueio explícito mesmo que `_index.yaml` exista.
+**Pronto quando:** as quatro estratégias geram mensagens completas para o catálogo, inclusive casos sem CWE/contexto específico; testes de recuperação verificam categoria correta e fallback. Critérios da preparação concluídos na feature 03; não equivalem a remediação validada. O congelamento dos parâmetros da execução real permanece pendente.
 
 ### Entrega F — piloto e execução final
 
@@ -292,7 +294,7 @@ H — redação acompanha as entregas desde o início.
 
 Não há estimativa confiável de duração sem medir a validação do novo catálogo. Trabalhar por entregas com evidências evita repetir o cronograma inicial como se todas as condições já estivessem prontas.
 
-O cronograma do TCC1 previa implementação do pipeline/RAG em setembro, experimentos em outubro–novembro, métricas em novembro e análise/redação até dezembro de 2026. Em 12/10/2026, a execução já começou no catálogo histórico, mas RAG e a integração ampliada permanecem pendentes. Essas são as prioridades para atualizar o cronograma com a orientadora; este guia não assume uma data de defesa confirmada.
+O cronograma do TCC1 previa implementação do pipeline/RAG em setembro, experimentos em outubro–novembro, métricas em novembro e análise/redação até dezembro de 2026. Em 13/10/2026, a integração ampliada e RAG passaram pelo preflight sem API. Piloto e avaliação final são as prioridades para atualizar o cronograma com a orientadora; este guia não assume uma data de defesa confirmada.
 
 ### Próxima sessão de trabalho
 

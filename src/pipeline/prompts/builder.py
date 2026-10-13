@@ -1,4 +1,4 @@
-"""Montagem dos prompts (F5.3). Implementados: P1_simples e P2_raciocinio_guiado.
+"""Montagem dos prompts (F5.3). Implementados: P1/P2/P3/P4 e diagnóstico P1L.
 
 P1 = papel + tarefa, codigo (arquivo ou janela), restricoes + formato.
 P2 = P1 + roteiro de raciocinio em etapas (config/prompts/).
@@ -26,7 +26,7 @@ COM_RAG = {"P3", "P4"}
 # Condicao de diagnostico (protocolo, Secao 12): NAO e estrategia do desenho
 # do TCC 1. P1L = P1 + bloco com a localizacao e a identificacao do alerta.
 DIAGNOSTICOS = {"P1L": "P1L_diagnostico_localizacao"}
-COM_ALERTA = {"P1L"}
+COM_ALERTA = {"P1L", "P3", "P4"}
 
 RAIZ_REPO = Path(__file__).resolve().parents[3]
 ARQ_ROTEIRO = RAIZ_REPO / "config" / "prompts" / "roteiro_raciocinio_guiado.md"
@@ -58,6 +58,11 @@ edicoes (lista de {arquivo, trecho_original, trecho_corrigido}),
 justificativa_tecnica e limitacoes_da_correcao."""
 
 
+TAREFA = "Tarefa: identifique e corrija a vulnerabilidade de seguranca presente no codigo abaixo."
+CABECALHO_COMPLETO = "Arquivo: {arquivo} (completo, {total} linhas)"
+CABECALHO_JANELA = "Arquivo: {arquivo} (trecho das linhas {a} a {b} de {total}; o restante do arquivo nao foi mostrado)"
+CABECALHO_RAG = "Contexto técnico recuperado para apoiar a análise:\n"
+
 @dataclass
 class PromptMontado:
     estrategia: str            # nome completo, ex. P1_simples
@@ -72,6 +77,18 @@ class PromptMontado:
     arquivo_rag_recuperado: str | None = None
     roteiro_status: str | None = None   # APROVADO | RASCUNHO (so P2/P4)
     roteiro_sha256: str | None = None
+    rag_categoria_recuperada: str | None = None
+    rag_motivo_recuperacao: str | None = None
+    rag_cwe_selecionada: str | None = None
+    rag_documento_versao: str | None = None
+    rag_documento_sha256: str | None = None
+    rag_corpo_sha256: str | None = None
+    rag_index_sha256: str | None = None
+    rag_base_sha256: str | None = None
+
+    def metadados_rag(self) -> dict:
+        return {k: v for k, v in asdict(self).items()
+                if k.startswith("rag_") or k in ("usa_rag", "arquivo_rag_recuperado")}
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -115,10 +132,12 @@ def verificar_disponivel(estrategia: str) -> None:
     if estrategia not in ESTRATEGIAS and estrategia not in DIAGNOSTICOS:
         raise EstrategiaIndisponivel(f"Estrategia desconhecida: {estrategia} "
                                      f"(validas: {list(ESTRATEGIAS) + list(DIAGNOSTICOS)})")
-    if estrategia in COM_RAG and not (DIR_KB / "_index.yaml").exists():
-        raise EstrategiaIndisponivel(
-            f"{estrategia} ({ESTRATEGIAS[estrategia]}) depende de knowledge_base/_index.yaml "
-            "(F5.4), que ainda nao existe. Rode com --estrategias P1,P2 ate a base ficar pronta.")
+    if estrategia in COM_RAG:
+        from pipeline.rag.retriever import carregar_base, BaseInvalida
+        try:
+            carregar_base(DIR_KB)
+        except BaseInvalida as exc:
+            raise EstrategiaIndisponivel(f"{estrategia}: {exc}") from exc
     if estrategia in COM_ROTEIRO:
         carregar_roteiro()
 
@@ -139,8 +158,6 @@ def bloco_alerta(issue: dict) -> str:
 
 def montar(issue: dict, wt: Path, estrategia: str = "P1") -> PromptMontado:
     verificar_disponivel(estrategia)
-    if estrategia in COM_RAG:
-        raise EstrategiaIndisponivel(f"{estrategia}: montagem com RAG ainda nao implementada (F5.4)")
 
     arquivo = issue["arquivo"]
     # O codigo vem do worktree (commit fixado), nao do campo 'trecho' do
@@ -151,18 +168,22 @@ def montar(issue: dict, wt: Path, estrategia: str = "P1") -> PromptMontado:
         codigo += "\n"
 
     if modo == "arquivo_completo":
-        cabecalho = f"Arquivo: {arquivo} (completo, {len(linhas)} linhas)"
+        cabecalho = CABECALHO_COMPLETO.format(arquivo=arquivo,total=len(linhas))
     else:
-        cabecalho = (f"Arquivo: {arquivo} (trecho das linhas {a} a {b} de {len(linhas)}; "
-                     "o restante do arquivo nao foi mostrado)")
+        cabecalho = CABECALHO_JANELA.format(arquivo=arquivo,a=a,b=b,total=len(linhas))
 
     blocos = [
-        "Tarefa: identifique e corrija a vulnerabilidade de seguranca presente no codigo abaixo.",
+        TAREFA,
         f"{cabecalho}\n```typescript\n{codigo}```",
     ]
     roteiro_status = roteiro_sha = None
     if estrategia in COM_ALERTA:
         blocos.append(bloco_alerta(issue))
+    recuperacao = None
+    if estrategia in COM_RAG:
+        from pipeline.rag.retriever import recuperar
+        recuperacao = recuperar(issue, DIR_KB)
+        blocos.append(CABECALHO_RAG + recuperacao.corpo)
     if estrategia in COM_ROTEIRO:
         roteiro, roteiro_status, roteiro_sha = carregar_roteiro()
         blocos.append(roteiro)
@@ -173,5 +194,41 @@ def montar(issue: dict, wt: Path, estrategia: str = "P1") -> PromptMontado:
     ]
     h = hashlib.sha256(json.dumps(mensagens, ensure_ascii=False).encode("utf-8")).hexdigest()
     nome = ESTRATEGIAS.get(estrategia) or DIAGNOSTICOS[estrategia]
-    return PromptMontado(nome, arquivo, modo, a, b, len(linhas), mensagens, h,
-                         roteiro_status=roteiro_status, roteiro_sha256=roteiro_sha)
+    prompt = PromptMontado(nome, arquivo, modo, a, b, len(linhas), mensagens, h,
+                          roteiro_status=roteiro_status, roteiro_sha256=roteiro_sha)
+    if recuperacao:
+        prompt.usa_rag = True
+        prompt.arquivo_rag_recuperado = recuperacao.arquivo
+        for campo, valor in {
+            "categoria_recuperada": recuperacao.categoria, "motivo_recuperacao": recuperacao.motivo,
+            "cwe_selecionada": recuperacao.cwe, "documento_versao": recuperacao.versao,
+            "documento_sha256": recuperacao.documento_sha256, "corpo_sha256": recuperacao.corpo_sha256,
+            "index_sha256": recuperacao.index_sha256, "base_sha256": recuperacao.base_sha256,
+        }.items():
+            setattr(prompt, "rag_" + campo, valor)
+    return prompt
+
+
+def componentes_contrato(estrategias: list[str]) -> dict:
+    """Hashes de texto e política aplicáveis, sem acoplar metadados ao texto."""
+    import inspect
+    def hash_texto(texto):
+        return hashlib.sha256(texto.encode("utf-8")).hexdigest()
+    partes = {"papel": PAPEL, "restricoes": RESTRICOES, "formato": FORMATO,
+              "tarefa": TAREFA,
+              "politica_contexto": json.dumps({"limite": LIMITE_ARQUIVO_COMPLETO, "janela": JANELA,
+                  "funcao": inspect.getsource(_contexto),
+                  "cabecalho_completo": CABECALHO_COMPLETO,
+                  "cabecalho_janela": CABECALHO_JANELA,
+                  "cerca": "```typescript", "quebra_final": True}, sort_keys=True),
+              "mensagens": "system:papel|user:blocos unidos por duas quebras;hash=json.dumps(ensure_ascii=False)",
+              "ordem": json.dumps({e: ["tarefa", "codigo"] +
+                  (["alerta"] if e in COM_ALERTA else []) + (["contexto"] if e in COM_RAG else []) +
+                  (["roteiro"] if e in COM_ROTEIRO else []) + ["restricoes", "formato"] for e in estrategias},sort_keys=True)}
+    if set(estrategias) & COM_ALERTA:
+        partes["alerta"] = inspect.getsource(bloco_alerta)
+    if set(estrategias) & COM_ROTEIRO:
+        partes["roteiro"] = carregar_roteiro()[0]
+    if set(estrategias) & COM_RAG:
+        partes["contexto_rag"] = CABECALHO_RAG
+    return {k: hash_texto(v) for k, v in partes.items()}

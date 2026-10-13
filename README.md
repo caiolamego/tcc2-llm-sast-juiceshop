@@ -163,7 +163,7 @@ python scripts/audit/classify_combined_scan.py --help
 python scripts/experiment/build_issue_catalog.py --help
 python scripts/experiment/baseline_testes.py --help
 
-# Correções: P1/P2 estão implementados; P3/P4 dependem do RAG pendente.
+# Correções reais: P1/P2/P3/P4 disponíveis; requerem ambiente e orçamento configurados.
 PYTHONPATH=src python -m pipeline.run_pipeline --execucao E03 --estrategias P1,P2
 
 # Métricas das execuções já registradas; não chama a API.
@@ -178,8 +178,11 @@ A execução das correções pode ser retomada pelo identificador da execução.
 
 ## Estrutura
 
+A base documental está em `knowledge_base/`; o recuperador está em `src/pipeline/rag/`, e sua validação editorial em `scripts/experiment/validate_knowledge_base.py`.
+
 ```text
 config/               configurações, critérios e mapeamentos
+knowledge_base/       dez documentos, índice e manifesto RAG 1.0
 rules/rodada1..12/    regras locais e fixtures do Semgrep
 scripts/setup/        preparação do alvo
 scripts/audit/        scans, triagem, matrizes e verificações das rodadas
@@ -340,12 +343,12 @@ anteriores, incluindo JSONP same-site. Nenhuma LLM foi executada.
 | Fase | Situação |
 |---|:---:|
 | Preparação do ambiente e do alvo | Scripts e evidências existentes; preparação local necessária |
-| Baseline SAST e catálogo de issues | Catálogo histórico de 12 casos; auditoria ampliada separada |
+| Baseline SAST e catálogo de issues | Catálogo histórico de 12 casos e ampliado de 78; seleção explícita |
 | Workspace e validação em camadas | Implementados, T0/T2/T3/T4 |
-| Camada LLM, prompts e RAG | P1/P2 e diagnóstico P1L implementados; RAG pendente |
+| Camada LLM, prompts e RAG | P1/P2/P3/P4 e P1L implementados; base 1.0 e preflight de 312 prompts validados |
 | Orquestração e métricas | Implementadas parcialmente; consolidação final pendente |
 | Execução exploratória | Rodadas de auditoria e E01/E02 registradas |
-| Execução completa | Quatro estratégias e catálogo ampliado pendentes |
+| Execução completa | Piloto e correções reais sobre os 78 casos ainda pendentes |
 | Análise e redação | Relatórios técnicos existentes; análise final pendente |
 
 ---
@@ -378,3 +381,26 @@ em `--baseline-testes`. Indeterminações SAST são registradas e não aceitas a
 Os nomes antigos JS continuam disponíveis no modo histórico; AMP usa identidade por ocorrência.
 
 Veja a [especificação da integração](features/02-integracao-catalogo/README.md).
+
+
+## RAG e preflight das quatro estratégias
+
+A feature 03 publicou dez documentos genéricos em português na [base 1.0](knowledge_base/README.md). P3/P4 recuperam pela primeira CWE mapeada, depois pela categoria do catálogo e por último pelo contexto genérico. A categoria recuperada é registrada separadamente da original; não confirma uma vulnerabilidade. P1/P2/P1L mantiveram suas mensagens e hashes.
+
+```bash
+.venv/bin/python scripts/experiment/validate_knowledge_base.py
+make test-unit PYTHON=.venv/bin/python
+PYTHONPATH=src .venv/bin/python -m pipeline.run_pipeline \
+  --execucao AMP_RAG_PREFLIGHT_01 \
+  --catalogo outputs/catalogos/ampliado_v1/catalogo_issues.json \
+  --perfil-sast config/perfis/ampliado_v1/perfil.json \
+  --saida outputs/feature03/AMP_RAG_PREFLIGHT_01 \
+  --estrategias P1,P2,P3,P4 --somente-preflight --k 1 \
+  --semgrep-bin .venv/bin/semgrep
+```
+
+Essa saída já contém 312 prompts, com 156 recuperações P3/P4. O comando pode conferir a retomada compatível; mudanças científicas exigem nova execução/saída. Nenhuma chamada à API, patch ou validação funcional ocorre no preflight. Os oito diagnósticos preexistentes de parsing estão preservados.
+
+Contratos novos usam versão 2.0 com hashes dos componentes textuais e política de contexto. RAG inclui os hashes do manifesto, índice e documentos. Contratos 1.0 sem RAG só podem ser retomados com evidências completas de mensagens/hashes equivalentes para todos os pares solicitados; seus artefatos e identidade são preservados. Não adicionar P3/P4 a saídas antigas.
+
+Veja a [entrega da feature 03](features/03-rag-prompts/ENTREGA.md) e a [cobertura por caso](outputs/feature03/cobertura_rag.json). Piloto com correções reais e cobertura específica de frontend seguem pendentes.

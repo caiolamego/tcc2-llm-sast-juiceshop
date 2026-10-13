@@ -41,18 +41,71 @@ class Preparacao:
     contrato_hash: str
     baseline_testes: Path
     saida: Path
+    componentes_prompt: dict | None = None
+    rag_base_sha256: str | None = None
 
 
 def contrato(args, catalogo, perfil, casos):
-    templates = [builder.ARQ_ROTEIRO, Path(builder.__file__), RAIZ_REPO/'src/pipeline/validation/runner.py']
+    templates = [builder.ARQ_ROTEIRO, RAIZ_REPO/'src/pipeline/validation/runner.py']
     baseline=Path(args.baseline_testes).resolve()
-    return {'schema_versao':'1.0','execucao':args.execucao,
+    estrategias = args.estrategias + args.diagnosticos
+    data = {'schema_versao':'2.0','execucao':args.execucao,
             'modo':'preflight' if args.somente_preflight else 'dry-run' if args.dry_run else 'real',
             'commit_alvo':catalogo.commit,'hashes_catalogo':catalogo.hashes,'perfil_sha256':perfil.hash,
             'semgrep_versao':perfil.dados['semgrep_versao'],'estrategias':args.estrategias,
             'diagnosticos':args.diagnosticos,'casos':sorted(c['caso_id'] for c in casos),
             'comparador':VERSAO,'prompts_validacao_sha256':{p.name:digest(p) for p in templates},
+            'componentes_prompt_sha256':builder.componentes_contrato(estrategias),
             'baseline_testes_sha256':None if args.somente_preflight else digest(baseline)}
+    if set(estrategias) & builder.COM_RAG:
+        from pipeline.rag.retriever import carregar_base
+        base = carregar_base(builder.DIR_KB)
+        data['rag'] = {'manifesto_sha256':base.hash_base, 'indice_sha256':base.manifesto['index_sha256'],
+                       'documentos':base.manifesto['documentos'],
+                       'politica_recuperacao':'primeira_cwe_categoria_fallback_v1'}
+    return data
+
+
+def projecao_prompt(data):
+    # Novos metadados opcionais não alteram a equivalência textual histórica.
+    return {k:data.get(k) for k in ('mensagens','hash_prompt')}
+
+
+def validar_compatibilidade_antiga(old, current, saida, casos, wt):
+    """Contrato 1.0 permanece imutável; exige evidência para TODOS os pares."""
+    exigir(old.get('schema_versao') == '1.0', 'Contrato incompatível: versão desconhecida')
+    estrategias = current['estrategias'] + current['diagnosticos']
+    exigir(not set(estrategias) & builder.COM_RAG, 'Contrato incompatível: saída antiga não aceita P3/P4')
+    scientific = {k:v for k,v in current.items() if k not in
+                  ('schema_versao','prompts_validacao_sha256','componentes_prompt_sha256','rag')}
+    exigir({k:v for k,v in old.items() if k not in ('schema_versao','prompts_validacao_sha256')} == scientific,
+           'Contrato incompatível: campos científicos divergentes')
+    exigir(all(old.get('prompts_validacao_sha256',{}).get(k) == v
+               for k,v in current['prompts_validacao_sha256'].items()),
+           'Contrato incompatível: roteiro/validação alterados')
+    for issue in casos:
+        for e in estrategias:
+            expected = builder.montar(issue,wt,e)
+            # Preflight ou tentativa individual, com nomes de artefatos existentes.
+            files = sorted((saida/'prompts').glob(f'{issue["caso_id"]}_*.json'))
+            matched = []
+            for path in files:
+                data = json.loads(path.read_text(encoding='utf-8'))
+                if data.get('estrategia') == expected.estrategia:
+                    matched.append(data)
+            exigir(bool(matched), f'Contrato incompatível: evidência de prompt ausente para {issue["caso_id"]}/{e}; use nova saída')
+            exigir(all(projecao_prompt(d) == projecao_prompt(expected.to_dict()) for d in matched),
+                   'Contrato incompatível: mensagens/hash de prompt divergentes')
+
+
+def conferir_prompt_contrato(prep, prompt, estrategias):
+    exigir(builder.componentes_contrato(estrategias) == prep.componentes_prompt,
+           'Componentes de prompt alterados após preflight')
+    if prep.rag_base_sha256:
+        from pipeline.rag.retriever import carregar_base
+        exigir(carregar_base(builder.DIR_KB).hash_base == prep.rag_base_sha256, 'Base RAG alterada após preflight')
+    if prompt.usa_rag:
+        exigir(prompt.rag_base_sha256 == prep.rag_base_sha256, 'Base RAG alterada após preflight')
 
 
 def conferir_linhas(path, expected):
@@ -104,8 +157,14 @@ def preparar(args, catalogo, casos):
     if saida.exists() and not contract_path.exists():
         exigir(not any(saida.iterdir()),'Saída existente sem contrato de execução')
     saida.mkdir(parents=True,exist_ok=True)
+    antigo = False
     if contract_path.exists():
-        exigir(json.loads(contract_path.read_text())==current,'Contrato incompatível; use nova execução/saída')
+        old_contract = json.loads(contract_path.read_text())
+        antigo = old_contract.get('schema_versao') == '1.0'
+        if antigo:
+            validar_compatibilidade_antiga(old_contract,current,saida,casos,worktrees[0])
+        else:
+            exigir(old_contract==current,'Contrato incompatível; use nova execução/saída')
     else:salvar(contract_path,current)
     contract_hash=digest(contract_path)
     conferir_linhas(saida/'resultados_consolidados/execucoes.jsonl',contract_hash)
@@ -120,7 +179,10 @@ def preparar(args, catalogo, casos):
         scan=scan_perfil(worktrees[0],perfil,baseline,args.semgrep_bin)
     report=gate(catalogo,scan)
     report.update(contrato_execucao_sha256=contract_hash,baseline_sha256=digest(baseline) if baseline.exists() else None)
-    salvar(gate_file,report)
+    if not gate_file.exists():
+        salvar(gate_file,report)
+    else:
+        exigir(json.loads(gate_file.read_text()) == report, 'Relatório de reprodução alterado')
     exigir(report['reproduzido'],f'Perfil não reproduz catálogo; veja {gate_file}')
     if args.somente_preflight:
         prompts=[]
@@ -129,14 +191,32 @@ def preparar(args, catalogo, casos):
                 prompt=builder.montar(issue,worktrees[0],e)
                 path=saida/'prompts'/f'{issue["caso_id"]}_{e}.json'
                 data=prompt.to_dict()
-                if path.exists():exigir(json.loads(path.read_text())==data,'Prompt preflight alterado')
+                if path.exists():
+                    saved = json.loads(path.read_text())
+                    exigir((projecao_prompt(saved)==projecao_prompt(data)) if antigo else (saved==data), 'Prompt preflight alterado')
                 else:salvar(path,data)
-                prompts.append({'caso':issue['caso_id'],'estrategia':e,'hash_prompt':prompt.hash_prompt})
-        salvar(saida/'preflight.json',{'status':'concluido','casos':len(casos),'prompts':prompts,
+                exigir(builder.componentes_contrato(args.estrategias+args.diagnosticos)==current['componentes_prompt_sha256'], 'Texto alterado durante preflight')
+                if prompt.usa_rag:
+                    exigir(prompt.rag_base_sha256==current['rag']['manifesto_sha256'], 'Base RAG alterada durante preflight')
+                prompts.append({'caso':issue['caso_id'],'estrategia':e,'hash_prompt':prompt.hash_prompt,
+                                'categoria_rag':issue.get('categoria_rag'), **prompt.metadados_rag()})
+        preflight_path = saida/'preflight.json'
+        data = {'status':'concluido','casos':len(casos),'prompts':prompts,
                 'contrato_execucao_sha256':contract_hash,'custo_api_usd':0,'diagnosticos':scan.diagnosticos,
-                'cobertura_funcional':'não executada'})
+                'cobertura_funcional':'não executada'}
+        if not preflight_path.exists():
+            salvar(preflight_path,data)
+        elif not antigo:
+            exigir(json.loads(preflight_path.read_text()) == data, 'Relatório de preflight alterado')
+        else:
+            archived = json.loads(preflight_path.read_text())
+            exigir(archived.get('contrato_execucao_sha256')==contract_hash and
+                   archived.get('casos')==len(casos) and
+                   archived.get('prompts')==[{k:v for k,v in item.items() if k in ('caso','estrategia','hash_prompt')} for item in prompts],
+                   'Relatório de preflight antigo divergente')
         return None
-    return Preparacao(catalogo,perfil,scan,contract_hash,Path(args.baseline_testes).resolve(),saida)
+    return Preparacao(catalogo,perfil,scan,contract_hash,Path(args.baseline_testes).resolve(),saida,
+                      current['componentes_prompt_sha256'],current.get('rag',{}).get('manifesto_sha256'))
 
 
 def sondar(args, catalogo):

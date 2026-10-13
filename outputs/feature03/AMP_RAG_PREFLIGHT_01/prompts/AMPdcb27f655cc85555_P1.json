@@ -1,0 +1,31 @@
+{
+  "arquivo": "frontend/src/app/data-export/data-export.component.ts",
+  "arquivo_rag_recuperado": null,
+  "estrategia": "P1_simples",
+  "hash_prompt": "50d5230a656d88c21f9b188a176f536be9dde6dd75930cb3eab74110524e6cd4",
+  "linha_fim_contexto": 99,
+  "linha_ini_contexto": 1,
+  "mensagens": [
+    {
+      "content": "Voce e um engenheiro de seguranca de aplicacoes especializado em TypeScript, Node.js e Express.",
+      "role": "system"
+    },
+    {
+      "content": "Tarefa: identifique e corrija a vulnerabilidade de seguranca presente no codigo abaixo.\n\nArquivo: frontend/src/app/data-export/data-export.component.ts (completo, 99 linhas)\n```typescript\n/*\n * Copyright (c) 2014-2026 Bjoern Kimminich & the OWASP Juice Shop contributors.\n * SPDX-License-Identifier: MIT\n */\n\nimport { Component, type OnInit, inject } from '@angular/core'\nimport { UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms'\nimport { ImageCaptchaService } from '../Services/image-captcha.service'\nimport { DataSubjectService } from '../Services/data-subject.service'\nimport { DomSanitizer } from '@angular/platform-browser'\nimport { MatButtonModule } from '@angular/material/button'\nimport { MatInputModule } from '@angular/material/input'\nimport { MatLabel, MatFormFieldModule, MatHint, MatError } from '@angular/material/form-field'\nimport { MatRadioGroup, MatRadioButton } from '@angular/material/radio'\n\nimport { TranslateModule } from '@ngx-translate/core'\nimport { MatCardModule } from '@angular/material/card'\n\nimport { MatIconModule } from '@angular/material/icon'\n\n@Component({\n  selector: 'app-data-export',\n  templateUrl: './data-export.component.html',\n  styleUrls: ['./data-export.component.scss'],\n  imports: [MatCardModule, TranslateModule, MatRadioGroup, FormsModule, ReactiveFormsModule, MatLabel, MatRadioButton, MatFormFieldModule, MatInputModule, MatHint, MatError, MatButtonModule, MatIconModule]\n})\nexport class DataExportComponent implements OnInit {\n  sanitizer = inject(DomSanitizer)\n  private readonly imageCaptchaService = inject(ImageCaptchaService)\n  private readonly dataSubjectService = inject(DataSubjectService)\n\n  public captchaControl: UntypedFormControl = new UntypedFormControl('', [Validators.required, Validators.minLength(5)])\n  public formatControl: UntypedFormControl = new UntypedFormControl('', [Validators.required])\n  public captcha: any\n  private dataRequest: any = undefined\n  public confirmation: any\n  public error: any\n  public lastSuccessfulTry: any\n  public presenceOfCaptcha = false\n  public userData: any\n  ngOnInit (): void {\n    this.needCaptcha()\n    this.dataRequest = {}\n  }\n\n  needCaptcha () {\n    const nowTime = new Date()\n    const timeOfCaptcha = localStorage.getItem('lstdtxprt') ? new Date(JSON.parse(String(localStorage.getItem('lstdtxprt')))) : new Date(0)\n    if (nowTime.getTime() - timeOfCaptcha.getTime() < 300000) {\n      this.getNewCaptcha()\n      this.presenceOfCaptcha = true\n    }\n  }\n\n  getNewCaptcha () {\n    this.imageCaptchaService.getCaptcha().subscribe((data: any) => {\n      this.captcha = this.sanitizer.bypassSecurityTrustHtml(data.image)\n    })\n  }\n\n  save () {\n    if (this.presenceOfCaptcha) {\n      this.dataRequest.answer = this.captchaControl.value\n    }\n    this.dataRequest.format = this.formatControl.value\n    this.dataSubjectService.dataExport(this.dataRequest).subscribe({\n      next: (data: any) => {\n        this.error = null\n        this.confirmation = data.confirmation\n        this.userData = data.userData\n        window.open('', '_blank', 'width=500')?.document.write(this.userData)\n        this.lastSuccessfulTry = new Date()\n        localStorage.setItem('lstdtxprt', JSON.stringify(this.lastSuccessfulTry))\n        this.ngOnInit()\n        this.resetForm()\n      },\n      error: (error) => {\n        this.error = error.error\n        this.confirmation = null\n        this.resetFormError()\n      }\n    })\n  }\n\n  resetForm () {\n    this.captchaControl.markAsUntouched()\n    this.captchaControl.markAsPristine()\n    this.captchaControl.setValue('')\n    this.formatControl.markAsUntouched()\n    this.formatControl.markAsPristine()\n    this.formatControl.setValue('')\n  }\n\n  resetFormError () {\n    this.captchaControl.markAsUntouched()\n    this.captchaControl.markAsPristine()\n    this.captchaControl.setValue('')\n  }\n}\n```\n\nRestricoes obrigatorias:\n- Altere o minimo necessario para corrigir a vulnerabilidade. Nao refatore, nao reformate e nao renomeie nada.\n- Não altere mensagens de erro, textos visíveis ao usuário, nomes de identificadores nem assinaturas de funções existentes.\n- Nao altere arquivos de teste.\n- Cada \"trecho_original\" deve ser copiado LITERALMENTE do codigo fornecido (mesmos espacos, quebras de linha e pontuacao) e deve aparecer UMA unica vez no arquivo. Inclua linhas vizinhas se precisar para torna-lo unico.\n- Preserve o comportamento funcional existente.\n- Em \"arquivo\", use exatamente o caminho relativo informado acima.\n\nFormato da resposta: um objeto JSON com os campos\nvulnerabilidade_identificada, causa_da_vulnerabilidade, estrategia_de_correcao,\nedicoes (lista de {arquivo, trecho_original, trecho_corrigido}),\njustificativa_tecnica e limitacoes_da_correcao.",
+      "role": "user"
+    }
+  ],
+  "modo_contexto": "arquivo_completo",
+  "rag_base_sha256": null,
+  "rag_categoria_recuperada": null,
+  "rag_corpo_sha256": null,
+  "rag_cwe_selecionada": null,
+  "rag_documento_sha256": null,
+  "rag_documento_versao": null,
+  "rag_index_sha256": null,
+  "rag_motivo_recuperacao": null,
+  "roteiro_sha256": null,
+  "roteiro_status": null,
+  "total_linhas_arquivo": 99,
+  "usa_rag": false
+}
