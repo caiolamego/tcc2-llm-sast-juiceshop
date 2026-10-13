@@ -154,6 +154,33 @@ Mesmo com a linha de base, observou-se um teste de T4 que falha de forma intermi
 
 Por que não ampliar a linha de base com várias execuções e unir as falhas: isso colocaria `erasure-request` permanentemente na lista de falhas toleradas, e uma correção que de fato quebrasse esse teste passaria como se nada tivesse ocorrido. A reexecução preserva a sensibilidade do critério; a união da linha de base a destruiria. Custo: uma execução extra de T4 (~12 s) apenas nos casos em que há falha nova.
 
+**Extensão para timeout (2026-10-08, antes da E02).** Na primeira sessão da E01, o T4 de um worktree sem alteração travou em `test/api/password.test.ts` até o limite de 300 s e passou em 11 s nas duas execuções seguintes (caderno, 2026-10-08). Um travamento desses durante uma tentativa daria `F = 0` sem relação com a correção. Por isso, **timeout também dispara uma reexecução da camada, uma única vez** (T0, T2, T3 e T4). Como a primeira rodada não gera relatório, não há interseção possível: vale o resultado da segunda rodada sozinha. Se a segunda também estourar o tempo, a camada reprova com motivo `timeout`; se a segunda acusar testes falhos novos, eles contam. Cada camada registra `timeout_na_primeira_rodada` e `reexecucoes`.
+
+### 7.3 Limitação do oráculo R conforme o tipo de regra
+
+O critério R depende de a regra do Semgrep deixar de disparar após a correção. Isso não depende só da correção: depende de **como a regra decide**. A primeira hipótese (separar regras `audit` de `vuln`) não se sustentou nos dados: `metadata.subcategory` vale `vuln` para os 12 achados elegíveis, enquanto 9 deles têm `.audit.` no `check_id`. Os dois critérios discordam e nenhum descreve o mecanismo de decisão.
+
+**Classificação adotada: modo da regra e saneadores declarados.** Lida no código-fonte das 7 regras distintas, versionado como cópia de referência em `config/semgrep-rules-referencia/` (repositório `semgrep/semgrep-rules`, ramo `develop`, commit `a84ff9cc`, copiado em 2026-10-07; pode divergir das regras que o registro executou, ver README da pasta). Registrada no catálogo nos campos `modo_regra` e `saneadores_regra`.
+
+| Faixa | Mecanismo | Casos | Proporção |
+|---|---|---|---|
+| 1. `search` | Casamento de padrão, sem fluxo de dados. O alerta só some se o padrão sumir do código. | JS012 | 1 de 12 |
+| 2. `taint` com saneadores declarados | Rastreia o dado da origem (requisição) ao uso; aceita `parseInt(...)` e `.hash(...)` como limpeza. | JS005, JS009 | 2 de 12 |
+| 3. `taint` sem saneadores declarados | Rastreia o fluxo, mas nenhuma função conta como limpeza e validações condicionais (`if`) não são consideradas. O alerta só some se o fluxo for interrompido ou se a forma do uso mudar para uma que a regra exclui. | JS001–JS004, JS006–JS008, JS010, JS011 | 9 de 12 |
+
+**Sondagens sem LLM (2026-10-07), regra `express-res-sendfile`, faixa 3.** Resultados em `outputs/sondagens/`:
+
+- **A. Tentativas da LLM em JS003:** o alerta **persiste nas duas**. `EXP01` (verificação `startsWith` do caminho resolvido) e `EXP02` (bloqueio de `..`) têm `R = 0`, embora a `EXP02` passe em toda a validação. As duas são validações condicionais, que a regra não considera.
+- **B. Correção escrita à mão** (não gerada pela LLM e fora de qualquer métrica), na forma que a regra exclui: `res.sendFile(file, { root: ... })`, mantendo a validação e a mensagem de erro. O alerta **desaparece** (`R = 1`) nos 4 casos de `sendFile`, sem alertas novos. Na validação:
+  - JS004 e JS007: passam em todas as camadas (não há teste unitário para esses arquivos).
+  - JS003 e JS002: reprovam no T2. Os testes unitários (`keyServer`, `fileServer`) conferem, por mock, que o primeiro argumento de `sendFile` contém o caminho completo (`encryptionkeys/…`, `ftp/…`). No JS002 isso inclui 5 testes de desafio. Rodado à parte, só para diagnóstico, o T4 passa nos dois: o comportamento HTTP se mantém.
+
+**Consequências para a análise.** A definição da TRV (Seção 3.9 do TCC 1) **não muda**. Muda a análise:
+
+1. Os resultados são reportados também **separados pelas três faixas**. Na faixa 3, `R = 0` pode refletir a forma como a regra decide e não a ausência de correção.
+2. Há casos em que R e F puxam para lados opostos: a forma que zera o alerta quebra testes unitários acoplados à implementação, e a forma que preserva os testes não zera o alerta. Os casos de `sendFile` com teste unitário (JS002, JS003) são o exemplo concreto.
+3. Para permitir essa análise, cada tentativa registra a saída completa do SAST posterior (F6).
+
 ## 8. Rastreabilidade
 
 Toda execução do baseline gera: `outputs/sast_antes/baseline_raw.json` (saída bruta do Semgrep, arquivada), `outputs/sast_antes/catalogo_issues.json` (todos os findings, elegíveis e excluídos, com motivo), `outputs/sast_antes/catalogo_meta.json` (contagens por etapa, versão do Semgrep, rulesets e **commit do alvo**), `outputs/sast_antes/relatorio_baseline.md` (agregações para o caderno). O commit do alvo é registrado também em cada linha de `outputs/resultados_consolidados/execucoes.jsonl` e em cada artefato de validação, para que nenhum resultado dependa apenas deste documento.
@@ -184,7 +211,61 @@ As restrições presentes em todos os prompts (F5.3 do guia) foram **fixadas ant
 Condições que tornam esse ajuste legítimo e não seleção de resultados favoráveis:
 
 1. Foi feito **antes** da execução completa, com base em uma única tentativa exploratória, e vale igualmente para os 12 casos e as 4 estratégias.
-2. A tentativa que motivou o ajuste está arquivada em `outputs/tentativas/JS003_A06_PATHTRAV_P1_E01_*` e é reportada no texto como observação preliminar, não descartada.
+2. A tentativa que motivou o ajuste está arquivada em `outputs/tentativas/JS003_A06_PATHTRAV_P1_EXP01_*` (renomeada de `E01` em 2026-10-07, para deixar `E01` livre para a execução oficial; a tentativa seguinte, já com a restrição, é a `EXP02`) e é reportada no texto como observação preliminar, não descartada.
 3. Após esta data, **nenhuma alteração de prompt é feita com base em resultados da execução completa**. Qualquer necessidade identificada depois entra como trabalho futuro.
 
-A observação em si é resultado: a correção removeria o alerta do SAST (`R = 1`) e seria classificada como bem-sucedida por qualquer avaliação baseada apenas em reanálise estática, mas foi reprovada na camada de testes por uma alteração cosmética. É evidência direta do argumento central do trabalho — remoção de alerta não é prova de correção adequada — e deve ser citada no capítulo de discussão.
+A observação em si é resultado, mas não é uma divergência entre R e F: a sondagem A (Seção 7.3) mostrou que o alerta **persiste nas duas tentativas** (`R = 0` na EXP01 e na EXP02), porque a regra `express-res-sendfile` não reconhece verificações condicionais. O que as duas tentativas mostram é a **troca entre profundidade da correção e preservação funcional**: a correção reprovada (EXP01) também verificava, com `startsWith`, se o caminho resolvido permanece dentro de `encryptionkeys/`; a aceita nos testes (EXP02), escrita sob a restrição de mudança mínima, só bloqueia `..` e `/`, e é defensivamente mais fraca. A restrição elevou a preservação funcional e reduziu a profundidade da correção. Esse efeito deve ser citado no capítulo de discussão sobre engenharia de prompt.
+
+A divergência entre R e F, isto é, remoção do alerta sem aprovação nos testes, é ilustrada pelos casos **JS005, JS006 e JS011 da execução preliminar E01**, que têm evidência real. Em JS005 e JS006, a consulta parametrizada remove o alerta de SQL injection (`R = 1`, `M = 1`) e reprova no T4 só nos testes de `login.test.ts` que executam o ataque e esperam que ele funcione. Em JS011, a correção remove o alerta e reprova só no teste que espera o payload de SSTI ser avaliado. É evidência direta do argumento central do trabalho: remoção de alerta não é prova de correção adequada, e aprovação nos testes também não é, quando os testes verificam a própria vulnerabilidade.
+
+## 11. Limitações
+
+### L1. Conflito entre R e F em JS002 e JS003, identificado antes da E01
+
+Na sondagem B (Seção 7.3, `outputs/sondagens/B_*_ESCRITO_A_MAO*`), feita à mão e **antes da execução E01**, a forma `res.sendFile(x, { root: ... })` foi a única que a regra `express-res-sendfile` reconhece como segura: ela remove o alerta (`R = 1`) nos quatro casos de `sendFile`. Em **JS002** e **JS003**, porém, essa forma reprova no T2: os testes unitários (`fileServer.unit.test.ts`, `keyServer.unit.test.ts`) verificam, por mock, que o primeiro argumento passado ao `sendFile` é o caminho completo (`ftp/…`, `encryptionkeys/…`). Rodado à parte, só para diagnóstico, o T4 passa nos dois casos, o que confirma que o comportamento HTTP se mantém.
+
+Consequência: **nesses dois casos nenhuma correção consegue satisfazer R e F ao mesmo tempo.** A forma que remove o alerta quebra o teste unitário, e as formas que preservam o teste (validação condicional do nome do arquivo) não removem o alerta, porque a regra é `taint` sem saneadores declarados (faixa 3).
+
+**O critério F não foi alterado por causa disso.** O T2 continua contando; nenhum teste foi pulado, removido ou acrescentado à linha de base. O tratamento é só na análise: os casos são separados pelo `tier_falha` e pelos `testes_falhos_novos`, já registrados em cada linha do `execucoes.jsonl`, de modo que uma reprovação em JS002 ou JS003 causada por esses testes unitários possa ser lida como efeito do acoplamento entre teste e implementação, e não como defeito funcional da correção. As correções escritas à mão da sondagem B não entram em nenhuma métrica.
+
+## 12. Condição de diagnóstico P1L (localização do alerta)
+
+**O que é.** `P1L_diagnostico_localizacao` é o prompt `P1_simples` mais um único bloco com a localização e a identificação do alerta do Semgrep: arquivo, linha, regra (`check_id`), CWE e mensagem. O bloco entra entre o código e as restrições, na mesma posição em que o P2 insere o roteiro. Todo o resto é idêntico ao P1 (papel, tarefa, código, restrições congeladas da Seção 10, formato).
+
+**O que não é.** **Não é uma estratégia nova do desenho experimental.** As estratégias P1 a P4 do TCC 1 não mudam e a TRV do desenho continua calculada só sobre elas. O P1L é uma **condição de diagnóstico**: serve para medir o efeito de o prompt não dizer qual vulnerabilidade corrigir.
+
+**Justificativa.** A confusão foi prevista **antes de qualquer execução**, no Adendo M4: nas estratégias sem alerta (P1, P2), quem escolhe o que corrigir é a LLM, e não o SAST; o critério R, porém, só verifica o alerta escolhido pelo SAST. A execução preliminar E01 mostrou o efeito nos dados (caderno, 2026-10-08): em JS001 a LLM corrigiu outra vulnerabilidade do mesmo arquivo, e JS005/JS006 e JS009/JS010 receberam prompts idênticos, por serem regras diferentes no mesmo ponto do mesmo arquivo. Comparar P1 com P1L, caso a caso, isola o efeito da informação de localização, sem alterar o desenho aprovado.
+
+**Execução.** O P1L roda **sempre e fora da cadeia** de estratégias (`--diagnosticos P1L`): não depende de P1 ou P2 terem sido aceitos e não interrompe a cadeia. Assim, existe um par P1 × P1L para todos os casos. Cada linha do `execucoes.jsonl` registra `condicao` (`desenho` ou `diagnostico`), e as métricas do desenho excluem as linhas de diagnóstico, que são reportadas à parte.
+
+## 13. Separação dos conjuntos F e D: definição, operacionalização e análise de sensibilidade
+
+> **Nota de transparência sobre a ordem dos fatos.** A definição do conjunto D estava pré-registrada (Seção 7.1) antes de qualquer execução, mas **não foi implementada a tempo da execução preliminar E01**. A operacionalização abaixo foi construída **depois** de a E01 ter rodado e de termos visto quais testes falharam nela. A sequência real está descrita a seguir, sem reordenar.
+
+**1. Definição pré-registrada (Seção 7.1).** D é o conjunto de testes do Juice Shop que falham justamente porque a vulnerabilidade foi corrigida; uma correção não perde F por fazer cair um teste de D. A classificação seria feita na análise. Até a E01, nenhuma regra operacional existia.
+
+**2. Execução preliminar E01 (2026-10-08), sem separação.** Os testes que derrubaram correções com `R = 1` foram, entre outros, os de `login.test.ts` que executam SQL injection e esperam token (JS005, JS006) e o de `user-profile.test.ts` que espera o payload de SSTI avaliado (JS011). A E01 fica arquivada como preliminar.
+
+**3. Primeira tentativa: marcador de desafio (2026-10-08).** Procurou-se um marcador mecânico na suíte. O encontrado foi a asserção de desafio resolvido, `assert.equal(challenges.<id>.solved, true)` (32 ocorrências) e duas variantes (`challenge.solved, true` e `'Challenge successfully solved'`). A busca por palavras no nome do teste foi descartada, porque pega testes que afirmam a defesa ("is caught by parser", "is not susceptible", "cannot be bypassed"). A comparação com as correções oficiais (`data/static/codefixes/`) foi descartada, porque só existe para 5 dos 12 casos.
+
+**4. Por que o marcador se mostrou incompleto.** Ao aplicá-lo aos testes que falharam na E01, viu-se que os **testes de exploit da API não citam desafio**: o teste de SQL injection exige HTTP 200 com token para a carga de ataque, e o de SSTI exige o resultado da expressão avaliada. Pela semântica, eles dependem da vulnerabilidade; pelo marcador, seriam F. O marcador era só uma forma de operacionalizar a definição da 7.1, e não a definição.
+
+**5. Critérios (2026-10-09), escritos antes de classificar qualquer teste** (`docs/criterios_conjunto_d.md`). Um teste pertence a D se, e somente se, suas asserções só podem valer enquanto a vulnerabilidade está presente, verificado por uma de três formas:
+- **(a)** asserção de desafio resolvido (as três variantes do item 3);
+- **(b)** requisição com carga de ataque conhecida recebendo resposta de sucesso (2xx, token de autenticação, ou dado que não deveria ser acessível sem a falha);
+- **(c)** resposta contendo evidência de que a carga foi interpretada (avaliação de template, vazamento de erro de SQL, execução ou entrega sem neutralização de script).
+
+Todo o resto é F, inclusive testes que afirmam que a defesa funciona ou que a aplicação não é suscetível. Testes baseados em mock do caminho de chamada (por exemplo, o argumento passado a `res.sendFile`) são F. Em dúvida, F.
+
+**6. Construção a priori da lista sobre a suíte inteira** (`docs/conjunto_d.md`, `config/conjunto_d.json`, gerados por `scripts/gerar_conjunto_d.py`). Foram varridos **863 blocos `it(...)`** de `test/api/` e `test/server/` inteiros (os ~27 testes gerados em laço são funcionais e ficam em F). O critério (a) é aplicado mecanicamente; para (b) e (c), os candidatos foram localizados por sinais de carga de ataque no corpo e por palavras-chave no nome, e decididos pelas asserções. Resultado: **75 testes em D** — 36 por (a), 29 por (b), 10 por (c) — e 35 testes examinados e mantidos em F, com o motivo. Doze deles estão **sinalizados**: parecem depender de uma falha, mas ficam fora da letra dos critérios (listagem de diretório e log de acesso obtidos por GET simples, vazamento de erro que não é de SQL, ReDoS com 503, exportação sem CAPTCHA). Pela regra "em dúvida, F", ficam em F até decisão do grupo. A lista foi montada sobre a suíte, sem consultar os resultados da E01, mas quem a montou já conhecia os testes que tinham falhado na E01; essa familiaridade não pode ser apagada e fica declarada.
+
+**7. Decisão: reportar nas duas definições (análise de sensibilidade).**
+- **`d_marcador`:** só o critério (a). Regra mecânica, sem julgamento.
+- **`d_criterio`:** os três critérios, pela lista do item 6. É a definição usada em `F` e `classificacao_final`, por ser a operacionalização mais fiel à 7.1.
+- Cada validação grava também `F_sem_separacao` (qualquer falha nova reprova, como na E01), para comparação.
+- Os conjuntos são encaixados (`d_marcador` ⊂ `d_criterio`), portanto `F_sem_separacao ≤ F_marcador ≤ F_criterio`. A escada de validação só para quando uma camada falha por algo fora de `d_criterio`, para que as três versões saiam da mesma validação.
+- A cadeia de estratégias só para quando a tentativa é aceita **sem separação** (definição mais estrita). Nas métricas de cada definição, tentativas posteriores ao primeiro aceite **naquela definição** não entram, como se a cadeia tivesse parado ali.
+- **TCD** (proporção de correções aceitas que fazem cair ao menos um teste de D) é calculada em cada definição; sem separação, é 0 por construção.
+
+A diferença entre as métricas nas duas definições mede quanto do resultado depende da classificação.
+

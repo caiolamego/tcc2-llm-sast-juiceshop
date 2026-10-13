@@ -255,6 +255,208 @@ O item 3 (escopo) ainda está em aberto — aguardando a contagem exata de quant
 
 ---
 
+### 2026-10-07 — Reexecução com interseção para testes intermitentes (F4/F5)
+
+**Sintoma:** `test/api/erasure-request.test.ts` (`POST erasure request does not actually delete the user`) falhou 1 vez em 8 execuções do T4 sem alteração (`socket hang up`) e, por não estar na linha de base, reprovou o cenário 1 numa rodada.
+
+**Causa:** teste intermitente do próprio Juice Shop. Uma linha de base de uma execução só não o captura.
+
+**Correção (decisão do grupo, protocolo 7.2):** quando uma camada acusa testes falhos novos, `runner._avaliar` a executa uma segunda vez; contam contra o F só os testes novos que falharam **nas duas** rodadas (interseção). Cada camada e cada validação registram `reexecucoes` e `testes_falhos_intermitentes` (diferença simétrica: falharam em só uma rodada); a camada guarda também `testes_falhos_reexecucao` e `saida_reexecucao`. Se a segunda rodada não produzir relatório confiável (timeout, erro sem relatório), vale a primeira (conservador). A linha de base não foi ampliada.
+
+Conferido por simulação das duas rodadas (sem rodar a suíte):
+
+| Caso simulado | 1ª rodada | 2ª rodada | Resultado |
+|---|---|---|---|
+| Intermitente | {A} | {} | passa, `so_falhas_intermitentes`, intermitentes = {A} |
+| Real | {A} | {A} | reprova, novos = {A} |
+| Misto | {A, B} | {A, C} | reprova, novos = {A}, intermitentes = {B, C} |
+
+Primeiro caso real: sondagem B de JS003 (`reexecucoes = 1`), em que a falha de `keyServer.unit.test.ts` se repetiu e contou.
+
+**Impacto na reprodutibilidade:** sim, define o F. Custo extra só quando há falha nova (~12 s no T4).
+
+**Fase do guia:** F4.2 (D5).
+
+---
+
+### 2026-10-07 — EXP01 × EXP02: restrição de mudança mínima e profundidade da correção (F5)
+
+**Sintoma:** na EXP01 (sem a restrição explícita), a correção de JS003 reprovou no T4 por reescrever a mensagem de erro verificada por `test/api/file-serving.test.ts`. Na EXP02 (com a restrição "Não altere mensagens de erro, textos visíveis ao usuário, nomes de identificadores nem assinaturas de funções existentes"), passou em T0, T2, T3 e T4 com +1/−1 linha.
+
+**Observação relevante:** a correção aceita (bloqueio de `..` e `/`) é defensivamente mais fraca que a reprovada, que também verificava se o caminho resolvido permanece dentro de `encryptionkeys/` (`startsWith`). A restrição de mudança mínima elevou a preservação funcional e reduziu a profundidade da correção. Sondagem A (mesmo dia, sem LLM): **o alerta do Semgrep persiste nas duas** (`R = 0`), porque a regra `express-res-sendfile` é `taint` sem saneadores e não considera validações condicionais (protocolo 7.3).
+
+**Impacto:** material para a discussão sobre engenharia de prompt; os dois diffs ficam arquivados (`outputs/tentativas/JS003_A06_PATHTRAV_P1_EXP01_*` e `_EXP02_*`). A primeira tentativa foi renomeada de `E01` para `EXP01` (`git mv`), para deixar `E01` livre para a execução oficial; a citação da Seção 10 do protocolo foi atualizada.
+
+**Custos:** EXP01 640+548 tokens, US$ 0,00113; EXP02 665+387 tokens, US$ 0,00089; mesmo `system_fingerprint` `fp_adba1d049a`.
+
+**Fase do guia:** F5.3.
+
+---
+
+### 2026-10-07 — Oráculo R depende do modo da regra; sondagens A e B em `sendFile` (F5/F6)
+
+**Sintoma:** hipótese inicial de separar os achados por regras `audit` × `vuln`. `metadata.subcategory` vale `vuln` nos 12 elegíveis, mas 9 têm `.audit.` no `check_id`: os critérios discordam.
+
+**Causa:** nenhum dos dois descreve como a regra decide. Lido no código-fonte das 7 regras (`semgrep/semgrep-rules`, `develop`, commit `a84ff9cc`): 1 é `search` (JS012), 2 são `taint` com saneadores (`parseInt`, `.hash`: JS005, JS009) e 9 são `taint` sem saneadores.
+
+**Correção:** classificação em três faixas (protocolo 7.3). Definições versionadas em `config/semgrep-rules-referencia/` com README (cópia de referência, possivelmente divergente do registro). Catálogo com `subcategoria_regra`, `audit_no_check_id`, `modo_regra` e `saneadores_regra`. Sondagens sem LLM, arquivadas em `outputs/sondagens/`:
+- A: patches EXP01 e EXP02 de JS003 → alerta persiste nos dois (`R = 0`).
+- B: correção **escrita à mão** (`res.sendFile(file, { root: ... })`, mantendo validação e mensagem) → alerta some (`R = 1`) em JS002, JS003, JS004 e JS007, sem alertas novos. JS004 e JS007 passam em toda a validação. JS002 e JS003 reprovam no T2, porque os testes unitários conferem por mock o caminho completo passado ao `sendFile` (8 testes no JS002, 5 deles de desafio). O T4, rodado à parte para diagnóstico, passa nos dois.
+
+**Impacto na reprodutibilidade:** não muda a TRV, muda a análise (resultados também por faixa). Mostra um conflito concreto entre R e F: a forma que zera o alerta quebra testes acoplados à implementação. As correções escritas à mão não entram em nenhuma métrica.
+
+**Fase do guia:** F3.4 (D1, D6), F7.
+
+---
+
+### 2026-10-07 — `config/semgrepignore` sem `logs/` e `three.js` (F3.2, descoberto na F6)
+
+**Sintoma:** ao preparar a varredura da sessão para a F6, `config/semgrepignore` não continha `logs/` nem `frontend/src/assets/private/three.js`, que estão no comando da F3.2 do guia e na Seção 3 do protocolo.
+
+**Causa:** as duas exclusões foram acrescentadas ao comando manual do baseline, mas não ao arquivo que o código lê.
+
+**Correção:** as duas linhas foram acrescentadas ao arquivo. O baseline de setembro, rodado com o comando do guia, não foi afetado.
+
+**Impacto na reprodutibilidade:** sim, para varreduras feitas pelo código. Sem a correção, a varredura da F6 sairia com contagens diferentes das do baseline.
+
+**Fase do guia:** F3.2 (D1).
+
+---
+
+### 2026-10-07 — F6: orquestração, R contra a varredura da sessão, P2 com roteiro em rascunho
+
+**Sintoma:** implementação da F6 (`src/pipeline/run_pipeline.py`).
+
+**Causa / decisões aplicadas:**
+- **R contra a varredura da sessão (decisão do grupo):** os rulesets do registro não são versionados, então o "antes" do R é a varredura do worktree limpo feita no início de cada execução (`outputs/sast_antes/<EXECUCAO>_baseline_raw.json`). Numa retomada da mesma execução, essa varredura é reaproveitada. O baseline de setembro continua sendo a origem do catálogo. As duas são comparadas a cada sessão (`<EXECUCAO>_comparacao_baseline.json`); caso do catálogo sem o alerta na sessão é pulado e registrado.
+- **SAST depois:** só os arquivos tocados (o do alerta e os editados), porque a análise do Semgrep é por arquivo. R = assinatura do caso ausente depois. M = nenhuma assinatura elegível pelo filtro do protocolo (Seção 3, passos 2–4, agora em `src/pipeline/sast/filtro.py`, compartilhado com o catálogo) que não existisse antes nesses arquivos. Cada linha do `execucoes.jsonl` grava a saída completa do SAST depois (`sast_depois`, todos os achados normalizados) e o caminho do JSON bruto (`sast_depois_raw`), além de `ocorrencias_alvo` (antes/depois) e `faixa_regra` (protocolo 7.3).
+- **Paralelismo:** um caso por worktree (K workers), estratégias em sequência, parando na primeira com R·F·M = 1. T4 serializado por lock entre worktrees (porta 43210); a reexecução da Seção 7.2 roda dentro do lock. Orçamento: conferir, chamar e registrar sob o mesmo lock (sem isso, até K−1 chamadas passariam do limite).
+- **Checagem de ambiente:** no início da sessão, a validação roda em cada worktree sem alteração; se algum reprovar, a sessão aborta (cenário 1 da F4.3).
+- **Retomada:** lê o `execucoes.jsonl`, pula tentativas registradas e casos já aceitos. Erro inesperado interrompe só o caso, sem gravar linha (a retomada refaz; a resposta da LLM vem do cache).
+- **P2:** implementado como P1 + roteiro em etapas, sem alerta SAST (tabela da F5.3; fatorial 2×2 removido no cronograma). O texto do roteiro do TCC 1 não estava disponível (repositório da PoC não encontrado entre os públicos), então `config/prompts/roteiro_raciocinio_guiado.md` contém um **rascunho** (`STATUS: RASCUNHO`), com passos espelhando os seis campos da resposta. Com rascunho, P2 roda só em `--dry-run`; chamada real exige `STATUS: APROVADO`. P1 ficou idêntico byte a byte (hash igual ao da EXP02).
+- **P3/P4:** falham na largada com mensagem clara enquanto `knowledge_base/_index.yaml` não existir.
+
+**Critério de conclusão (dry-run completo, `DRY02`):** 12 casos × P1, P2, K=4, 24 tentativas em 617 s, 0 erros. Varredura da sessão igual à de setembro (15 × 15 achados brutos, 12 assinaturas, Semgrep 1.177.0). Todas `rejeitada:R0F1M1`, como esperado de uma resposta falsa que só acrescenta um comentário. Checagem de ambiente: os 4 worktrees passaram. A reexecução da Seção 7.2 atuou 2 vezes e evitou 2 F=0 espúrios: em JS006/P1, `internet-resources › Comment on "Top 10 Fruits…"` e `memory.test.ts › Should not crash … CVE-2022-24434`; em JS007/P2, o mesmo teste de `internet-resources`. São mais dois testes intermitentes além do `erasure-request`, e ambos se resolveram na segunda rodada. Caminho de aceite conferido à parte (`DRYACEITE`, correção escrita à mão em JS004): aceita em P1, P2 não executado.
+
+**Impacto na reprodutibilidade:** sim. Define como R é medido e onde ficam os artefatos (`outputs/prompts/`, `respostas_llm/`, `patches/`, `codigos_corrigidos/`, `sast_depois/`, `testes/`, `resultados_consolidados/`); o dry-run usa a mesma estrutura em `outputs/dry_run/`.
+
+**Fase do guia:** F6.
+
+---
+
+### 2026-10-08 — Roteiro do P2 substituído pelo texto do TCC 1 (Seção 4.2.4)
+
+**Sintoma:** o roteiro em `config/prompts/roteiro_raciocinio_guiado.md` era um rascunho (`STATUS: RASCUNHO`, seis passos espelhando os campos da resposta), escrito sem acesso ao TCC 1.
+
+**Causa:** o texto original não estava no repositório.
+
+**Correção:** o grupo substituiu o arquivo pelo texto da Seção 4.2.4 do TCC 1 (cinco etapas: identificar, explicar a causa, descrever o impacto de segurança, propor a correção, justificar tecnicamente), com `STATUS: APROVADO`, a tabela de correspondência entre as etapas e os seis campos da resposta, e a nota de congelamento (2026-10-08). O arquivo novo é um documento, então `builder.carregar_roteiro()` passou a extrair **só** o bloco cercado por ``` da seção "Bloco a ser inserido no prompt", e falha se ela não existir. Sem essa mudança, as 65 linhas do documento iriam para o prompt. Conferido: o bloco extraído é idêntico ao do arquivo (sha256 `6ac34725…`), o P2 é exatamente P1 + esse bloco entre o código e as restrições, e o P1 continua idêntico (mesmo hash da EXP02). Com `STATUS: APROVADO`, o P2 deixou de estar restrito ao dry-run.
+
+**Impacto na reprodutibilidade:** sim. Define o conteúdo do P2 na E01; o `roteiro_sha256` vai em cada linha do `execucoes.jsonl`.
+
+**Fase do guia:** F5.3.
+
+---
+
+### 2026-10-08 — Primeira tentativa da E01 abortada: T4 travado no wt-4
+
+**Sintoma:** na checagem de ambiente da primeira sessão da E01 (20:36 UTC), o T4 do `wt-4` (sem alteração) ficou parado em `test/api/password.test.ts` até o timeout de 300 s. O `wt-4` reprovou e a sessão abortou **antes de qualquer chamada à LLM** (contador de orçamento inalterado: 2 chamadas, US$ 0,002). O `wt-3` levou 346 s, mas passou: ficou esperando o lock do T4, preso pelo `wt-4`.
+
+**Causa:** não identificada. O teste não acessa rede (app em memória). Rodado logo depois, duas vezes, o T4 do `wt-4` passou em 11 s cada vez. Foi um travamento pontual, não defeito do worktree.
+
+**Correção:** nenhuma no critério. A sessão foi reiniciada com K=4. O orquestrador passou a gravar a sessão em `<EXECUCAO>_sessoes.json` também quando aborta (antes, a checagem abortada não deixava registro) e a registrar o motivo de cada camada na checagem.
+
+**Em aberto para o grupo:** a reexecução da Seção 7.2 vale só para testes falhos novos. Um travamento como este durante uma tentativa real gera F=0 por `timeout` sem reexecução. Opção: estender a reexecução a `timeout` no T4.
+
+**Impacto na reprodutibilidade:** potencial. Timeout no T4 pode produzir F=0 espúrio.
+
+**Fase do guia:** F4.2, F6.
+
+---
+
+### 2026-10-08 — Execução E01 (P1, P2; 12 casos): resultado e achados
+
+**Sintoma:** E01 concluída (sessão 20:42:54–20:51:48 UTC, 450,7 s de processamento após a checagem de ambiente). 24 tentativas, 0 erros, **0 correções aceitas** (TRV = 0). Métricas preliminares (antes da F7) em `outputs/resultados_consolidados/E01_metricas_preliminares.json`. 19 chamadas reais (US$ 0,02498; 27.017 + 9.220 tokens) e 5 respostas do cache. `system_fingerprint` único: `fp_adba1d049a`. Varredura da sessão igual à de setembro (15 × 15). Checagem de ambiente: 4 worktrees OK; no `wt-2`, `feedback.test.ts › DELETE existing feedback` foi intermitente e se resolveu na reexecução.
+
+**Achados (para a análise; nenhum critério foi alterado):**
+1. **Prompts idênticos entre casos.** JS005/JS006 (`routes/login.ts`, linha 34) e JS009/JS010 (`routes/search.ts`, linha 23) são regras diferentes no mesmo ponto do mesmo arquivo. Como P1 e P2 não recebem o alerta SAST, o prompt é o mesmo, e a segunda chamada veio do cache, com patch idêntico. Na prática, 10 problemas distintos para a LLM, não 12.
+2. **JS003/P1 da E01 é a resposta da EXP02:** mesmo prompt, modelo e seed; veio do cache. Determinismo esperado (D8), mas a E01 de JS003/P1 não é uma chamada independente.
+3. **Sem o alerta, a LLM corrigiu outra vulnerabilidade.** Em JS001 (segredo JWT fixo em `lib/insecurity.ts`), P1 e P2 alteraram a linha do allowlist de redirecionamento (`vuln-line redirectChallenge`) no mesmo arquivo. R = 0 e reprovação no T3 por um teste de desafio. É a variável de confusão do Adendo M4 aparecendo nos dados.
+4. **Testes de desafio (Risco 2, conjunto D) derrubam correções que parecem corretas.** JS005/JS006 (P1 e P2): consulta parametrizada com `replacements`, R = 1, M = 1, e reprovação no T4 só pelos 5 testes de `login.test.ts` que executam ataques de SQL injection e esperam que funcionem. JS011/P1: R = 1, reprovação só em `user-profile.test.ts › … renders evaluated SSTI payload …`. JS001: `redirect.unit.test.ts › tricking the allowlist should solve "redirectChallenge"`. A classificação F × D é feita na análise (protocolo 7.1), não no pipeline.
+5. **Falhas de compilação (T0):** JS009/JS010 (P1 e P2: `Property 'QueryTypes' does not exist on type 'Sequelize'`) e JS008/P2 (`Property 'some' does not exist on type 'Set<string>'`).
+6. **Faixa 3 (`sendFile`, JS002–JS004, JS007):** todas com F = 1 e R = 0, como a sondagem A antecipou (validação condicional não remove o alerta).
+7. **Patch não aplicável:** JS012/P1 e JS011/P2 (`ancora_nao_encontrada`); TAP = 22/24.
+
+**Correção (código):** o custo acumulado da sessão no log somava respostas do cache (US$ 0,03075 no log; real US$ 0,02498); corrigido em `run_pipeline.py`. A primeira sessão abortada (entrada anterior) não ficou em `E01_sessoes.json`, porque o registro de sessão abortada foi acrescentado depois dela.
+
+**Impacto na reprodutibilidade:** os achados 1 e 2 afetam a independência entre casos e devem constar da Metodologia. Os achados 3 e 4 são resultado.
+
+**Fase do guia:** F6, F7, F8.
+
+---
+
+### 2026-10-08 — Decisões antes da E02: E01 preliminar, timeout, Seção 10 e condição P1L
+
+**Sintoma:** a E01 mostrou falhas em testes de desafio sem separação F/D implementada, risco de F = 0 por travamento, um parágrafo errado na Seção 10 e a confusão do Adendo M4 nos dados.
+
+**Causa / decisões do grupo:**
+- **E01 arquivada como execução preliminar**, anterior à separação F/D. Nada dela é apagado. A execução oficial será a E02.
+- **Timeout também dispara reexecução** (protocolo 7.2, extensão): uma vez, em T0, T2, T3 e T4. Sem relatório da primeira rodada não há interseção; vale a segunda. Campo `timeout_na_primeira_rodada`. Conferido por simulação: timeout→passa (passa), timeout→timeout (reprova, `timeout`), timeout→falha A (reprova, A conta).
+- **Seção 10 reescrita:** a lição de EXP01 × EXP02 é a troca entre profundidade da correção e preservação funcional (as duas têm R = 0), e não divergência entre R e F. A divergência entre R e F passa a ser ilustrada por JS005, JS006 e JS011 da E01. A nota de correção provisória foi removida.
+- **Condição de diagnóstico P1L** (protocolo, Seção 12): P1 + bloco com arquivo, linha, regra, CWE e mensagem do alerta. Não é estratégia do desenho; mede o efeito de o prompt não dizer o que corrigir (confusão prevista no Adendo M4). Roda sempre, fora da cadeia (`--diagnosticos P1L`), com `condicao = diagnostico` em cada linha. Conferido: P1L = P1 + bloco; P1 inalterado (hash da EXP02); com o P1L, JS005 × JS006 e JS009 × JS010 passam a ter prompts distintos; em dry-run, com P1 aceito, o P2 foi pulado e o P1L rodou.
+
+**Correção:** `runner.py`, `builder.py`, `run_pipeline.py`; protocolo 7.2, 10 e 12.
+
+**Impacto na reprodutibilidade:** sim. Muda o critério F (timeout) e acrescenta uma condição às execuções a partir da E02.
+
+**Fase do guia:** F4.2, F5.3, F6.
+
+---
+
+### 2026-10-09 — Separação F/D: critérios, lista a priori e duas definições
+
+**Sintoma:** o marcador de desafio (asserção `challenges.<id>.solved, true`), proposto em 2026-10-08, não captura os testes de exploit da API (SQL injection em `login.test.ts`, SSTI em `user-profile.test.ts`), que afirmam que o ataque funciona sem citar desafio.
+
+**Causa:** o marcador operacionaliza só uma parte da definição da Seção 7.1.
+
+**Correção (decisão do grupo, protocolo Seção 13):**
+1. Critérios (a), (b), (c) escritos **antes** de classificar qualquer teste: `docs/criterios_conjunto_d.md`.
+2. Varredura de `test/api/` e `test/server/` inteiros (863 blocos `it(...)`): 75 testes em D (36 por (a), 29 por (b), 10 por (c)) e 35 examinados e mantidos em F, 12 deles sinalizados para decisão do grupo. Lista em `docs/conjunto_d.md` e `config/conjunto_d.json`, gerados por `scripts/gerar_conjunto_d.py`. Todas as 110 linhas citadas (do `it` e da asserção) foram conferidas contra o arquivo.
+3. Duas classificações em cada validação: `d_marcador` (só (a)) e `d_criterio` (lista completa), além de `F_sem_separacao` (regra da E01). Escada só para em falha fora de `d_criterio`; cadeia só para em aceite sem separação. Métricas e TCD nas três versões (`scripts/metricas_execucao.py`). Conferido por simulação de seis cenários de escada e por dry-run com a consulta parametrizada de JS005 escrita à mão (F sem/marcador/critério = 0/0/1).
+
+**Erro encontrado e corrigido no caminho:** a primeira versão da extração contava a linha em branco anterior ao `it(...)`, deslocando a linha do teste em −1; corrigido e conferido linha a linha.
+
+**Reclassificação a posteriori da E01 (só para comparação):** sob `d_criterio`, JS005, JS006 e JS011 seriam aceitos (TRV por tentativa 0 → 0,143; 3/12 casos); sob `d_marcador`, nada muda. JS001 fica indeterminado: a escada da E01 parou no T3 (teste (a)) e o T4 não rodou; o R dele é 0 de qualquer forma.
+
+**Achado no mesmo dia:** segundo travamento do T4. No dry-run de teste da separação (JS005/P2), a primeira rodada terminou em ~11 s, com os 5 testes (b), e a reexecução da interseção travou até 300 s. Pela regra, vale a primeira rodada (conservador), e a classificação saiu correta. A saída capturada não permite identificar o arquivo travado.
+
+**Impacto na reprodutibilidade:** sim. Define F a partir da E02. A familiaridade de quem montou a lista com os testes que falharam na E01 está declarada no protocolo.
+
+**Fase do guia:** F4.2, F7.
+
+---
+
+### 2026-10-09 — Execução E02 (P1, P2 e diagnóstico P1L; 12 casos)
+
+**Sintoma:** E02 concluída (20:07:59–20:26:49 UTC, 1.050 s), 36 tentativas (24 do desenho, 12 de diagnóstico), 0 erros. Métricas em `outputs/resultados_consolidados/E02_metricas.json` (`scripts/metricas_execucao.py`). Varredura da sessão igual à de setembro (15 × 15).
+
+**Cache:** P1 e P2 têm os mesmos prompts da E01, então as 24 respostas do desenho vieram do cache (Seção 9, D8). Só os 12 P1L foram chamadas novas (US$ 0,01785; 17.887 + 6.684 tokens). Consequência: no desenho, a comparação E01 × E02 isola o efeito da separação F/D, sem variação da LLM.
+
+**Resultados (desenho, cadeia reconstruída por definição):**
+- Sem separação e `d_marcador`: TRV 0, nenhum caso aceito, como na E01.
+- `d_criterio`: JS005, JS006 e JS011 aceitos com P1 (TRV por tentativa 0,143; 3/12 casos; TCD 1,00). Os três derrubam só testes D: 5 de SQL injection (b) em JS005 e JS006, 1 de SSTI (c) em JS011.
+- A mudança em relação à E01 vem só da separação F/D: a reclassificação a posteriori da E01 dá exatamente os mesmos 3 casos.
+
+**Diagnóstico P1L:** JS001 aceito com P1L em todas as definições. Com o alerta no prompt, a LLM corrigiu o segredo JWT; com P1 e P2 tinha alterado o redirecionamento. JS005 aceito com P1L sob `d_criterio`. JS006/P1L reprovou por um teste F: a correção reformatou a consulta em várias linhas, deslocando o comentário `vuln-code-snippet vuln-line`, e `vuln-code-snippet.test.ts › … returns a line-number hint …` falhou. JS012/P1L removeu a listagem de diretório (R = 0) e derrubou `ftp-folder.test.ts › GET serves a directory listing`, um dos testes sinalizados.
+
+**Robustez:** a reexecução por timeout (Seção 7.2) atuou uma vez: JS005/P2, T4 travou na primeira rodada e passou na segunda. A reexecução por falha nova salvou JS002/P1 e JS007/P1 de testes intermitentes.
+
+**Impacto na reprodutibilidade:** a E02 é a execução oficial do desenho com separação F/D. As 24 respostas do desenho são as da E01 (cache).
+
+**Fase do guia:** F6, F7, F8.
+
+---
+
 <!--
 Próxima entrada:
 
