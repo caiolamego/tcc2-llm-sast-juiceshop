@@ -188,3 +188,36 @@ Condições que tornam esse ajuste legítimo e não seleção de resultados favo
 3. Após esta data, **nenhuma alteração de prompt é feita com base em resultados da execução completa**. Qualquer necessidade identificada depois entra como trabalho futuro.
 
 A observação em si é resultado: a correção removeria o alerta do SAST (`R = 1`) e seria classificada como bem-sucedida por qualquer avaliação baseada apenas em reanálise estática, mas foi reprovada na camada de testes por uma alteração cosmética. É evidência direta do argumento central do trabalho — remoção de alerta não é prova de correção adequada — e deve ser citada no capítulo de discussão.
+
+## 11. Catálogo ampliado por ocorrência — política escopo_apenas_v1
+
+Implementado em 12/10/2026 na feature 01. Esta seção registra a política do conjunto ampliado;
+as seções anteriores descrevem o catálogo histórico e as execuções E01/E02.
+
+O gerador `scripts/experiment/build_expanded_catalog.py` lê as quatro fontes da auditoria
+combinada arquivada, verifica hashes, commit, versão do Semgrep e associação por número,
+regra, arquivo e intervalo. A decisão de escopo é a classificação arquivada validada.
+O filtro histórico de severidade/categoria/CWE não é reaplicado ao conjunto ampliado.
+
+A unidade é uma ocorrência (regra normalizada, arquivo e intervalo completo no commit fixado),
+sem deduplicação ou agrupamento por causa. Entram confirmados, falsos positivos e inconclusivos;
+só `fora_escopo` é excluído. O catálogo produzido contém 78 casos: 55 confirmados,
+21 falsos positivos e 2 inconclusivos. Há 46 exclusões rastreáveis, totalizando 124 alertas.
+A presença de um falso positivo permanece como metadado; eventual remoção de seu alerta
+não será interpretada como prova de correção de uma vulnerabilidade real.
+
+Os IDs `AMP…` derivam de SHA-256 sobre commit, regra, arquivo e coordenadas. Eles identificam
+ocorrências no baseline; deslocamentos de linhas após patches exigirão tratamento na integração.
+Trechos são lidos de um checkout limpo, com hash do arquivo e três linhas de contexto por lado.
+Arquivos excluídos não são lidos para extrair trechos. Metadados ausentes não excluem casos;
+CWE desconhecida resulta em `OUTRO`, e RAG sem mapeamento em `generico`.
+
+Saídas oficiais: [catálogo](../outputs/catalogos/ampliado_v1/catalogo_issues.json),
+[exclusões](../outputs/catalogos/ampliado_v1/exclusoes.json) e
+[metadados](../outputs/catalogos/ampliado_v1/catalogo_meta.json).
+A [especificação](../features/01-catalogo-ampliado/README.md) e o
+[relatório de entrega](../features/01-catalogo-ampliado/ENTREGA.md) detalham o contrato e a reprodução.
+
+Esta geração não altera as entradas do orquestrador. O catálogo histórico, seus resultados e
+os scripts anteriores foram preservados. Congelamento do perfil ampliado, comparação posterior
+R/M e seleção do novo catálogo no pipeline permanecem pendentes.
