@@ -20,8 +20,8 @@ ARQ_EXECUCOES = RAIZ_REPO / "outputs" / "resultados_consolidados" / "execucoes.j
 _LOCK = threading.Lock()  # varios workers gravando no mesmo arquivo
 
 
-def commit_alvo(wt: Path) -> str:
-    esperado = dotenv_values(RAIZ_REPO / ".env").get("JUICESHOP_COMMIT")
+def commit_alvo(wt: Path, commit_esperado: str | None = None) -> str:
+    esperado = commit_esperado or dotenv_values(RAIZ_REPO / ".env").get("JUICESHOP_COMMIT")
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=wt, capture_output=True,
                           text=True, check=True, timeout=30).stdout.strip()
     if not esperado or head != esperado:
@@ -29,9 +29,9 @@ def commit_alvo(wt: Path) -> str:
     return head
 
 
-def registrar_execucao(linha: dict, wt: Path, arquivo: Path = ARQ_EXECUCOES) -> None:
+def registrar_execucao(linha: dict, wt: Path, arquivo: Path = ARQ_EXECUCOES, commit_esperado: str | None = None) -> None:
     """Acrescenta uma linha (uma tentativa) e forca a escrita em disco."""
-    registro = {**linha, "commit_alvo": commit_alvo(wt)}
+    registro = {**linha, "commit_alvo": commit_alvo(wt, commit_esperado)}
     arquivo.parent.mkdir(parents=True, exist_ok=True)
     with _LOCK, arquivo.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(registro, ensure_ascii=False) + "\n")

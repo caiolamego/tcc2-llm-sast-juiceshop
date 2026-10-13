@@ -355,3 +355,26 @@ anteriores, incluindo JSONP same-site. Nenhuma LLM foi executada.
 MIT. Ver [LICENSE](LICENSE).
 
 O OWASP Juice Shop é distribuído sob licença própria e não é redistribuído neste repositório — é obtido em tempo de configuração a partir do repositório oficial, em commit fixado.
+
+
+## Execução com catálogo ampliado
+
+A feature 02 adiciona seleção do catálogo e perfil local, preflight e contrato de retomada.
+Use o ambiente completo preparado em `.venv` e um worktree no commit fixado.
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pipeline.run_pipeline \
+  --execucao AMP_PREFLIGHT_01 \
+  --catalogo outputs/catalogos/ampliado_v1/catalogo_issues.json \
+  --perfil-sast config/perfis/ampliado_v1/perfil.json \
+  --saida outputs/feature02/AMP_PREFLIGHT_01 \
+  --somente-preflight --estrategias P1,P2 --k 1 \
+  --semgrep-bin .venv/bin/semgrep
+```
+
+O preflight não chama a API, não aplica patches e não exige `node_modules`.
+Para dry-run, usar outra execução/saída, `--dry-run` e uma referência de testes compatível
+em `--baseline-testes`. Indeterminações SAST são registradas e não aceitas automaticamente.
+Os nomes antigos JS continuam disponíveis no modo histórico; AMP usa identidade por ocorrência.
+
+Veja a [especificação da integração](features/02-integracao-catalogo/README.md).

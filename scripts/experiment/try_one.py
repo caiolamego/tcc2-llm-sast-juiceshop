@@ -53,9 +53,30 @@ def main() -> None:
     ap.add_argument("--execucao", required=True, help="tentativas exploratorias: EXPnn (E01.. e da F6)")
     ap.add_argument("--dry-run", action="store_true", help="resposta falsa, sem chamar a API")
     ap.add_argument("--sem-t4", action="store_true", help="pula o T4 (testes de API)")
+    ap.add_argument('--catalogo', type=Path, default=CATALOGO)
+    ap.add_argument('--perfil-sast', type=Path)
+    ap.add_argument('--semgrep-bin', default='semgrep')
+    ap.add_argument('--saida', type=Path)
+    ap.add_argument('--baseline-testes', type=Path, default=RAIZ_REPO/'outputs/baseline_testes.json')
     args = ap.parse_args()
 
-    issue = next((i for i in json.loads(CATALOGO.read_text(encoding="utf-8"))
+    from pipeline.catalogo import carregar
+    catalogo = carregar(args.catalogo)
+    if catalogo.ampliado:
+        if args.sem_t4:
+            raise SystemExit('--sem-t4 não é permitido no modo ampliado; preserve a cobertura declarada')
+        if not args.perfil_sast or not args.saida:
+            raise SystemExit('Catálogo ampliado requer --perfil-sast e --saida')
+        from pipeline.run_pipeline import main as run
+        argv = ['--execucao', args.execucao, '--catalogo', str(args.catalogo),
+                '--perfil-sast', str(args.perfil_sast), '--saida', str(args.saida),
+                '--semgrep-bin', args.semgrep_bin, '--casos', args.caso,
+                '--estrategias', args.estrategia, '--k', '1', '--baseline-testes', str(args.baseline_testes)]
+        if args.dry_run: argv.append('--dry-run')
+        sys.argv = [sys.argv[0], *argv]
+        run()
+        return
+    issue = next((i for i in catalogo.casos
                   if i["caso_id"] == args.caso), None)
     if issue is None:
         raise SystemExit(f"Caso {args.caso} nao esta em {CATALOGO}")

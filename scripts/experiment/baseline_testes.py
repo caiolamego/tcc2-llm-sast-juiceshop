@@ -35,7 +35,14 @@ from pipeline.validation.runner import ARQ_LINHA_DE_BASE, ConfigValidacao, rodar
 
 
 def main() -> None:
-    commit = dotenv_values(RAIZ_REPO / ".env").get("JUICESHOP_COMMIT")
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--saida", type=Path, default=ARQ_LINHA_DE_BASE)
+    ap.add_argument("--commit")
+    args = ap.parse_args()
+    if args.saida.exists():
+        raise SystemExit("Saída já existe; escolha --saida nova para preservar evidências")
+    commit = args.commit or dotenv_values(RAIZ_REPO / ".env").get("JUICESHOP_COMMIT")
     pool = PoolWorktrees(RAIZ_REPO / "workspace", k=1, commit_esperado=commit)
     cfg = ConfigValidacao()
     node = subprocess.run(["node", "--version"], capture_output=True, text=True,
@@ -66,9 +73,9 @@ def main() -> None:
         "worktree": worktree,
         "tiers": tiers,
     }
-    ARQ_LINHA_DE_BASE.parent.mkdir(parents=True, exist_ok=True)
-    ARQ_LINHA_DE_BASE.write_text(json.dumps(dados, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"\nLinha de base gravada em {rel(ARQ_LINHA_DE_BASE)}")
+    args.saida.parent.mkdir(parents=True, exist_ok=True)
+    args.saida.write_text(json.dumps(dados, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"\nLinha de base gravada em {rel(args.saida)}")
 
 
 if __name__ == "__main__":

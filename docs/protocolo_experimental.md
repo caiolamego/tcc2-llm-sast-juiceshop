@@ -221,3 +221,41 @@ A [especificação](../features/01-catalogo-ampliado/README.md) e o
 Esta geração não altera as entradas do orquestrador. O catálogo histórico, seus resultados e
 os scripts anteriores foram preservados. Congelamento do perfil ampliado, comparação posterior
 R/M e seleção do novo catálogo no pipeline permanecem pendentes.
+
+
+## 12. Integração do catálogo ampliado — feature 02
+
+A execução ampliada seleciona catálogo, perfil e saída explicitamente. O loader verifica
+hashes, schema, IDs, coordenadas e fontes arquivadas. O commit esperado vem do catálogo;
+a configuração de ambiente, quando preenchida, deve coincidir.
+
+O perfil local `config/perfis/ampliado_v1/perfil.json` congela as regras remotas exportadas
+e as regras locais, incluindo hashes, IDs, exclusões e timeouts. Sua exportação remota foi
+obtida após a auditoria e verificada por reprodução do multiconjunto de 78 ocorrências.
+A reprodução dos achados não prova que todo o conteúdo das regras é idêntico à versão
+histórica não arquivada; fixa o detector utilizado nesta nova etapa.
+
+Antes de criar cliente LLM, o preflight exige reprodução completa, verifica o checkout e
+monta prompts. `--somente-preflight` não exige dependências Node, API ou testes funcionais.
+Dry-run e tentativas usam worktrees com dependências e referência funcional selecionada
+por `--baseline-testes`, preservando a referência histórica.
+
+A comparação ampliada realiza scans globais e pareia ocorrências de arquivos inalterados
+por coordenadas. Em arquivos alterados, utiliza blocos de linhas idênticos e únicos nos
+dois arquivos, traduzindo o deslocamento. Grupos com anteriores e posteriores não pareados
+ficam indeterminados. R/M nulos não geram aceite automático.
+
+Avisos de parsing idênticos já presentes em arquivos não alterados permanecem como
+cobertura limitada. Diagnósticos novos, problemas em arquivos alterados, falha operacional
+ou timeout tornam as medições afetadas inconclusivas. Findings em arquivos sem cobertura
+anterior não são declarados novos comprovados. A confirmação dinâmica continua necessária
+para conclusões de segurança.
+
+A retomada exige contrato com commit, hashes de catálogo/metadados/perfil, estratégias,
+casos, comparador, templates e referência funcional. O baseline e os artefatos das linhas
+concluídas são conferidos por hash. As execuções ampliadas não são misturadas a E01/E02.
+
+TRV mantém indeterminados no denominador como tentativas sem remediação validada; as taxas
+auxiliares ampliadas utilizam valores medidos e denominadores explícitos. Os cálculos
+históricos ficam preservados. F continua medindo a cobertura atual do servidor, sem
+alegar validação integral de frontend.

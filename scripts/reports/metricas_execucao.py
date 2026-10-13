@@ -40,8 +40,8 @@ DEFS = ("sem_separacao", "marcador", "criterio")
 ORDEM_TIERS = ["T0", "T2", "T3", "T4"]
 
 
-def carregar(execucao: str) -> list[dict]:
-    arq = RAIZ / "outputs" / "resultados_consolidados" / "execucoes.jsonl"
+def carregar(execucao: str, saida: Path = RAIZ / "outputs") -> list[dict]:
+    arq = saida / "resultados_consolidados" / "execucoes.jsonl"
     linhas = [json.loads(l) for l in arq.read_text(encoding="utf-8").splitlines() if l.strip()]
     return [l for l in linhas if l["execucao"] == execucao]
 
@@ -52,7 +52,7 @@ def normalizar(l: dict) -> dict:
     l.setdefault("condicao", "desenho")
     if "F_criterio" in l:
         for d in DEFS:
-            l[f"incompleto_{d}"] = False
+            l[f"incompleto_{d}"] = l.get(f"classificacao_{d}") == "indeterminada_sast"
         l.setdefault("testes_falhos_d_sem_separacao", [])
         return l
     # Linha antiga: reclassificacao a posteriori.
@@ -98,17 +98,24 @@ def indices(ls: list[dict], d: str) -> dict | None:
     if not m:
         return None
     aceitas = [l for l in ls if l[f"classificacao_{d}"] == "aceita"]
+    ampliado = any('assinatura_ocorrencia' in l for l in ls)
+    def taxa(campo):
+        if ampliado:
+            medidos = [l[campo] for l in ls if l[campo] is not None]
+            return round(sum(medidos) / len(medidos), 4) if medidos else None
+        return round(sum(v(l[campo]) for l in ls) / m, 4)
     return {
         "m": m,
         "TRV": round(sum(v(l["R"]) * v(l[f"F_{d}"]) * v(l["M"]) for l in ls) / m, 4),
-        "TRI": round(sum(v(l["R"]) for l in ls) / m, 4),
-        "TPF": round(sum(v(l[f"F_{d}"]) for l in ls) / m, 4),
-        "TNINI": round(sum(v(l["M"]) for l in ls) / m, 4),
+        "TRI": taxa("R"),
+        "TPF": taxa(f"F_{d}"),
+        "TNINI": taxa("M"),
         "TAP": round(sum(l["status_aplicacao"] == "aplicado" for l in ls) / m, 4),
         "aceitas": len(aceitas),
         "TCD": (round(sum(bool(l[f"testes_falhos_d_{d}"]) for l in aceitas) / len(aceitas), 4)
                 if aceitas else None),
         "indeterminadas": sum(1 for l in ls if l.get(f"incompleto_{d}")),
+        **({'denominadores_medidos': {campo:sum(l[campo] is not None for l in ls) for campo in ('R',f'F_{d}','M')}} if ampliado else {}),
     }
 
 
@@ -125,9 +132,24 @@ def cadeia(ls: list[dict], d: str, ordem: list[str]) -> list[dict]:
     return saida
 
 
+def custos(linhas):
+    reais = [l for l in linhas if not l.get('dry_run') and l.get('modelo') != 'dry-run']
+    nc = [l for l in reais if not l.get('do_cache')]
+    return {'chamadas_reais': len(nc), 'do_cache': sum(bool(l.get('do_cache')) for l in reais),
+            'simuladas': len(linhas) - len(reais),
+            'usd': round(sum(v(l['custo_usd']) for l in nc), 6),
+            'tokens_entrada': sum(v(l['tokens_entrada']) for l in nc),
+            'tokens_saida': sum(v(l['tokens_saida']) for l in nc)}
+
+
 def main() -> None:
-    execucao = sys.argv[1]
-    linhas = [normalizar(l) for l in carregar(execucao)]
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('execucao')
+    ap.add_argument('--saida', type=Path, default=RAIZ / 'outputs')
+    args = ap.parse_args()
+    execucao = args.execucao
+    linhas = [normalizar(l) for l in carregar(execucao, args.saida)]
     for l in linhas:
         l["estrategia_curta"] = l["tentativa_id"].split("_")[3]
     desenho = [l for l in linhas if l["condicao"] == "desenho"]
@@ -135,7 +157,7 @@ def main() -> None:
     ordem = sorted({l["estrategia_curta"] for l in desenho}, key=lambda e: ("P1", "P2", "P3", "P4").index(e))
     casos = sorted({l["caso_id"] for l in linhas})
 
-    res = {"AVISO": "Calculo anterior a F7. Tentativa nao aplicada conta 0. Cadeia reconstruida por definicao.",
+    res = {"AVISO": "Tentativa nao aplicada/indeterminada permanece no denominador e nao representa remediacao validada. Indeterminadas sao reportadas separadamente.",
            "execucao": execucao, "casos": len(casos), "definicoes": {}}
     for d in DEFS:
         cad = cadeia(desenho, d, ordem)
@@ -162,29 +184,27 @@ def main() -> None:
                            "do_cache": l.get("do_cache"),
                        } for l in ls]})
     res["tabela"] = tabela
-    nc = [l for l in linhas if not l.get("do_cache")]
-    res["custo"] = {"chamadas_reais": len(nc), "do_cache": len(linhas) - len(nc),
-                    "usd": round(sum(v(l["custo_usd"]) for l in nc), 6),
-                    "tokens_entrada": sum(v(l["tokens_entrada"]) for l in nc),
-                    "tokens_saida": sum(v(l["tokens_saida"]) for l in nc)}
-    arq_s = RAIZ / "outputs" / "resultados_consolidados" / f"{execucao}_sessoes.json"
+    res["custo"] = custos(linhas)
+    arq_s = args.saida / "resultados_consolidados" / f"{execucao}_sessoes.json"
     if arq_s.exists():
         res["sessoes"] = [{k: s.get(k) for k in ("inicio", "fim", "duracao_s", "abortada")}
                           for s in json.loads(arq_s.read_text(encoding="utf-8"))]
-    saida = RAIZ / "outputs" / "resultados_consolidados" / f"{execucao}_metricas.json"
+    saida = args.saida / "resultados_consolidados" / f"{execucao}_metricas.json"
     saida.write_text(json.dumps(res, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     print(f"{execucao}: {len(casos)} casos, {len(linhas)} tentativas ({len(diag)} de diagnostico)")
     print(f"{'definicao':14} {'m':>3} {'TRV':>6} {'TRI':>6} {'TPF':>6} {'TNINI':>6} {'TAP':>6} {'TCD':>6} {'casos aceitos'}")
+    def fmt(value):
+        return '-' if value is None else f'{value:.3f}'
     for d in DEFS:
         g = res["definicoes"][d]["geral_por_tentativa"]
         pc = res["definicoes"][d]["por_caso"]
         tcd = "-" if g["TCD"] is None else f"{g['TCD']:.2f}"
-        print(f"{d:14} {g['m']:>3} {g['TRV']:>6.3f} {g['TRI']:>6.3f} {g['TPF']:>6.3f} {g['TNINI']:>6.3f} "
+        print(f"{d:14} {g['m']:>3} {g['TRV']:>6.3f} {fmt(g['TRI']):>6} {fmt(g['TPF']):>6} {fmt(g['TNINI']):>6} "
               f"{g['TAP']:>6.3f} {tcd:>6} {len(pc['casos_aceitos'])}/{len(casos)} {pc['casos_aceitos']}"
               + (f"  [{g['indeterminadas']} indeterminada(s)]" if g["indeterminadas"] else ""))
     print("custo:", res["custo"])
-    print("->", saida.relative_to(RAIZ))
+    print("->", saida.resolve())
 
 
 if __name__ == "__main__":

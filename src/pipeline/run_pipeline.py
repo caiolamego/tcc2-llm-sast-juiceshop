@@ -35,7 +35,7 @@ from dotenv import dotenv_values  # noqa: E402
 from rich.console import Console  # noqa: E402
 
 from pipeline.caminhos import RAIZ_REPO, rel  # noqa: E402
-from pipeline.llm.falso import resposta_falsa  # noqa: E402
+from pipeline.llm.falso import resposta_falsa, resposta_falsa_ampliada  # noqa: E402
 from pipeline.llm.openai_client import OrcamentoEsgotado  # noqa: E402
 from pipeline.patching.applier import ResultadoAplicacao, aplicar, interpretar  # noqa: E402
 from pipeline.prompts import builder  # noqa: E402
@@ -89,7 +89,7 @@ def _elegiveis_dedup(findings: list[Finding]) -> set[str]:
 
 
 def varredura_da_sessao(pool: PoolWorktrees, saidas: Saidas, execucao: str,
-                        catalogo: list[dict]) -> tuple[list[Finding], dict]:
+                        catalogo: list[dict], semgrep_bin: str = "semgrep") -> tuple[list[Finding], dict]:
     """Varre o worktree limpo (ou reaproveita a varredura desta execucao) e
     compara com o baseline de setembro."""
     arq = saidas.baseline_sessao(execucao)
@@ -99,7 +99,7 @@ def varredura_da_sessao(pool: PoolWorktrees, saidas: Saidas, execucao: str,
             console.log(f"Varredura SAST da sessao em {wt.name} (repositorio inteiro)...")
             inicio = time.monotonic()
             executar(wt, RULESETS, saida_bruta=arq,
-                     exclusoes=ler_exclusoes(RAIZ_REPO / "config" / "semgrepignore"))
+                     exclusoes=ler_exclusoes(RAIZ_REPO / "config" / "semgrepignore"), semgrep_bin=semgrep_bin)
             console.log(f"  concluida em {time.monotonic() - inicio:.0f}s -> {rel(arq)}")
         sessao = carregar_resultados(arq, wt)
         setembro = carregar_resultados(BASELINE_SETEMBRO, wt)
@@ -180,12 +180,17 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     s = ctx.saidas
     args = ctx.args
     PoolWorktrees.restaurar(wt)
-
+    amp = getattr(ctx, "ampliado", None)
+    if amp:
+        from pipeline.catalogo import carregar as validar_catalogo
+        amp.perfil.conferir()
+        if validar_catalogo(amp.catalogo.caminho).hashes != amp.catalogo.hashes:
+            raise ValueError('Catálogo alterado após preflight')
     prompt = builder.montar(issue, wt, estrategia)
     gravar_json(s.d("prompts") / f"{tid}.json", prompt.to_dict())
 
     if args.dry_run:
-        texto = resposta_falsa(issue, wt)
+        texto = resposta_falsa_ampliada(issue, wt) if amp else resposta_falsa(issue, wt)
         llm = {"modelo": "dry-run", "seed": None, "system_fingerprint": None, "tokens_entrada": 0,
                "tokens_saida": 0, "latencia_s": 0.0, "custo_usd": 0.0, "do_cache": False,
                "finish_reason": None, "recusa": None, "hash_prompt": prompt.hash_prompt}
@@ -196,11 +201,18 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     gravar_json(s.d("respostas_llm") / f"{tid}.json", {"texto": texto, **llm})
 
     correcao = interpretar(texto)
+    fontes_originais = {}
+    if amp and not isinstance(correcao, ResultadoAplicacao):
+        for ed in correcao.edicoes:
+            path = (wt / ed.arquivo).resolve()
+            if path.is_relative_to(wt.resolve()) and path.is_file():
+                fontes_originais[path.relative_to(wt.resolve()).as_posix()] = path.read_bytes()
     aplic = correcao if isinstance(correcao, ResultadoAplicacao) else aplicar(wt, correcao)
 
     linha = {
         "tentativa_id": tid, "execucao": args.execucao, "dry_run": args.dry_run,
-        "caso_id": issue["caso_id"], "assinatura": issue["assinatura"], "projeto": PROJETO,
+        "caso_id": issue["caso_id"], "projeto": PROJETO,
+        **({"assinatura_ocorrencia": issue["assinatura_ocorrencia"]} if amp else {"assinatura": issue["assinatura"]}),
         "arquivo": issue["arquivo"], "linha": issue["linha_inicio"], "check_id": issue["check_id"],
         "cwe": issue["cwe"], "owasp_2025": issue["owasp_2025"], "sigla_vuln": issue["sigla_vuln"],
         "modo_regra": issue.get("modo_regra"), "faixa_regra": faixa_regra(issue),
@@ -232,6 +244,13 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
                       "resposta": rel(s.d("respostas_llm") / f"{tid}.json")},
     }
 
+    if amp:
+        linha.update(contrato_execucao_sha256=amp.contrato_hash, hashes_catalogo=amp.catalogo.hashes,
+                     perfil_sha256=amp.perfil.hash, classificacao_auditoria=issue['classificacao_auditoria'],
+                     desafios=issue['desafios'], origem_caso=issue['origem'], cobertura_funcional='servidor')
+        if args.dry_run and texto is None:
+            aplic.status = 'dry_run_sem_patch_suportado'
+            linha['status_aplicacao'] = aplic.status
     if aplic.status != "aplicado":
         linha["classificacao_final"] = f"nao_aplicada:{aplic.status}"
         for k in ("sem_separacao", "marcador", "criterio"):
@@ -251,23 +270,43 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     alvos = sorted(set(aplic.arquivos) | {issue["arquivo"]})
     arq_raw = s.d("sast_depois") / f"{tid}_raw.json"
     inicio = time.monotonic()
-    depois = executar(wt, RULESETS, saida_bruta=arq_raw, caminhos=alvos)
-    linha["duracao_sast_s"] = round(time.monotonic() - inicio, 2)
-    antes = [f for f in ctx.sessao if f.path in alvos]
+    if amp:
+        from pipeline.sast.semgrep_client import scan_perfil
+        from pipeline.sast.comparacao import comparar, chave_caso
+        depois_scan = scan_perfil(wt, amp.perfil, arq_raw, args.semgrep_bin)
+        fontes = {a: (fontes_originais[a], (wt / a).read_bytes()) for a in aplic.arquivos}
+        comp = comparar(amp.scan, depois_scan, chave_caso(issue), fontes)
+        comp_file = s.d('comparacoes') / f'{tid}.json'
+        gravar_json(comp_file, comp)
+        linha.update(R=comp['R'], M=comp['M'], comparacao_status=comp['comparacao_status'],
+                     comparacao_artefato=rel(comp_file), novas_issues_qtd=comp['novas_issues_qtd'],
+                     possiveis_novas_issues_qtd=comp['possiveis_novas_issues_qtd'],
+                     novas_issues_ids=comp['novos'], cobertura_sast_limitada=comp['cobertura_limitada'],
+                     motivos_indeterminacao=comp['arquivos_inconclusivos'])
+        linha['sast_depois'] = [f.to_dict() for f in depois_scan.findings]
+        linha['sast_depois_raw'] = rel(arq_raw) if arq_raw.exists() else None
+        linha['duracao_sast_s'] = round(time.monotonic() - inicio, 2)
+        linha['artefatos']['comparacao'] = rel(comp_file)
+        if arq_raw.exists(): linha['artefatos']['sast_depois'] = rel(arq_raw)
+        cfg = ConfigValidacao(lock_t4=ctx.lock_t4, arquivo_linha_de_base=amp.baseline_testes)
+    else:
+        depois = executar(wt, RULESETS, saida_bruta=arq_raw, caminhos=alvos, semgrep_bin=args.semgrep_bin)
+        linha["duracao_sast_s"] = round(time.monotonic() - inicio, 2)
+        antes = [f for f in ctx.sessao if f.path in alvos]
 
-    sig_alvo = issue["assinatura"]
-    sig_depois = {assinatura(f) for f in depois}
-    novas = sorted(_elegiveis_dedup(depois) - _elegiveis_dedup(antes))
-    linha["R"] = int(sig_alvo not in sig_depois)
-    linha["M"] = int(not novas)
-    linha["novas_issues_qtd"] = len(novas)
-    linha["novas_issues_ids"] = novas
-    linha["ocorrencias_alvo"] = {"antes": sum(assinatura(f) == sig_alvo for f in antes),
-                                 "depois": sum(assinatura(f) == sig_alvo for f in depois)}
-    linha["sast_depois"] = [_finding_dict(f) for f in depois]
-    linha["sast_depois_raw"] = rel(arq_raw)
+        sig_alvo = issue["assinatura"]
+        sig_depois = {assinatura(f) for f in depois}
+        novas = sorted(_elegiveis_dedup(depois) - _elegiveis_dedup(antes))
+        linha["R"] = int(sig_alvo not in sig_depois)
+        linha["M"] = int(not novas)
+        linha["novas_issues_qtd"] = len(novas)
+        linha["novas_issues_ids"] = novas
+        linha["ocorrencias_alvo"] = {"antes": sum(assinatura(f) == sig_alvo for f in antes),
+                                     "depois": sum(assinatura(f) == sig_alvo for f in depois)}
+        linha["sast_depois"] = [_finding_dict(f) for f in depois]
+        linha["sast_depois_raw"] = rel(arq_raw)
 
-    cfg = ConfigValidacao(lock_t4=ctx.lock_t4)
+        cfg = ConfigValidacao(lock_t4=ctx.lock_t4)
     v = validar(wt, aplic.arquivos, cfg)
     gravar_json(s.d("testes") / f"{tid}.json", v.to_dict())
     linha["artefatos"]["validacao"] = rel(s.d("testes") / f"{tid}.json")
@@ -287,7 +326,8 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
 
     for k in ("sem_separacao", "marcador", "criterio"):
         f = linha[f"F_{k}"]
-        linha[f"classificacao_{k}"] = ("aceita" if linha["R"] and f and linha["M"] else
+        linha[f"classificacao_{k}"] = ("indeterminada_sast" if amp and (linha["R"] is None or linha["M"] is None) else
+                                       "aceita" if linha["R"] and f and linha["M"] else
                                        f"rejeitada:R{linha['R']}F{f}M{linha['M']}")
     linha["classificacao_final"] = linha["classificacao_criterio"]
     return linha
@@ -298,7 +338,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
 # --------------------------------------------------------------------------
 
 def nome_tentativa(issue: dict, estrategia: str, execucao: str) -> str:
-    return "_".join([issue["caso_id"], issue["owasp_2025"], issue["sigla_vuln"], estrategia, execucao])
+    return "_".join([issue["caso_id"], issue["owasp_2025"] or "SEMOWASP", issue["sigla_vuln"], estrategia, execucao])
 
 
 def _aceita_estrita(linha: dict) -> bool:
@@ -345,7 +385,13 @@ def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
                 ctx.erros.append({"tentativa_id": tid, "erro": f"{type(ex).__name__}: {ex}"})
                 console.log(f"[red]{tid}: ERRO {type(ex).__name__}: {ex}. Caso interrompido.[/]")
                 return
-            registrar_execucao(linha, wt, ctx.saidas.execucoes)
+            amp = getattr(ctx, 'ampliado', None)
+            if amp:
+                from pipeline.catalogo import digest
+                linha['artefatos_sha256'] = {Path(value).relative_to(ctx.saidas.raiz.relative_to(RAIZ_REPO)).as_posix(): digest(RAIZ_REPO / value)
+                    for value in linha['artefatos'].values() if (RAIZ_REPO / value).exists()} if ctx.saidas.raiz.is_relative_to(RAIZ_REPO) else {
+                    str(Path(value).relative_to(ctx.saidas.raiz)): digest(Path(value)) for value in linha['artefatos'].values() if Path(value).is_absolute() and Path(value).exists()}
+            registrar_execucao(linha, wt, ctx.saidas.execucoes, amp.catalogo.commit if amp else None)
             # Resposta do cache nao e cobrada de novo (o custo na linha e o da chamada original).
             total = ctx.somar_custo(0.0 if linha["do_cache"] else (linha["custo_usd"] or 0.0))
             cor = "green" if linha["classificacao_final"] == "aceita" else "yellow"
@@ -371,11 +417,11 @@ def registrar_sessao(saidas: Saidas, execucao: str, info: dict) -> Path:
     return gravar_json(arq, historico + [info])
 
 
-def checar_ambiente(pool: PoolWorktrees, k: int, lock_t4: threading.Lock) -> list[dict]:
+def checar_ambiente(pool: PoolWorktrees, k: int, lock_t4: threading.Lock, baseline_testes: Path | None = None) -> list[dict]:
     """Cenario 1 da F4.3 em cada worktree: sem alteracao, a validacao passa."""
     def um(_):
         with pool.alugar() as wt:
-            v = validar(wt, [], ConfigValidacao(lock_t4=lock_t4))
+            v = validar(wt, [], ConfigValidacao(lock_t4=lock_t4, **({"arquivo_linha_de_base": baseline_testes} if baseline_testes else {})))
             # Sem alteracao nenhum teste novo pode falhar, nem de D.
             return {"worktree": wt.name, "passou": v.F_sem_separacao,
                     "tier_falha": v.tier_falha_sem_separacao,
@@ -397,6 +443,12 @@ def main() -> None:
     ap.add_argument("--k", type=int, default=4, help="worktrees em paralelo")
     ap.add_argument("--dry-run", action="store_true", help="resposta falsa, sem chamar a API")
     ap.add_argument("--pular-checagem-ambiente", action="store_true")
+    ap.add_argument('--catalogo', type=Path, default=CATALOGO)
+    ap.add_argument('--perfil-sast', type=Path)
+    ap.add_argument('--saida', type=Path)
+    ap.add_argument('--somente-preflight', action='store_true')
+    ap.add_argument('--semgrep-bin', default='semgrep')
+    ap.add_argument('--baseline-testes', type=Path, default=RAIZ_REPO / 'outputs/baseline_testes.json')
     args = ap.parse_args()
     args.estrategias = [e.strip() for e in args.estrategias.split(",") if e.strip()]
     args.diagnosticos = [e.strip() for e in args.diagnosticos.split(",") if e.strip()]
@@ -417,7 +469,9 @@ def main() -> None:
             raise SystemExit(f"ERRO: roteiro do P2/P4 com STATUS {status} "
                              f"({rel(builder.ARQ_ROTEIRO)}). Chamada real so com STATUS: APROVADO.")
 
-    catalogo = json.loads(CATALOGO.read_text(encoding="utf-8"))
+    from pipeline.catalogo import carregar as carregar_catalogo
+    contexto_catalogo = carregar_catalogo(args.catalogo)
+    catalogo = contexto_catalogo.casos
     casos = [c for c in catalogo if c["elegivel"]]
     if args.casos:
         pedidos = [c.strip() for c in args.casos.split(",")]
@@ -426,9 +480,18 @@ def main() -> None:
             raise SystemExit(f"ERRO: casos fora do catalogo elegivel: {sorted(desconhecidos)}")
         casos = [c for c in casos if c["caso_id"] in pedidos]
 
-    saidas = Saidas(RAIZ_REPO / "outputs" / ("dry_run" if args.dry_run else ""))
+    ampliado = None
+    if contexto_catalogo.ampliado:
+        from pipeline.execucao_ampliada import preparar
+        ampliado = preparar(args, contexto_catalogo, casos)
+        if args.somente_preflight:
+            console.log(f'Preflight concluído: {len(casos)} casos; sem chamadas à API.')
+            return
+    elif args.somente_preflight or args.perfil_sast:
+        raise SystemExit('Preflight/perfil local requer catálogo ampliado')
+    saidas = Saidas(Path(args.saida).resolve() if args.saida else RAIZ_REPO / "outputs" / ("dry_run" if args.dry_run else ""))
     env = dotenv_values(RAIZ_REPO / ".env")
-    pool = PoolWorktrees(RAIZ_REPO / "workspace", k=args.k, commit_esperado=env.get("JUICESHOP_COMMIT"))
+    pool = PoolWorktrees(RAIZ_REPO / "workspace", k=args.k, commit_esperado=ampliado.catalogo.commit if ampliado else env.get("JUICESHOP_COMMIT"))
     sessao_info = {
         "execucao": args.execucao, "dry_run": args.dry_run, "estrategias": args.estrategias,
         "diagnosticos": args.diagnosticos,
@@ -442,7 +505,7 @@ def main() -> None:
     lock_t4 = threading.Lock()
     if not args.pular_checagem_ambiente:
         console.log("Checagem de ambiente: validacao sem alteracao em cada worktree...")
-        amb = checar_ambiente(pool, args.k, lock_t4)
+        amb = checar_ambiente(pool, args.k, lock_t4, ampliado.baseline_testes if ampliado else None)
         sessao_info["checagem_ambiente"] = amb
         for a in amb:
             console.log(f"  {a['worktree']}: {'OK' if a['passou'] else 'FALHOU'} ({a['duracao_s']}s)"
@@ -453,9 +516,18 @@ def main() -> None:
             raise SystemExit("ERRO: worktree sem alteracao reprovado na validacao. "
                              "Problema de ambiente, nao do pipeline (F4.3).")
 
-    sessao, comp = varredura_da_sessao(pool, saidas, args.execucao, catalogo)
-    sessao_info["comparacao_baseline"] = rel(saidas.d("sast_antes") / f"{args.execucao}_comparacao_baseline.json")
-    console.log(f"Baseline setembro x sessao: {comp['achados_brutos']['setembro']} x "
+    if ampliado:
+        sessao = ampliado.scan.findings
+        n = len(sessao)
+        comp = {'achados_brutos': {'setembro': n, 'sessao': n},
+                'semgrep_versao': {'setembro': ampliado.scan.versao, 'sessao': ampliado.scan.versao},
+                'diverge': False, 'casos_do_catalogo_ausentes_na_sessao': []}
+        sessao_info['contrato_execucao_sha256'] = ampliado.contrato_hash
+        sessao_info['commit_alvo'] = ampliado.catalogo.commit
+    else:
+        sessao, comp = varredura_da_sessao(pool, saidas, args.execucao, catalogo, args.semgrep_bin)
+    sessao_info["comparacao_baseline"] = rel(saidas.d("sast_antes") / ("reproducao.json" if ampliado else f"{args.execucao}_comparacao_baseline.json"))
+    console.log(f"{'Baseline catálogo' if ampliado else 'Baseline setembro'} x sessão: {comp['achados_brutos']['setembro']} x "
                 f"{comp['achados_brutos']['sessao']} achados brutos, "
                 f"semgrep {comp['semgrep_versao']['setembro']} x {comp['semgrep_versao']['sessao']}")
     if comp["diverge"]:
@@ -476,6 +548,7 @@ def main() -> None:
     versao = comp["semgrep_versao"]["sessao"]
     ctx = Contexto(args, saidas, sessao, versao)
     ctx.lock_t4 = lock_t4
+    ctx.ampliado = ampliado
     inicio = time.monotonic()
     with ThreadPoolExecutor(max_workers=args.k) as ex:
         list(ex.map(lambda c: processar_caso(ctx, pool, c, feitas), casos))

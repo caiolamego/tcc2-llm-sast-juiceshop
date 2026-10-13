@@ -50,20 +50,31 @@ def main() -> None:
     ap.add_argument("--rotulo", required=True, help="nome do artefato em outputs/sondagens/")
     ap.add_argument("--origem", required=True, choices=["LLM_ARQUIVADA", "ESCRITO_A_MAO"])
     ap.add_argument("--validar", action="store_true")
+    ap.add_argument('--catalogo', type=Path, default=CATALOGO)
+    ap.add_argument('--perfil-sast', type=Path)
+    ap.add_argument('--semgrep-bin', default='semgrep')
+    ap.add_argument('--saida', type=Path)
+    ap.add_argument('--baseline-testes', type=Path, default=RAIZ_REPO/'outputs/baseline_testes.json')
     args = ap.parse_args()
 
-    issue = next(i for i in json.loads(CATALOGO.read_text(encoding="utf-8")) if i["caso_id"] == args.caso)
+    from pipeline.catalogo import carregar
+    catalogo = carregar(args.catalogo)
+    if catalogo.ampliado:
+        from pipeline.execucao_ampliada import sondar
+        sondar(args, catalogo)
+        return
+    issue = next(i for i in catalogo.casos if i["caso_id"] == args.caso)
     patch = Path(args.patch).resolve()
     alvo_sig = issue["assinatura"]
     env = dotenv_values(RAIZ_REPO / ".env")
     pool = PoolWorktrees(RAIZ_REPO / "workspace", k=1, commit_esperado=env.get("JUICESHOP_COMMIT"))
 
     with pool.alugar() as wt:
-        antes = executar(wt, RULESETS, caminhos=[issue["arquivo"]])
+        antes = executar(wt, RULESETS, caminhos=[issue["arquivo"]], semgrep_bin=args.semgrep_bin)
         subprocess.run(["git", "apply", str(patch)], cwd=wt, check=True, timeout=60)
         diff = subprocess.run(["git", "diff"], cwd=wt, capture_output=True, text=True,
                               timeout=60).stdout
-        depois = executar(wt, RULESETS, caminhos=[issue["arquivo"]])
+        depois = executar(wt, RULESETS, caminhos=[issue["arquivo"]], semgrep_bin=args.semgrep_bin)
         v = validar(wt, [issue["arquivo"]]) if args.validar else None
 
     sig_antes = {assinatura(f) for f in antes}
