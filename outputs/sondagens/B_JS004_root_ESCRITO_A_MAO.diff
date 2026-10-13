@@ -1,0 +1,14 @@
+# ESCRITO_A_MAO -- sondagem do oraculo R (protocolo 7.3). NAO e saida da LLM.
+diff --git a/routes/logfileServer.ts b/routes/logfileServer.ts
+index 7ef6160d7..475732dc1 100644
+--- a/routes/logfileServer.ts
++++ b/routes/logfileServer.ts
+@@ -11,7 +11,7 @@ export function serveLogFiles () {
+     const file = params.file
+ 
+     if (!file.includes('/')) {
+-      res.sendFile(path.resolve('logs/', file))
++      res.sendFile(file, { root: path.resolve('logs/') })
+     } else {
+       res.status(403)
+       next(new Error('File names cannot contain forward slashes!'))

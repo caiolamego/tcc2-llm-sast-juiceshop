@@ -1,0 +1,56 @@
+{
+  "AVISO": "Correcao ESCRITA A MAO para sondar o oraculo R; nao e saida da LLM e nao entra em nenhuma metrica.",
+  "origem_patch": "ESCRITO_A_MAO",
+  "caso": "JS002",
+  "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+  "arquivo": "routes/fileServer.ts",
+  "patch": "outputs/sondagens/B_JS002_root_ESCRITO_A_MAO.diff",
+  "diff": "diff --git a/routes/fileServer.ts b/routes/fileServer.ts\nindex e48d4da64..f98cbb15b 100644\n--- a/routes/fileServer.ts\n+++ b/routes/fileServer.ts\n@@ -30,7 +30,7 @@ export function servePublicFiles () {\n       challengeUtils.solveIf(challenges.directoryListingChallenge, () => { return file.toLowerCase() === 'acquisitions.md' })\n       verifySuccessfulPoisonNullByteExploit(file)\n \n-      res.sendFile(path.resolve('ftp/', file))\n+      res.sendFile(file, { root: path.resolve('ftp/') })\n     } else {\n       res.status(403)\n       next(new Error('Only .md and .pdf files are allowed!'))\n",
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "executado_em": "2026-10-07T21:01:50+00:00",
+  "rulesets": [
+    "p/javascript",
+    "p/typescript",
+    "p/nodejs",
+    "p/expressjs",
+    "p/owasp-top-ten"
+  ],
+  "alerta_no_antes": true,
+  "alerta_persiste": false,
+  "R": 1,
+  "alertas_novos": [],
+  "findings_antes": [
+    {
+      "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+      "linha": 33,
+      "assinatura": "409f0cf9a8a4b8c0481fc2d069c1057c780d167928ab971e08430d701d1ba0f8"
+    }
+  ],
+  "findings_depois": [],
+  "validacao": {
+    "passou": false,
+    "tier_falha": "T2",
+    "testes_falhos_novos": [
+      "test/server/fileServer.unit.test.ts :: fileServer > should serve Markdown files from folder /ftp",
+      "test/server/fileServer.unit.test.ts :: fileServer > should serve PDF files from folder /ftp",
+      "test/server/fileServer.unit.test.ts :: fileServer > should serve incident-support.kdbx files from folder /ftp",
+      "test/server/fileServer.unit.test.ts :: fileServer > should solve \"directoryListingChallenge\" when requesting acquisitions.md",
+      "test/server/fileServer.unit.test.ts :: fileServer > should solve \"easterEggLevelOneChallenge\" when requesting eastere.gg with Poison Null Byte attack",
+      "test/server/fileServer.unit.test.ts :: fileServer > should solve \"forgottenBackupChallenge\" when requesting coupons_2013.md.bak with Poison Null Byte attack",
+      "test/server/fileServer.unit.test.ts :: fileServer > should solve \"forgottenDevBackupChallenge\" when requesting package.json.bak with Poison Null Byte attack",
+      "test/server/fileServer.unit.test.ts :: fileServer > should solve \"misplacedSignatureFileChallenge\" when requesting suspicious_errors.yml with Poison Null Byte attack"
+    ],
+    "testes_falhos_intermitentes": [],
+    "reexecucoes": 1,
+    "tiers": {
+      "T0": {
+        "passou": true,
+        "motivo": null
+      },
+      "T2": {
+        "passou": false,
+        "motivo": "falha"
+      }
+    }
+  }
+}

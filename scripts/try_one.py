@@ -21,7 +21,7 @@ RAIZ_REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ_REPO / "src"))
 from dotenv import dotenv_values  # noqa: E402
 
-from pipeline.llm.schema import Correcao, Edicao  # noqa: E402
+from pipeline.llm.falso import resposta_falsa  # noqa: E402
 from pipeline.patching.applier import ResultadoAplicacao, aplicar, interpretar  # noqa: E402
 from pipeline.prompts.builder import montar  # noqa: E402
 from pipeline.target.workspace import PoolWorktrees  # noqa: E402
@@ -29,23 +29,6 @@ from pipeline.validation.runner import ConfigValidacao, validar  # noqa: E402
 
 CATALOGO = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_issues.json"
 DIR_SAIDA = RAIZ_REPO / "outputs" / "tentativas"
-
-
-def resposta_falsa(issue: dict, wt: Path) -> str:
-    """Edicao inofensiva: acrescenta um comentario no fim da linha do finding.
-    Exercita applier e validacao sem chamar a API."""
-    linhas = (wt / issue["arquivo"]).read_text(encoding="utf-8").splitlines()
-    linha = linhas[issue["linha_inicio"] - 1]
-    c = Correcao(
-        vulnerabilidade_identificada="[dry-run]",
-        causa_da_vulnerabilidade="[dry-run]",
-        estrategia_de_correcao="[dry-run] comentario inofensivo",
-        edicoes=[Edicao(arquivo=issue["arquivo"], trecho_original=linha,
-                        trecho_corrigido=linha + " // dry-run")],
-        justificativa_tecnica="[dry-run]",
-        limitacoes_da_correcao="[dry-run]",
-    )
-    return c.model_dump_json()
 
 
 def salvar(base: Path, artefato: str, conteudo, ext: str = "json") -> Path:
@@ -60,7 +43,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--caso", required=True, help="ex.: JS003")
     ap.add_argument("--estrategia", default="P1")
-    ap.add_argument("--execucao", default="E01")
+    ap.add_argument("--execucao", required=True, help="tentativas exploratorias: EXPnn (E01.. e da F6)")
     ap.add_argument("--dry-run", action="store_true", help="resposta falsa, sem chamar a API")
     ap.add_argument("--sem-t4", action="store_true", help="pula o T4 (testes de API)")
     args = ap.parse_args()
@@ -77,6 +60,10 @@ def main() -> None:
     pasta = DIR_SAIDA / "dry_run" if args.dry_run else DIR_SAIDA
     pasta.mkdir(parents=True, exist_ok=True)
     base = pasta / nome
+    existentes = sorted(pasta.glob(f"{nome}_*"))
+    if existentes and not args.dry_run:
+        # Tentativas reais ficam arquivadas (protocolo, Secao 10): nunca sobrescrever.
+        raise SystemExit(f"{nome} ja tem artefatos ({existentes[0].name}...). Use outro --execucao.")
 
     env = dotenv_values(RAIZ_REPO / ".env")
     pool = PoolWorktrees(RAIZ_REPO / "workspace", k=1, commit_esperado=env.get("JUICESHOP_COMMIT"))

@@ -1,0 +1,13 @@
+diff --git a/routes/keyServer.ts b/routes/keyServer.ts
+index b9a4d9495..54f6de0af 100644
+--- a/routes/keyServer.ts
++++ b/routes/keyServer.ts
+@@ -10,7 +10,7 @@ export function serveKeyFiles () {
+   return ({ params }: Request, res: Response, next: NextFunction) => {
+     const file = params.file
+ 
+-    if (!file.includes('/')) {
++    if (!file.includes('/') && !file.includes('..')) {
+       res.sendFile(path.resolve('encryptionkeys/', file))
+     } else {
+       res.status(403)

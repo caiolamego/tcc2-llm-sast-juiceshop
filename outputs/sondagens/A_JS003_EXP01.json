@@ -1,0 +1,37 @@
+{
+  "AVISO": "Patch de tentativa exploratoria da LLM, reaplicado so para sondar o R.",
+  "origem_patch": "LLM_ARQUIVADA",
+  "caso": "JS003",
+  "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+  "arquivo": "routes/keyServer.ts",
+  "patch": "outputs/tentativas/JS003_A06_PATHTRAV_P1_EXP01_patch.diff",
+  "diff": "diff --git a/routes/keyServer.ts b/routes/keyServer.ts\nindex b9a4d9495..7c7c5332f 100644\n--- a/routes/keyServer.ts\n+++ b/routes/keyServer.ts\n@@ -10,11 +10,14 @@ export function serveKeyFiles () {\n   return ({ params }: Request, res: Response, next: NextFunction) => {\n     const file = params.file\n \n-    if (!file.includes('/')) {\n-      res.sendFile(path.resolve('encryptionkeys/', file))\n+    const basePath = path.resolve('encryptionkeys/')\n+    const requestedPath = path.resolve(basePath, file)\n+\n+    if (!file.includes('/') && !file.includes('..') && !file.includes('\\\\') && requestedPath.startsWith(basePath)) {\n+      res.sendFile(requestedPath)\n     } else {\n       res.status(403)\n-      next(new Error('File names cannot contain forward slashes!'))\n+      next(new Error('File names cannot contain forward slashes or path traversal sequences!'))\n     }\n   }\n }\n",
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "executado_em": "2026-10-07T20:59:53+00:00",
+  "rulesets": [
+    "p/javascript",
+    "p/typescript",
+    "p/nodejs",
+    "p/expressjs",
+    "p/owasp-top-ten"
+  ],
+  "alerta_no_antes": true,
+  "alerta_persiste": true,
+  "R": 0,
+  "alertas_novos": [],
+  "findings_antes": [
+    {
+      "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+      "linha": 14,
+      "assinatura": "b62a5b30ab648c6d6b7cdc36fcc0118a03229b34bcb5de744a097b0717fe1a78"
+    }
+  ],
+  "findings_depois": [
+    {
+      "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+      "linha": 17,
+      "assinatura": "b62a5b30ab648c6d6b7cdc36fcc0118a03229b34bcb5de744a097b0717fe1a78"
+    }
+  ],
+  "validacao": null
+}

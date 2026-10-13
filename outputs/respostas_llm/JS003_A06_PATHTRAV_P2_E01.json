@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path Traversal (Directory Traversal)\",\"causa_da_vulnerabilidade\":\"O código permite que o parâmetro 'file' seja usado diretamente na função 'res.sendFile' para servir arquivos, sem uma validação adequada para impedir que o caminho do arquivo acesse diretórios pai (por exemplo, usando '../'). A única verificação feita é se o parâmetro contém uma barra '/', mas isso não impede o uso de '\\\\' (barra invertida) em sistemas Windows ou sequências como '..' que podem levar a um caminho fora do diretório esperado.\",\"estrategia_de_correcao\":\"Implementar uma validação mais rigorosa para o parâmetro 'file', garantindo que ele não contenha sequências que possam levar a path traversal, como '..' ou barras invertidas '\\\\'. Além disso, usar 'path.basename' para garantir que apenas o nome do arquivo seja considerado, evitando que diretórios sejam incluídos no caminho.\",\"edicoes\":[{\"arquivo\":\"routes/keyServer.ts\",\"trecho_original\":\"    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const file = params.file\\n\\n    if (!file.includes('/') && !file.includes('..') && !file.includes('\\\\\\\\') && file === path.basename(file)) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"A validação original apenas verifica a presença de '/' no nome do arquivo, o que é insuficiente para prevenir path traversal, pois um atacante pode usar '..' para subir diretórios ou '\\\\' em sistemas Windows para manipular o caminho. Ao verificar explicitamente a ausência de '..' e '\\\\' e garantir que o nome do arquivo seja igual ao seu basename, impedimos que o caminho escape do diretório 'encryptionkeys/'. Isso mitiga a vulnerabilidade de path traversal, garantindo que apenas arquivos dentro do diretório esperado sejam servidos.\",\"limitacoes_da_correcao\":\"A correção assume que os nomes válidos de arquivos não contêm '..' ou barras invertidas, o que é razoável para nomes de arquivos simples. No entanto, se houver necessidade de suportar nomes de arquivos mais complexos ou subdiretórios legítimos, a validação precisaria ser ajustada. Além disso, a mensagem de erro permanece genérica e não informa o motivo exato da rejeição, o que é intencional para não vazar informações.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 773,
+  "tokens_saida": 585,
+  "latencia_s": 6.496,
+  "custo_usd": 0.001245,
+  "hash_prompt": "8d7d1639bd8a071e65c012d55cab34e4dec1957f99b7e47778dbc091a8959f5c",
+  "do_cache": false
+}

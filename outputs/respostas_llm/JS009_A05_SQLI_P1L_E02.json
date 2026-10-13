@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection via concatenação direta de entrada do usuário em consulta SQL.\",\"causa_da_vulnerabilidade\":\"O código concatena diretamente o parâmetro 'criteria' vindo da query string na string da consulta SQL, sem usar parâmetros preparados ou sanitização adequada, permitindo que um atacante injete código SQL malicioso.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas do Sequelize para passar o parâmetro 'criteria' de forma segura, evitando concatenação direta e prevenindo injeção de SQL.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"models.sequelize.query(\\n      `SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name`,\\n      { replacements: { criteria: `%${criteria}%` }, type: models.sequelize.QueryTypes.SELECT }\\n    ) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"Ao usar consultas parametrizadas com 'replacements' do Sequelize, o valor do parâmetro é tratado como dado e não como código SQL, eliminando a possibilidade de injeção de SQL. Isso mantém o comportamento funcional original da busca por produtos, mas com segurança reforçada.\",\"limitacoes_da_correcao\":\"A correção assume que o Sequelize está configurado para suportar consultas parametrizadas e que o tipo QueryTypes.SELECT está disponível. Não altera a lógica da aplicação, apenas a forma de construir a consulta SQL.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 1339,
+  "tokens_saida": 369,
+  "latencia_s": 3.556,
+  "custo_usd": 0.001126,
+  "hash_prompt": "3eed2bd85be8390bb98f5609bd812942eff68d2af690e40f3362de2e323f723a",
+  "do_cache": false
+}

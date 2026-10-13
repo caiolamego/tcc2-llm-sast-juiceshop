@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de SQL (SQL Injection) na consulta dinâmica construída com concatenação direta de entrada do usuário.\",\"causa_da_vulnerabilidade\":\"O código constrói a consulta SQL concatenando diretamente o parâmetro 'criteria' obtido da query string do usuário dentro da string da consulta, sem qualquer sanitização ou uso de parâmetros preparados. Isso permite que um atacante injete código SQL malicioso na consulta.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas (prepared statements) fornecidas pelo Sequelize para evitar a concatenação direta de strings e impedir a injeção de SQL.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"models.sequelize.query(\\\"SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name\\\", { replacements: { criteria: `%${criteria}%` }, type: models.sequelize.QueryTypes.SELECT }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"Ao usar consultas parametrizadas com 'replacements' do Sequelize, o valor do parâmetro 'criteria' é tratado como dado e não como código SQL, eliminando a possibilidade de injeção de comandos SQL maliciosos. Isso mantém a consulta segura independentemente do conteúdo da entrada do usuário.\",\"limitacoes_da_correcao\":\"A correção protege contra injeção SQL na consulta específica, mas não valida ou sanitiza o conteúdo do parâmetro 'criteria' para outros tipos de ataques, como ataques de lógica ou DoS por entradas muito grandes. Além disso, a limitação de tamanho para 200 caracteres permanece, mas entradas maliciosas podem ainda causar outros efeitos dependendo do contexto da aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 1315,
+  "tokens_saida": 415,
+  "latencia_s": 3.43,
+  "custo_usd": 0.00119,
+  "hash_prompt": "bc44d34b56f4e1e1afca3a390b7d774c4c5b654ef2adf7aa9e07c750f7d623dd",
+  "do_cache": false
+}

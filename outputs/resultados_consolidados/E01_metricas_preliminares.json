@@ -1,0 +1,602 @@
+{
+  "AVISO": "Metricas preliminares, calculadas antes da F7 (metrics/calculator.py). Tentativa nao aplicada conta 0 em R, F e M.",
+  "execucao": "E01",
+  "geral_por_tentativa": {
+    "m": 24,
+    "TRV": 0.0,
+    "TRI": 0.375,
+    "TPF": 0.4166666666666667,
+    "TNINI": 0.9166666666666666,
+    "TAP": 0.9166666666666666,
+    "entre_aplicadas": {
+      "m": 22,
+      "TRV": 0.0,
+      "TRI": 0.4090909090909091,
+      "TPF": 0.45454545454545453,
+      "TNINI": 1.0
+    }
+  },
+  "por_estrategia": {
+    "P1_simples": {
+      "m": 12,
+      "TRV": 0.0,
+      "TRI": 0.4166666666666667,
+      "TPF": 0.4166666666666667,
+      "TNINI": 0.9166666666666666,
+      "TAP": 0.9166666666666666,
+      "entre_aplicadas": {
+        "m": 11,
+        "TRV": 0.0,
+        "TRI": 0.45454545454545453,
+        "TPF": 0.45454545454545453,
+        "TNINI": 1.0
+      }
+    },
+    "P2_raciocinio_guiado": {
+      "m": 12,
+      "TRV": 0.0,
+      "TRI": 0.3333333333333333,
+      "TPF": 0.4166666666666667,
+      "TNINI": 0.9166666666666666,
+      "TAP": 0.9166666666666666,
+      "entre_aplicadas": {
+        "m": 11,
+        "TRV": 0.0,
+        "TRI": 0.36363636363636365,
+        "TPF": 0.45454545454545453,
+        "TNINI": 1.0
+      }
+    }
+  },
+  "por_faixa_regra": {
+    "1_search": {
+      "m": 2,
+      "TRV": 0.0,
+      "TRI": 0.0,
+      "TPF": 0.5,
+      "TNINI": 0.5,
+      "TAP": 0.5,
+      "entre_aplicadas": {
+        "m": 1,
+        "TRV": 0.0,
+        "TRI": 0.0,
+        "TPF": 1.0,
+        "TNINI": 1.0
+      }
+    },
+    "2_taint_com_saneadores": {
+      "m": 4,
+      "TRV": 0.0,
+      "TRI": 1.0,
+      "TPF": 0.0,
+      "TNINI": 1.0,
+      "TAP": 1.0,
+      "entre_aplicadas": {
+        "m": 4,
+        "TRV": 0.0,
+        "TRI": 1.0,
+        "TPF": 0.0,
+        "TNINI": 1.0
+      }
+    },
+    "3_taint_sem_saneadores": {
+      "m": 18,
+      "TRV": 0.0,
+      "TRI": 0.2777777777777778,
+      "TPF": 0.5,
+      "TNINI": 0.9444444444444444,
+      "TAP": 0.9444444444444444,
+      "entre_aplicadas": {
+        "m": 17,
+        "TRV": 0.0,
+        "TRI": 0.29411764705882354,
+        "TPF": 0.5294117647058824,
+        "TNINI": 1.0
+      }
+    }
+  },
+  "por_caso": {
+    "m": 12,
+    "casos_aceitos": 0,
+    "TRV_caso": 0.0
+  },
+  "custo_usd": 0.030752,
+  "tokens": {
+    "entrada": 33806,
+    "saida": 11129
+  },
+  "do_cache": 5,
+  "fingerprints": [
+    "fp_adba1d049a"
+  ],
+  "tabela": [
+    {
+      "caso": "JS001",
+      "sigla": "HARDCRED",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T3",
+          "testes_falhos_novos": [
+            "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+          ],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001902,
+          "tokens_entrada": 2979,
+          "tokens_saida": 444,
+          "classificacao_final": "rejeitada:R0F0M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T3",
+          "testes_falhos_novos": [
+            "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+          ],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001334,
+          "tokens_entrada": 3087,
+          "tokens_saida": 422,
+          "classificacao_final": "rejeitada:R0F0M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS002",
+      "sigla": "PATHTRAV",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001092,
+          "tokens_entrada": 1090,
+          "tokens_saida": 410,
+          "classificacao_final": "rejeitada:R0F1M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.00133,
+          "tokens_entrada": 1198,
+          "tokens_saida": 532,
+          "classificacao_final": "rejeitada:R0F1M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS003",
+      "sigla": "PATHTRAV",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.000885,
+          "tokens_entrada": 665,
+          "tokens_saida": 387,
+          "classificacao_final": "rejeitada:R0F1M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001245,
+          "tokens_entrada": 773,
+          "tokens_saida": 585,
+          "classificacao_final": "rejeitada:R0F1M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS004",
+      "sigla": "PATHTRAV",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.000992,
+          "tokens_entrada": 664,
+          "tokens_saida": 454,
+          "classificacao_final": "rejeitada:R0F1M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001146,
+          "tokens_entrada": 772,
+          "tokens_saida": 523,
+          "classificacao_final": "rejeitada:R0F1M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS005",
+      "sigla": "SQLI",
+      "faixa": "2_taint_com_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T4",
+          "testes_falhos_novos": [
+            "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+          ],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.00128,
+          "tokens_entrada": 1747,
+          "tokens_saida": 363,
+          "classificacao_final": "rejeitada:R1F0M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T4",
+          "testes_falhos_novos": [
+            "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+          ],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001355,
+          "tokens_entrada": 1855,
+          "tokens_saida": 383,
+          "classificacao_final": "rejeitada:R1F0M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS006",
+      "sigla": "SQLI",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T4",
+          "testes_falhos_novos": [
+            "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+          ],
+          "testes_falhos_intermitentes": [
+            "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+          ],
+          "novas_issues_ids": [],
+          "custo_usd": 0.00128,
+          "tokens_entrada": 1747,
+          "tokens_saida": 363,
+          "classificacao_final": "rejeitada:R1F0M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T4",
+          "testes_falhos_novos": [
+            "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+            "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+          ],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001355,
+          "tokens_entrada": 1855,
+          "tokens_saida": 383,
+          "classificacao_final": "rejeitada:R1F0M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS007",
+      "sigla": "PATHTRAV",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.000904,
+          "tokens_entrada": 669,
+          "tokens_saida": 398,
+          "classificacao_final": "rejeitada:R0F1M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001152,
+          "tokens_entrada": 777,
+          "tokens_saida": 526,
+          "classificacao_final": "rejeitada:R0F1M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS008",
+      "sigla": "OPENREDIR",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001182,
+          "tokens_entrada": 903,
+          "tokens_saida": 513,
+          "classificacao_final": "rejeitada:R0F1M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T0",
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001329,
+          "tokens_entrada": 1011,
+          "tokens_saida": 578,
+          "classificacao_final": "rejeitada:R0F0M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS009",
+      "sigla": "SQLI",
+      "faixa": "2_taint_com_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T0",
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.00106,
+          "tokens_entrada": 1207,
+          "tokens_saida": 361,
+          "classificacao_final": "rejeitada:R1F0M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T0",
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.00119,
+          "tokens_entrada": 1315,
+          "tokens_saida": 415,
+          "classificacao_final": "rejeitada:R1F0M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS010",
+      "sigla": "SQLI",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T0",
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.00106,
+          "tokens_entrada": 1207,
+          "tokens_saida": 361,
+          "classificacao_final": "rejeitada:R1F0M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T0",
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.00119,
+          "tokens_entrada": 1315,
+          "tokens_saida": 415,
+          "classificacao_final": "rejeitada:R1F0M1"
+        }
+      ]
+    },
+    {
+      "caso": "JS011",
+      "sigla": "CODEINJ",
+      "faixa": "3_taint_sem_saneadores",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "aplicado",
+          "R": 1,
+          "F": 0,
+          "M": 1,
+          "tier_falha": "T4",
+          "testes_falhos_novos": [
+            "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+          ],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001347,
+          "tokens_entrada": 1375,
+          "tokens_saida": 498,
+          "classificacao_final": "rejeitada:R1F0M1"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "ancora_nao_encontrada",
+          "R": null,
+          "F": null,
+          "M": null,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001321,
+          "tokens_entrada": 1483,
+          "tokens_saida": 455,
+          "classificacao_final": "nao_aplicada:ancora_nao_encontrada"
+        }
+      ]
+    },
+    {
+      "caso": "JS012",
+      "sigla": "INFOEXPOSURE",
+      "faixa": "1_search",
+      "aceita": null,
+      "tentativas": [
+        {
+          "estrategia_prompt": "P1_simples",
+          "status_aplicacao": "ancora_nao_encontrada",
+          "R": null,
+          "F": null,
+          "M": null,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.002062,
+          "tokens_entrada": 2002,
+          "tokens_saida": 788,
+          "classificacao_final": "nao_aplicada:ancora_nao_encontrada"
+        },
+        {
+          "estrategia_prompt": "P2_raciocinio_guiado",
+          "status_aplicacao": "aplicado",
+          "R": 0,
+          "F": 1,
+          "M": 1,
+          "tier_falha": null,
+          "testes_falhos_novos": [],
+          "testes_falhos_intermitentes": [],
+          "novas_issues_ids": [],
+          "custo_usd": 0.001759,
+          "tokens_entrada": 2110,
+          "tokens_saida": 572,
+          "classificacao_final": "rejeitada:R0F1M1"
+        }
+      ]
+    }
+  ]
+}
