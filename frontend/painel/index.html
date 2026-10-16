@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pipeline · TCC2</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<main>
+  <header><div><p class="eyebrow">TCC2 / LLM + SAST</p><h1>Execução do pipeline</h1><p class="muted">Juice Shop · Acompanhe as tentativas e os tempos de validação.</p></div><span id="connection" class="badge">Conectando…</span></header>
+  <section class="panel controls" aria-label="Controles">
+    <div><label for="mode">Modo de execução</label><select id="mode"><option value="real">Real · usa a LLM</option><option value="preflight">Preflight · somente preparação</option><option value="dry-run">Dry-run · resposta simulada</option></select></div>
+    <button id="start">Iniciar pipeline</button><button id="stop" class="secondary" disabled>Encerrar após tentativa atual</button>
+    <p id="config" class="muted full"></p><p class="muted full">Execução real respeita os limites acumulados do .env. A parada aguarda a preparação ou a tentativa atual; preserva os registros e restaura a worktree.</p>
+  </section>
+  <p id="error" role="alert"></p>
+  <section class="stats" aria-label="Resumo"><article><span>Status</span><strong id="status">Aguardando</strong></article><article><span>Tempo da sessão atual</span><strong id="elapsed">—</strong></article><article><span>Tentativas na visualização</span><strong id="count">0</strong></article></section>
+  <section class="panel"><div class="section-title"><h2>Tempo por issue e prompt</h2><div><label for="history">Visualização</label><select id="history"><option value="">Execução atual</option></select></div></div>
+    <p id="run" class="muted"></p><p class="muted">Os tempos aparecem quando cada tentativa é registrada. Total medido inclui a tentativa completa; “≈” indica soma das etapas disponíveis em registros antigos. Resultado de F usa o critério funcional.</p>
+    <div class="table-scroll"><table><thead><tr><th>Issue / arquivo</th><th>Prompt</th><th>Resultado</th><th>LLM</th><th>SAST</th><th>Validação</th><th>Total</th><th>R / F / M</th></tr></thead><tbody id="attempts"></tbody></table></div>
+    <p id="empty" class="muted">Nenhuma tentativa registrada. Preflight gera prompts, mas não tentativas de correção.</p><p id="warnings" class="muted"></p>
+  </section>
+  <section class="panel"><div class="section-title"><h2>Log da execução atual</h2><label><input id="follow" type="checkbox" checked> Acompanhar final</label></div><pre id="log" tabindex="0">Aguardando execução…</pre><p class="muted">Exibe os últimos 64 KB. O log completo é salvo em outputs/painel/.</p></section>
+</main>
+</body></html>

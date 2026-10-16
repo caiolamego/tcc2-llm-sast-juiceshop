@@ -348,6 +348,11 @@ def _aceita_estrita(linha: dict) -> bool:
     return linha.get("classificacao_sem_separacao", linha.get("classificacao_final")) == "aceita"
 
 
+def parada_solicitada(args) -> bool:
+    arquivo = getattr(args, 'arquivo_parada', None)
+    return bool(arquivo and Path(arquivo).is_file())
+
+
 def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
                    feitas: dict[str, dict]) -> None:
     """Estrategias do desenho em sequencia, parando na primeira aceita; depois
@@ -374,12 +379,17 @@ def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
     cadeia_encerrada = False
     with pool.alugar() as wt:
         for e, tid, na_cadeia in pendentes:
-            if ctx.parar.is_set():
+            if ctx.parar.is_set() or parada_solicitada(ctx.args):
                 return
             if na_cadeia and cadeia_encerrada:
                 continue
             try:
+                inicio_tentativa = datetime.now(timezone.utc).isoformat()
+                cronometro = time.monotonic()
                 linha = tentativa(ctx, issue, e, wt, tid)
+                linha['inicio_tentativa'] = inicio_tentativa
+                linha['fim_tentativa'] = datetime.now(timezone.utc).isoformat()
+                linha['duracao_total_s'] = round(time.monotonic() - cronometro, 3)
             except OrcamentoEsgotado as ex:
                 ctx.parar.set()
                 console.log(f"[bold red]Orcamento esgotado: {ex}. Parando a sessao.[/]")
@@ -452,7 +462,12 @@ def main() -> None:
     ap.add_argument('--somente-preflight', action='store_true')
     ap.add_argument('--semgrep-bin', default='semgrep')
     ap.add_argument('--baseline-testes', type=Path, default=RAIZ_REPO / 'outputs/baseline_testes.json')
+    ap.add_argument('--arquivo-parada', type=Path,
+                    help='Controle local: encerrar entre tentativas quando este arquivo existir')
     args = ap.parse_args()
+    if parada_solicitada(args):
+        console.log('Parada solicitada; nenhuma tentativa iniciada.')
+        return
     args.estrategias = [e.strip() for e in args.estrategias.split(",") if e.strip()]
     args.diagnosticos = [e.strip() for e in args.diagnosticos.split(",") if e.strip()]
     if set(args.estrategias) & set(builder.DIAGNOSTICOS):
@@ -492,6 +507,9 @@ def main() -> None:
             return
     elif args.somente_preflight or args.perfil_sast:
         raise SystemExit('Preflight/perfil local requer catálogo ampliado')
+    if parada_solicitada(args):
+        console.log('Parada solicitada durante a preparação; nenhuma tentativa iniciada.')
+        return
     saidas = Saidas(Path(args.saida).resolve() if args.saida else RAIZ_REPO / "outputs" / ("dry_run" if args.dry_run else ""))
     env = dotenv_values(RAIZ_REPO / ".env")
     pool = PoolWorktrees(RAIZ_REPO / "workspace", k=args.k, commit_esperado=ampliado.catalogo.commit if ampliado else env.get("JUICESHOP_COMMIT"))
@@ -561,6 +579,7 @@ def main() -> None:
         "duracao_s": round(time.monotonic() - inicio, 1),
         "custo_usd_sessao": round(ctx.custo_sessao, 6),
         "erros": ctx.erros, "interrompida_por_orcamento": ctx.parar.is_set(),
+        "interrompida_pelo_usuario": parada_solicitada(args),
     })
     arq_sessoes = registrar_sessao(saidas, args.execucao, sessao_info)
 

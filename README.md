@@ -2,6 +2,45 @@
 
 Guia de continuidade: [diagnóstico, checklists e plano do TCC2](docs/GUIA_CONTINUIDADE_TCC2.md).
 
+Para iniciar com as configurações do piloto, na raiz deste repositório:
+
+```bash
+python executar.py
+```
+
+Essa entrada usa automaticamente a `.venv` existente e executa **a LLM real** para
+`routes/login.ts` e `routes/keyServer.ts`, com P1–P4, K=1 e consolidação de métricas
+ao final. Casos, estratégias e caminhos ficam em [config/execucao.yaml](config/execucao.yaml).
+A chave e os limites continuam no `.env`; o orçamento é acumulado entre execuções,
+conforme `.cache/orcamento_llm.json`. O lançador não aumenta limites nem apaga esse histórico.
+
+Cada chamada cria uma execução nova em `outputs/execucoes/` e uma pasta irmã com
+sufixo `_METRICAS`. Se o pipeline falhar, o lançador preserva os artefatos e retorna
+o código da falha, sem iniciar a consolidação. A retomada de uma execução existente
+continua disponível pela interface completa abaixo.
+
+```bash
+python executar.py --modo preflight   # prepara prompts sem chamar a LLM
+python executar.py --modo dry-run     # valida com respostas simuladas
+python executar.py --mostrar-comando # apenas mostra os comandos delegados
+```
+
+O ambiente e o worktree devem estar previamente preparados. O lançador reutiliza
+os gates, contratos e validações do pipeline; não instala dependências nem modifica
+os resultados anteriores. Também funciona por caminho absoluto, a partir de outra pasta.
+
+Para controlar e acompanhar pelo navegador:
+
+```bash
+python painel.py
+```
+
+Abra **http://127.0.0.1:8765**. O painel oferece início, parada após a tentativa atual,
+log ao vivo, cronômetro da sessão e tempos por issue/prompt (LLM, SAST, validação e
+total). O seletor de histórico permite consultar as tentativas já registradas,
+incluindo o piloto de duas issues. Abrir o painel não inicia o pipeline.
+Veja [uso e limites do painel](docs/painel_local.md).
+
 Pipeline automatizado que integra análise estática de segurança (SAST), Modelos de Linguagem de Grande Escala (LLMs), estratégias de contextualização e testes automatizados para gerar e **validar** correções de vulnerabilidades no OWASP Juice Shop.
 
 Trabalho de Conclusão de Curso 2 — Engenharia de Software, Faculdade de Ciências e Tecnologias em Engenharia (FCTE), Universidade de Brasília.
@@ -182,6 +221,9 @@ A base documental está em `knowledge_base/`; o recuperador está em `src/pipeli
 
 ```text
 config/               configurações, critérios e mapeamentos
+executar.py           entrada curta pelo terminal
+painel.py             entrada do painel local
+frontend/painel/      interface HTML/CSS/JS do painel
 knowledge_base/       dez documentos, índice e manifesto RAG 1.0
 rules/rodada1..12/    regras locais e fixtures do Semgrep
 scripts/setup/        preparação do alvo
