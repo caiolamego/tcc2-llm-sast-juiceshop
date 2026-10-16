@@ -55,10 +55,14 @@ def main() -> None:
     ap.add_argument('--semgrep-bin', default='semgrep')
     ap.add_argument('--saida', type=Path)
     ap.add_argument('--baseline-testes', type=Path, default=RAIZ_REPO/'outputs/baseline_testes.json')
+    from pipeline.validation.policy import argumentos, opcoes, alterada
+    argumentos(ap)
     args = ap.parse_args()
 
     from pipeline.catalogo import carregar
     catalogo = carregar(args.catalogo)
+    if not catalogo.ampliado and alterada(args):
+        raise SystemExit("Otimizações requerem catálogo ampliado")
     if catalogo.ampliado:
         from pipeline.execucao_ampliada import sondar
         sondar(args, catalogo)

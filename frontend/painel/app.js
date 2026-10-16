@@ -18,7 +18,7 @@ function render(data) {
   $('stop').disabled = !data.ativo || current?.status === 'parando' || busy;
   $('mode').disabled = data.ativo || busy;
   if (!configured) { $('mode').value = data.config.modo; configured = true; }
-  $('config').textContent = `Casos: ${data.config.casos.join(', ')} · Estratégias: ${data.config.estrategias.join(' → ')} · K=${data.config.k} · Configuração: config/execucao.yaml`;
+  $('config').textContent = `Casos: ${data.config.casos.join(', ')} · Estratégias: ${data.config.estrategias.join(' → ')} · K=${data.config.k} · ${data.config.politica_validacao} · Cache de validação: ${data.config.cache_validacao} · Repetição API: ${data.config.repeticao_api}`;
   const labels = {executando: 'Executando', parando: 'Aguardando parada', finalizada: 'Processo finalizado', interrompida: 'Interrompida', falhou: 'Falhou'};
   $('status').textContent = current ? `${labels[current.status] || current.status} · ${current.etapa}` : 'Aguardando';
   $('elapsed').textContent = current ? duration(current.decorrido_s) : '—';
@@ -30,8 +30,14 @@ function render(data) {
     const first = cell(tr, attempt.caso || '—'); const file = document.createElement('small'); file.textContent = attempt.arquivo || '—'; first.append(file);
     const strategy = cell(tr, attempt.estrategia?.split('_')[0] || '—');
     strategy.title = attempt.estrategia || '';
-    cell(tr, `${attempt.classificacao || '—'}${attempt.cache ? ' · cache' : ''}`);
-    for (const key of ['llm', 'sast', 'validacao']) cell(tr, duration(attempt.tempos[key]));
+    const hits = Object.entries(attempt.cache_validacao || {}).filter(([,v])=>v.hit).map(([k])=>k);
+    const result = cell(tr, `${attempt.classificacao || '—'}${attempt.cache ? ' · cache LLM' : ''}${hits.length ? ' · reuso '+hits.join('/') : ''}`);
+    result.title = JSON.stringify({politica:attempt.politica_validacao,cache:attempt.cache_validacao,etapas:attempt.etapas_validacao},null,2);
+    for (const key of ['llm', 'sast', 'validacao']) {
+      const td=cell(tr, duration(attempt.tempos[key]));
+      const origem=attempt.cache_validacao?.[key==='validacao'?'funcional':key];
+      if(origem?.hit) td.title=`Tempo gasto agora. Evidência original: ${duration(origem.duracao_original_s)}`;
+    }
     cell(tr, `${attempt.total_estimado && attempt.tempos.total != null ? '≈ ' : ''}${duration(attempt.tempos.total)}`);
     cell(tr, [attempt.R, attempt.F, attempt.M].map(bit).join(' / '));
     return tr;

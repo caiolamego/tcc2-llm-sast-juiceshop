@@ -110,7 +110,7 @@ def custos_atual(rows, sessoes):
         return {'total_conhecido':math.fsum(present),'ausentes':len(values)-len(present),
                 'completude':'completa' if len(values)==len(present) else 'parcial'}
     errors=sum(len(s.get('erros',[])) for s in sessoes)
-    return {'chamadas_novas_registradas':len(calls),'usos_cache':len(cached),
+    resultado = {'chamadas_novas_registradas':len(calls),'usos_cache':len(cached),
             'simuladas':sum(r['dry_run'] for r in rows),
             'custo_usd':known(calls,'custo_usd'),
             'tokens_chamadas':{k:known(calls,k) for k in ('tokens_entrada','tokens_saida')},
@@ -121,6 +121,14 @@ def custos_atual(rows, sessoes):
             'duracoes_sessoes':[{'inicio':s.get('inicio'),'fim':s.get('fim'),'duracao_s':s.get('duracao_s'),
                                  'abortada':s.get('abortada'),'interrompida_por_orcamento':s.get('interrompida_por_orcamento')} for s in sessoes],
             'erros_sessoes':errors,'limite':'Chamadas sem registro não têm custo/tokens inferidos; durações acumuladas não são tempo de parede.'}
+    if any('cache_validacao' in r for r in rows):
+        resultado['validacao_reutilizada'] = {
+            comp: {'reusos':sum(bool(r.get('cache_validacao',{}).get(comp,{}).get('hit')) for r in rows),
+                   'medicoes_executadas':sum(comp in r.get('cache_validacao',{}) and not r['cache_validacao'][comp]['hit'] for r in rows),
+                   'tempo_original_reutilizado_s':math.fsum(r.get('cache_validacao',{}).get(comp,{}).get('duracao_original_s',0)
+                                                          for r in rows if r.get('cache_validacao',{}).get(comp,{}).get('hit'))}
+            for comp in ('sast','funcional')}
+    return resultado
 
 
 DIMENSOES={'estrategia':'estrategia_curta','caso':'caso_id','cwe':'cwe_ids','owasp':'owasp_2025',

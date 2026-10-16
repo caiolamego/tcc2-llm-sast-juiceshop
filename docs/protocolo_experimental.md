@@ -295,3 +295,55 @@ Publicação ocorre em saída nova, com lock, revalidação de fontes e promoç�
 A validação encontrou divergência preexistente no YAML remoto do perfil atual. Um snapshot exato do Git, com os hashes do manifesto original, foi arquivado na preparação da feature 04; a divergência permanece registrada. Isso não altera a metodologia nem o detector histórico. Novos scans precisam selecionar um perfil íntegro.
 
 Veja [especificação](../features/04-metricas-consolidacao/README.md) e [entrega](../features/04-metricas-consolidacao/ENTREGA.md).
+
+## Otimização experimental da validação — feature 05
+
+A feature 05 introduz a política opcional `otimizada_v1`. O padrão permanece
+`historica_v1`, cache desligado e repetição ampla. A política otimizada executa
+compilação e testes relacionados antes da confirmação ampla, mantendo SAST global
+mesmo quando a triagem funcional reprova. R/M negativos ou indeterminados não
+impedem medir F. Aprovar apenas a triagem não autoriza F positivo.
+
+O mapa revisado associa arquivos alterados a testes de servidor/API; arquivos não
+mapeados e componentes compartilhados usam fallback amplo. Esse fallback preserva
+a cobertura existente de servidor/API: não passa a cobrir testes Angular ou Cypress.
+A classificação F/D e a regra de parada da cadeia permanecem inalteradas.
+
+Novas execuções ampliadas registram contrato 3.0, com política, mapa, implementação,
+conjunto D e ambiente efetivo. Contratos 1.0/2.0 continuam legíveis; mudanças
+científicas exigem nova execução, sem migração ou sobrescrita dos artefatos antigos.
+A reserva do workspace impede execuções concorrentes de processos que usam as novas
+entradas do pipeline. Dentro da execução, K controla casos; estratégias do mesmo
+caso continuam sequenciais e as etapas de API compartilham o lock de porta.
+
+Cache de SAST e cache funcional são independentes do cache de respostas LLM. Uma
+observação só é reutilizada com identidade de conteúdo, ambiente e implementação
+compatível, artefatos íntegros e proveniência registrada. R/M são recalculados por
+ocorrência mesmo em um hit de scan. Alterações não explicadas em estado local dos
+testes impedem a publicação funcional. Reutilizações não são novas réplicas de LLM
+nem novas medições independentes de qualidade. Tempos atuais e originais são separados.
+
+A repetição seletiva de API é experimental e fica desligada por padrão. Cobertura
+incompleta ou ambígua retorna à repetição ampla. Sua investigação deve comparar
+resultados e evidências, pois dependências de ordem podem não aparecer isoladamente.
+
+O benchmark da feature usa patches arquivados, sem gerar correções ou chamar a LLM.
+Seus replays ficam fora das populações de remediação e preservam os resultados
+históricos. A recomendação de política/K depende das medições e das limitações
+registradas na entrega; a simples implementação não demonstra aceleração.
+
+
+### Resultado da avaliação da feature 05
+
+A matriz de 96 replays dos oito patches preservou R/M e as três definições de F.
+K=1 frio ficou praticamente empatado com a política histórica (0,443% de redução
+mediana); K=2 frio reduziu 15,970% frente ao otimizado K=1, em três repetições.
+A preparação foi medida separadamente. Cache funcional não teve hits no alvo por
+mudanças de identidade; cache SAST teve três hits frios/oito quentes por rodada.
+Uma diferença de intermitência externa apareceu no K=2 quente. Cache quente e
+repetição seletiva têm observação única e permanecem exploratórios.
+
+A política vigente não foi alterada. Recomenda-se avaliar otimizado/K=2/repetição
+ampla em novo piloto controlado antes de congelar a campanha. A cobertura continua
+sendo a suíte de servidor/API já existente, sem Angular/Cypress. Veja os hashes,
+preparações descartadas e limites na [entrega](../features/05-otimizacao-validacao/ENTREGA.md).

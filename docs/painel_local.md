@@ -51,6 +51,14 @@ pertence à sessão atual do servidor.
 
 ## Tempos e resultados
 
+Nas execuções com contrato 3.0, a configuração efetiva mostra política de validação,
+cache e repetição de API. A tabela distingue cache da LLM de reuso SAST/funcional.
+Passe o mouse sobre o resultado para consultar política, origem e etapas; sobre um
+tempo reutilizado para consultar a duração original. O valor principal é o trabalho
+gasto agora, não o custo histórico da evidência. Etapas dispensadas não são testes
+aprovados. O exemplo `config/execucao_otimizada.exemplo.yaml` mantém K=1 e inicia em
+preflight; o YAML padrão não foi alterado.
+
 | Coluna | Medição |
 |---|---|
 | LLM | Latência registrada pelo cliente, incluindo a política existente de cache |
@@ -65,6 +73,13 @@ a preparação global, a gravação final do registro ou a restauração ao devo
 Os registros novos também recebem `inicio_tentativa` e `fim_tentativa` em UTC.
 Registros antigos permanecem intactos. Ausências aparecem como `—`; R/M indeterminados
 aparecem como `?`. A coluna F mostra `F_criterio` quando esse campo existe.
+
+No contrato 3.0, o total também inclui a restauração explícita feita após a medição
+e antes de registrar a tentativa. A restauração adicional ao devolver o pool e a
+persistência final continuam fora desse cronômetro. O replay mede ainda o tempo até
+obter a worktree limpa (incluindo a preparação inicial do pool) e a restauração de
+cada patch, em campos próprios. Somente esperas efetivamente instrumentadas são
+apresentadas como medições.
 
 O cronômetro da sessão é independente: inclui preparação e consolidação. Tempos de
 tentativas paralelas não devem ser somados como tempo de parede. A tabela mostra

@@ -32,6 +32,10 @@ def resumo_tentativa(linha):
             'classificacao': linha.get('classificacao_final'),
             'R': linha.get('R'), 'F': linha.get('F_criterio', linha.get('F')), 'M': linha.get('M'),
             'cache': linha.get('do_cache', False), 'tempos': tempos,
+            'cache_validacao': linha.get('cache_validacao', {}),
+            'politica_validacao': linha.get('politica_validacao', 'historica_v1'),
+            'tempos_medicao': linha.get('tempos_medicao', {}),
+            'etapas_validacao': linha.get('etapas_validacao', []),
             'total_estimado': estimado}
 
 
@@ -72,6 +76,9 @@ class Controle:
                           'inicio': time.time(), 'fim': None, 'etapa': 'pipeline',
                           'casos': config['casos'], 'estrategias': config['estrategias'],
                           'k': config['k'],
+                          'politica_validacao':config.get('politica_validacao','historica_v1'),
+                          'cache_validacao':config.get('cache_validacao','desligado'),
+                          'repeticao_api':config.get('repeticao_api','ampla'),
                           'saida': str(config['saida_base'] / ident),
                           'log': str(logs / f'{ident}.console.log'),
                           'parada': str(controle / 'parar'), 'erro': None}
@@ -174,4 +181,7 @@ class Controle:
             publico['decorrido_s'] = (atual['fim'] or time.time()) - atual['inicio']
         return {'atual': publico, 'ativo': ativo, 'tentativas': tentativas, 'avisos': avisos,
                 'log': logs, 'config': {'modo': config['modo'], 'casos': config['casos'],
-                                       'estrategias': config['estrategias'], 'k': config['k']}}
+                                       'estrategias': config['estrategias'], 'k': config['k'],
+                                       'politica_validacao':config.get('politica_validacao','historica_v1'),
+                                       'cache_validacao':config.get('cache_validacao','desligado'),
+                                       'repeticao_api':config.get('repeticao_api','ampla')}}

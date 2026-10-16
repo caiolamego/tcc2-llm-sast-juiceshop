@@ -58,13 +58,16 @@ def _metric_rows(ex, pop, d, group, values):
 
 def construir(report, entrada):
     artifacts={'metricas.json':json_bytes(report)}
+    colunas = list(COL_ROW)
+    if entrada.contrato and entrada.contrato.get('schema_versao') == '3.0':
+        colunas += ['politica_validacao','cache_validacao','tempos_medicao','selecao_testes','etapas_validacao']
     rows=[]
     for l in entrada.linhas:
-        row={k:l.get(k) for k in COL_ROW}
+        row={k:l.get(k) for k in colunas}
         for k in ('R','F','M',*(f'F_{d}' for d in DEFS),*(f'classificacao_{d}' for d in DEFS)):
             row[k+'_original']=l['original'].get(k)
         rows.append(row)
-    artifacts['tentativas.csv']=csv_bytes(COL_ROW,rows)
+    artifacts['tentativas.csv']=csv_bytes(colunas,rows)
     cases=[]
     for c in report['casos']:
         cases.append({**{k:v for k,v in c.items() if k!='definicoes'},**{f'aceito_{d}':c['definicoes'][d] for d in DEFS}})

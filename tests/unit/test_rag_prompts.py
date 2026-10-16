@@ -198,8 +198,8 @@ class ContratoTests(unittest.TestCase):
         amp.salvar(out/'contrato_execucao.json',old)
         return old,current,out
 
-    def test_v2_without_rag_does_not_depend_on_base(self):
-        got=self.current();self.assertEqual(got['schema_versao'],'2.0');self.assertNotIn('rag',got)
+    def test_v3_without_rag_does_not_depend_on_base(self):
+        got=self.current();self.assertEqual(got['schema_versao'],'3.0');self.assertNotIn('rag',got)
         self.assertNotIn('builder.py',got['prompts_validacao_sha256'])
         shutil.rmtree(self.base)
         self.assertEqual(got,self.current())

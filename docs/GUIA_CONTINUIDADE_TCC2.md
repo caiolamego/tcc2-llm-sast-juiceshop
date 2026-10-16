@@ -10,6 +10,14 @@
 
 Este documento é um diagnóstico e um plano de trabalho. Checkboxes marcadas representam implementações ou evidências encontradas; não significam que o ambiente foi reproduzido integralmente nesta máquina. Atualize os itens com links para as evidências de conclusão.
 
+> **Feature 05 — 16/10/2026:** implementados cache de validação, mapa explícito,
+> triagem, contrato 3.0 e repetição seletiva experimental. A matriz de 96 replays
+> preservou R/M/F; K=2 frio reduziu a mediana em cerca de 16% sobre otimizado K=1.
+> Cache funcional real não teve hits; houve uma diferença de intermitência externa.
+> Padrões continuam históricos/K=1. Veja a [entrega e limites](../features/05-otimizacao-validacao/ENTREGA.md)
+> e o [roteiro sem LLM](../features/05-otimizacao-validacao/VALIDACAO.md).
+
+
 
 > **Atualização — feature 01 concluída:** o [catálogo ampliado](../outputs/catalogos/ampliado_v1/catalogo_issues.json) foi gerado e validado com 78 casos por ocorrência e 46 exclusões. Veja a [entrega](../features/01-catalogo-ampliado/ENTREGA.md). Nessa etapa, o pipeline ainda consumia os 12 casos históricos e a integração estava pendente. O diagnóstico abaixo preserva o estado inicial da análise, e os checklists foram atualizados apenas nos itens comprovados.
 

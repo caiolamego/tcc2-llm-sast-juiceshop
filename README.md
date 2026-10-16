@@ -41,6 +41,17 @@ total). O seletor de histórico permite consultar as tentativas já registradas,
 incluindo o piloto de duas issues. Abrir o painel não inicia o pipeline.
 Veja [uso e limites do painel](docs/painel_local.md).
 
+A política otimizada é experimental e não altera a configuração padrão. Para
+conferir seus comandos sem executar o pipeline:
+
+```bash
+python executar.py --config config/execucao_otimizada.exemplo.yaml --mostrar-comando
+```
+
+O exemplo usa preflight, K=1, cache de validação e repetição ampla de API. A
+[feature 05](features/05-otimizacao-validacao/README.md) descreve a seleção explícita,
+o reuso de evidências e o [benchmark sem LLM](features/05-otimizacao-validacao/VALIDACAO.md).
+
 Pipeline automatizado que integra análise estática de segurança (SAST), Modelos de Linguagem de Grande Escala (LLMs), estratégias de contextualização e testes automatizados para gerar e **validar** correções de vulnerabilidades no OWASP Juice Shop.
 
 Trabalho de Conclusão de Curso 2 — Engenharia de Software, Faculdade de Ciências e Tecnologias em Engenharia (FCTE), Universidade de Brasília.
@@ -443,7 +454,7 @@ PYTHONPATH=src .venv/bin/python -m pipeline.run_pipeline \
 
 Essa saída já contém 312 prompts, com 156 recuperações P3/P4. O comando pode conferir a retomada compatível; mudanças científicas exigem nova execução/saída. Nenhuma chamada à API, patch ou validação funcional ocorre no preflight. Os oito diagnósticos preexistentes de parsing estão preservados.
 
-Contratos novos usam versão 2.0 com hashes dos componentes textuais e política de contexto. RAG inclui os hashes do manifesto, índice e documentos. Contratos 1.0 sem RAG só podem ser retomados com evidências completas de mensagens/hashes equivalentes para todos os pares solicitados; seus artefatos e identidade são preservados. Não adicionar P3/P4 a saídas antigas.
+Na entrega da feature 03, os contratos passaram a usar versão 2.0 com hashes dos componentes textuais e política de contexto. RAG inclui os hashes do manifesto, índice e documentos. Contratos 1.0 sem RAG só podem ser retomados com evidências completas de mensagens/hashes equivalentes para todos os pares solicitados; seus artefatos e identidade são preservados. Não adicionar P3/P4 a saídas antigas.
 
 Veja a [entrega da feature 03](features/03-rag-prompts/ENTREGA.md) e a [cobertura por caso](outputs/feature03/cobertura_rag.json). Piloto com correções reais e cobertura específica de frontend seguem pendentes.
 
@@ -464,3 +475,27 @@ Escolha uma saída nova: o comando recusa sobrescrita. Ele lê contratos, regist
 No modo ampliado, TRI/TPF/TNINI usam valores medidos; as proporções mínimas sobre todas as tentativas também são exportadas. TRV mantém todas as tentativas da população. TFF acompanha o denominador de TPF. O módulo reutilizável está em `src/pipeline/metrics/`; o comando histórico permanece disponível.
 
 A [entrega da feature 04](features/04-metricas-consolidacao/ENTREGA.md) registra testes, reprodução e a divergência preexistente das regras remotas. Um [snapshot exato](outputs/feature04/preparacao/perfil_sast/perfil.json) foi recuperado do Git e usado na validação; os arquivos atuais e históricos foram preservados. Para futuras execuções SAST, selecionar um perfil íntegro explicitamente.
+
+
+## Otimização opcional da validação
+
+A [feature 05](features/05-otimizacao-validacao/ENTREGA.md) acrescenta as políticas
+`historica_v1` e `otimizada_v1`, mapa explícito de testes, cache de evidências e
+repetição de API `ampla|seletiva-experimental`. As otimizações exigem catálogo
+ampliado; a política otimizada exige `--mapa-testes`. Novas execuções ampliadas
+usam contrato 3.0 e continuam lendo 1.0/2.0 sem migrá-los.
+
+Os 96 replays dos oito patches do piloto preservaram R/M/F. O ganho mediano de
+cache frio K=1 foi 0,4%; K=2 reduziu a mediana em aproximadamente 16% sobre o
+mesmo otimizado K=1. Cache quente e repetição seletiva tiveram somente uma rodada;
+o relatório registra uma intermitência externa e a ausência de hits funcionais.
+Não são novas correções ou amostras independentes da LLM.
+
+Os padrões continuam históricos, K=1, cache desligado e repetição ampla. Para
+inspecionar a configuração alternativa sem iniciar API ou validação:
+
+```bash
+python executar.py --config config/execucao_otimizada.exemplo.yaml --mostrar-comando
+```
+
+O [roteiro](features/05-otimizacao-validacao/VALIDACAO.md) descreve os replays sem LLM.

@@ -183,6 +183,8 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     amp = getattr(ctx, "ampliado", None)
     if amp:
         from pipeline.catalogo import carregar as validar_catalogo
+        from pipeline.execucao_ampliada import conferir_validacao_contrato
+        conferir_validacao_contrato(amp,args,wt)
         amp.perfil.conferir()
         if validar_catalogo(amp.catalogo.caminho).hashes != amp.catalogo.hashes:
             raise ValueError('Catálogo alterado após preflight')
@@ -274,11 +276,15 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     arq_raw = s.d("sast_depois") / f"{tid}_raw.json"
     inicio = time.monotonic()
     if amp:
-        from pipeline.sast.semgrep_client import scan_perfil
-        from pipeline.sast.comparacao import comparar, chave_caso
-        depois_scan = scan_perfil(wt, amp.perfil, arq_raw, args.semgrep_bin)
+        from pipeline.validation.engine import medir
+        from pipeline.sast.comparacao import chave_caso
         fontes = {a: (fontes_originais[a], (wt / a).read_bytes()) for a in aplic.arquivos}
-        comp = comparar(amp.scan, depois_scan, chave_caso(issue), fontes)
+        depois_scan, comp, v, medicao = medir(
+            wt, issue, fontes, amp.scan, amp.perfil, amp.baseline_testes, arq_raw,
+            args, ctx.lock_t4, origem={'execucao':args.execucao,'tentativa_id':tid},
+            parar=lambda: parada_solicitada(args))
+        linha.update(medicao)
+        linha['artefatos']['evidencia_funcional'] = rel(arq_raw.with_name(arq_raw.stem+'_evidencia_funcional.json'))
         comp_file = s.d('comparacoes') / f'{tid}.json'
         gravar_json(comp_file, comp)
         linha.update(R=comp['R'], M=comp['M'], comparacao_status=comp['comparacao_status'],
@@ -288,7 +294,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
                      motivos_indeterminacao=comp['arquivos_inconclusivos'])
         linha['sast_depois'] = [f.to_dict() for f in depois_scan.findings]
         linha['sast_depois_raw'] = rel(arq_raw) if arq_raw.exists() else None
-        linha['duracao_sast_s'] = round(time.monotonic() - inicio, 2)
+        linha['duracao_sast_s'] = round(medicao['tempos_medicao']['sast_s'], 3)
         linha['artefatos']['comparacao'] = rel(comp_file)
         if arq_raw.exists(): linha['artefatos']['sast_depois'] = rel(arq_raw)
         cfg = ConfigValidacao(lock_t4=ctx.lock_t4, arquivo_linha_de_base=amp.baseline_testes)
@@ -310,7 +316,8 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         linha["sast_depois_raw"] = rel(arq_raw)
 
         cfg = ConfigValidacao(lock_t4=ctx.lock_t4)
-    v = validar(wt, aplic.arquivos, cfg)
+    if not amp:
+        v = validar(wt, aplic.arquivos, cfg)
     gravar_json(s.d("testes") / f"{tid}.json", v.to_dict())
     linha["artefatos"]["validacao"] = rel(s.d("testes") / f"{tid}.json")
     # F e tier_falha seguem d_criterio (Secao 7.1); as tres versoes vao juntas
@@ -325,7 +332,10 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     linha["testes_falhos_novos"] = v.testes_falhos_novos
     linha["testes_falhos_intermitentes"] = v.testes_falhos_intermitentes
     linha["reexecucoes"] = v.reexecucoes
-    linha["duracao_validacao_s"] = v.duracao_s
+    linha["duracao_validacao_s"] = medicao["tempos_medicao"]["validacao_s"] if amp else v.duracao_s
+    if amp:
+        linha['etapas_validacao'] = medicao['etapas_validacao']
+        linha['selecao_testes'] = v.selecao
 
     for k in ("sem_separacao", "marcador", "criterio"):
         f = linha[f"F_{k}"]
@@ -387,6 +397,10 @@ def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
                 inicio_tentativa = datetime.now(timezone.utc).isoformat()
                 cronometro = time.monotonic()
                 linha = tentativa(ctx, issue, e, wt, tid)
+                if 'tempos_medicao' in linha:
+                    inicio_restauracao = time.monotonic()
+                    PoolWorktrees.restaurar(wt)
+                    linha['tempos_medicao']['restauracao_s'] = time.monotonic()-inicio_restauracao
                 linha['inicio_tentativa'] = inicio_tentativa
                 linha['fim_tentativa'] = datetime.now(timezone.utc).isoformat()
                 linha['duracao_total_s'] = round(time.monotonic() - cronometro, 3)
@@ -464,6 +478,8 @@ def main() -> None:
     ap.add_argument('--baseline-testes', type=Path, default=RAIZ_REPO / 'outputs/baseline_testes.json')
     ap.add_argument('--arquivo-parada', type=Path,
                     help='Controle local: encerrar entre tentativas quando este arquivo existir')
+    from pipeline.validation.policy import argumentos, alterada
+    argumentos(ap)
     args = ap.parse_args()
     if parada_solicitada(args):
         console.log('Parada solicitada; nenhuma tentativa iniciada.')
@@ -489,6 +505,8 @@ def main() -> None:
 
     from pipeline.catalogo import carregar as carregar_catalogo
     contexto_catalogo = carregar_catalogo(args.catalogo)
+    if not contexto_catalogo.ampliado and alterada(args):
+        raise SystemExit("Otimizações de validação requerem catálogo ampliado")
     catalogo = contexto_catalogo.casos
     casos = [c for c in catalogo if c["elegivel"]]
     if args.casos:

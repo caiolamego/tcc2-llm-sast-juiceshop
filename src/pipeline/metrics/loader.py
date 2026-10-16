@@ -103,7 +103,15 @@ def _perfil(entrada):
 
 def _validar_contrato(entrada):
     c = entrada.contrato; cat = entrada.catalogo
-    exigir(c.get('schema_versao') in ('1.0','2.0') and c.get('execucao') == entrada.execucao, 'Schema/execução do contrato inválido')
+    exigir(c.get('schema_versao') in ('1.0','2.0','3.0') and c.get('execucao') == entrada.execucao, 'Schema/execução do contrato inválido')
+    if c.get('schema_versao') == '3.0':
+        from pipeline.validation.policy import CHOICES
+        v = c.get('validacao')
+        exigir(isinstance(v,dict) and all(v.get(k) in choices for k,choices in CHOICES.items()), 'Política de validação inválida')
+        exigir(isinstance(v.get('implementacao'),dict) and isinstance(v.get('ambientes'),list), 'Proveniência da validação ausente')
+        exigir(bool(v['implementacao']) and all(isinstance(h,str) and re.fullmatch('[0-9a-f]{64}',h) for h in v['implementacao'].values()), 'Hashes de implementação inválidos')
+        if v['politica_validacao']=='otimizada_v1':
+            exigir(isinstance(v.get('mapa_testes_sha256'),str) and re.fullmatch('[0-9a-f]{64}',v['mapa_testes_sha256']), 'Mapa de testes sem hash')
     exigir(c.get('modo') in ('real','dry-run','preflight'), 'Modo do contrato inválido')
     exigir(c.get('commit_alvo') == cat.commit and c.get('hashes_catalogo') == cat.hashes, 'Commit/hashes de catálogo divergentes')
     ids = c.get('casos'); all_ids = {i['caso_id'] for i in cat.casos}
@@ -205,6 +213,19 @@ def carregar(raiz, execucao, catalogo_path):
                 entrada.registrar(artifact,'artefatos/'+file)
             # Cada referência declarada deve estar coberta pelo ledger, incluindo cópias portáteis.
             declared=row.get('artefatos');exigir(isinstance(declared,dict),'Referências de artefatos ausentes')
+            if contract.get('schema_versao')=='3.0' and row['status_aplicacao']=='aplicado':
+                exigir(row.get('politica_validacao')==contract['validacao']['politica_validacao'], 'Política da tentativa diverge do contrato')
+                cache=row.get('cache_validacao')
+                exigir(isinstance(cache,dict) and set(cache)=={'sast','funcional'}, 'Proveniência de cache ausente')
+                for componente,info in cache.items():
+                    exigir(isinstance(info,dict) and type(info.get('hit')) is bool and
+                           isinstance(info.get('chave'),str) and re.fullmatch('[0-9a-f]{64}',info['chave']), 'Cache de validação inválido')
+                evidencia=declared.get('evidencia_funcional')
+                exigir(isinstance(evidencia,str),'Evidência funcional portátil ausente')
+                candidato=Path(evidencia)
+                candidato=candidato if candidato.is_absolute() else RAIZ_REPO/candidato
+                candidato=relativo(raiz,candidato.resolve().relative_to(raiz).as_posix())
+                exigir(digest(candidato)==cache['funcional'].get('evidencia_sha256'),'Hash da evidência funcional divergente')
             for value in declared.values():
                 exigir(isinstance(value,str), 'Referência de artefato inválida')
                 candidates=[file for file in ledger if value==file or value.endswith('/'+file)]

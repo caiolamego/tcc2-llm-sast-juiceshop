@@ -20,8 +20,9 @@ def carregar_config(arquivo: Path) -> dict:
     config = yaml.safe_load(arquivo.read_text(encoding="utf-8"))
     campos = {"modo", "casos", "estrategias", "k", "catalogo", "perfil_sast",
               "baseline_testes", "semgrep_bin", "saida_base"}
-    if not isinstance(config, dict) or set(config) != campos:
-        raise ValueError(f"A configuração deve conter exatamente: {', '.join(sorted(campos))}")
+    opcionais = {"politica_validacao", "mapa_testes", "cache_validacao", "repeticao_api"}
+    if not isinstance(config, dict) or not campos <= set(config) or set(config) - campos - opcionais:
+        raise ValueError(f"Campos obrigatórios da configuração: {', '.join(sorted(campos))}")
     if config["modo"] not in MODOS:
         raise ValueError("Modo inválido")
     if type(config["k"]) is not int or config["k"] < 1:
@@ -42,6 +43,19 @@ def carregar_config(arquivo: Path) -> dict:
         config[campo] = (RAIZ / caminho).resolve()
         if campo != "saida_base" and not config[campo].is_file():
             raise ValueError(f"Arquivo necessário ausente: {config[campo]}")
+    for campo in opcionais - {'mapa_testes'}:
+        if campo in config:
+            permitidos = {'politica_validacao': ('historica_v1','otimizada_v1'),
+                          'cache_validacao': ('desligado','leitura','leitura-escrita'),
+                          'repeticao_api': ('ampla','seletiva-experimental')}
+            if config[campo] not in permitidos[campo]:
+                raise ValueError(f'{campo} inválido')
+    if config.get('politica_validacao') == 'otimizada_v1' and not config.get('mapa_testes'):
+        raise ValueError('Política otimizada requer mapa_testes')
+    if config.get('mapa_testes'):
+        config['mapa_testes'] = (RAIZ / config['mapa_testes']).resolve()
+        if not config['mapa_testes'].is_file():
+            raise ValueError('Mapa de testes ausente')
     return config
 
 
@@ -54,6 +68,9 @@ def montar_comandos(config: dict, python: str, execucao: str) -> tuple[list[str]
                 "--estrategias", ",".join(config["estrategias"]), "--k", str(config["k"]),
                 "--semgrep-bin", str(config["semgrep_bin"]),
                 "--baseline-testes", str(config["baseline_testes"])]
+    for campo in ("politica_validacao", "mapa_testes", "cache_validacao", "repeticao_api"):
+        if config.get(campo) is not None:
+            pipeline.extend(["--" + campo.replace("_", "-"), str(config[campo])])
     if config["modo"] == "preflight":
         pipeline.append("--somente-preflight")
     elif config["modo"] == "dry-run":

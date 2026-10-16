@@ -43,13 +43,14 @@ class Preparacao:
     saida: Path
     componentes_prompt: dict | None = None
     rag_base_sha256: str | None = None
+    validacao: dict | None = None
 
 
-def contrato(args, catalogo, perfil, casos):
+def contrato(args, catalogo, perfil, casos, worktrees=()):
     templates = [builder.ARQ_ROTEIRO, RAIZ_REPO/'src/pipeline/validation/runner.py']
     baseline=Path(args.baseline_testes).resolve()
     estrategias = args.estrategias + args.diagnosticos
-    data = {'schema_versao':'2.0','execucao':args.execucao,
+    data = {'schema_versao':'3.0','execucao':args.execucao,
             'modo':'preflight' if args.somente_preflight else 'dry-run' if args.dry_run else 'real',
             'commit_alvo':catalogo.commit,'hashes_catalogo':catalogo.hashes,'perfil_sha256':perfil.hash,
             'semgrep_versao':perfil.dados['semgrep_versao'],'estrategias':args.estrategias,
@@ -57,6 +58,8 @@ def contrato(args, catalogo, perfil, casos):
             'comparador':VERSAO,'prompts_validacao_sha256':{p.name:digest(p) for p in templates},
             'componentes_prompt_sha256':builder.componentes_contrato(estrategias),
             'baseline_testes_sha256':None if args.somente_preflight else digest(baseline)}
+    from pipeline.validation.policy import identidade
+    data['validacao'] = identidade(args, worktrees)
     if set(estrategias) & builder.COM_RAG:
         from pipeline.rag.retriever import carregar_base
         base = carregar_base(builder.DIR_KB)
@@ -77,8 +80,11 @@ def validar_compatibilidade_antiga(old, current, saida, casos, wt):
     estrategias = current['estrategias'] + current['diagnosticos']
     exigir(not set(estrategias) & builder.COM_RAG, 'Contrato incompatível: saída antiga não aceita P3/P4')
     scientific = {k:v for k,v in current.items() if k not in
-                  ('schema_versao','prompts_validacao_sha256','componentes_prompt_sha256','rag')}
-    exigir({k:v for k,v in old.items() if k not in ('schema_versao','prompts_validacao_sha256')} == scientific,
+                  ('schema_versao','prompts_validacao_sha256','componentes_prompt_sha256','rag','validacao')}
+    from pipeline.validation.policy import DEFAULTS
+    exigir(all(current.get('validacao',{}).get(k,v) == v for k,v in DEFAULTS.items() if k != 'mapa_testes'),
+           'Contrato antigo não aceita política de validação nova')
+    exigir({k:v for k,v in old.items() if k not in ('schema_versao','prompts_validacao_sha256','validacao')} == scientific,
            'Contrato incompatível: campos científicos divergentes')
     exigir(all(old.get('prompts_validacao_sha256',{}).get(k) == v
                for k,v in current['prompts_validacao_sha256'].items()),
@@ -108,6 +114,17 @@ def conferir_prompt_contrato(prep, prompt, estrategias):
         exigir(prompt.rag_base_sha256 == prep.rag_base_sha256, 'Base RAG alterada após preflight')
 
 
+def conferir_validacao_contrato(prep, args, wt):
+    if not prep.validacao:
+        return
+    from pipeline.validation.policy import identidade
+    atual = identidade(args, [wt])
+    esperado = prep.validacao
+    exigir({k:v for k,v in atual.items() if k != 'ambientes'} ==
+           {k:v for k,v in esperado.items() if k != 'ambientes'}, 'Política/mapa/implementação alterada após preflight')
+    exigir(all(a in esperado['ambientes'] for a in atual['ambientes']), 'Ambiente alterado após preflight')
+
+
 def conferir_linhas(path, expected):
     if not path.exists(): return
     vistos = set()
@@ -129,6 +146,8 @@ def conferir_linhas(path, expected):
 
 
 def preparar(args, catalogo, casos):
+    from pipeline.target.workspace import reservar_execucao
+    reservar_execucao(RAIZ_REPO)
     exigir(args.perfil_sast and args.saida,'Catálogo ampliado requer --perfil-sast e --saida')
     exigir(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*',args.execucao), 'ID de execução inválido')
     exigir(args.k>=1,'K deve ser positivo')
@@ -147,13 +166,18 @@ def preparar(args, catalogo, casos):
         for file, old in catalogo.meta['arquivos_fonte'].items():
             file_path=(wt/file).resolve()
             exigir(file_path.is_relative_to(wt.resolve()) and digest(file_path)==old,f'Fonte do catálogo divergente: {file}')
+    from pipeline.validation.policy import opcoes
+    politica = opcoes(args)
+    if politica['politica_validacao'] == 'otimizada_v1':
+        from pipeline.validation.selection import selecionar
+        selecionar(politica['mapa_testes'],worktrees[0],[c['arquivo'] for c in casos])
     saida=Path(args.saida).resolve()
     exigir(saida!=RAIZ_REPO/'outputs' and saida!=RAIZ_REPO and not saida.is_relative_to(RAIZ_REPO/'workspace'), 'Saída inválida para execução ampliada')
     # Diretórios históricos não podem ser usados como saída de execução.
     for protected in ('sast_antes','resultados_consolidados','catalogos','auditoria_sast'):
         exigir(not saida.is_relative_to(RAIZ_REPO/'outputs'/protected),'Saída sobreposta a evidências históricas')
     contract_path=saida/'contrato_execucao.json'
-    current=contrato(args,catalogo,perfil,casos)
+    current=contrato(args,catalogo,perfil,casos,worktrees)
     if saida.exists() and not contract_path.exists():
         exigir(not any(saida.iterdir()),'Saída existente sem contrato de execução')
     saida.mkdir(parents=True,exist_ok=True)
@@ -216,7 +240,7 @@ def preparar(args, catalogo, casos):
                    'Relatório de preflight antigo divergente')
         return None
     return Preparacao(catalogo,perfil,scan,contract_hash,Path(args.baseline_testes).resolve(),saida,
-                      current['componentes_prompt_sha256'],current.get('rag',{}).get('manifesto_sha256'))
+                      current['componentes_prompt_sha256'],current.get('rag',{}).get('manifesto_sha256'),current['validacao'])
 
 
 def sondar(args, catalogo):
@@ -243,12 +267,22 @@ def sondar(args, catalogo):
             exigir(path.is_relative_to(wt.resolve()) and path.is_file() and prep.perfil.no_escopo(file), 'Patch fora do escopo ou cria/remove arquivo')
             before[file] = path.read_bytes()
         subprocess.run(['git','apply',str(patch)],cwd=wt,check=True,timeout=60)
-        after = scan_perfil(wt,prep.perfil,prep.saida/'sast_depois/sondagem_raw.json',args.semgrep_bin)
-        comp = comparar(prep.scan,after,chave_caso(issue),{f:(raw,(wt/f).read_bytes()) for f,raw in before.items()})
+        fontes = {f:(raw,(wt/f).read_bytes()) for f,raw in before.items()}
+        if args.validar:
+            from pipeline.validation.engine import medir
+            after, comp, resultado, medicao = medir(wt,issue,fontes,prep.scan,prep.perfil,
+                prep.baseline_testes,prep.saida/'sast_depois/sondagem_raw.json',args,
+                origem={'sondagem':args.rotulo})
+        else:
+            from pipeline.validation.policy import alterada
+            exigir(not alterada(args),'Opções de validação na sondagem requerem --validar')
+            after = scan_perfil(wt,prep.perfil,prep.saida/'sast_depois/sondagem_raw.json',args.semgrep_bin)
+            comp = comparar(prep.scan,after,chave_caso(issue),fontes)
         data = {'aviso':'Sondagem não integra métricas de geração LLM','origem_patch':args.origem,
                 'caso_id':issue['caso_id'],'patch_sha256':digest(patch),
                 'contrato_execucao_sha256':prep.contrato_hash,'comparacao':comp}
         if args.validar:
-            data['validacao'] = validar(wt,files,ConfigValidacao(arquivo_linha_de_base=prep.baseline_testes)).to_dict()
+            data['validacao'] = resultado.to_dict()
+            data.update(medicao)
         salvar(result_path,data)
     print(f'Sondagem arquivada em {result_path}')

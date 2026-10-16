@@ -58,10 +58,14 @@ def main() -> None:
     ap.add_argument('--semgrep-bin', default='semgrep')
     ap.add_argument('--saida', type=Path)
     ap.add_argument('--baseline-testes', type=Path, default=RAIZ_REPO/'outputs/baseline_testes.json')
+    from pipeline.validation.policy import argumentos, opcoes, alterada
+    argumentos(ap)
     args = ap.parse_args()
 
     from pipeline.catalogo import carregar
     catalogo = carregar(args.catalogo)
+    if not catalogo.ampliado and alterada(args):
+        raise SystemExit("Otimizações requerem catálogo ampliado")
     if catalogo.ampliado:
         if args.sem_t4:
             raise SystemExit('--sem-t4 não é permitido no modo ampliado; preserve a cobertura declarada')
@@ -72,6 +76,9 @@ def main() -> None:
                 '--perfil-sast', str(args.perfil_sast), '--saida', str(args.saida),
                 '--semgrep-bin', args.semgrep_bin, '--casos', args.caso,
                 '--estrategias', args.estrategia, '--k', '1', '--baseline-testes', str(args.baseline_testes)]
+        for chave, valor in opcoes(args).items():
+            if valor is not None:
+                argv.extend(['--'+chave.replace('_','-'),str(valor)])
         if args.dry_run: argv.append('--dry-run')
         sys.argv = [sys.argv[0], *argv]
         run()

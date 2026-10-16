@@ -75,6 +75,9 @@ class ConfigValidacao:
     # T4 serializado entre worktrees: chat.test.ts usa a porta fixa 43210
     # (protocolo, Secao 7). A reexecucao da Secao 7.2 roda dentro do lock.
     lock_t4: threading.Lock | None = None
+    politica: str = 'historica_v1'
+    mapa: Path | None = None
+    repeticao_api: str = 'ampla'
 
 
 @dataclass
@@ -103,6 +106,8 @@ class ResultadoTier:
     testes_falhos_f_criterio: list[str] = field(default_factory=list)
     saida: str = ""
     saida_reexecucao: str = ""
+    espera_api_s: float = 0.0
+    repeticao_seletiva: dict | None = None
 
 
 @dataclass
@@ -129,6 +134,9 @@ class ResultadoValidacao:
     reexecucoes: int = 0
     testes_falhos_intermitentes: list[str] = field(default_factory=list)
     linha_de_base: str | None = None
+    selecao: dict | None = None
+    etapas: list[dict] = field(default_factory=list)
+    duracao_selecao_s: float = 0.0
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -226,7 +234,7 @@ def _rodar(tier: str, cmd: list[str], wt: Path, timeout_s: float,
 
 
 def rodar_suite(tier: str, wt: Path, timeout_s: float,
-                linha_de_base: set[str] | None = None) -> ResultadoTier:
+                linha_de_base: set[str] | None = None, repeticao='ampla') -> ResultadoTier:
     """Roda T2/T3/T4 com reporter JUnit. Sem linha_de_base, so coleta os
     testes falhos (uso de scripts/experiment/baseline_testes.py)."""
     wt = Path(wt).resolve()
@@ -239,7 +247,8 @@ def rodar_suite(tier: str, wt: Path, timeout_s: float,
             cmd, env_extra = cmd_testes(SETUP_SERVIDOR, [GLOB_T3], xml), {}
         else:
             raise ValueError("use rodar_t2 para o T2")
-        return _avaliar(tier, cmd, wt, timeout_s, env_extra, xml, linha_de_base)
+        return _avaliar(tier, cmd, wt, timeout_s, env_extra, xml, linha_de_base,
+                        seletiva=(tier == 'T4' and repeticao == 'seletiva-experimental'))
 
 
 def rodar_t2(wt: Path, testes: list[str], timeout_s: float,
@@ -280,7 +289,7 @@ def _uma_rodada(tier: str, cmd: list[str], wt: Path, timeout_s: float, env_extra
 
 
 def _avaliar(tier: str, cmd: list[str], wt: Path, timeout_s: float, env_extra: dict,
-             xml: Path, linha_de_base: set[str] | None) -> ResultadoTier:
+             xml: Path, linha_de_base: set[str] | None, seletiva=False) -> ResultadoTier:
     """Uma rodada; se houver testes falhos novos, reexecuta uma vez e so conta
     a intersecao das falhas novas. Timeout tambem dispara uma reexecucao, e
     vale o resultado dela (protocolo, Secao 7.2)."""
@@ -296,9 +305,16 @@ def _avaliar(tier: str, cmd: list[str], wt: Path, timeout_s: float, env_extra: d
     if linha_de_base is None or r.motivo != "falha":
         return r
 
-    r2 = _uma_rodada(tier, cmd, wt, timeout_s, env_extra, xml, linha_de_base)
-    r.reexecucoes = 1
-    r.duracao_s = round(r.duracao_s + r2.duracao_s, 2)
+    r2 = None
+    if seletiva:
+        from pipeline.validation.retry import repetir_seletivo
+        r2, info = repetir_seletivo(r, wt, timeout_s, env_extra, linha_de_base)
+        r.repeticao_seletiva = info
+    if r2 is None:
+        r2 = _uma_rodada(tier, cmd, wt, timeout_s, env_extra, xml, linha_de_base)
+    descartada = (r.repeticao_seletiva or {}).get('duracao_descartada_s', 0)
+    r.reexecucoes = 1 + int(bool(descartada))
+    r.duracao_s = round(r.duracao_s + r2.duracao_s + descartada, 2)
     r.testes_falhos_reexecucao = r2.testes_falhos
     r.saida_reexecucao = r2.saida
     if r2.motivo in ("timeout", "comando_nao_encontrado", "falha_sem_relatorio"):
@@ -341,13 +357,30 @@ def _t0(wt: Path, timeout_s: float) -> ResultadoTier:
 
 def _t4_serializado(wt: Path, cfg: ConfigValidacao, base: set[str]) -> ResultadoTier:
     if cfg.lock_t4 is None:
-        return rodar_suite("T4", wt, cfg.timeout_t4_s, base)
+        return rodar_suite("T4", wt, cfg.timeout_t4_s, base, cfg.repeticao_api)
+    inicio = time.monotonic()
     with cfg.lock_t4:
-        return rodar_suite("T4", wt, cfg.timeout_t4_s, base)
+        espera = time.monotonic()-inicio
+        resultado = rodar_suite("T4", wt, cfg.timeout_t4_s, base, cfg.repeticao_api)
+        resultado.espera_api_s = espera
+        return resultado
+
+
+def _api_relacionada(wt, cfg, testes, base):
+    from contextlib import nullcontext
+    inicio = time.monotonic()
+    with (cfg.lock_t4 if cfg.lock_t4 is not None else nullcontext()):
+        espera = time.monotonic()-inicio
+        with tempfile.TemporaryDirectory(prefix='junit_API_REL_') as tmp:
+            xml = Path(tmp)/'resultado.xml'
+            resultado = _avaliar('T2_API', cmd_testes(SETUP_API, testes, xml), wt,
+                                 cfg.timeout_t4_s, {'PORT':str(porta_t4(wt))}, xml, base)
+            resultado.espera_api_s = espera
+            return resultado
 
 
 def validar(wt: Path, arquivos_alterados: list[str],
-            cfg: ConfigValidacao | None = None) -> ResultadoValidacao:
+            cfg: ConfigValidacao | None = None, entre_etapas=None) -> ResultadoValidacao:
     """Escada T0 -> T2 -> T3 -> T4.
 
     Cada camada classifica os testes falhos novos em D/F nas duas definicoes
@@ -377,14 +410,43 @@ def validar(wt: Path, arquivos_alterados: list[str],
     if cfg.rodar_t4:
         passos.append(("T4", lambda: _t4_serializado(wt, cfg, base.get("T4", set()))))
 
+    limite_triagem = 0
+    if cfg.politica == 'otimizada_v1':
+        from pipeline.validation.selection import selecionar
+        if not cfg.mapa:
+            raise ValueError('Política otimizada requer mapa de testes')
+        selecao_inicio = time.monotonic()
+        selecao = selecionar(cfg.mapa, wt, arquivos_alterados)
+        res.duracao_selecao_s = time.monotonic()-selecao_inicio
+        res.selecao = selecao.to_dict()
+        res.testes_t2, res.t2_pulado = selecao.unitarios, not selecao.unitarios
+        passos = [('T0', lambda: _t0(wt, cfg.timeout_t0_s))]
+        if not selecao.fallback:
+            if selecao.unitarios:
+                passos.append(('T2', lambda: rodar_t2(wt, selecao.unitarios, cfg.timeout_t2_s, base.get('T3',set()))))
+            if selecao.api and cfg.rodar_t4:
+                passos.append(('T2_API', lambda: _api_relacionada(wt,cfg,selecao.api,base.get('T4',set()))))
+        limite_triagem = len(passos)
+        passos.append(('T3', lambda: rodar_suite('T3',wt,cfg.timeout_t3_s,base.get('T3',set()))))
+        if cfg.rodar_t4:
+            passos.append(('T4', lambda: _t4_serializado(wt,cfg,base.get('T4',set()))))
+
     falha = {"sem_separacao": None, "marcador": None, "criterio": None}
     concluiu = True
-    for tier, rodar in passos:
+    callback_executado = False
+    duracao_callback = 0.0
+    for indice, (tier, rodar) in enumerate(passos):
+        if entre_etapas and indice == limite_triagem:
+            inicio_callback = time.monotonic()
+            entre_etapas()
+            duracao_callback += time.monotonic()-inicio_callback
+            callback_executado = True
         r = rodar()
         c = classificar(r.testes_falhos_novos)
         r.testes_falhos_d_marcador, r.testes_falhos_d_criterio = c["d_marcador"], c["d_criterio"]
         r.testes_falhos_f_marcador, r.testes_falhos_f_criterio = c["f_marcador"], c["f_criterio"]
         res.tiers.append(r)
+        res.etapas.append({'tier':tier, 'status':'executada', 'duracao_s':r.duracao_s})
         res.reexecucoes += r.reexecucoes
         for origem, destino in (
                 (r.testes_falhos_novos, res.testes_falhos_novos),
@@ -409,6 +471,16 @@ def validar(wt: Path, arquivos_alterados: list[str],
             concluiu = False
             break
 
+    if entre_etapas and not callback_executado:
+        inicio_callback = time.monotonic()
+        entre_etapas()  # SAST continua observável mesmo com F reprovado na triagem.
+        duracao_callback += time.monotonic()-inicio_callback
+    realizados = {r.tier for r in res.tiers}
+    for tier, _ in passos:
+        if tier not in realizados:
+            res.etapas.append({'tier':tier, 'status':'dispensada_por_reprovacao',
+                               'motivo':'F_criterio reprovado em etapa anterior', 'duracao_s':None})
+
     res.tier_falha_sem_separacao = falha["sem_separacao"]
     res.tier_falha_marcador = falha["marcador"]
     res.tier_falha_criterio = falha["criterio"]
@@ -417,5 +489,5 @@ def validar(wt: Path, arquivos_alterados: list[str],
     res.F_criterio = concluiu and falha["criterio"] is None
     res.passou, res.tier_falha = res.F_criterio, res.tier_falha_criterio
 
-    res.duracao_s = round(time.monotonic() - inicio, 2)
+    res.duracao_s = round(time.monotonic() - inicio - duracao_callback, 2)
     return res

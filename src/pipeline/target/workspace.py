@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import queue
+import atexit
+import fcntl
+import os
 import subprocess
 from contextlib import contextmanager
 from pathlib import Path
@@ -14,12 +17,32 @@ TIMEOUT_GIT_S = 60
 # (e 'git clean -fd' sem '-x' nao apaga ignorados), mas o '-e' explicito
 # protege contra uma correcao que altere o .gitignore.
 PRESERVAR = ["node_modules", "frontend/node_modules"]
+_RESERVAS = {}
+
+
+def reservar_execucao(raiz: Path):
+    """Reserva o pool entre processos até o processo terminar; lock não expira por arquivo."""
+    pasta = Path(raiz).resolve()/'.cache'
+    chave = str(pasta)
+    if chave in _RESERVAS:
+        return
+    pasta.mkdir(parents=True,exist_ok=True)
+    stream = (pasta/'workspace_execucao.lock').open('a+')
+    try:
+        fcntl.flock(stream.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
+    except BlockingIOError:
+        stream.close()
+        raise RuntimeError('Outra execução está usando as worktrees; aguarde seu encerramento')
+    stream.seek(0);stream.truncate();stream.write(str(os.getpid()));stream.flush()
+    _RESERVAS[chave] = stream
+    atexit.register(stream.close)
 
 
 class PoolWorktrees:
     """Fila de worktrees livres. Nomes sem zero a esquerda: wt-1 .. wt-K."""
 
     def __init__(self, raiz: Path, k: int = 4, commit_esperado: str | None = None):
+        reservar_execucao(Path(raiz).resolve().parent)
         self.raiz = Path(raiz)
         self.commit_esperado = commit_esperado
         self._livres: queue.Queue[Path] = queue.Queue()

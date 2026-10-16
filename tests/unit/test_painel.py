@@ -51,6 +51,18 @@ class PainelTests(unittest.TestCase):
         linha.pop('duracao_total_s')
         self.assertIsNone(resumo_tentativa(linha)['tempos']['total'])
 
+    def test_cache_validacao_separado_do_llm_e_do_tempo_original(self):
+        linha = {'do_cache': False, 'duracao_llm_s': 2, 'duracao_sast_s': 1,
+                 'duracao_validacao_s': 3, 'politica_validacao': 'otimizada_v1',
+                 'cache_validacao': {'sast': {'hit': True, 'duracao_original_s': 90}},
+                 'etapas_validacao': [{'etapa': 'T0', 'status': 'executada'}]}
+        resumo = resumo_tentativa(linha)
+        self.assertFalse(resumo['cache'])
+        self.assertTrue(resumo['cache_validacao']['sast']['hit'])
+        self.assertEqual(resumo['tempos']['total'], 6)
+        self.assertEqual(resumo['politica_validacao'], 'otimizada_v1')
+        self.assertEqual(resumo['etapas_validacao'], linha['etapas_validacao'])
+
     def test_leitura_historica_parcial_e_escapes(self):
         pasta = self.raiz / 'outputs/execucao'
         arquivo = pasta / 'resultados_consolidados/execucoes.jsonl'

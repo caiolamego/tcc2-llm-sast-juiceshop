@@ -92,6 +92,18 @@ class EntradaCurtaTests(unittest.TestCase):
         self.assertIn("--mostrar-comando", comando)
         self.assertEqual(comando[comando.index("--modo") + 1], "preflight")
 
+    def test_politica_opcional_propaga_sem_alterar_yaml_antigo(self):
+        mapa=self.raiz/'mapa.yaml';mapa.write_text('fixture')
+        self.config.update(politica_validacao='otimizada_v1',mapa_testes='mapa.yaml',
+                           cache_validacao='leitura-escrita',repeticao_api='seletiva-experimental')
+        self.gravar()
+        with patch.object(executar.subprocess,'run',return_value=subprocess.CompletedProcess([],0)) as run:
+            self.assertEqual(self.executar_main(),0)
+        cmd=run.call_args_list[0].args[0]
+        self.assertEqual(cmd[cmd.index('--mapa-testes')+1],str(mapa))
+        self.assertEqual(cmd[cmd.index('--politica-validacao')+1],'otimizada_v1')
+        self.assertIn('--cache-validacao',cmd)
+
 
 if __name__ == "__main__":
     unittest.main()
