@@ -1,0 +1,15 @@
+diff --git a/routes/deluxe.ts b/routes/deluxe.ts
+index ca190ad..022db57 100644
+--- a/routes/deluxe.ts
++++ b/routes/deluxe.ts
+@@ -16,6 +16,10 @@ import * as utils from '../lib/utils'
+ export function upgradeToDeluxe () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+     try {
++      if (!req.user || req.user.id !== req.body.UserId) {
++        res.status(403).json({ status: 'error', error: 'Unauthorized' })
++        return
++      }
+       const user = await UserModel.findOne({ where: { id: req.body.UserId, role: security.roles.customer } })
+       if (user == null) {
+         res.status(400).json({ status: 'error', error: 'Something went wrong. Please try again!' })

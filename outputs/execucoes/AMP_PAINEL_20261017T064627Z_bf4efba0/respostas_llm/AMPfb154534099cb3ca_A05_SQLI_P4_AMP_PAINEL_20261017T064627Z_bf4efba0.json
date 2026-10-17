@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection via concatenação direta de entrada do usuário na consulta SQL.\",\"causa_da_vulnerabilidade\":\"O código constrói uma query SQL concatenando diretamente os valores de 'req.body.email' e 'req.body.password' dentro da string da consulta, sem usar parâmetros ou sanitização adequada, permitindo que um atacante injete código SQL malicioso.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas do Sequelize para evitar a concatenação direta de valores de entrada do usuário na query SQL, substituindo a string concatenada por placeholders e passando os valores como parâmetros separados.\",\"edicoes\":[{\"arquivo\":\"routes/login.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true })\",\"trecho_corrigido\":\"models.sequelize.query('SELECT * FROM Users WHERE email = ? AND password = ? AND deletedAt IS NULL', { replacements: [req.body.email || '', security.hash(req.body.password || '')], model: UserModel, plain: true })\"}],\"justificativa_tecnica\":\"Ao usar consultas parametrizadas com 'replacements' do Sequelize, os valores de entrada são tratados como dados e não como parte da instrução SQL, prevenindo a injeção de código malicioso. Isso elimina a possibilidade de manipulação da query via entrada do usuário, mitigando a vulnerabilidade de SQL Injection.\",\"limitacoes_da_correcao\":\"A correção assume que o método 'sequelize.query' suporta o uso de parâmetros via 'replacements', o que é padrão no Sequelize. Não altera a lógica funcional da consulta, apenas a forma de passagem dos parâmetros. A proteção depende da correta utilização do método e do suporte do banco de dados para consultas parametrizadas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 2493,
+  "tokens_saida": 385,
+  "latencia_s": 3.883,
+  "custo_usd": 0.001037,
+  "hash_prompt": "5c6716593cb3abe090b5379b5d472ef34d5c5b0284b43c0fc59d1dc754a578d3",
+  "do_cache": true
+}

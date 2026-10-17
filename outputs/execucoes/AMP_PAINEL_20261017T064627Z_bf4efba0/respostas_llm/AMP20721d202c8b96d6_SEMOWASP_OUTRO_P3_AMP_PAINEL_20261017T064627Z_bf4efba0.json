@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL via uso inseguro do operador $where com concatenação dinâmica de string contendo entrada do usuário.\",\"causa_da_vulnerabilidade\":\"O código utiliza o operador $where do MongoDB com uma string JavaScript construída dinamicamente que inclui diretamente o parâmetro 'id' da requisição, permitindo que um atacante injete código malicioso e execute comandos arbitrários no banco de dados.\",\"estrategia_de_correcao\":\"Substituir a consulta que utiliza $where por uma consulta declarativa e tipada que utiliza um filtro direto no campo 'orderId', evitando a execução de código JavaScript dinâmico e eliminando a possibilidade de injeção.\",\"edicoes\":[{\"arquivo\":\"routes/trackOrder.ts\",\"trecho_original\":\"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\"trecho_corrigido\":\"    db.ordersCollection.find({ orderId: id }).then((order: any) => {\"}],\"justificativa_tecnica\":\"O operador $where executa código JavaScript no servidor MongoDB, o que é perigoso quando a string é construída com dados não confiáveis, pois permite injeção de código. Ao substituir por uma consulta declarativa que filtra diretamente pelo campo 'orderId', o MongoDB trata o valor como dado e não como código, eliminando a vulnerabilidade de injeção sem alterar a funcionalidade da consulta.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'orderId' é indexado e que a consulta direta pelo campo é funcionalmente equivalente à consulta original com $where. Caso existam regras específicas de comparação que dependam do código JavaScript, elas não serão aplicadas. Além disso, a sanitização do parâmetro 'id' permanece importante para evitar outros tipos de ataques, mas não é suficiente para mitigar a injeção via $where.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1449,
+  "tokens_saida": 403,
+  "latencia_s": 3.341,
+  "custo_usd": 0.001224,
+  "hash_prompt": "3d1486743621ff522e7f3c5daf2e1a778574e0188855e1f6f8a969cfa88bf1d9",
+  "do_cache": false
+}

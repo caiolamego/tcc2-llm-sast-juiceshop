@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/rest/basket/:id" time="0.529868" disabled="0" errors="0" tests="4" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+		<testcase name="GET existing basket by id is not allowed via public API" time="0.005824" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="GET empty basket when requesting non-existing basket id" time="0.019641" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="GET existing basket with contained products by id" time="0.030012" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="GET basket should accept forged JWTs" time="0.013958" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<testsuite name="/api/Baskets" time="0.016593" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+		<testcase name="POST new basket is not part of API" time="0.008856" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="GET all baskets is not part of API" time="0.007525" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<testsuite name="/api/Baskets/:id" time="0.022505" disabled="0" errors="0" tests="3" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+		<testcase name="GET existing basket is not part of API" time="0.007638" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="PUT update existing basket is not part of API" time="0.007532" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="DELETE existing basket is not part of API" time="0.007063" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<testsuite name="/rest/basket/:id" time="0.047361" disabled="0" errors="0" tests="1" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+		<testcase name="GET existing basket of another user" time="0.047245" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<testsuite name="/rest/basket/:id/checkout" time="0.305919" disabled="0" errors="0" tests="6" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+		<testcase name="POST placing an order for a basket is not allowed via public API" time="0.002194" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="POST placing an order for an existing basket returns orderId" time="0.131466" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="POST placing an order for a non-existing basket fails" time="0.013775" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="POST placing an order for a basket with a negative total cost is possible" time="0.024166" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="POST placing an order for a basket with 99% discount is possible" time="0.035279" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testsuite name="error cases" time="0.098784" disabled="0" errors="0" tests="3" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+			<testcase name="should return 500 if QuantityModel.findOne fails during checkout" time="0.028265" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+			<testcase name="should return 500 if WalletModel.findOne fails during checkout" time="0.038583" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+			<testcase name="should return 500 if ordersCollection.insert fails during checkout" time="0.031688" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		</testsuite>
+	</testsuite>
+	<testsuite name="/rest/basket/:id/coupon/:coupon" time="0.041882" disabled="0" errors="0" tests="4" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+		<testcase name="PUT apply valid coupon to existing basket" time="0.010765" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="PUT apply invalid coupon is not accepted" time="0.010708" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="PUT apply outdated coupon is not accepted" time="0.009613" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="PUT apply valid coupon to non-existing basket throws error" time="0.010594" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<!-- tests 22 -->
+	<!-- suites 7 -->
+	<!-- pass 22 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 2095.388668 -->
+</testsuites>

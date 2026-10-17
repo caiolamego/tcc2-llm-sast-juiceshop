@@ -30,7 +30,8 @@ Na raiz, com a `.venv` e o alvo preparados:
 
 O exemplo é **preflight**, K=1, quatro casos e P1/P2: valida revisão, baseline,
 ambiente, SAST e prompts, sem criar cliente LLM nem executar testes funcionais.
-A configuração padrão `config/execucao.yaml` permanece inalterada.
+A configuração padrão `config/execucao.yaml` seleciona o [piloto real de dez issues](piloto_10_issues.md),
+com K=4 e somente casos de servidor/API. Este exemplo separado continua sem LLM e com K=1.
 
 O painel também aceita esse arquivo:
 

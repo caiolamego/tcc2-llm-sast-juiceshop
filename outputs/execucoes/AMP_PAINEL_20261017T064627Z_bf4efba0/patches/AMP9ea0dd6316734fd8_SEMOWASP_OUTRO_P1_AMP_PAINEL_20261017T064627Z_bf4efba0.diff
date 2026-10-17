@@ -1,0 +1,13 @@
+diff --git a/routes/changePassword.ts b/routes/changePassword.ts
+index bef4d8e..dbb994c 100644
+--- a/routes/changePassword.ts
++++ b/routes/changePassword.ts
+@@ -48,7 +48,7 @@ export function changePassword () {
+         return
+       }
+ 
+-      await user.update({ password: newPasswordInString })
++      await user.update({ password: security.hash(newPasswordInString) })
+       challengeUtils.solveIf(
+         challenges.changePasswordBenderChallenge,
+         () => user.id === 3 && !currentPassword && user.password === security.hash('slurmCl4ssic')

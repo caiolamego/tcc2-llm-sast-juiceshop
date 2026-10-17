@@ -1,0 +1,28 @@
+diff --git a/routes/likeProductReviews.ts b/routes/likeProductReviews.ts
+index a8d120f..f97010a 100644
+--- a/routes/likeProductReviews.ts
++++ b/routes/likeProductReviews.ts
+@@ -15,14 +15,21 @@ const sleep = async (ms: number) => await new Promise(resolve => setTimeout(reso
+ 
+ export function likeProductReviews () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+-    const id = req.body.id
++    const idParam = req.body.id
+     const user = security.authenticatedUsers.from(req)
+     if (!user) {
+       return res.status(401).json({ error: 'Unauthorized' })
+     }
+ 
+     try {
+-      const review = await db.reviewsCollection.findOne({ _id: id })
++      const { ObjectId } = await import('mongodb')
++      let objectId
++      try {
++        objectId = new ObjectId(idParam)
++      } catch {
++        return res.status(400).json({ error: 'Wrong Params' })
++      }
++      const review = await db.reviewsCollection.findOne({ _id: objectId })
+       if (!review) {
+         return res.status(404).json({ error: 'Not found' })
+       }

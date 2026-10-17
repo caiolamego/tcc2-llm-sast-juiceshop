@@ -1,0 +1,31 @@
+{
+  "arquivo": "routes/likeProductReviews.ts",
+  "arquivo_rag_recuperado": null,
+  "estrategia": "P1_simples",
+  "hash_prompt": "167d6c0902d5b4ac143f3d16bbe966065996b6dd2371ba392ce5fd7a738b4d7e",
+  "linha_fim_contexto": 62,
+  "linha_ini_contexto": 1,
+  "mensagens": [
+    {
+      "content": "Voce e um engenheiro de seguranca de aplicacoes especializado em TypeScript, Node.js e Express.",
+      "role": "system"
+    },
+    {
+      "content": "Tarefa: identifique e corrija a vulnerabilidade de seguranca presente no codigo abaixo.\n\nArquivo: routes/likeProductReviews.ts (completo, 62 linhas)\n```typescript\n/*\n * Copyright (c) 2014-2026 Bjoern Kimminich & the OWASP Juice Shop contributors.\n * SPDX-License-Identifier: MIT\n */\n\nimport { type Request, type Response, type NextFunction } from 'express'\n\nimport * as challengeUtils from '../lib/challengeUtils'\nimport { challenges } from '../data/datacache'\nimport * as security from '../lib/insecurity'\nimport { type Review } from '../data/types'\nimport * as db from '../data/mongodb'\n\nconst sleep = async (ms: number) => await new Promise(resolve => setTimeout(resolve, ms))\n\nexport function likeProductReviews () {\n  return async (req: Request, res: Response, next: NextFunction) => {\n    const id = req.body.id\n    const user = security.authenticatedUsers.from(req)\n    if (!user) {\n      return res.status(401).json({ error: 'Unauthorized' })\n    }\n\n    try {\n      const review = await db.reviewsCollection.findOne({ _id: id })\n      if (!review) {\n        return res.status(404).json({ error: 'Not found' })\n      }\n\n      const likedBy = review.likedBy\n      if (likedBy.includes(user.data.email)) {\n        return res.status(403).json({ error: 'Not allowed' })\n      }\n\n      await db.reviewsCollection.update(\n        { _id: id },\n        { $inc: { likesCount: 1 } }\n      )\n\n      // Artificial wait for timing attack challenge\n      await sleep(150)\n      try {\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\n        const updatedLikedBy = updatedReview.likedBy\n        updatedLikedBy.push(user.data.email)\n\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\n\n        const result = await db.reviewsCollection.update(\n          { _id: id },\n          { $set: { likedBy: updatedLikedBy } }\n        )\n        res.json(result)\n      } catch (err) {\n        res.status(500).json(err)\n      }\n    } catch (err) {\n      res.status(400).json({ error: 'Wrong Params' })\n    }\n  }\n}\n```\n\nRestricoes obrigatorias:\n- Altere o minimo necessario para corrigir a vulnerabilidade. Nao refatore, nao reformate e nao renomeie nada.\n- Não altere mensagens de erro, textos visíveis ao usuário, nomes de identificadores nem assinaturas de funções existentes.\n- Nao altere arquivos de teste.\n- Cada \"trecho_original\" deve ser copiado LITERALMENTE do codigo fornecido (mesmos espacos, quebras de linha e pontuacao) e deve aparecer UMA unica vez no arquivo. Inclua linhas vizinhas se precisar para torna-lo unico.\n- Preserve o comportamento funcional existente.\n- Em \"arquivo\", use exatamente o caminho relativo informado acima.\n\nFormato da resposta: um objeto JSON com os campos\nvulnerabilidade_identificada, causa_da_vulnerabilidade, estrategia_de_correcao,\nedicoes (lista de {arquivo, trecho_original, trecho_corrigido}),\njustificativa_tecnica e limitacoes_da_correcao.",
+      "role": "user"
+    }
+  ],
+  "modo_contexto": "arquivo_completo",
+  "rag_base_sha256": null,
+  "rag_categoria_recuperada": null,
+  "rag_corpo_sha256": null,
+  "rag_cwe_selecionada": null,
+  "rag_documento_sha256": null,
+  "rag_documento_versao": null,
+  "rag_index_sha256": null,
+  "rag_motivo_recuperacao": null,
+  "roteiro_sha256": null,
+  "roteiro_status": null,
+  "total_linhas_arquivo": 62,
+  "usa_rag": false
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de dados sensíveis via resposta JSONP sem validação adequada da origem ou do conteúdo retornado.\",\"causa_da_vulnerabilidade\":\"O código permite que a resposta seja enviada via JSONP sempre que o parâmetro 'callback' estiver presente na query string, sem verificar se os dados retornados são seguros para exposição via JSONP. Isso pode permitir que dados sensíveis sejam expostos a origens não confiáveis, facilitando ataques de Cross-Site Script Inclusion (XSSI) ou Cross-Site Request Forgery (CSRF).\",\"estrategia_de_correcao\":\"Restringir o uso de JSONP apenas para casos onde não há exposição de dados sensíveis. Como o endpoint retorna informações do usuário autenticado, a resposta JSONP deve ser desabilitada para evitar exposição inadvertida. Portanto, substituir a resposta JSONP por uma resposta JSON padrão, independentemente da presença do parâmetro 'callback'.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"    if (req.query.callback === undefined) {\\n      res.json(response)\\n    } else {\\n      challengeUtils.solveIf(challenges.emailLeakChallenge, () => { return true })\\n      res.jsonp(response)\\n    }\",\"trecho_corrigido\":\"    res.json(response)\"}],\"justificativa_tecnica\":\"Ao remover a resposta JSONP, eliminamos a possibilidade de execução de código JavaScript arbitrário em domínios externos via callback JSONP, mitigando o risco de exposição de dados sensíveis do usuário autenticado. JSONP é um mecanismo inseguro para APIs que retornam dados sensíveis, pois não respeita políticas de mesma origem e pode ser explorado para ataques XSSI ou CSRF. A resposta JSON padrão (res.json) não sofre dessas vulnerabilidades, pois é sujeita à política de mesma origem do navegador.\",\"limitacoes_da_correcao\":\"A remoção do suporte a JSONP pode impactar clientes legados que dependem desse formato para consumir a API. No entanto, dado o risco de exposição de dados sensíveis, essa limitação é aceitável para garantir a segurança. Caso seja necessário suporte a JSONP, deve-se implementar validação rigorosa da origem e dos dados retornados, o que não é trivial e pode exigir mudanças mais profundas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1644,
+  "tokens_saida": 478,
+  "latencia_s": 4.506,
+  "custo_usd": 0.001422,
+  "hash_prompt": "338a9c18fb65a61d9307cea0edbda8401b72a386f26bbf0df8e51b3131406a12",
+  "do_cache": false
+}

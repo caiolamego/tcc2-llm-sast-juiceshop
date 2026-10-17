@@ -1,0 +1,246 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 19.04708889199901,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/api/file-serving.test.ts :: "
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/file-serving.test.ts :: "
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 3.44,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_wa12a1gr/key/primeira.xml",
+        "test/api/file-serving.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 3.51,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/file-serving.test.ts :: "
+      ],
+      "testes_falhos_novos": [
+        "test/api/file-serving.test.ts :: "
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "error: \u001b[31mExiting due to unsatisfied precondition!\u001b[39m\n✖ test/api/file-serving.test.ts (1649.809085ms)\nℹ tests 1\nℹ suites 0\nℹ pass 0\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1657.184849\n\n✖ failing tests:\n\ntest at test/api/file-serving.test.ts:1:1\n✖ test/api/file-serving.test.ts (1649.809085ms)\n  'test failed'\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 1.2266002158867195e-05,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/file-serving.test.ts :: "
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/keyServer.ts"
+    ],
+    "grupos": [
+      "key"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 3.44
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "key",
+      "status": "executada",
+      "duracao_s": 3.51
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": true,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "key"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 3.44
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "key",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/file-serving.test.ts :: ",
+            "arquivo": "test/api/file-serving.test.ts",
+            "nome": "",
+            "estado": "falhou"
+          }
+        ],
+        "falhos": [
+          "test/api/file-serving.test.ts :: "
+        ],
+        "falhos_novos": [
+          "test/api/file-serving.test.ts :: "
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/file-serving.test.ts :: "
+        ],
+        "esperados": [
+          "test/api/file-serving.test.ts :: /encryptionkeys > GET a key file whose name contains a \"/\" fails with a 403 error",
+          "test/api/file-serving.test.ts :: /encryptionkeys > GET a non-existing file in will return a 404 error",
+          "test/api/file-serving.test.ts :: /encryptionkeys > GET serves a directory listing",
+          "test/api/file-serving.test.ts :: /encryptionkeys > GET the Premium Content AES key",
+          "test/api/file-serving.test.ts :: /public/images/padding > GET tracking image for \"Administration\" page access challenge",
+          "test/api/file-serving.test.ts :: /public/images/padding > GET tracking image for \"Privacy Policy\" page access challenge",
+          "test/api/file-serving.test.ts :: /public/images/padding > GET tracking image for \"Score Board\" page access challenge",
+          "test/api/file-serving.test.ts :: /public/images/padding > GET tracking image for \"Token Sale\" page access challenge",
+          "test/api/file-serving.test.ts :: Hidden URL > GET Klingon translation file for \"Extra Language\" challenge",
+          "test/api/file-serving.test.ts :: Hidden URL > GET blueprint file for \"Retrieve Blueprint\" challenge",
+          "test/api/file-serving.test.ts :: Hidden URL > GET crazy cat photo for \"Missing Encoding\" challenge",
+          "test/api/file-serving.test.ts :: Hidden URL > GET folder containing access log files for \"Access Log\" challenge",
+          "test/api/file-serving.test.ts :: Hidden URL > GET the missing \"Thank you!\" image for assembling the URL hidden in the Privacy Policy",
+          "test/api/file-serving.test.ts :: Hidden URL > GET the premium content by visiting the AES decrypted URL",
+          "test/api/file-serving.test.ts :: Hidden URL > GET the second easter egg by visiting the Base64>ROT13-decrypted URL",
+          "test/api/file-serving.test.ts :: Server > GET a restricted file directly from file system path on server via URL-encoded Directory Traversal attack loads index.html instead",
+          "test/api/file-serving.test.ts :: Server > GET responds with index.html when visiting application URL",
+          "test/api/file-serving.test.ts :: Server > GET responds with index.html when visiting application URL with any path",
+          "test/api/file-serving.test.ts :: Server > GET serves a csaf changes.csv",
+          "test/api/file-serving.test.ts :: Server > GET serves a csaf index.txt",
+          "test/api/file-serving.test.ts :: Server > GET serves a csaf juice-shop-sa-20200513-express-jwt.json",
+          "test/api/file-serving.test.ts :: Server > GET serves a csaf provider-metadata.json",
+          "test/api/file-serving.test.ts :: Server > GET serves a robots.txt file",
+          "test/api/file-serving.test.ts :: Server > GET serves a security.txt file",
+          "test/api/file-serving.test.ts :: Server > GET serves a security.txt file under well-known subfolder"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/file-serving.test.ts :: "
+        ],
+        "obrigatorios_aprovados": [],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": "testes_ausentes_ou_ignorados",
+        "comparavel": false,
+        "duracao_s": 3.51,
+        "espera_api_s": 1.2266002158867195e-05,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_wa12a1gr/key/primeira.xml",
+            "test/api/file-serving.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 3.51,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "error: \u001b[31mExiting due to unsatisfied precondition!\u001b[39m\n✖ test/api/file-serving.test.ts (1649.809085ms)\nℹ tests 1\nℹ suites 0\nℹ pass 0\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1657.184849\n\n✖ failing tests:\n\ntest at test/api/file-serving.test.ts:1:1\n✖ test/api/file-serving.test.ts (1649.809085ms)\n  'test failed'\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"test/api/file-serving.test.ts\" time=\"1.649809\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-4/test/api/file-serving.test.ts\" failure=\"test failed\">\n\t\t<failure type=\"testCodeFailure\" message=\"test failed\">\n[Error: test failed] { code: 'ERR_TEST_FAILURE', failureType: 'testCodeFailure', cause: 'test failed', exitCode: 1, signal: null }\n\t\t</failure>\n\t</testcase>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 0 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1657.184849 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"test/api/file-serving.test.ts\" time=\"1.782908\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-4/test/api/file-serving.test.ts\" failure=\"test failed\">\n\t\t<failure type=\"testCodeFailure\" message=\"test failed\">\n[Error: test failed] { code: 'ERR_TEST_FAILURE', failureType: 'testCodeFailure', cause: 'test failed', exitCode: 1, signal: null }\n\t\t</failure>\n\t</testcase>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 0 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1791.076316 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [
+      "testes_ausentes_ou_ignorados"
+    ],
+    "baseline_sha256": "af15ab686ca7539e9f663528227aa5c323d634de170ac2760e66ffd1c501b34b",
+    "suficiente": false
+  }
+}

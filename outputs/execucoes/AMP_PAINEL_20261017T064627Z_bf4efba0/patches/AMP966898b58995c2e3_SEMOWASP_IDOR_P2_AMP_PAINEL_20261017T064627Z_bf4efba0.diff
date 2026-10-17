@@ -1,0 +1,20 @@
+diff --git a/routes/basket.ts b/routes/basket.ts
+index c916bb5..07db099 100644
+--- a/routes/basket.ts
++++ b/routes/basket.ts
+@@ -18,9 +18,13 @@ export function retrieveBasket () {
+       const id = req.params.id
+       const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
+       /* jshint eqeqeq:false */
++      const user = security.authenticatedUsers.from(req)
++      if (!user || !id || id === 'undefined' || id === 'null' || id === 'NaN' || !user.bid || user.bid != parseInt(id, 10)) {
++        res.status(403).send('Forbidden')
++        return
++      }
+       challengeUtils.solveIf(challenges.basketAccessChallenge, () => {
+-        const user = security.authenticatedUsers.from(req)
+-        return user && id && id !== 'undefined' && id !== 'null' && id !== 'NaN' && user.bid && user?.bid != parseInt(id, 10) // eslint-disable-line eqeqeq
++        return true
+       })
+       if (((basket?.Products) != null) && basket.Products.length > 0) {
+         for (let i = 0; i < basket.Products.length; i++) {

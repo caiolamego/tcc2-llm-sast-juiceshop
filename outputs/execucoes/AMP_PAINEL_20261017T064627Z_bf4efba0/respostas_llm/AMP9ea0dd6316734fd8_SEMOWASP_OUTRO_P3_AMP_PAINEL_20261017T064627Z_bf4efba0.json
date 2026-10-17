@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-620: Unverified Password Change - A senha atual não é verificada quando não é fornecida, permitindo alteração de senha sem autenticação adequada.\",\"causa_da_vulnerabilidade\":\"O código permite que a senha seja alterada mesmo quando o parâmetro 'currentPassword' não é informado, pois a verificação da senha atual ocorre somente se 'currentPassword' estiver presente.\",\"estrategia_de_correcao\":\"Exigir que o parâmetro 'currentPassword' seja sempre fornecido e que sua verificação seja obrigatória antes de permitir a alteração da senha. Caso contrário, negar a operação com erro apropriado.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\",\"trecho_corrigido\":\"if (!currentPassword) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\\n\\nif (security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\"}],\"justificativa_tecnica\":\"A alteração garante que a senha atual seja sempre fornecida e validada, impedindo que usuários autenticados alterem a senha sem comprovar a posse da senha atual, mitigando o risco de tomada de conta indevida.\",\"limitacoes_da_correcao\":\"Esta correção exige que o usuário informe a senha atual para alterar a senha, o que pode impactar fluxos de recuperação de senha que não utilizam a senha atual. Para esses casos, deve-se implementar um fluxo separado de recuperação com validação adequada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1521,
+  "tokens_saida": 382,
+  "latencia_s": 2.776,
+  "custo_usd": 0.00122,
+  "hash_prompt": "1bfe95462cae8933b3784e9bf534d3b6eda9837d4abfc5a72b6f9be1a329c116",
+  "do_cache": false
+}

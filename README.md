@@ -9,7 +9,7 @@ python executar.py
 ```
 
 Essa entrada usa automaticamente a `.venv` existente e executa **a LLM real** para
-`routes/login.ts` e `routes/keyServer.ts`, com P1–P4, K=2 e consolidação de métricas
+dez issues em dez arquivos, com P1–P4, K=4 e consolidação de métricas
 ao final. Casos, estratégias e caminhos ficam em [config/execucao.yaml](config/execucao.yaml).
 A chave e os limites continuam no `.env`; o orçamento é acumulado entre execuções,
 conforme `.cache/orcamento_llm.json`. O lançador não aumenta limites nem apaga esse histórico.
@@ -41,9 +41,10 @@ total). O seletor de histórico permite consultar as tentativas já registradas,
 incluindo o piloto de duas issues. Abrir o painel não inicia o pipeline.
 Veja [uso e limites do painel](docs/painel_local.md).
 
-A configuração de entrada usa `relacionada_v1`: somente os testes mapeados para
-a funcionalidade alterada, além de compilação e SAST global. Veja
-[como funciona](docs/validacao_relacionada.md). A política `otimizada_v1` da feature
+A configuração de entrada usa `relacionada_v2`: testes revisados da funcionalidade
+alterada, compilação e SAST global, com baseline verificável e sem suíte ampla.
+Veja [os dez casos e como consultar respostas](docs/piloto_10_issues.md) e
+[como funciona a cobertura](docs/cobertura_funcional.md). A política `otimizada_v1` da feature
 05 permanece como alternativa com confirmação ampla. Para
 conferir seus comandos sem executar o pipeline:
 
@@ -495,9 +496,9 @@ o relatório registra uma intermitência externa e a ausência de hits funcionai
 Não são novas correções ou amostras independentes da LLM.
 
 O CLI mantém a política histórica por compatibilidade. A configuração de entrada
-`config/execucao.yaml` agora seleciona `relacionada_v1`, com K=1 e cache desligado:
-compilação, testes mapeados e SAST global, sem T3/T4 amplos. Veja o
-[escopo e tratamento das lacunas](docs/validacao_relacionada.md). Para
+`config/execucao.yaml` seleciona `relacionada_v2`, com dez casos, K=4 e cache
+de validação desligado. As políticas anteriores continuam disponíveis. Veja o
+[escopo e tratamento das lacunas](docs/cobertura_funcional.md). Para
 inspecionar a configuração alternativa sem iniciar API ou validação:
 
 ```bash
@@ -532,5 +533,5 @@ Veja [como executar e auditar](docs/cobertura_funcional.md) e a
 ```
 
 Esse exemplo executa somente preflight de quatro casos com P1/P2 e K=1, sem LLM.
-A configuração padrão permanece `relacionada_v1`, K=2. Contratos novos da política
+A configuração padrão do piloto de dez issues usa `relacionada_v2`, K=4. Contratos novos da política
 v2 usam schema 4.0, sem migrar execuções anteriores; lacunas impedem F positivo.
