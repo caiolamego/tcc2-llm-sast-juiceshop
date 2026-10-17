@@ -59,8 +59,9 @@ def _metric_rows(ex, pop, d, group, values):
 def construir(report, entrada):
     artifacts={'metricas.json':json_bytes(report)}
     colunas = list(COL_ROW)
-    if entrada.contrato and entrada.contrato.get('schema_versao') == '3.0':
+    if entrada.contrato and entrada.contrato.get('schema_versao') in ('3.0','4.0'):
         colunas += ['politica_validacao','cache_validacao','tempos_medicao','selecao_testes','etapas_validacao']
+        if entrada.contrato['schema_versao']=='4.0':colunas+=['cobertura_funcional','cobertura_detalhada']
     rows=[]
     for l in entrada.linhas:
         row={k:l.get(k) for k in colunas}
@@ -94,6 +95,12 @@ def construir(report, entrada):
                 for d in DEFS:
                     rag += [{**row,'dimensao':dim} for row in _metric_rows(report['execucao'],pop,d,item['grupo'],item['definicoes'][d])]
     artifacts['metricas_por_rag.csv']=csv_bytes(['dimensao',*COL_AGG],rag)
+    if entrada.contrato and entrada.contrato.get('schema_versao')=='4.0':
+        coverage=[]
+        for pop,dimensions in report['agregacoes'].items():
+            for item in dimensions['cobertura_funcional']:
+                for d in DEFS:coverage+=_metric_rows(report['execucao'],pop,d,item['grupo'],item['definicoes'][d])
+        artifacts['metricas_por_cobertura_funcional.csv']=csv_bytes(COL_AGG,coverage)
     manifest={'schema_versao':'1.0','execucao':report['execucao'],'fontes_sha256':dict(sorted(entrada.fontes.items())),
               'politicas':report['politicas'],'definicao_f_principal':report['definicao_f_principal'],
               'artefatos_sha256':{name:hashlib.sha256(raw).hexdigest() for name,raw in sorted(artifacts.items())}}

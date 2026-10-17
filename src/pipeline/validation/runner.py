@@ -78,6 +78,7 @@ class ConfigValidacao:
     politica: str = 'historica_v1'
     mapa: Path | None = None
     repeticao_api: str = 'ampla'
+    cobertura: Path | None = None
 
 
 @dataclass
@@ -139,6 +140,7 @@ class ResultadoValidacao:
     duracao_selecao_s: float = 0.0
     escopo: str = 'amplo'
     cobertura_insuficiente: bool = False
+    cobertura_detalhada: dict | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -233,6 +235,11 @@ def _rodar(tier: str, cmd: list[str], wt: Path, timeout_s: float,
         saida = relativizar_texto(f"TIMEOUT apos {timeout_s}s\n" + (saida or "")[-TAMANHO_SAIDA:], wt)
         return ResultadoTier(tier, cmd_registro, False, round(duracao, 2), "timeout",
                              saida=relativizar_texto(saida)), None
+    except BaseException:
+        try:os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:pass
+        proc.communicate()
+        raise
 
 
 def rodar_suite(tier: str, wt: Path, timeout_s: float,
@@ -394,6 +401,9 @@ def validar(wt: Path, arquivos_alterados: list[str],
     """
     cfg = cfg or ConfigValidacao()
     wt = Path(wt).resolve()
+    if cfg.politica == 'relacionada_v2':
+        from pipeline.validation.coverage_runner import validar as validar_cobertura
+        return validar_cobertura(wt,arquivos_alterados,cfg,entre_etapas)
     base = carregar_linha_de_base(cfg.arquivo_linha_de_base, wt)
     inicio = time.monotonic()
     res = ResultadoValidacao(passou=False, tier_falha=None, duracao_s=0.0,

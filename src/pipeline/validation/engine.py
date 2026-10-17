@@ -90,6 +90,12 @@ def medir(wt, issue, fontes, baseline, perfil, baseline_testes, saida_raw, args,
     cfg = ConfigValidacao(lock_t4=lock_api, arquivo_linha_de_base=Path(baseline_testes),
                           politica=options['politica_validacao'], mapa=options['mapa_testes'],
                           repeticao_api=options['repeticao_api'])
+    cfg.cobertura=options.get('cobertura_funcional')
+    def ambiente_funcional():
+        if cfg.cobertura:
+            from pipeline.validation.coverage import ambiente as ambiente_cobertura
+            return ambiente_cobertura(wt,(wt/'frontend/node_modules').is_dir())
+        return ambiente(wt)
     if cfg.politica == 'historica_v1':
         obter_scan()
     t = time.monotonic()
@@ -99,7 +105,7 @@ def medir(wt, issue, fontes, baseline, perfil, baseline_testes, saida_raw, args,
     bypass = None
     try:
         funcional = estado(wt, funcional=True) if options['cache_validacao'] != 'desligado' else None
-        env = ambiente(wt) if options['cache_validacao'] != 'desligado' else None
+        env = ambiente_funcional() if options['cache_validacao'] != 'desligado' else None
     except (ValueError,OSError) as exc:
         funcional,env = None,None
         bypass = f'identidade_funcional_indisponivel: {type(exc).__name__}'
@@ -109,10 +115,16 @@ def medir(wt, issue, fontes, baseline, perfil, baseline_testes, saida_raw, args,
                       'mapa':digest(cfg.mapa) if cfg.mapa else None, 'implementacao':impl,
                       'conjunto_d':digest(RAIZ_REPO/'config/conjunto_d.json'),
                       'arquivos':sorted(fontes),'timeouts':[cfg.timeout_t0_s,cfg.timeout_t2_s,cfg.timeout_t3_s,cfg.timeout_t4_s]}
+    if cfg.cobertura:
+        from pipeline.validation.coverage import carregar,identidade as identidade_cobertura
+        revision=carregar(cfg.cobertura,cfg.mapa,wt,permitir_avaliadores_alterados=True)
+        identidade_func['cobertura']=identidade_cobertura(revision,cfg.cobertura,cfg.mapa)
     tempos['identidade_funcional_s'] = time.monotonic()-t
     t = time.monotonic()
     def conferir_func():
-        return (estado(wt,funcional=True) == funcional and ambiente(wt) == env
+        cobertura_ok=(not cfg.cobertura or identidade_cobertura(
+            carregar(cfg.cobertura,cfg.mapa,wt,permitir_avaliadores_alterados=True),cfg.cobertura,cfg.mapa)==identidade_func['cobertura'])
+        return (cobertura_ok and componentes()==impl and estado(wt,funcional=True) == funcional and ambiente_funcional() == env
                 and digest(baseline_testes) == identidade_func['baseline']
                 and (digest(cfg.mapa) if cfg.mapa else None) == identidade_func['mapa'])
     def calcular_func():
@@ -143,9 +155,16 @@ def medir(wt, issue, fontes, baseline, perfil, baseline_testes, saida_raw, args,
             digest(baseline_testes) != identidade_func['baseline'] or
             (digest(cfg.mapa) if cfg.mapa else None) != identidade_func['mapa']):
         raise ValueError('Configuração/implementação alterada durante a medição')
+    if cfg.cobertura and identidade_cobertura(carregar(cfg.cobertura,cfg.mapa,wt,permitir_avaliadores_alterados=True),cfg.cobertura,cfg.mapa)!=identidade_func['cobertura']:
+        raise ValueError('Revisão/conjunto D/avaliações alteradas durante medição')
     tempos['total_s'] = time.monotonic()-inicio
-    return holder['scan'],holder['comparacao'],_resultado(data),{'cache_validacao':meta,'tempos_medicao':tempos,
+    metadata={'cache_validacao':meta,'tempos_medicao':tempos,
                                                                'etapas_validacao':etapas_atuais,
                                                                'politica_validacao':cfg.politica,
                                                                'cobertura_funcional':('insuficiente' if data.get('cobertura_insuficiente') else
+                                                                                      'relacionada_v2' if cfg.politica == 'relacionada_v2' else
                                                                                       'servidor_relacionado' if cfg.politica == 'relacionada_v1' else 'servidor')}
+    if cfg.cobertura:
+        metadata['cobertura_detalhada']=data.get('cobertura_detalhada')
+        metadata['selecao_testes']=data.get('selecao')
+    return holder['scan'],holder['comparacao'],_resultado(data),metadata

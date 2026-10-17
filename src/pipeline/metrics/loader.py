@@ -101,17 +101,42 @@ def _perfil(entrada):
     entrada.perfil = profile
 
 
+def _cobertura(entrada):
+    root=entrada.raiz/'cobertura_funcional'
+    manifest=relativo(root,'manifesto.json');data=ler_json(manifest)
+    exigir(data.get('schema_versao')=='1.0' and isinstance(data.get('fontes_sha256'),dict),'Snapshot funcional inválido')
+    entrada.registrar(manifest,'cobertura/manifesto')
+    expected=entrada.contrato['validacao']['cobertura']
+    for name,field in (('revisao.yaml','revisao_sha256'),('mapa.yaml','mapa_sha256'),('conjunto_d.json','conjunto_d_sha256')):
+        exigir(data['fontes_sha256'].get(name)==expected[field],'Snapshot/hash de cobertura divergente')
+    exigir(data['fontes_sha256'].get('baseline/baseline_testes.json')==entrada.contrato['baseline_testes_sha256'],'Baseline portátil divergente')
+    for name,h in data['fontes_sha256'].items():
+        p=relativo(root,name);exigir(digest(p)==h,'Snapshot funcional adulterado')
+        entrada.registrar(p,'cobertura/'+name)
+    baseline=ler_json(root/'baseline/baseline_testes.json')
+    for name,h in baseline.get('artefatos_sha256',{}).items():
+        exigir(data['fontes_sha256'].get('baseline/'+name)==h,'Closure das evidências baseline divergente')
+
+
 def _validar_contrato(entrada):
     c = entrada.contrato; cat = entrada.catalogo
-    exigir(c.get('schema_versao') in ('1.0','2.0','3.0') and c.get('execucao') == entrada.execucao, 'Schema/execução do contrato inválido')
-    if c.get('schema_versao') == '3.0':
+    exigir(c.get('schema_versao') in ('1.0','2.0','3.0','4.0') and c.get('execucao') == entrada.execucao, 'Schema/execução do contrato inválido')
+    if c.get('schema_versao') in ('3.0','4.0'):
         from pipeline.validation.policy import CHOICES
         v = c.get('validacao')
         exigir(isinstance(v,dict) and all(v.get(k) in choices for k,choices in CHOICES.items()), 'Política de validação inválida')
         exigir(isinstance(v.get('implementacao'),dict) and isinstance(v.get('ambientes'),list), 'Proveniência da validação ausente')
         exigir(bool(v['implementacao']) and all(isinstance(h,str) and re.fullmatch('[0-9a-f]{64}',h) for h in v['implementacao'].values()), 'Hashes de implementação inválidos')
-        if v['politica_validacao'] in ('otimizada_v1','relacionada_v1'):
+        if v['politica_validacao'] in ('otimizada_v1','relacionada_v1','relacionada_v2'):
             exigir(isinstance(v.get('mapa_testes_sha256'),str) and re.fullmatch('[0-9a-f]{64}',v['mapa_testes_sha256']), 'Mapa de testes sem hash')
+        if c['schema_versao']=='4.0':
+            exigir(v['politica_validacao']=='relacionada_v2' and isinstance(v.get('cobertura'),dict),'Contrato 4.0 sem cobertura')
+            exigir(v['repeticao_api']=='ampla','Contrato v4 requer repetição integral')
+            for k in ('revisao_sha256','mapa_sha256','conjunto_d_sha256'):
+                exigir(isinstance(v['cobertura'].get(k),str) and re.fullmatch('[0-9a-f]{64}',v['cobertura'][k]),'Hash de cobertura inválido')
+            exigir(v['cobertura']['mapa_sha256']==v['mapa_testes_sha256'],'Mapas de cobertura divergentes')
+            exigir(v.get('baseline_sha256')==c.get('baseline_testes_sha256'),'Hash baseline de cobertura divergente')
+        else:exigir(v['politica_validacao']!='relacionada_v2','relacionada_v2 requer contrato 4.0')
     exigir(c.get('modo') in ('real','dry-run','preflight'), 'Modo do contrato inválido')
     exigir(c.get('commit_alvo') == cat.commit and c.get('hashes_catalogo') == cat.hashes, 'Commit/hashes de catálogo divergentes')
     ids = c.get('casos'); all_ids = {i['caso_id'] for i in cat.casos}
@@ -121,6 +146,7 @@ def _validar_contrato(entrada):
     exigir(len(set(c['estrategias']+c['diagnosticos'])) == len(c['estrategias']+c['diagnosticos']), 'Estratégias duplicadas')
     exigir(c.get('comparador') in ('blocos_unicos_v1', 'ocorrencias_contexto_v2'), 'Comparador incompatível')
     _perfil(entrada)
+    if c.get('schema_versao')=='4.0':_cobertura(entrada)
 
 
 def carregar(raiz, execucao, catalogo_path):
@@ -213,7 +239,7 @@ def carregar(raiz, execucao, catalogo_path):
                 entrada.registrar(artifact,'artefatos/'+file)
             # Cada referência declarada deve estar coberta pelo ledger, incluindo cópias portáteis.
             declared=row.get('artefatos');exigir(isinstance(declared,dict),'Referências de artefatos ausentes')
-            if contract.get('schema_versao')=='3.0' and row['status_aplicacao']=='aplicado':
+            if contract.get('schema_versao') in ('3.0','4.0') and row['status_aplicacao']=='aplicado':
                 exigir(row.get('politica_validacao')==contract['validacao']['politica_validacao'], 'Política da tentativa diverge do contrato')
                 cache=row.get('cache_validacao')
                 exigir(isinstance(cache,dict) and set(cache)=={'sast','funcional'}, 'Proveniência de cache ausente')
@@ -226,6 +252,12 @@ def carregar(raiz, execucao, catalogo_path):
                 candidato=candidato if candidato.is_absolute() else RAIZ_REPO/candidato
                 candidato=relativo(raiz,candidato.resolve().relative_to(raiz).as_posix())
                 exigir(digest(candidato)==cache['funcional'].get('evidencia_sha256'),'Hash da evidência funcional divergente')
+                if contract['schema_versao']=='4.0':
+                    functional=ler_json(candidato)
+                    exigir(isinstance(row.get('cobertura_detalhada'),dict) and row['cobertura_detalhada']==functional.get('cobertura_detalhada'),
+                           'Cobertura funcional divergente da evidência')
+                    exigir(not functional.get('cobertura_insuficiente') or all(row.get('F_'+d)!=1 for d in DEFS),
+                           'F positivo com cobertura insuficiente')
             for value in declared.values():
                 exigir(isinstance(value,str), 'Referência de artefato inválida')
                 candidates=[file for file in ledger if value==file or value.endswith('/'+file)]

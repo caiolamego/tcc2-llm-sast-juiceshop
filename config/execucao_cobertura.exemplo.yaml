@@ -1,0 +1,20 @@
+# Optativo: python executar.py --config config/execucao_cobertura.exemplo.yaml
+# Preflight: confere SAST, ambiente, evidências funcionais e prompts; não chama LLM.
+modo: preflight
+casos:
+  - AMPfb154534099cb3ca
+  - AMP95adf572d3c6677f
+  - AMP41302bd0fb784039
+  - AMPd53a8fdb9fb5d682
+estrategias: [P1, P2]
+k: 1
+politica_validacao: relacionada_v2
+mapa_testes: config/mapa_testes_relacionados_v2.yaml
+cobertura_funcional: config/cobertura_funcional_v1.yaml
+cache_validacao: desligado
+repeticao_api: ampla
+catalogo: outputs/catalogos/ampliado_v1/catalogo_issues.json
+perfil_sast: config/perfis/ampliado_piloto_v1/perfil.json
+baseline_testes: outputs/feature06/BASELINE_06/baseline_testes.json
+semgrep_bin: .venv/bin/semgrep
+saida_base: outputs/execucoes

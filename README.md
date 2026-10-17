@@ -9,7 +9,7 @@ python executar.py
 ```
 
 Essa entrada usa automaticamente a `.venv` existente e executa **a LLM real** para
-`routes/login.ts` e `routes/keyServer.ts`, com P1–P4, K=1 e consolidação de métricas
+`routes/login.ts` e `routes/keyServer.ts`, com P1–P4, K=2 e consolidação de métricas
 ao final. Casos, estratégias e caminhos ficam em [config/execucao.yaml](config/execucao.yaml).
 A chave e os limites continuam no `.env`; o orçamento é acumulado entre execuções,
 conforme `.cache/orcamento_llm.json`. O lançador não aumenta limites nem apaga esse histórico.
@@ -516,3 +516,21 @@ Novas execuções ampliadas usam o [comparador v2](docs/auditoria/comparador_v2.
 com pareamento por tokens/contexto e motivos de indeterminação no painel. A reanálise
 offline de 63 referências e oito patches preservou os artefatos antigos; novas
 medições exigem outra execução, sem retomar contratos do comparador anterior.
+
+
+### Cobertura funcional revisada — feature 06
+
+A política optativa `relacionada_v2` acrescenta revisão por ocorrência, baseline
+por seleção, compilação Angular e testes Vitest/jsdom. Os 78 casos foram
+revisados: 52 estão preparados no alcance declarado e 26 permanecem bloqueados,
+incluindo lacunas compartilhadas por arquivo. Isso não prepara a campanha completa.
+Veja [como executar e auditar](docs/cobertura_funcional.md) e a
+[entrega com evidências](features/06-cobertura-funcional/ENTREGA.md).
+
+```bash
+.venv/bin/python executar.py --config config/execucao_cobertura.exemplo.yaml
+```
+
+Esse exemplo executa somente preflight de quatro casos com P1/P2 e K=1, sem LLM.
+A configuração padrão permanece `relacionada_v1`, K=2. Contratos novos da política
+v2 usam schema 4.0, sem migrar execuções anteriores; lacunas impedem F positivo.

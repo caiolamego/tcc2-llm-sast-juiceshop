@@ -105,6 +105,22 @@ def expanded(root, mode='real'):
 
 
 class NumerosTests(unittest.TestCase):
+    def test_v4_keeps_different_functional_scopes_separate(self):
+        with tempfile.TemporaryDirectory() as folder:
+            a,b=case('AMP_A'),case('AMP_B')
+            entry=context(Path(folder),[row(a),row(b)])
+            entry.contrato['schema_versao']='4.0'
+            for record,group in zip(entry.linhas,['login','key']):
+                record['cobertura_detalhada']={'dominios':['api'],'grupos_selecionados':[group],'suficiente':True}
+                record['cobertura_funcional']='relacionada_v2'
+            report=calcular(entry)
+            groups=report['agregacoes']['real_desenho']['cobertura_funcional']
+            self.assertEqual(len(groups),2)
+            self.assertEqual({tuple(g['grupo']['grupos']) for g in groups},{('login',),('key',)})
+            self.assertEqual(report['populacoes']['real_desenho']['tentativas'],2)
+            entry.contrato.pop('schema_versao')
+            self.assertNotIn('cobertura_funcional',calcular(entry)['agregacoes']['real_desenho'])
+
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)
 

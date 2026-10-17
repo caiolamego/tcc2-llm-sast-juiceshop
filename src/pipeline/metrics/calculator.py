@@ -175,6 +175,15 @@ def calcular(entrada, definicao_principal='criterio', pesos=None):
                                    'casos_alcancados':len({l['caso_id'] for l in sub}),
                                    'definicoes':{d:metricas(sub,d,entrada.catalogo.ampliado,pesos) for d in DEFS}}
                                   for key,sub in sorted(by.items())]
+        if entrada.contrato and entrada.contrato.get('schema_versao')=='4.0':
+            by=defaultdict(list)
+            for row in ls:
+                detail=row.get('cobertura_detalhada') or {}
+                scope={'dominios':detail.get('dominios'),'grupos':detail.get('grupos_selecionados'),
+                       'suficiente':detail.get('suficiente'),'alcance':row.get('cobertura_funcional')}
+                by[json.dumps(scope,ensure_ascii=False,sort_keys=True)].append(row)
+            aggregate[name]['cobertura_funcional']=[{'grupo':json.loads(k),'tentativas':len(sub),
+                'definicoes':{d:metricas(sub,d,entrada.catalogo.ampliado,pesos) for d in DEFS}} for k,sub in sorted(by.items())]
     requested=entrada.contrato['casos'] if entrada.contrato else None
     observed=sorted({l['caso_id'] for l in rows if l['condicao']=='desenho'})
     case_ids=sorted(requested if requested is not None else observed)

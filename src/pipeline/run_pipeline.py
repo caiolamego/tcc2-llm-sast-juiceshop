@@ -547,7 +547,10 @@ def main() -> None:
                  f"{len(casos)} casos x {args.estrategias} + diagnosticos {args.diagnosticos}, K={args.k}")
 
     lock_t4 = threading.Lock()
-    if not args.pular_checagem_ambiente:
+    if not args.pular_checagem_ambiente and getattr(args,'politica_validacao',None)=='relacionada_v2':
+        # O preflight conferiu ambiente e baseline por grupo; não executar suítes amplas.
+        sessao_info['checagem_ambiente']={'politica':'relacionada_v2','status':'verificada_no_preflight','testes_executados':False}
+    elif not args.pular_checagem_ambiente:
         console.log("Checagem de ambiente: validacao sem alteracao em cada worktree...")
         amb = checar_ambiente(pool, args.k, lock_t4, ampliado.baseline_testes if ampliado else None)
         sessao_info["checagem_ambiente"] = amb

@@ -30,19 +30,33 @@ def _lista() -> tuple[list[tuple[str, re.Pattern, str]], str]:
     return itens, dados.get("gerado_em", "")
 
 
-def criterio_de(teste: str) -> str | None:
+def criterio_de(teste: str, conjunto=None) -> str | None:
     """'a', 'b', 'c' ou None (F). teste = '<arquivo> :: <suite> > ... > <nome>'."""
     arquivo, _, caminho = teste.partition(" :: ")
     nome = caminho.split(" > ")[-1]
-    for arq, padrao, crit in _lista()[0]:
+    itens=_lista()[0] if conjunto is None else _carregar_versionado(conjunto)
+    for arq, padrao, crit in itens:
         if arq == arquivo and padrao.match(nome):
             return crit
     return None
 
 
-def classificar(testes: list[str]) -> dict[str, list[str]]:
+def _carregar_versionado(arquivo):
+    from pathlib import Path
+    data=json.loads(Path(arquivo).read_text(encoding='utf-8'))
+    if data.get('schema_versao')!='2.0' or not isinstance(data.get('d'),list):
+        raise ValueError('Conjunto D versionado inválido')
+    seen=set();items=[]
+    for row in data['d']:
+        key=(row['arquivo'],row['nome'])
+        if key in seen or row['criterio'] not in ('a','b','c'):raise ValueError('Classificação D inválida/duplicada')
+        seen.add(key);items.append((row['arquivo'],_padrao_nome(row['nome']),row['criterio']))
+    return items
+
+
+def classificar(testes: list[str], arquivo=None) -> dict[str, list[str]]:
     """Separa testes falhos nas duas definicoes de D e nos F correspondentes."""
-    crit = {t: criterio_de(t) for t in testes}
+    crit = {t: criterio_de(t,arquivo) for t in testes}
     d_marcador = sorted(t for t, c in crit.items() if c == "a")
     d_criterio = sorted(t for t, c in crit.items() if c is not None)
     return {

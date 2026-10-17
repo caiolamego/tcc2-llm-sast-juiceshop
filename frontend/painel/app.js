@@ -35,7 +35,13 @@ function render(data) {
     const reasons = (attempt.motivos_indeterminacao || []).map(r => typeof r === 'string' ? r : `${r.campo}: ${r.descricao}`);
     if (reasons.length) { const detail = document.createElement('small'); detail.textContent = reasons.join(' '); result.append(detail); }
     else if (attempt.classificacao === 'indeterminada_sast') { const detail = document.createElement('small'); detail.textContent = 'Consulte a comparação arquivada para esta execução.'; result.append(detail); }
-    result.title = JSON.stringify({comparador:attempt.versao_comparador,motivos:attempt.motivos_indeterminacao,contexto:attempt.falhas_contexto_sast,politica:attempt.politica_validacao,cache:attempt.cache_validacao,etapas:attempt.etapas_validacao},null,2);
+    if (attempt.cobertura_detalhada) {
+      const detail=document.createElement('small');
+      const scope=attempt.cobertura_detalhada;
+      detail.textContent=`Cobertura: ${(scope.dominios||[]).join(', ') || 'insuficiente'} · ${(scope.grupos||[]).length} grupos executados${scope.motivos?.length ? ' · '+scope.motivos.join('; ') : ''}`;
+      result.append(detail);
+    }
+    result.title = JSON.stringify({comparador:attempt.versao_comparador,motivos:attempt.motivos_indeterminacao,contexto:attempt.falhas_contexto_sast,politica:attempt.politica_validacao,cache:attempt.cache_validacao,etapas:attempt.etapas_validacao,cobertura:attempt.cobertura_detalhada ? {dominios:attempt.cobertura_detalhada.dominios,baseline:attempt.cobertura_detalhada.baseline_sha256,suficiente:attempt.cobertura_detalhada.suficiente,selecionados:attempt.cobertura_detalhada.grupos_selecionados,compilacoes:attempt.cobertura_detalhada.compilacoes,grupos:attempt.cobertura_detalhada.grupos.map(g=>({grupo:g.grupo,esperados:g.esperados?.length,executados:g.executados?.length,ignorados:g.testes?.filter(t=>t.estado==='ignorado').length}))} : null},null,2);
     for (const key of ['llm', 'sast', 'validacao']) {
       const td=cell(tr, duration(attempt.tempos[key]));
       const origem=attempt.cache_validacao?.[key==='validacao'?'funcional':key];

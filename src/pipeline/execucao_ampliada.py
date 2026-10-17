@@ -61,6 +61,9 @@ def contrato(args, catalogo, perfil, casos, worktrees=()):
             'baseline_testes_sha256':None if args.somente_preflight else digest(baseline)}
     from pipeline.validation.policy import identidade
     data['validacao'] = identidade(args, worktrees)
+    if getattr(args,'politica_validacao',None)=='relacionada_v2':
+        data['schema_versao']='4.0'
+        data['baseline_testes_sha256']=digest(baseline)  # Preflight v4 depende da evidência funcional anterior.
     if set(estrategias) & builder.COM_RAG:
         from pipeline.rag.retriever import carregar_base
         base = carregar_base(builder.DIR_KB)
@@ -146,6 +149,35 @@ def conferir_linhas(path, expected):
             exigir(digest(path.parents[1]/relative)==old, f'Artefato de tentativa alterado: {file}')
 
 
+def snapshot_cobertura(args, saida, dados, contrato_atual):
+    """Cópia portátil da evidência funcional; nunca substitui arquivos existentes."""
+    from pipeline.validation.coverage import interno
+    fontes={'revisao.yaml':Path(args.cobertura_funcional),'mapa.yaml':Path(args.mapa_testes),
+            'conjunto_d.json':interno(RAIZ_REPO,dados['conjunto_d']['arquivo']),
+            'baseline/baseline_testes.json':Path(args.baseline_testes)}
+    baseline=json.loads(Path(args.baseline_testes).read_text())
+    for name,h in baseline.get('artefatos_sha256',{}).items():
+        source=interno(Path(args.baseline_testes).resolve().parent,name)
+        exigir(digest(source)==h,'Evidência baseline alterada durante preparação')
+        fontes['baseline/'+name]=source
+    for g in dados['grupos'].values():
+        for t in g['testes']:
+            if t['origem']=='avaliacao':fontes[t['arquivo']]=interno(RAIZ_REPO,t['arquivo'])
+    root=saida/'cobertura_funcional';hashes={}
+    for name,source in sorted(fontes.items()):
+        original=digest(source);dest=root/name;dest.parent.mkdir(parents=True,exist_ok=True)
+        if dest.exists():exigir(digest(dest)==original,'Snapshot funcional alterado')
+        else:
+            with dest.open('xb') as f:f.write(source.read_bytes())
+        exigir(digest(dest)==original and digest(source)==original,'Fonte funcional alterada durante cópia')
+        hashes[name]=original
+    exigir(hashes['baseline/baseline_testes.json']==contrato_atual['baseline_testes_sha256'],'Baseline alterado após contrato')
+    for name,source in fontes.items():exigir(digest(source)==hashes[name],'Fonte alterada durante snapshot')
+    manifest=root/'manifesto.json';data={'schema_versao':'1.0','fontes_sha256':hashes}
+    if manifest.exists():exigir(json.loads(manifest.read_text())==data,'Manifesto funcional divergente')
+    else:salvar(manifest,data)
+
+
 def preparar(args, catalogo, casos):
     from pipeline.target.workspace import reservar_execucao
     reservar_execucao(RAIZ_REPO)
@@ -169,6 +201,18 @@ def preparar(args, catalogo, casos):
             exigir(file_path.is_relative_to(wt.resolve()) and digest(file_path)==old,f'Fonte do catálogo divergente: {file}')
     from pipeline.validation.policy import opcoes
     politica = opcoes(args)
+    cobertura_relatorio=None
+    if politica['politica_validacao']=='relacionada_v2':
+        from pipeline.validation import coverage as cobertura
+        revisao=cobertura.carregar(politica['cobertura_funcional'],politica['mapa_testes'],worktrees[0],catalogo)
+        selections=[]
+        for wt in worktrees:
+            selection=cobertura.selecionar(revisao,[c['arquivo'] for c in casos],wt)
+            exigir(selection['suficiente'],'Cobertura funcional insuficiente: '+'; '.join(selection['motivos']))
+            cobertura.validar_baseline(args.baseline_testes,revisao,politica['cobertura_funcional'],politica['mapa_testes'],wt,selection)
+            selections.append(selection)
+        cobertura_relatorio={'revisao_sha256':digest(politica['cobertura_funcional']),
+                             'casos':[{'caso_id':c['caso_id'],**cobertura.selecionar(revisao,[c['arquivo']],worktrees[0])} for c in casos]}
     if politica['politica_validacao'] in ('otimizada_v1', 'relacionada_v1'):
         from pipeline.validation.selection import selecionar
         selecao = selecionar(politica['mapa_testes'],worktrees[0],[c['arquivo'] for c in casos])
@@ -194,6 +238,7 @@ def preparar(args, catalogo, casos):
         else:
             exigir(old_contract==current,'Contrato incompatível; use nova execução/saída')
     else:salvar(contract_path,current)
+    if politica['politica_validacao']=='relacionada_v2':snapshot_cobertura(args,saida,revisao,current)
     contract_hash=digest(contract_path)
     conferir_linhas(saida/'resultados_consolidados/execucoes.jsonl',contract_hash)
     baseline=saida/'sast_antes/baseline_raw.json'
@@ -232,6 +277,7 @@ def preparar(args, catalogo, casos):
         data = {'status':'concluido','casos':len(casos),'prompts':prompts,
                 'contrato_execucao_sha256':contract_hash,'custo_api_usd':0,'diagnosticos':scan.diagnosticos,
                 'cobertura_funcional':'não executada'}
+        if cobertura_relatorio:data['preparacao_funcional']=cobertura_relatorio
         if not preflight_path.exists():
             salvar(preflight_path,data)
         elif not antigo:

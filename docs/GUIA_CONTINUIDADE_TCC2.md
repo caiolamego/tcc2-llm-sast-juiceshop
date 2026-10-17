@@ -49,6 +49,15 @@ Este documento é um diagnóstico e um plano de trabalho. Checkboxes marcadas re
 > casos variados ainda não usados na calibração e revisar a cobertura funcional.
 > Veja a [entrega e os limites](auditoria/comparador_v2.md).
 
+> **Feature 06 — 17/10/2026:** revisão concluída dos 78 casos/46 arquivos,
+> 63 adequados e 15 insuficientes. A união de obrigações por arquivo deixa 52
+> preparados e 26 bloqueados. Foram validados grupos seletivos de servidor, API e
+> Angular/jsdom e três controles de regressão. A nova política é optativa, com
+> contrato 4.0; não houve campanha nem chamadas à LLM. O próximo passo é resolver
+> as lacunas descritas ou realizar um piloto somente com o subconjunto preparado.
+> Veja [a entrega](../features/06-cobertura-funcional/ENTREGA.md) e
+> [os comandos e limites](cobertura_funcional.md).
+
 ## 1. Documentos que orientam o trabalho
 
 | Fonte | Como utilizar |

@@ -407,3 +407,36 @@ regra, ocorrência, prompt, classificação da auditoria ou critério F/D foi al
 Alternativas incorretas que removem alertas reforçam a necessidade de validação
 funcional independente. Retomadas com comparador divergente são recusadas; novas
 execuções usam outra saída. Veja a [entrega, comandos e evidências](auditoria/comparador_v2.md).
+
+
+### Cobertura funcional por grupos revisados — feature 06, 17/10/2026
+
+A política optativa `relacionada_v2` usa revisão 1.0, mapa derivado 2.0 e baseline
+funcional 2.0. O contrato 4.0 vincula revisão, mapa, D, avaliadores, adaptadores,
+ambiente e baseline. As políticas e os contratos anteriores não são migrados; a
+configuração padrão é preservada. O preflight verifica prontidão antes de criar
+cliente LLM, sem executar testes funcionais.
+
+Depois do patch, a seleção é a união dos comportamentos revisados de todos os
+arquivos alterados, sem fallback amplo. F positivo requer compilação dos domínios,
+execução dos testes obrigatórios e baseline comparável. Lacuna, timeout, skip
+obrigatório ou avaliador alterado impedem aprovação; falha comprovada produz F=0.
+As três definições F/D, comparador SAST e parada da cadeia permanecem vigentes.
+R/M continuam medidos globalmente, independentemente da avaliação funcional.
+
+Angular usa build development com AOT e saída temporária; Vitest/jsdom executa
+arquivos explícitos com JUnit e timeout de 300 segundos por grupo. Não representa
+navegador real nem integração completa entre frontend e servidor. Testes adicionais
+são materializados exclusivamente e removidos antes do scan; falha de limpeza
+interrompe a medição. Arquivos de teste alvo exigem avaliação independente.
+
+O conjunto D novo preserva as 75 entradas anteriores. As 33 asserções Angular
+candidatas revisadas observam mocks/estado, sem demonstração suficiente de
+exploração: nenhuma foi acrescentada a D. Critérios anteriores permanecem iguais.
+
+A auditoria concluiu 63 revisões adequadas e 15 insuficientes, com 52 casos
+preparados e 26 bloqueados pela união por arquivo. A campanha dos 78 permanece
+pendente. Baselines compartilhados não são 78 medições independentes. Métricas
+acrescentam agrupamento por alcance funcional, sem mudar denominadores; registros
+antigos não recebem alcance inventado. Consulte a
+[entrega, controles e evidências](../features/06-cobertura-funcional/ENTREGA.md).

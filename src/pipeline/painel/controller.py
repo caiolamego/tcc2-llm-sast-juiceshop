@@ -39,6 +39,8 @@ def resumo_tentativa(linha):
             'motivos_indeterminacao': linha.get('motivos_indeterminacao', []),
             'versao_comparador': linha.get('versao_comparador', 'blocos_unicos_v1'),
             'falhas_contexto_sast': linha.get('falhas_contexto_sast', {}),
+            'cobertura_detalhada': linha.get('cobertura_detalhada'),
+            'cobertura_funcional': linha.get('cobertura_funcional'),
             'total_estimado': estimado}
 
 
