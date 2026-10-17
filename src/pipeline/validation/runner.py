@@ -114,12 +114,12 @@ class ResultadoTier:
 class ResultadoValidacao:
     # passou/tier_falha seguem a definicao d_criterio (Secao 7.1); as tres
     # versoes ficam em F_* e tier_falha_*.
-    passou: bool
+    passou: bool | None
     tier_falha: str | None
     duracao_s: float
-    F_sem_separacao: bool = False
-    F_marcador: bool = False
-    F_criterio: bool = False
+    F_sem_separacao: bool | None = False
+    F_marcador: bool | None = False
+    F_criterio: bool | None = False
     tier_falha_sem_separacao: str | None = None
     tier_falha_marcador: str | None = None
     tier_falha_criterio: str | None = None
@@ -137,6 +137,8 @@ class ResultadoValidacao:
     selecao: dict | None = None
     etapas: list[dict] = field(default_factory=list)
     duracao_selecao_s: float = 0.0
+    escopo: str = 'amplo'
+    cobertura_insuficiente: bool = False
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -411,25 +413,30 @@ def validar(wt: Path, arquivos_alterados: list[str],
         passos.append(("T4", lambda: _t4_serializado(wt, cfg, base.get("T4", set()))))
 
     limite_triagem = 0
-    if cfg.politica == 'otimizada_v1':
+    relacionada = cfg.politica == 'relacionada_v1'
+    if cfg.politica in ('otimizada_v1', 'relacionada_v1'):
         from pipeline.validation.selection import selecionar
         if not cfg.mapa:
-            raise ValueError('Política otimizada requer mapa de testes')
+            raise ValueError('Política de testes relacionados requer mapa de testes')
         selecao_inicio = time.monotonic()
         selecao = selecionar(cfg.mapa, wt, arquivos_alterados)
         res.duracao_selecao_s = time.monotonic()-selecao_inicio
         res.selecao = selecao.to_dict()
+        if relacionada:
+            res.escopo = 'relacionado'
+            res.cobertura_insuficiente = selecao.fallback or bool(selecao.api and not cfg.rodar_t4)
         res.testes_t2, res.t2_pulado = selecao.unitarios, not selecao.unitarios
         passos = [('T0', lambda: _t0(wt, cfg.timeout_t0_s))]
-        if not selecao.fallback:
+        if relacionada or not selecao.fallback:
             if selecao.unitarios:
                 passos.append(('T2', lambda: rodar_t2(wt, selecao.unitarios, cfg.timeout_t2_s, base.get('T3',set()))))
             if selecao.api and cfg.rodar_t4:
                 passos.append(('T2_API', lambda: _api_relacionada(wt,cfg,selecao.api,base.get('T4',set()))))
         limite_triagem = len(passos)
-        passos.append(('T3', lambda: rodar_suite('T3',wt,cfg.timeout_t3_s,base.get('T3',set()))))
-        if cfg.rodar_t4:
-            passos.append(('T4', lambda: _t4_serializado(wt,cfg,base.get('T4',set()))))
+        if not relacionada:
+            passos.append(('T3', lambda: rodar_suite('T3',wt,cfg.timeout_t3_s,base.get('T3',set()))))
+            if cfg.rodar_t4:
+                passos.append(('T4', lambda: _t4_serializado(wt,cfg,base.get('T4',set()))))
 
     falha = {"sem_separacao": None, "marcador": None, "criterio": None}
     concluiu = True
@@ -487,6 +494,16 @@ def validar(wt: Path, arquivos_alterados: list[str],
     res.F_sem_separacao = concluiu and falha["sem_separacao"] is None
     res.F_marcador = concluiu and falha["marcador"] is None
     res.F_criterio = concluiu and falha["criterio"] is None
+    if relacionada:
+        for tier in ('T3', 'T4'):
+            res.etapas.append({'tier': tier, 'status': 'nao_aplicavel',
+                               'motivo': 'relacionada_v1: somente testes mapeados da funcionalidade',
+                               'duracao_s': None})
+        if res.cobertura_insuficiente:
+            for definicao in ('sem_separacao', 'marcador', 'criterio'):
+                if getattr(res, 'F_' + definicao):
+                    setattr(res, 'F_' + definicao, None)
+                    setattr(res, 'tier_falha_' + definicao, 'cobertura_insuficiente')
     res.passou, res.tier_falha = res.F_criterio, res.tier_falha_criterio
 
     res.duracao_s = round(time.monotonic() - inicio - duracao_callback, 2)

@@ -10,11 +10,16 @@
 
 Este documento é um diagnóstico e um plano de trabalho. Checkboxes marcadas representam implementações ou evidências encontradas; não significam que o ambiente foi reproduzido integralmente nesta máquina. Atualize os itens com links para as evidências de conclusão.
 
+> **Validação relacionada — 16/10/2026:** a entrada atual usa `relacionada_v1`,
+> compilação + testes da funcionalidade + SAST global, sem suítes amplas.
+> Lacunas impedem F positivo; os demais casos precisam de mapeamento. Veja
+> [a decisão e os comandos](validacao_relacionada.md). Tempos desta política ainda não foram medidos.
+
 > **Feature 05 — 16/10/2026:** implementados cache de validação, mapa explícito,
 > triagem, contrato 3.0 e repetição seletiva experimental. A matriz de 96 replays
 > preservou R/M/F; K=2 frio reduziu a mediana em cerca de 16% sobre otimizado K=1.
 > Cache funcional real não teve hits; houve uma diferença de intermitência externa.
-> Padrões continuam históricos/K=1. Veja a [entrega e limites](../features/05-otimizacao-validacao/ENTREGA.md)
+> Nessa entrega os padrões permaneceram históricos/K=1. Veja a [entrega e limites](../features/05-otimizacao-validacao/ENTREGA.md)
 > e o [roteiro sem LLM](../features/05-otimizacao-validacao/VALIDACAO.md).
 
 

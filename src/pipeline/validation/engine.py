@@ -32,7 +32,8 @@ def _falha_carregamento(tier):
 
 
 def funcional_elegivel(data):
-    return (not data.get('testes_falhos_intermitentes') and bool(data.get('tiers'))
+    return (not data.get('cobertura_insuficiente') and
+            not data.get('testes_falhos_intermitentes') and bool(data.get('tiers'))
             and all(not r.get('timeout_na_primeira_rodada') and not _falha_carregamento(r) and
                     not any(x in (r.get('motivo') or '') for x in ('timeout','comando_nao_encontrado','falha_sem_relatorio'))
                     for r in data['tiers']))
@@ -114,10 +115,10 @@ def medir(wt, issue, fontes, baseline, perfil, baseline_testes, saida_raw, args,
                 and digest(baseline_testes) == identidade_func['baseline']
                 and (digest(cfg.mapa) if cfg.mapa else None) == identidade_func['mapa'])
     def calcular_func():
-        return validar(wt,list(fontes),cfg,entre_etapas=obter_scan if cfg.politica == 'otimizada_v1' else None).to_dict()
+        return validar(wt,list(fontes),cfg,entre_etapas=obter_scan if cfg.politica != 'historica_v1' else None).to_dict()
     data, info = cache_func.obter('funcional',identidade_func,calcular_func,conferir_func,funcional_elegivel,origem)
     if bypass:info['motivo']=bypass
-    tempos['validacao_s'] = time.monotonic()-t - (tempos.get('sast_s',0)+tempos.get('comparacao_s',0) if cfg.politica == 'otimizada_v1' and not info['hit'] else 0)
+    tempos['validacao_s'] = time.monotonic()-t - (tempos.get('sast_s',0)+tempos.get('comparacao_s',0) if cfg.politica != 'historica_v1' and not info['hit'] else 0)
     info['duracao_original_s'] = data['duracao_s']
     meta['funcional'] = info
     evidencia_funcional = saida_raw.with_name(saida_raw.stem+'_evidencia_funcional.json')
@@ -144,4 +145,6 @@ def medir(wt, issue, fontes, baseline, perfil, baseline_testes, saida_raw, args,
     tempos['total_s'] = time.monotonic()-inicio
     return holder['scan'],holder['comparacao'],_resultado(data),{'cache_validacao':meta,'tempos_medicao':tempos,
                                                                'etapas_validacao':etapas_atuais,
-                                                               'politica_validacao':cfg.politica}
+                                                               'politica_validacao':cfg.politica,
+                                                               'cobertura_funcional':('insuficiente' if data.get('cobertura_insuficiente') else
+                                                                                      'servidor_relacionado' if cfg.politica == 'relacionada_v1' else 'servidor')}

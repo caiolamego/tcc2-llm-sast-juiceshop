@@ -168,9 +168,12 @@ def preparar(args, catalogo, casos):
             exigir(file_path.is_relative_to(wt.resolve()) and digest(file_path)==old,f'Fonte do catálogo divergente: {file}')
     from pipeline.validation.policy import opcoes
     politica = opcoes(args)
-    if politica['politica_validacao'] == 'otimizada_v1':
+    if politica['politica_validacao'] in ('otimizada_v1', 'relacionada_v1'):
         from pipeline.validation.selection import selecionar
-        selecionar(politica['mapa_testes'],worktrees[0],[c['arquivo'] for c in casos])
+        selecao = selecionar(politica['mapa_testes'],worktrees[0],[c['arquivo'] for c in casos])
+        if politica['politica_validacao'] == 'relacionada_v1':
+            exigir(not selecao.fallback,
+                   'Política relacionada requer mapeamento completo dos casos selecionados: ' + '; '.join(selecao.motivos))
     saida=Path(args.saida).resolve()
     exigir(saida!=RAIZ_REPO/'outputs' and saida!=RAIZ_REPO and not saida.is_relative_to(RAIZ_REPO/'workspace'), 'Saída inválida para execução ampliada')
     # Diretórios históricos não podem ser usados como saída de execução.

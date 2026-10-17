@@ -45,13 +45,13 @@ def carregar_config(arquivo: Path) -> dict:
             raise ValueError(f"Arquivo necessário ausente: {config[campo]}")
     for campo in opcionais - {'mapa_testes'}:
         if campo in config:
-            permitidos = {'politica_validacao': ('historica_v1','otimizada_v1'),
+            permitidos = {'politica_validacao': ('historica_v1','otimizada_v1','relacionada_v1'),
                           'cache_validacao': ('desligado','leitura','leitura-escrita'),
                           'repeticao_api': ('ampla','seletiva-experimental')}
             if config[campo] not in permitidos[campo]:
                 raise ValueError(f'{campo} inválido')
-    if config.get('politica_validacao') == 'otimizada_v1' and not config.get('mapa_testes'):
-        raise ValueError('Política otimizada requer mapa_testes')
+    if config.get('politica_validacao') in ('otimizada_v1','relacionada_v1') and not config.get('mapa_testes'):
+        raise ValueError('Política de testes relacionados requer mapa_testes')
     if config.get('mapa_testes'):
         config['mapa_testes'] = (RAIZ / config['mapa_testes']).resolve()
         if not config['mapa_testes'].is_file():

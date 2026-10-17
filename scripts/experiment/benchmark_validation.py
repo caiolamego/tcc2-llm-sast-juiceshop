@@ -163,7 +163,7 @@ def replay(args):
                             restauracao = time.monotonic()-restauracao
                         row = {'replay_id':tid,'caso_id':caso,'estrategia':linha['estrategia_prompt'],
                                'repeticao':repeticao,'patch_sha256':digest(patch),'worktree':wt.name,
-                               'R':comp['R'],'M':comp['M'], **{f'F_{d}':int(getattr(validacao,f'F_{d}')) for d in ('sem_separacao','marcador','criterio')},
+                               'R':comp['R'],'M':comp['M'], **{f'F_{d}':None if getattr(validacao,f'F_{d}') is None else int(getattr(validacao,f'F_{d}')) for d in ('sem_separacao','marcador','criterio')},
                                'falhas_persistentes':validacao.testes_falhos_novos,
                                'falhas_intermitentes':validacao.testes_falhos_intermitentes,
                                'selecao':validacao.selecao, 'etapas':medicao['etapas_validacao'],
@@ -173,7 +173,7 @@ def replay(args):
                             rows.append(row)
                             with (saida/'replays.jsonl').open('a',encoding='utf-8') as stream:
                                 stream.write(json.dumps(row,ensure_ascii=False)+'\n');stream.flush();os.fsync(stream.fileno())
-                        print(f"{caso} {linha['estrategia_prompt']} rep={repeticao} {row['total_s']:.1f}s R/F/M={comp['R']}/{int(validacao.F_criterio)}/{comp['M']} cache="+
+                        print(f"{caso} {linha['estrategia_prompt']} rep={repeticao} {row['total_s']:.1f}s R/F/M={comp['R']}/{row['F_criterio']}/{comp['M']} cache="+
                               str({k:v['hit'] for k,v in medicao['cache_validacao'].items()}),flush=True)
         with ThreadPoolExecutor(max_workers=args.k) as executor:
             futures = [executor.submit(processar,item) for item in sorted(jobs.items())]

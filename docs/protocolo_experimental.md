@@ -347,3 +347,22 @@ A política vigente não foi alterada. Recomenda-se avaliar otimizado/K=2/repeti
 ampla em novo piloto controlado antes de congelar a campanha. A cobertura continua
 sendo a suíte de servidor/API já existente, sem Angular/Cypress. Veja os hashes,
 preparações descartadas e limites na [entrega](../features/05-otimizacao-validacao/ENTREGA.md).
+
+
+### Política relacionada, decisão posterior à feature 05 — 16/10/2026
+
+A entrada `config/execucao.yaml` seleciona `relacionada_v1`: T0, união explícita dos
+testes unitários/API dos arquivos alterados e SAST global. Não se exige T3/T4
+amplo. F mede a cobertura relacionada declarada, mantendo as três separações F/D
+e a parada vigente; não representa regressão global verificada. Mapeamento
+insuficiente não aciona suíte ampla e não autoriza F positivo. Antes da LLM,
+recusam-se seleções de casos sem mapa revisado; lacunas adicionais introduzidas
+pelo patch geram indeterminação funcional, preservando R/M.
+
+A política e seu hash de implementação integram o contrato 3.0. Os contratos e
+resultados anteriores não são alterados; a nova política exige outra execução.
+A matriz de desempenho da feature 05 continua descrevendo as políticas históricas
+medidas, não esta cobertura mais restrita. Testes automatizados verificam seleção,
+F/D, SAST mesmo após falha e ausência das chamadas às suítes amplas. Não foram
+executados LLM, scan ou testes do alvo para esta alteração. Consulte a
+[definição operacional](validacao_relacionada.md).

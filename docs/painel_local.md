@@ -57,7 +57,8 @@ Passe o mouse sobre o resultado para consultar política, origem e etapas; sobre
 tempo reutilizado para consultar a duração original. O valor principal é o trabalho
 gasto agora, não o custo histórico da evidência. Etapas dispensadas não são testes
 aprovados. O exemplo `config/execucao_otimizada.exemplo.yaml` mantém K=1 e inicia em
-preflight; o YAML padrão não foi alterado.
+preflight. O YAML de entrada atual seleciona `relacionada_v1`; veja
+[os testes executados e as lacunas](validacao_relacionada.md).
 
 | Coluna | Medição |
 |---|---|

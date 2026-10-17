@@ -104,6 +104,20 @@ class EntradaCurtaTests(unittest.TestCase):
         self.assertEqual(cmd[cmd.index('--politica-validacao')+1],'otimizada_v1')
         self.assertIn('--cache-validacao',cmd)
 
+    def test_relacionada_exige_mapa_e_propaga_no_preview(self):
+        self.config['politica_validacao'] = 'relacionada_v1'
+        self.gravar()
+        with self.assertRaises(ValueError):
+            executar.carregar_config(self.arquivo)
+        (self.raiz/'mapa.yaml').write_text('fixture')
+        self.config['mapa_testes'] = 'mapa.yaml'
+        self.gravar()
+        config = executar.carregar_config(self.arquivo)
+        cmd, _ = executar.montar_comandos(config, 'python', 'TEST')
+        self.assertEqual(cmd[cmd.index('--politica-validacao')+1], 'relacionada_v1')
+        with patch.object(executar.subprocess, 'run', side_effect=AssertionError('execução inesperada')):
+            self.assertEqual(self.executar_main('--mostrar-comando'), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

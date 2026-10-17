@@ -41,7 +41,10 @@ total). O seletor de histórico permite consultar as tentativas já registradas,
 incluindo o piloto de duas issues. Abrir o painel não inicia o pipeline.
 Veja [uso e limites do painel](docs/painel_local.md).
 
-A política otimizada é experimental e não altera a configuração padrão. Para
+A configuração de entrada usa `relacionada_v1`: somente os testes mapeados para
+a funcionalidade alterada, além de compilação e SAST global. Veja
+[como funciona](docs/validacao_relacionada.md). A política `otimizada_v1` da feature
+05 permanece como alternativa com confirmação ampla. Para
 conferir seus comandos sem executar o pipeline:
 
 ```bash
@@ -491,7 +494,10 @@ mesmo otimizado K=1. Cache quente e repetição seletiva tiveram somente uma rod
 o relatório registra uma intermitência externa e a ausência de hits funcionais.
 Não são novas correções ou amostras independentes da LLM.
 
-Os padrões continuam históricos, K=1, cache desligado e repetição ampla. Para
+O CLI mantém a política histórica por compatibilidade. A configuração de entrada
+`config/execucao.yaml` agora seleciona `relacionada_v1`, com K=1 e cache desligado:
+compilação, testes mapeados e SAST global, sem T3/T4 amplos. Veja o
+[escopo e tratamento das lacunas](docs/validacao_relacionada.md). Para
 inspecionar a configuração alternativa sem iniciar API ou validação:
 
 ```bash

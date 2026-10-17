@@ -1,0 +1,164 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 7.77,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "npx",
+        "tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 3.49,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/keyServer.unit.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 0.17,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ keyServer\n  ✔ should serve requested file from folder /encryptionkeys (1.087848ms)\n  ✔ should raise error for slashes in filename (0.257934ms)\n✔ keyServer (2.134574ms)\nℹ tests 2\nℹ suites 1\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 139.240848\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/api/file-serving.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 1.66,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ Server\n  ✔ GET responds with index.html when visiting application URL (15.744353ms)\n  ✔ GET responds with index.html when visiting application URL with any path (19.282255ms)\n  ✔ GET a restricted file directly from file system path on server via URL-encoded Directory Traversal attack loads index.html instead (24.817621ms)\n  ✔ GET serves a security.txt file (4.202768ms)\n  ✔ GET serves a security.txt file under well-known subfolder (1.990636ms)\n  ✔ GET serves a robots.txt file (1.68934ms)\n  ✔ GET serves a csaf provider-metadata.json (2.526652ms)\n  ✔ GET serves a csaf index.txt (1.958914ms)\n  ✔ GET serves a csaf changes.csv (1.955451ms)\n  ✔ GET serves a csaf juice-shop-sa-20200513-express-jwt.json (2.7803ms)\n✔ Server (541.377729ms)\n▶ /public/images/padding\n  ✔ GET tracking image for \"Score Board\" page access challenge (2.370458ms)\n  ✔ GET tracking image for \"Administration\" page access challenge (2.062058ms)\n  ✔ GET tracking image for \"Token Sale\" page access challenge (4.405561ms)\n  ✔ GET tracking image for \"Privacy Policy\" page access challenge (2.327946ms)\n✔ /public/images/padding (11.407155ms)\n▶ /encryptionkeys\n  ✔ GET serves a directory listing (16.406552ms)\n  ✔ GET a non-existing file in will return a 404 error (3.370162ms)\n  ✔ GET the Premium Content AES key (1.673423ms)\n  ✔ GET a key file whose name contains a \"/\" fails with a 403 error (2.35572ms)\n✔ /encryptionkeys (24.063351ms)\n▶ Hidden URL\n  ✔ GET the second easter egg by visiting the Base64>ROT13-decrypted URL (8.951359ms)\n  ✔ GET the premium content by visiting the AES decrypted URL (8.244155ms)\n  ✔ GET the missing \"Thank you!\" image for assembling the URL hidden in the Privacy Policy (12.673161ms)\n  ✔ GET Klingon translation file for \"Extra Language\" challenge (7.000554ms)\n  ✔ GET blueprint file for \"Retrieve Blueprint\" challenge (3.164394ms)\n  ✔ GET crazy cat photo for \"Missing Encoding\" challenge (2.145884ms)\n  ✔ GET folder containing access log files for \"Access Log\" challenge (5.470125ms)\n✔ Hidden URL (47.981755ms)\nℹ tests 25\nℹ suites 4\nℹ pass 25\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1634.606257\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 2.4389350159999594,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [
+    "test/server/keyServer.unit.test.ts"
+  ],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": "outputs/feature02/validacao/baseline_testes.json",
+  "selecao": {
+    "unitarios": [
+      "test/server/keyServer.unit.test.ts"
+    ],
+    "api": [
+      "test/api/file-serving.test.ts"
+    ],
+    "fallback": false,
+    "motivos": [],
+    "arquivos": [
+      "routes/keyServer.ts"
+    ]
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 3.49
+    },
+    {
+      "tier": "T2",
+      "status": "executada",
+      "duracao_s": 0.17
+    },
+    {
+      "tier": "T2_API",
+      "status": "executada",
+      "duracao_s": 1.66
+    },
+    {
+      "tier": "T3",
+      "status": "nao_aplicavel",
+      "motivo": "relacionada_v1: somente testes mapeados da funcionalidade",
+      "duracao_s": null
+    },
+    {
+      "tier": "T4",
+      "status": "nao_aplicavel",
+      "motivo": "relacionada_v1: somente testes mapeados da funcionalidade",
+      "duracao_s": null
+    }
+  ],
+  "duracao_selecao_s": 0.016703133000191883,
+  "escopo": "relacionado",
+  "cobertura_insuficiente": false
+}

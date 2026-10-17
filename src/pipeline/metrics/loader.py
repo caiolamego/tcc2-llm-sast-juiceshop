@@ -110,7 +110,7 @@ def _validar_contrato(entrada):
         exigir(isinstance(v,dict) and all(v.get(k) in choices for k,choices in CHOICES.items()), 'Política de validação inválida')
         exigir(isinstance(v.get('implementacao'),dict) and isinstance(v.get('ambientes'),list), 'Proveniência da validação ausente')
         exigir(bool(v['implementacao']) and all(isinstance(h,str) and re.fullmatch('[0-9a-f]{64}',h) for h in v['implementacao'].values()), 'Hashes de implementação inválidos')
-        if v['politica_validacao']=='otimizada_v1':
+        if v['politica_validacao'] in ('otimizada_v1','relacionada_v1'):
             exigir(isinstance(v.get('mapa_testes_sha256'),str) and re.fullmatch('[0-9a-f]{64}',v['mapa_testes_sha256']), 'Mapa de testes sem hash')
     exigir(c.get('modo') in ('real','dry-run','preflight'), 'Modo do contrato inválido')
     exigir(c.get('commit_alvo') == cat.commit and c.get('hashes_catalogo') == cat.hashes, 'Commit/hashes de catálogo divergentes')

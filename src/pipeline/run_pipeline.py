@@ -322,10 +322,11 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     linha["artefatos"]["validacao"] = rel(s.d("testes") / f"{tid}.json")
     # F e tier_falha seguem d_criterio (Secao 7.1); as tres versoes vao juntas
     # para a analise de sensibilidade (Secao 13).
-    linha["F"] = int(v.passou)
+    linha["F"] = None if v.passou is None else int(v.passou)
     linha["tier_falha"] = v.tier_falha
     for k in ("sem_separacao", "marcador", "criterio"):
-        linha[f"F_{k}"] = int(getattr(v, f"F_{k}"))
+        valor_f = getattr(v, f"F_{k}")
+        linha[f"F_{k}"] = None if valor_f is None else int(valor_f)
         linha[f"tier_falha_{k}"] = getattr(v, f"tier_falha_{k}")
     for k in ("d_marcador", "d_criterio", "f_marcador", "f_criterio"):
         linha[f"testes_falhos_{k}"] = getattr(v, f"testes_falhos_{k}")
@@ -339,7 +340,8 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
 
     for k in ("sem_separacao", "marcador", "criterio"):
         f = linha[f"F_{k}"]
-        linha[f"classificacao_{k}"] = ("indeterminada_sast" if amp and (linha["R"] is None or linha["M"] is None) else
+        linha[f"classificacao_{k}"] = ("indeterminada_funcional" if f is None else
+                                       "indeterminada_sast" if amp and (linha["R"] is None or linha["M"] is None) else
                                        "aceita" if linha["R"] and f and linha["M"] else
                                        f"rejeitada:R{linha['R']}F{f}M{linha['M']}")
     linha["classificacao_final"] = linha["classificacao_criterio"]

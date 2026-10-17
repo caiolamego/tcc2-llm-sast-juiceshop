@@ -155,6 +155,69 @@ arquivos:
             resultado=validar(self.root,['routes/key.ts'],cfg,entre_etapas=lambda:eventos.append('SAST'))
         self.assertEqual(eventos,['T0','T2','T2_API','SAST','T3','T4']);self.assertTrue(resultado.F_criterio)
 
+    def validar_relacionada(self, arquivos, api=None, t0=None, rodar_api=True):
+        cfg = ConfigValidacao(politica='relacionada_v1', mapa=self.mapa, rodar_t4=rodar_api)
+        eventos = []
+        def ok(tier):
+            eventos.append(tier)
+            return ResultadoTier(tier, [], True, .1)
+        with patch('pipeline.validation.runner.carregar_linha_de_base', return_value={}), \
+             patch('pipeline.validation.runner._t0', side_effect=lambda *_: t0 or ok('T0')), \
+             patch('pipeline.validation.runner.rodar_t2', side_effect=lambda *_: ok('T2')), \
+             patch('pipeline.validation.runner._api_relacionada', side_effect=lambda *_: api or ok('T2_API')), \
+             patch('pipeline.validation.runner.rodar_suite') as ampla, \
+             patch('pipeline.validation.runner._t4_serializado') as t4:
+            res = validar(self.root, arquivos, cfg, entre_etapas=lambda: eventos.append('SAST'))
+        ampla.assert_not_called()
+        t4.assert_not_called()
+        return res, eventos
+
+    def test_relacionada_nao_exige_suite_ampla_para_aprovar(self):
+        res, eventos = self.validar_relacionada(['routes/key.ts'])
+        self.assertEqual(eventos, ['T0', 'T2', 'T2_API', 'SAST'])
+        self.assertTrue(res.F_criterio)
+        self.assertEqual(res.escopo, 'relacionado')
+        self.assertFalse(res.cobertura_insuficiente)
+        self.assertEqual([e['status'] for e in res.etapas[-2:]], ['nao_aplicavel']*2)
+
+    def test_relacionada_sem_unitario_usa_api_mapeada(self):
+        self.mapa.write_text(self.mapa.read_text().replace('unitarios: [test/server/key.unit.test.ts]', 'unitarios: []'))
+        res, eventos = self.validar_relacionada(['routes/key.ts'])
+        self.assertEqual(eventos, ['T0', 'T2_API', 'SAST'])
+        self.assertTrue(res.F_criterio)
+
+    def test_relacionada_lacunas_nao_disparam_amplas_nem_aprovacao(self):
+        for arquivos in ([], ['lib/shared.ts'], ['routes/key.ts', 'lib/shared.ts']):
+            with self.subTest(arquivos=arquivos):
+                res, eventos = self.validar_relacionada(arquivos)
+                self.assertTrue(res.cobertura_insuficiente)
+                self.assertIsNone(res.passou)
+                self.assertTrue(all(getattr(res, 'F_'+d) is None for d in ('criterio','marcador','sem_separacao')))
+                self.assertIn('SAST', eventos)
+                self.assertFalse(funcional_elegivel(res.to_dict()))
+
+    def test_relacionada_falha_compilacao_preserva_sast_e_f_negativo(self):
+        res, eventos = self.validar_relacionada(['lib/shared.ts'], t0=ResultadoTier('T0', [], False, .1, 'falha'))
+        self.assertEqual(eventos, ['SAST'])
+        self.assertFalse(res.F_criterio)
+        self.assertTrue(res.cobertura_insuficiente)
+
+    def test_relacionada_api_desligada_nao_inventa_cobertura(self):
+        res, eventos = self.validar_relacionada(['routes/key.ts'], rodar_api=False)
+        self.assertNotIn('T2_API', eventos)
+        self.assertIsNone(res.F_criterio)
+
+    def test_relacionada_preserva_definicoes_f_d(self):
+        nome = 'test/api/key.test.ts :: Suite > desafio'
+        falha = ResultadoTier('T2_API', [], False, .1, 'falha', testes_falhos_novos=[nome])
+        with patch('pipeline.validation.runner.classificar', return_value={
+                'd_marcador': [], 'd_criterio': [nome], 'f_marcador': [nome], 'f_criterio': []}):
+            res, eventos = self.validar_relacionada(['routes/key.ts'], api=falha)
+        self.assertTrue(res.F_criterio)
+        self.assertFalse(res.F_marcador)
+        self.assertFalse(res.F_sem_separacao)
+        self.assertIn('SAST', eventos)
+
     def test_fallback_nao_duplica_suites(self):
         cfg=ConfigValidacao(politica='otimizada_v1',mapa=self.mapa)
         with patch('pipeline.validation.runner.carregar_linha_de_base',return_value={}), \

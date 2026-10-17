@@ -45,6 +45,27 @@ class ValidationContractTests(unittest.TestCase):
             with self.subTest(campo=campo),patch('pipeline.metrics.loader._perfil'),self.assertRaises(ValueError):
                 _validar_contrato(e)
 
+    def test_contrato_relacionado_requer_hash_e_preserva_f_nulo(self):
+        from pipeline.metrics.normalizer import normalizar
+        from pipeline.metrics.calculator import metricas
+        e = entrada()
+        e.contrato['validacao']['politica_validacao'] = 'relacionada_v1'
+        with patch('pipeline.metrics.loader._perfil'), self.assertRaises(ValueError):
+            _validar_contrato(e)
+        e.contrato['validacao']['mapa_testes_sha256'] = 'b'*64
+        with patch('pipeline.metrics.loader._perfil'):
+            _validar_contrato(e)
+        row = {'R': 1, 'M': 1, 'F': None, 'status_aplicacao': 'aplicado'}
+        for d in ('criterio', 'marcador', 'sem_separacao'):
+            row['F_'+d] = None
+            row['classificacao_'+d] = 'indeterminada_funcional'
+        normalizado = normalizar(row)
+        self.assertTrue(normalizado['incompleto_criterio'])
+        self.assertIsNone(normalizado['F_criterio'])
+        ms = metricas([normalizado], 'criterio', True)
+        self.assertEqual(ms['TRV']['denominador'], 1)
+        self.assertIsNone(ms['TPF']['valor'])
+
     def test_reserva_impede_segundo_processo_e_e_reentrante(self):
         with tempfile.TemporaryDirectory() as tmp:
             raiz=Path(tmp)

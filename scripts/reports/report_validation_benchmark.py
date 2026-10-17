@@ -48,7 +48,7 @@ def carregar(base, nomes):
             if not re.fullmatch(r'[A-Za-z0-9_-]+',rid):raise ValueError('ID de replay inválido')
             pasta=root/'tentativas'/rid
             comp=ler(pasta/'comparacao.json');val=ler(pasta/'validacao.json')
-            if any(comp[k]!=row[k] for k in ('R','M')) or any(int(val['F_'+d])!=row['F_'+d] for d in ('criterio','marcador','sem_separacao')):
+            if any(comp[k]!=row[k] for k in ('R','M')) or any(val['F_'+d]!=row['F_'+d] for d in ('criterio','marcador','sem_separacao')):
                 raise ValueError('Resultado divergente das evidências')
             for path in sorted(pasta.iterdir()):
                 if path.is_file():fontes[str(path.resolve().relative_to(base))]=digest(path)

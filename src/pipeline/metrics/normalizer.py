@@ -9,7 +9,7 @@ def normalizar(l: dict) -> dict:
     l.setdefault("condicao", "desenho")
     if "F_criterio" in l:
         for d in DEFS:
-            l[f"incompleto_{d}"] = l.get(f"classificacao_{d}") == "indeterminada_sast"
+            l[f"incompleto_{d}"] = l.get(f"classificacao_{d}") in ("indeterminada_sast", "indeterminada_funcional")
         l.setdefault("testes_falhos_d_sem_separacao", [])
         return l
     # Linha antiga: reclassificacao a posteriori.

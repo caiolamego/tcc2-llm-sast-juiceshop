@@ -4,7 +4,7 @@ from pipeline.caminhos import RAIZ_REPO
 
 DEFAULTS = {'politica_validacao': 'historica_v1', 'mapa_testes': None,
             'cache_validacao': 'desligado', 'repeticao_api': 'ampla'}
-CHOICES = {'politica_validacao': ('historica_v1', 'otimizada_v1'),
+CHOICES = {'politica_validacao': ('historica_v1', 'otimizada_v1', 'relacionada_v1'),
            'cache_validacao': ('desligado', 'leitura', 'leitura-escrita'),
            'repeticao_api': ('ampla', 'seletiva-experimental')}
 
@@ -25,8 +25,8 @@ def opcoes(args):
         if valores[k] not in choices:
             raise ValueError(f'{k} inválido')
     mapa = valores['mapa_testes']
-    if valores['politica_validacao'] == 'otimizada_v1' and not mapa:
-        raise ValueError('Política otimizada requer --mapa-testes')
+    if valores['politica_validacao'] in ('otimizada_v1', 'relacionada_v1') and not mapa:
+        raise ValueError('Política de testes relacionados requer --mapa-testes')
     if mapa:
         valores['mapa_testes'] = Path(mapa).resolve()
     return valores
