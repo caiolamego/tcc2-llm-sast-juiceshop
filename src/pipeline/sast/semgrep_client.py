@@ -28,7 +28,10 @@ class Finding:
 
 
 # Rulesets do protocolo (Secao 2). Nao versionados pelo registro (D2).
-RULESETS = ["p/javascript", "p/typescript", "p/nodejs", "p/expressjs", "p/owasp-top-ten"]
+# Os 5 primeiros sao os do catalogo v1 (E01/E02); os 6 ultimos entraram no
+# catalogo v2 (decisao do grupo, 2026-10-13). Execucao sempre anonima (sem login).
+RULESETS = ["p/javascript", "p/typescript", "p/nodejs", "p/expressjs", "p/owasp-top-ten",
+            "p/security-audit", "p/secrets", "p/xss", "p/sql-injection", "p/jwt", "p/default"]
 TIMEOUT_SEMGREP_S = 900
 
 # Sem login, o Semgrep devolve este texto no lugar de extra.fingerprint e de

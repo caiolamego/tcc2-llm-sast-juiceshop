@@ -1,0 +1,195 @@
+{
+  "passou": false,
+  "tier_falha": "T4",
+  "duracao_s": 85.0,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T3",
+  "tier_falha_marcador": "T4",
+  "tier_falha_criterio": "T4",
+  "testes_falhos_d_marcador": [
+    "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+  ],
+  "testes_falhos_d_criterio": [
+    "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\"",
+    "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+    "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+    "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+    "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "npx",
+        "tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 2.61,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": ""
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/insecurity.unit.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 1.13,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ insecurity\n  ▶ cutOffPoisonNullByte\n    ✔ returns string unchanged if it contains no null byte (0.448917ms)\n    ✔ returns string up to null byte (0.095166ms)\n  ✔ cutOffPoisonNullByte (1.070584ms)\n  ▶ userEmailFrom\n    ✔ returns content of \"x-user-email\" header if present (0.100167ms)\n    ✔ returns undefined if header \"x-user-email\" is not present (0.069ms)\n  ✔ userEmailFrom (0.2895ms)\n  ▶ generateCoupon\n    ✔ returns base85-encoded month, year and discount as coupon code (0.265875ms)\n    ✔ uses current month and year if not specified (0.085166ms)\n    ✔ does not encode day of month or time into coupon code (0.089375ms)\n  ✔ generateCoupon (0.587916ms)\n  ▶ discountFromCoupon\n    ✔ returns undefined when not passing in a coupon code (0.149084ms)\n    ✔ returns undefined for malformed coupon code (0.066334ms)\n    ✔ returns undefined for coupon code not according to expected pattern (0.341792ms)\n    ✔ returns undefined for expired coupon code (0.087542ms)\n    ✔ returns discount from valid coupon code (0.076167ms)\n  ✔ discountFromCoupon (0.885084ms)\n  ▶ authenticatedUsers\n    ✔ returns user by associated token (0.609041ms)\n    ✔ returns undefined if no token is passed in (0.046417ms)\n    ✔ returns token by associated user (0.056042ms)\n    ✔ returns user by associated token from request (0.094875ms)\n    ✔ returns undefined if no token is present in request (0.042375ms)\n  ✔ authenticatedUsers (0.959667ms)\n  ▶ sanitizeHtml\n    ✔ handles empty inputs by returning their string representation (0.46825ms)\n    ✔ returns input unchanged for plain text input (0.145542ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.429625ms)\n    ✔ returns input unchanged for HTML input with only harmless links (0.949625ms)\n    ✔ removes all Javascript from HTML input (0.253875ms)\n    ✔ can be bypassed by exploiting lack of recursive sanitization (0.07275ms)\n  ✔ sanitizeHtml (2.457583ms)\n  ▶ sanitizeLegacy\n    ✔ returns empty string for undefined input (25.269625ms)\n    ✔ returns input unchanged for plain text input (3.942916ms)\n    ✔ removes all opening tags and subsequent character from HTML input (0.068125ms)\n    ✔ can be bypassed to allow working HTML payload to be returned (0.056583ms)\n  ✔ sanitizeLegacy (81.993667ms)\n  ▶ sanitizeSecure\n    ✔ handles empty inputs by returning their string representation (0.176792ms)\n    ✔ returns input unchanged for plain text input (0.104834ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.125042ms)\n    ✔ returns input unchanged for HTML input with only harmless links (1.622667ms)\n    ✔ removes all Javascript from HTML input (27.058375ms)\n    ✔ cannot be bypassed by exploiting lack of recursive sanitization (0.142542ms)\n  ✔ sanitizeSecure (29.450208ms)\n  ▶ hash\n    ✔ returns MD5 hash for any input string (0.122ms)\n  ✔ hash (0.161167ms)\n  ▶ hmac\n    ✔ returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string (0.232041ms)\n  ✔ hmac (0.289041ms)\n✔ insecurity (118.746167ms)\nℹ tests 35\nℹ suites 11\nℹ pass 35\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1077.705167\n",
+      "saida_reexecucao": ""
+    },
+    {
+      "tier": "T3",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/**/*.unit.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 13.56,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+      ],
+      "testes_falhos_novos": [
+        "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [
+        "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+      ],
+      "testes_falhos_d_marcador": [
+        "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+      ],
+      "testes_falhos_d_criterio": [
+        "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+      ],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "5ms)\n      ✔ 403 status code (0.064917ms)\n      ✔ 404 status code (0.09ms)\n      ✔ 500 status code (0.048959ms)\n    ✔ is solved when an error occurs on a response with error (0.346834ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.065209ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.079541ms)\n      ✔ 402 status code (0.048875ms)\n      ✔ 404 status code (0.054791ms)\n      ✔ 500 status code (0.05425ms)\n    ✔ is not solved when no error occurs on a response with error (0.29425ms)\n    ✔ should pass occurred error on to next route (0.298834ms)\n  ✔ \"errorHandlingChallenge\" (1.26825ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (1.011792ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.136791ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.115375ms)\n    ✔ \"changeProductChallenge\" (1.360625ms)\n  ✔ databaseRelatedChallenges (1.451291ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (2.793334ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.266334ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (1.393167ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (0.360333ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (0.274125ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (0.536667ms)\n  ✔ jwtChallenges (5.757042ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.122ms)\n    ✔ should return 1 for identical strings even if they are short (0.044042ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.040666ms)\n    ✔ should return 0 for completely different strings (0.049292ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.049709ms)\n  ✔ diceCoefficient (0.375375ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.097125ms)\n    ✔ should return false if similarity is below threshold (0.054166ms)\n  ✔ checkSystemPromptSimilarity (0.1895ms)\n✔ verify (22.904042ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (0.413792ms)\n    ✔ fails when supplied webhook is not a valid URL (52.178292ms)\n    ✔ submits POST with payload to existing URL (78.252041ms)\n  ✔ notify (131.409625ms)\n✔ webhook (131.641166ms)\n▶ xml\n  ✔ should parse a simple XML string (738.419959ms)\n  ✔ should expand internal entities (2.518167ms)\n  ✔ should throw error on malformed XML (3.917334ms)\n  ✔ should timeout on entity expansion bomb (1.956292ms)\n✔ xml (747.668375ms)\nℹ tests 335\nℹ suites 109\nℹ pass 332\nℹ fail 1\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 7547.374334\n\n✖ failing tests:\n\ntest at test/server/redirect.unit.test.ts:2:3622\n✖ tricking the allowlist should solve \"redirectChallenge\" (1.142333ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  false !== true\n  \n      at TestContext.<anonymous> (test/server/redirect.unit.test.ts:84:12)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "      ✔ 403 status code (0.060416ms)\n      ✔ 404 status code (0.084833ms)\n      ✔ 500 status code (0.05875ms)\n    ✔ is solved when an error occurs on a response with error (0.346167ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.062291ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.0875ms)\n      ✔ 402 status code (0.065875ms)\n      ✔ 404 status code (0.061459ms)\n      ✔ 500 status code (0.054958ms)\n    ✔ is not solved when no error occurs on a response with error (0.331375ms)\n    ✔ should pass occurred error on to next route (0.083667ms)\n  ✔ \"errorHandlingChallenge\" (1.044584ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (0.240333ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.0685ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.06825ms)\n    ✔ \"changeProductChallenge\" (0.420375ms)\n  ✔ databaseRelatedChallenges (0.463208ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (0.854584ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.205209ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (38.861042ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (5.245333ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (0.348167ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (0.619959ms)\n  ✔ jwtChallenges (48.10275ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.125791ms)\n    ✔ should return 1 for identical strings even if they are short (0.044917ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.041833ms)\n    ✔ should return 0 for completely different strings (0.052875ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.049542ms)\n  ✔ diceCoefficient (0.385917ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.107041ms)\n    ✔ should return false if similarity is below threshold (0.061542ms)\n  ✔ checkSystemPromptSimilarity (0.208709ms)\n✔ verify (53.644583ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (0.559542ms)\n    ✔ fails when supplied webhook is not a valid URL (11.144083ms)\n    ✔ submits POST with payload to existing URL (86.301917ms)\n  ✔ notify (99.017208ms)\n✔ webhook (99.323541ms)\n▶ xml\n  ✔ should parse a simple XML string (783.6795ms)\n  ✔ should expand internal entities (5.366791ms)\n  ✔ should throw error on malformed XML (53.995208ms)\n  ✔ should timeout on entity expansion bomb (13.818083ms)\n✔ xml (857.657708ms)\nℹ tests 335\nℹ suites 109\nℹ pass 332\nℹ fail 1\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 5899.186292\n\n✖ failing tests:\n\ntest at test/server/redirect.unit.test.ts:2:3622\n✖ tricking the allowlist should solve \"redirectChallenge\" (1.240458ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  false !== true\n  \n      at TestContext.<anonymous> (test/server/redirect.unit.test.ts:84:12)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    },
+    {
+      "tier": "T4",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/api/**/*.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 38.06,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available",
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+      ],
+      "testes_falhos_novos": [
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [
+        "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available",
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+      ],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [
+        "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+      ],
+      "testes_falhos_f_marcador": [
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+      ],
+      "testes_falhos_f_criterio": [
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+        "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter"
+      ],
+      "saida": " ✔ returns the first hint text on the second wrong attempt (10.962541ms)\n  ✔ returns a line-number hint after all text hints are exhausted (23.473916ms)\n✔ snippets/verdict (hint progression for loginAdminChallenge) (40.528041ms)\n▶ /api/Wallets\n  ✔ GET wallet is forbidden via public API (5.526875ms)\n  ✔ GET wallet retrieves wallet amount of requesting user (11.295208ms)\n  ✔ PUT wallet is forbidden via public API (3.390417ms)\n  ✔ PUT charge wallet from credit card of requesting user (18.056833ms)\n  ✔ PUT charge wallet from foreign credit card is forbidden (6.391667ms)\n  ✔ PUT charge wallet without credit card is forbidden (3.330458ms)\n  ✔ GET wallet balance for user without a wallet returns 404 (25.94825ms)\n✔ /api/Wallets (358.188542ms)\n﹣ /rest/web3/walletExploitAddress (0.282625ms) # ALCHEMY_API_KEY not set\nℹ tests 555\nℹ suites 114\nℹ pass 545\nℹ fail 4\nℹ cancelled 0\nℹ skipped 6\nℹ todo 0\nℹ duration_ms 20636.381209\n\n✖ failing tests:\n\ntest at test/api/internet-resources.test.ts:2:4679\n✖ StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available (86.213875ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  403 !== 200\n  \n      at TestContext.<anonymous> (test/api/internet-resources.test.ts:78:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 403,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/redirect.test.ts:2:3565\n✖ GET error message with information leakage when calling /redirect without query parameter (42.281209ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  406 !== 500\n  \n      at TestContext.<anonymous> (test/api/redirect.test.ts:73:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 406,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/redirect.test.ts:2:4176\n✖ GET error message with information leakage when calling /redirect with unrecognized query parameter (28.572583ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  406 !== 500\n  \n      at TestContext.<anonymous> (test/api/redirect.test.ts:84:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 406,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/redirect.test.ts:2:5351\n✖ GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string (24.415208ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  406 !== 200\n  \n      at TestContext.<anonymous> (test/api/redirect.test.ts:105:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 406,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "s)\n  ✔ returns the first hint text on the second wrong attempt (7.664792ms)\n  ✔ returns a line-number hint after all text hints are exhausted (17.663375ms)\n✔ snippets/verdict (hint progression for loginAdminChallenge) (29.708458ms)\n▶ /api/Wallets\n  ✔ GET wallet is forbidden via public API (6.803666ms)\n  ✔ GET wallet retrieves wallet amount of requesting user (14.5315ms)\n  ✔ PUT wallet is forbidden via public API (4.643833ms)\n  ✔ PUT charge wallet from credit card of requesting user (25.253209ms)\n  ✔ PUT charge wallet from foreign credit card is forbidden (8.898375ms)\n  ✔ PUT charge wallet without credit card is forbidden (4.358375ms)\n  ✔ GET wallet balance for user without a wallet returns 404 (38.050166ms)\n✔ /api/Wallets (451.783166ms)\n﹣ /rest/web3/walletExploitAddress (0.328042ms) # ALCHEMY_API_KEY not set\nℹ tests 555\nℹ suites 114\nℹ pass 545\nℹ fail 4\nℹ cancelled 0\nℹ skipped 6\nℹ todo 0\nℹ duration_ms 17338.457667\n\n✖ failing tests:\n\ntest at test/api/internet-resources.test.ts:2:4679\n✖ StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available (90.052875ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  403 !== 200\n  \n      at TestContext.<anonymous> (test/api/internet-resources.test.ts:78:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 403,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/redirect.test.ts:2:3565\n✖ GET error message with information leakage when calling /redirect without query parameter (15.5955ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  406 !== 500\n  \n      at TestContext.<anonymous> (test/api/redirect.test.ts:73:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 406,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/redirect.test.ts:2:4176\n✖ GET error message with information leakage when calling /redirect with unrecognized query parameter (12.890542ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  406 !== 500\n  \n      at TestContext.<anonymous> (test/api/redirect.test.ts:84:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 406,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/redirect.test.ts:2:5351\n✖ GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string (13.855791ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  406 !== 200\n  \n      at TestContext.<anonymous> (test/api/redirect.test.ts:105:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 406,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [
+    "test/server/insecurity.unit.test.ts"
+  ],
+  "testes_falhos_novos": [
+    "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\"",
+    "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+    "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+    "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+  ],
+  "reexecucoes": 2,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": "outputs/baseline_testes.json"
+}

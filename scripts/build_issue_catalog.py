@@ -8,8 +8,13 @@ outputs/sast_antes/catalogo_meta.json com os totais de cada etapa (brutos,
 duplicatas removidas, total apos dedupe) -- sem isso esses numeros so
 existiam no print do terminal e se perdiam (ver caderno, F3.6).
 
+IDs estaveis: com --catalogo-anterior, um achado com a mesma assinatura
+mantem o caso_id antigo e os novos continuam a numeracao (catalogo v2 sobre
+o v1, 2026-10-13). triagem_manual vem de config/triagem_manual.yaml e nao
+exclui nada (protocolo, Secao 3, passo 7).
+
 Uso:
-    python scripts/build_issue_catalog.py [--worktree workspace/wt-1]
+    python scripts/build_issue_catalog.py [--worktree workspace/wt-1] [--catalogo-anterior outputs/sast_antes/catalogo_issues_v1.json]
 """
 from __future__ import annotations
 
@@ -25,8 +30,8 @@ from dotenv import dotenv_values
 
 RAIZ_REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ_REPO / "src"))
-from pipeline.sast.semgrep_client import carregar_resultados, assinatura  # noqa: E402
-from pipeline.sast.filtro import filtrar  # noqa: E402
+from pipeline.sast.semgrep_client import RULESETS, carregar_resultados, assinatura, ler_exclusoes  # noqa: E402
+from pipeline.sast.filtro import SEVERIDADES_ACEITAS, filtrar  # noqa: E402
 
 BASELINE_JSON = RAIZ_REPO / "outputs" / "sast_antes" / "baseline_raw.json"
 SAIDA = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_issues.json"
@@ -35,6 +40,8 @@ SAIDA_META = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_meta.json"
 MAPA_CWE = RAIZ_REPO / "config" / "mapa_cwe_vuln.yaml"
 MAPA_OWASP = RAIZ_REPO / "config" / "mapa_owasp.yaml"
 MAPA_RAG = RAIZ_REPO / "config" / "mapa_categoria_rag.yaml"
+TRIAGEM = RAIZ_REPO / "config" / "triagem_manual.yaml"
+EXCLUSOES = RAIZ_REPO / "config" / "semgrepignore"
 # Copia de referencia das regras (ver o README da pasta): pode divergir do
 # que o registro executou na varredura.
 DIR_REGRAS = RAIZ_REPO / "config" / "semgrep-rules-referencia"
@@ -134,15 +141,40 @@ def commit_do_worktree(worktree: Path) -> str:
     return head
 
 
+def funil(findings) -> dict:
+    """Contagem depois de cada passo da Secao 3 (2 a 5), na ordem do protocolo.
+    O catalogo deduplica antes de filtrar; o resultado final e o mesmo, porque
+    categoria, severidade e CWE sao da regra, iguais em todo o (check_id, path)."""
+    f2 = [f for f in findings if f.category == "security"]
+    f3 = [f for f in f2 if f.severity in SEVERIDADES_ACEITAS]
+    f4 = [f for f in f3 if f.cwe]
+    return {"1_brutos_apos_exclusao_de_caminhos": len(findings), "2_categoria_security": len(f2),
+            "3_severidade": len(f3), "4_com_cwe": len(f4),
+            "5_dedup_check_id_path": len({(f.check_id, f.path) for f in f4})}
+
+
+def carregar_triagem() -> dict[tuple[str, str, int], str]:
+    dados = carregar_yaml(TRIAGEM).get("triagem", [])
+    return {(t["check_id"], t["arquivo"], int(t["linha"])): t["status"] for t in dados}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--worktree", default="workspace/wt-1")
+    ap.add_argument("--catalogo-anterior", default=None,
+                    help="mantem o caso_id de achados com a mesma assinatura")
     args = ap.parse_args()
     worktree = (RAIZ_REPO / args.worktree).resolve()
 
     mapa_cwe = carregar_yaml(MAPA_CWE)
     mapa_owasp = carregar_yaml(MAPA_OWASP)
     mapa_rag = carregar_yaml(MAPA_RAG)
+    triagem = carregar_triagem()
+    ids_anteriores: dict[str, str] = {}
+    if args.catalogo_anterior:
+        anterior = json.loads((RAIZ_REPO / args.catalogo_anterior).read_text(encoding="utf-8"))
+        ids_anteriores = {c["assinatura"]: c["caso_id"] for c in anterior if c.get("caso_id")}
+    proximo_id = max((int(i[2:]) for i in ids_anteriores.values()), default=0)
 
     if not BASELINE_JSON.exists():
         raise SystemExit(f"Baseline nao encontrado: {BASELINE_JSON}. Rode F3.2 primeiro.")
@@ -208,13 +240,18 @@ def main() -> None:
             "linhas_arquivo": total_linhas,
             "modo_contexto": modo_contexto,
             "marcador_juiceshop": None,   # preenchido em F3.5
+            "triagem_manual": triagem.get((f.check_id, f.path, f.start_line), "nao_triado"),
             "elegivel": elegivel,
             "motivo_exclusao": motivo,
         }
 
         if elegivel:
             contador += 1
-            entrada["caso_id"] = f"JS{contador:03d}"
+            if entrada["assinatura"] in ids_anteriores:
+                entrada["caso_id"] = ids_anteriores[entrada["assinatura"]]
+            else:
+                proximo_id += 1
+                entrada["caso_id"] = f"JS{proximo_id:03d}"
 
         catalogo.append(entrada)
 
@@ -234,6 +271,15 @@ def main() -> None:
         "total_apos_dedup": len(catalogo),
         "elegiveis": len(elegiveis),
         "excluidos": len(catalogo) - len(elegiveis),
+        "funil_secao_3": funil(findings),
+        "rulesets": RULESETS,
+        "exclusoes_caminho": ler_exclusoes(EXCLUSOES),
+        "catalogo_anterior": args.catalogo_anterior,
+        "casos_mantidos_do_anterior": sorted(e["caso_id"] for e in elegiveis if e["assinatura"] in ids_anteriores),
+        "casos_do_anterior_ausentes": sorted(set(ids_anteriores.values())
+                                             - {e["caso_id"] for e in elegiveis}),
+        "triagem_manual": {k: sum(1 for e in elegiveis if e["triagem_manual"] == k)
+                           for k in ("confirmado", "falso_positivo", "inconclusivo", "nao_triado")},
     }
     SAIDA_META.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Metadados gravados em {SAIDA_META.relative_to(RAIZ_REPO)}")

@@ -1,0 +1,234 @@
+# Triagem manual dos alertas do Semgrep (campo triagem_manual do catalogo).
+# Valores: confirmado | falso_positivo | inconclusivo. Alerta do catalogo sem
+# entrada aqui recebe nao_triado.
+#
+# A triagem NAO exclui nenhum caso: todos os elegiveis vao a execucao (Secao 3.4
+# do TCC 1). Serve para reportar os falsos positivos a parte nas metricas
+# (protocolo, Secao 3, passo 7; decisao do grupo, 2026-10-13).
+#
+# Origem: revisao manual de Matheus Brant na branch semgrep-findings, commit
+# fa044444abe4feb7b53dbf88859c99a45e089352. Unificacao de dois arquivos dela,
+# sem conflito de status entre eles:
+#   config/auditoria_desafios.yaml (fonte: auditoria_desafios; 5 rulesets
+#     originais, p/default e p/security-audit)
+#   outputs/auditoria_sast/combinado-hZGD7r/triagem-final/alertas_classificados.json
+#     (fonte: triagem_final; p/default e regras locais; prevalece se repetir)
+# Ficaram de fora as regras locais tcc.* (nao fazem parte dos rulesets) e os
+# alertas fora de escopo. Chave: (check_id, arquivo, linha de inicio).
+triagem:
+- check_id: generic.secrets.security.detected-generic-secret.detected-generic-secret
+  arquivo: data/static/users.yml
+  linha: 151
+  status: confirmado
+  motivo: O arquivo de dados de inicializacao contem um segredo TOTP de conta administrativa em texto claro; nao foi associado automaticamente a um desafio especifico.
+  fonte: triagem_final
+- check_id: generic.secrets.security.detected-jwt-token.detected-jwt-token
+  arquivo: frontend/src/app/app.guard.spec.ts
+  linha: 46
+  status: falso_positivo
+  motivo: Token JWT publico de exemplo usado somente em teste unitario, nao credencial da aplicacao.
+  fonte: triagem_final
+- check_id: generic.secrets.security.detected-jwt-token.detected-jwt-token
+  arquivo: frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+  linha: 72
+  status: falso_positivo
+  motivo: JWT sintetico com IP de exemplo em teste unitario.
+  fonte: triagem_final
+- check_id: generic.secrets.security.detected-jwt-token.detected-jwt-token
+  arquivo: frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+  linha: 78
+  status: falso_positivo
+  motivo: JWT sintetico sem IP em teste unitario.
+  fonte: triagem_final
+- check_id: generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var
+  arquivo: frontend/src/app/navbar/navbar.component.html
+  linha: 17
+  status: falso_positivo
+  motivo: Em template Angular, alt={{applicationName}} e binding de propriedade com escaping; nao e interpolacao textual de HTML cru.
+  fonte: auditoria_desafios
+- check_id: generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var
+  arquivo: frontend/src/app/purchase-basket/purchase-basket.component.html
+  linha: 15
+  status: falso_positivo
+  motivo: Em template Angular, alt={{element.name}} e binding de propriedade com escaping.
+  fonte: auditoria_desafios
+- check_id: javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop
+  arquivo: frontend/src/hacking-instructor/helpers/helpers.ts
+  linha: 49
+  status: falso_positivo
+  motivo: O loop apenas le uma cadeia de propriedades de configuracao; nao escreve em objetos nem polui prototipos.
+  fonte: triagem_final
+- check_id: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
+  arquivo: lib/codingChallenges.ts
+  linha: 76
+  status: falso_positivo
+  motivo: challengeKey vem das chaves de desafios extraidas de comentarios do proprio codigo, nao de entrada remota.
+  fonte: triagem_final
+- check_id: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
+  arquivo: lib/codingChallenges.ts
+  linha: 78
+  status: falso_positivo
+  motivo: Mesmo uso de chave interna de desafio em regex dinamica; nao ha entrada remota demonstrada.
+  fonte: triagem_final
+- check_id: javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key
+  arquivo: lib/insecurity.ts
+  linha: 42
+  status: confirmado
+  motivo: Chave literal usada em crypto.createHmac no codigo de producao; achado incidental sem mapeamento seguro a desafio.
+  fonte: triagem_final
+- check_id: javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
+  arquivo: lib/insecurity.ts
+  linha: 54
+  status: confirmado
+  motivo: jwt.sign usa privateKey, que e uma chave RSA privada literal definida no mesmo arquivo; nao foi equiparada automaticamente a um desafio.
+  fonte: triagem_final
+- check_id: javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key
+  arquivo: lib/insecurity.ts
+  linha: 150
+  status: confirmado
+  motivo: HMAC do token deluxe reutiliza a privateKey RSA literal embutida no codigo.
+  fonte: triagem_final
+- check_id: javascript.browser.security.eval-detected.eval-detected
+  arquivo: routes/captcha.ts
+  linha: 22
+  status: falso_positivo
+  motivo: Expressao e formada por numeros aleatorios e operadores fixos, sem entrada controlada pelo usuario.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.remote-property-injection.remote-property-injection
+  arquivo: routes/currentUser.ts
+  linha: 31
+  status: confirmado
+  motivo: Parametro fields da query escolhe propriedades de user.data e pode incluir password, enviado na resposta JSON.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-res-sendfile.express-res-sendfile
+  arquivo: routes/fileServer.ts
+  linha: 33
+  status: confirmado
+  motivo: A extensao .md e checada antes de remover %00; teste HTTP local de package.json.bak%2500.md retornou 200 e serviu backup que sem sufixo recebe 403. Nao demonstra traversal fora de ftp.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-res-sendfile.express-res-sendfile
+  arquivo: routes/keyServer.ts
+  linha: 14
+  status: confirmado
+  motivo: Rota publica serve arquivos de encryptionkeys por nome e server.ts ainda expoe listagem desse diretorio; e exposicao de chaves, nao prova de path traversal.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-res-sendfile.express-res-sendfile
+  arquivo: routes/logfileServer.ts
+  linha: 14
+  status: confirmado
+  motivo: Rota publica serve arquivos de logs sem autenticacao; o middleware anterior so registra desafios e chama next.
+  fonte: triagem_final
+- check_id: javascript.express.security.injection.tainted-sql-string.tainted-sql-string
+  arquivo: routes/login.ts
+  linha: 34
+  status: confirmado
+  motivo: Mesmo ponto de SQL injection, reportado por segunda regra.
+  fonte: auditoria_desafios
+- check_id: javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection
+  arquivo: routes/login.ts
+  linha: 34
+  status: confirmado
+  motivo: Consulta SQL monta a clausula WHERE com email controlado pela requisicao.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-res-sendfile.express-res-sendfile
+  arquivo: routes/quarantineServer.ts
+  linha: 14
+  status: inconclusivo
+  motivo: Rota serve arquivos da quarentena sem autenticacao, mas nao foi demonstrado acesso fora do diretorio nem impacto de arquivo especifico.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-open-redirect.express-open-redirect
+  arquivo: routes/redirect.ts
+  linha: 19
+  status: confirmado
+  motivo: res.redirect recebe URL da query; a validacao em lib/insecurity.ts usa includes e pode aceitar destino externo nao permitido.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.possible-user-input-redirect.unknown-value-in-redirect
+  arquivo: routes/redirect.ts
+  linha: 19
+  status: confirmado
+  motivo: Mesmo sink de redirecionamento confirmado em conjunto com a allowlist vulneravel.
+  fonte: auditoria_desafios
+- check_id: javascript.express.security.injection.tainted-sql-string.tainted-sql-string
+  arquivo: routes/search.ts
+  linha: 23
+  status: confirmado
+  motivo: Mesmo ponto de SQL injection, reportado por segunda regra.
+  fonte: auditoria_desafios
+- check_id: javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection
+  arquivo: routes/search.ts
+  linha: 23
+  status: confirmado
+  motivo: Consulta SQL interpola criterios de busca sem parametrizacao.
+  fonte: triagem_final
+- check_id: javascript.browser.security.eval-detected.eval-detected
+  arquivo: routes/userProfile.ts
+  linha: 61
+  status: confirmado
+  motivo: 'Codigo extraido de username persistido passa para eval quando o desafio esta habilitado.
+
+    Revisao: updateUserProfile.ts:38 persiste req.body.username; userProfile.ts:52-61 extrai a expressao do username e executa eval no servidor quando usernameXssChallenge esta habilitado. routes/verify.ts:96-97
+    e o teste Cypress profile.spec.ts vinculam esse caminho a sstiChallenge. O hook isolado nao e a evidencia: a entrada persistida alcanca avaliacao de codigo. Revisao estatica, sem executar payload.'
+  fonte: triagem_final
+- check_id: javascript.lang.security.audit.code-string-concat.code-string-concat
+  arquivo: routes/userProfile.ts
+  linha: 61
+  status: confirmado
+  motivo: 'Revisao explicita da divergencia entre baseline antigo e default revisado: conservar associacao SSTI versionada na rodada 6, alerta e069d02afca88512. O username controlado e persistido por updateUserProfile.ts:38,
+    extraido em userProfile.ts:52-56 e avaliado via eval em 61; condicionado ao desafio habilitado. Mesmo finding e mesma causa, sem novo desafio. Baseline permanece intacto; transferencia usa a revisao
+    atual da matriz 12, nao a associacao anterior do baseline.'
+  fonte: triagem_final
+- check_id: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
+  arquivo: routes/videoHandler.ts
+  linha: 57
+  status: falso_positivo
+  motivo: A string de ataque aparece apenas na verificacao do desafio, nao e inserida no HTML nesta linha.
+  fonte: triagem_final
+- check_id: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
+  arquivo: routes/videoHandler.ts
+  linha: 71
+  status: confirmado
+  motivo: Conteudo do arquivo VTT e concatenado sem escaping dentro de uma tag script; exploracao depende de controlar o arquivo de legendas.
+  fonte: triagem_final
+- check_id: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring
+  arquivo: server.ts
+  linha: 157
+  status: falso_positivo
+  motivo: O primeiro argumento de console.error e uma string estatica concatenada com name; nao ha formato interpretado.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing
+  arquivo: server.ts
+  linha: 269
+  status: confirmado
+  motivo: Middleware publica listagem do diretorio FTP.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing
+  arquivo: server.ts
+  linha: 273
+  status: falso_positivo
+  motivo: O diretorio .well-known contem apenas security.txt, recurso publicamente destinado a descoberta; a listagem nao demonstra exposicao sensivel.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing
+  arquivo: server.ts
+  linha: 277
+  status: confirmado
+  motivo: Rota publica lista o diretorio encryptionkeys que contem chaves usadas pela aplicacao.
+  fonte: triagem_final
+- check_id: javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing
+  arquivo: server.ts
+  linha: 281
+  status: confirmado
+  motivo: Middleware publica listagem dos logs de acesso.
+  fonte: triagem_final
+- check_id: generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var
+  arquivo: views/dataErasureForm.hbs
+  linha: 38
+  status: falso_positivo
+  motivo: Teste isolado com Handlebars 4.7.7 e parser HTML mostrou que caracteres como = sao escapados; payload onfocus=alert(1) nao cria atributo executavel. Permite alterar atributos booleanos, mas nao
+    comprova CWE-79.
+  fonte: auditoria_desafios
+- check_id: javascript.express.security.audit.xss.pug.explicit-unescape.template-explicit-unescape
+  arquivo: views/promotionVideo.pug
+  linha: 75
+  status: falso_positivo
+  motivo: A regra interpreta o operador JavaScript != como interpolacao Pug !=.
+  fonte: triagem_final

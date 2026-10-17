@@ -22,14 +22,18 @@
 |---|---|
 | Ferramenta | Semgrep |
 | Versão | `1.177.0` — registrada em toda execução (Decisão D2) |
-| Rulesets | `p/javascript`, `p/typescript`, `p/nodejs`, `p/expressjs`, `p/owasp-top-ten` |
+| Rulesets | Catálogo v2 (desde 2026-10-13): `p/javascript`, `p/typescript`, `p/nodejs`, `p/expressjs`, `p/owasp-top-ten`, `p/security-audit`, `p/secrets`, `p/xss`, `p/sql-injection`, `p/jwt`, `p/default`. Catálogo v1 (E01, E02): só os cinco primeiros |
 | Flags fixas | `--json --no-git-ignore --metrics=off` |
-| Modo de autenticação | **sem login** (execução anônima) |
+| Modo de autenticação | **sem login** (execução anônima), reafirmado em 2026-10-13 (abaixo e Seção 15) |
 | Worktree de referência | `workspace/wt-1` |
 
 **Risco de não-versionamento conhecido e aceito (D2):** os rulesets do registro não são versionados — podem mudar sem aviso entre execuções em datas diferentes. Mitigação: a versão do Semgrep é registrada em toda execução e o JSON bruto (`outputs/sast_antes/baseline_raw.json`) é arquivado como fonte primária.
 
 **Achado adicional (F3.2):** o Semgrep aplica uma lista de exclusão padrão embutida no próprio binário (reportada como `.semgrepignore patterns`, 1444 arquivos na execução de referência) mesmo sem nenhum `.semgrepignore` explícito no projeto. Essa lista não é controlada por `config/semgrepignore` e está sujeita ao mesmo risco de mudança entre versões.
+
+**Ampliação dos rulesets (2026-10-13, decisão do grupo).** A Seção 3.4 do TCC 1 prevê tentativas sobre todos os alertas produzidos pela ferramenta. Cinco conjuntos genéricos produziram só 12 achados elegíveis num projeto deliberadamente vulnerável. Ampliar a cobertura é mais fiel ao desenho original. Os seis conjuntos acrescentados são os do registro que cobrem as categorias do referencial (auditoria geral, segredos, XSS, SQL injection, JWT) e o conjunto padrão. Antes da adoção, uma varredura de controle com os cinco conjuntos antigos, no mesmo dia, reproduziu exatamente os 15 achados de setembro: a diferença vem dos conjuntos novos, não de mudança no registro.
+
+**Por que continuar sem login (2026-10-13).** O login foi testado (Seção 15) e não foi adotado, por quatro motivos: (1) com login entram regras proprietárias, que não podem ser inspecionadas nem copiadas para a pasta de referência (`config/semgrep-rules-referencia/`); (2) três delas falharam em todos os arquivos, porque exigem o motor pago (Pro); (3) reproduzir o trabalho passaria a exigir conta no Semgrep; (4) o ganho do `fingerprint` só se realizaria trocando também o passo 5 (deduplicação por regra e arquivo), que é pré-registrado.
 
 **Achado adicional (F5, 2026-10-07) — campos indisponíveis sem login.** Na execução anônima, o Semgrep **não** preenche dois campos do JSON: `extra.fingerprint` e `extra.lines` retornam literalmente a string `requires login`. Consequências e tratamento na Seção 6.
 
@@ -42,7 +46,11 @@
    logs/, frontend/src/assets/private/three.js, .github/, .npmrc,
    *.min.js, *.map
    ```
+   Acrescentados em 2026-10-13 (catálogo v2): `*.spec.ts`, `data/static/users.yml`, `frontend/src/hacking-instructor/`, `lib/codingChallenges.ts`.
+
    `data/static/codefixes/` é excluído especificamente como mitigação de contaminação de treinamento (Parte 0, Risco 3). `logs/` e `three.js` foram adicionados após identificar, na execução de referência, que eram respectivamente um artefato de runtime e uma biblioteca de terceiros vendorizada — nenhum dos dois é código-fonte da aplicação. `.github/` e `.npmrc` foram adicionados após a execução de F3.6 revelar que 9 dos 21 findings elegíveis (43%) caíam em workflows de CI/CD e configuração do npm — a mesma fronteira de escopo do Adendo M1 (vulnerabilidades de supply chain/dependências fora do escopo), só identificada mais tarde porque os rulesets usados cobrem YAML incidentalmente. Nenhum dos dois é testável pela suíte automatizada do Juice Shop.
+
+   Os quatro acrescentados em 2026-10-13 falham no critério já vigente, o de código da aplicação coberto pela suíte automatizada. Apareceram quando a ampliação dos rulesets passou a alertar neles. Testes do frontend (`*.spec.ts`) são a mesma categoria de `test/`. `hacking-instructor/` e `lib/codingChallenges.ts` são infraestrutura didática do Juice Shop (tutorial interativo e servidor dos Coding Challenges), da mesma família de `data/static/codefixes/`. `users.yml` é dado de semente do banco, não código. Removem 7 dos 35 achados brutos da varredura ampliada.
 
 2. **Manter apenas findings de `metadata.category == "security"`.**
 
@@ -52,9 +60,33 @@
 
 5. **Deduplicar por `(check_id, path)`** — mesma regra no mesmo arquivo conta uma vez.
 
-6. **Amostragem estratificada por categoria OWASP** (não acionada nesta execução — 12 findings elegíveis, bem abaixo de qualquer `N_max` calculado em F2.4).
+6. **Amostragem estratificada por categoria OWASP** quando o número de elegíveis passa de `N_max`. Não acionada no catálogo v1 (12 elegíveis) nem no v2 (22 elegíveis). A conta refeita com dados reais está na Seção 16: o passo não foi ignorado, apenas não disparou.
 
-### Resultado da execução de referência
+7. **Triagem manual (não exclui).** Cada caso recebe `triagem_manual` (`confirmado`, `falso_positivo`, `inconclusivo` ou `nao_triado`), a partir de `config/triagem_manual.yaml`. Nenhum caso é excluído por ela: a Seção 3.4 do TCC 1 manda tentar corrigir todos os alertas. As métricas incluem os falsos positivos no total e também os reportam à parte. A remoção do alerta de um falso positivo não conta como correção de vulnerabilidade real na discussão. Origem da triagem: revisão manual de Matheus Brant (branch `semgrep-findings`, commit `fa04444`), restrita às regras do registro; ver o cabeçalho do arquivo.
+
+### Resultado do catálogo v2 (2026-10-13, vigente)
+
+Varredura anônima, Semgrep 1.177.0, 11 rulesets, exclusões ampliadas, `wt-1` no commit fixado. Baseline em `outputs/sast_antes/baseline_raw.json`, catálogo em `catalogo_issues.json` e totais em `catalogo_meta.json`.
+
+| Passo | Contagem |
+|---|---:|
+| Brutos antes das exclusões novas (sondagem, mesmos 11 rulesets) | 35 |
+| 1. Brutos após exclusão de caminhos | 28 |
+| 2. Categoria `security` | 28 |
+| 3. Severidade (sai 1 `INFO`) | 27 |
+| 4. Com CWE | 27 |
+| 5. Deduplicação `(check_id, path)` | **22** |
+| 6. Amostragem | não acionada (Seção 16) |
+
+- Os 12 casos do v1 continuam presentes, com os mesmos IDs (JS001–JS012, por assinatura). Os 10 novos são JS013–JS022.
+- Os 22 casos caem em 18 locais distintos do código; quatro locais têm duas regras.
+- Com marcador `vuln-code-snippet`: 5 de 22 (os mesmos 5 do v1).
+- Triagem manual: 15 confirmados, 6 falsos positivos, 1 inconclusivo, nenhum não triado.
+- Por sigla: XSS 5, PATHTRAV 4, SQLI 4, CODEINJ 3, HARDCRED 2, OPENREDIR 2, CREDPROT 1, INFOEXPOSURE 1.
+- Por OWASP 2025: A05 12, A06 5, A01 3, A07 2.
+- Por modo da regra: 12 `taint`, 10 `search`.
+
+### Resultado da execução de referência (catálogo v1, setembro; arquivado como `*_v1`)
 
 > **Nota de reconciliação.** A primeira exclusão de `.github/`/`.npmrc` derrubou os findings brutos de 30 para 15 (queda de 15, não os 9 esperados pela contagem pós-dedupe da execução anterior). Reconciliado: dos 30 brutos originais, 15 já eram código de aplicação (idênticos aos 15 desta execução) e 15 eram de `.github/`/`.npmrc`, dos quais só 9 sobreviviam à deduplicação (6 eram duplicatas internas, mesma regra disparando mais de uma vez no mesmo arquivo de workflow). As siglas `CMDI` e `INTEGRITY` desapareceram por completo da lista final — 100% dos achados dessas duas categorias estavam em configuração de CI/CD, nenhum na aplicação.
 
@@ -73,6 +105,8 @@
 ### 4.1 CWE → sigla de vulnerabilidade (`config/mapa_cwe_vuln.yaml`)
 
 Doze siglas definidas a priori (Decisão D7, a partir do referencial teórico do TCC 1), mais sete adicionadas após rodar o baseline real e encontrar CWEs não previstas (caderno, entrada de 2026-09-25: `CWE-95`, `CWE-73`, `CWE-1357`, `CWE-353`, `CWE-829`, `CWE-601`, `CWE-548`). Duas das adições reaproveitam siglas existentes (mesma família); três (`CWE-1357`, `CWE-353`, `CWE-829`) formaram a sigla `INTEGRITY`, que **não aparece no catálogo final** — todos os achados dessa sigla estavam em `.github/`/`.npmrc`, fora de escopo. A sigla permanece no mapa para o caso de reexecuções com outros rulesets, mas não demanda documento de RAG.
+
+Acrescentadas em 2026-10-13, com a ampliação dos rulesets (decisão do grupo): `CWE-321` → `HARDCRED` (chave criptográfica embutida, mesma família de `CWE-798`); `CWE-522` → `CREDPROT` (sigla nova, credenciais insuficientemente protegidas); `CWE-915` → `MASSASSIGN` (sigla nova, modificação de atributos de objeto). Depois das exclusões de caminho, só `CWE-522` aparece no catálogo v2 (JS017, `routes/currentUser.ts`). Nenhum caso do v2 ficou em `OUTRO`. `CREDPROT` e `MASSASSIGN` ainda não têm categoria em `config/mapa_categoria_rag.yaml`: isso fica pendente da base de conhecimento.
 
 ### 4.2 OWASP 2021 → OWASP 2025 (`config/mapa_owasp.yaml`)
 
@@ -264,8 +298,66 @@ Todo o resto é F, inclusive testes que afirmam que a defesa funciona ou que a a
 - **`d_criterio`:** os três critérios, pela lista do item 6. É a definição usada em `F` e `classificacao_final`, por ser a operacionalização mais fiel à 7.1.
 - Cada validação grava também `F_sem_separacao` (qualquer falha nova reprova, como na E01), para comparação.
 - Os conjuntos são encaixados (`d_marcador` ⊂ `d_criterio`), portanto `F_sem_separacao ≤ F_marcador ≤ F_criterio`. A escada de validação só para quando uma camada falha por algo fora de `d_criterio`, para que as três versões saiam da mesma validação.
-- A cadeia de estratégias só para quando a tentativa é aceita **sem separação** (definição mais estrita). Nas métricas de cada definição, tentativas posteriores ao primeiro aceite **naquela definição** não entram, como se a cadeia tivesse parado ali.
+- A cadeia de estratégias só para quando a tentativa é aceita **sem separação** (definição mais estrita). Nas métricas de cada definição, tentativas posteriores ao primeiro aceite **naquela definição** não entram, como se a cadeia tivesse parado ali. *(Válido para E01 e E02. A partir de 2026-10-13, o orquestrador não interrompe mais a cadeia; ver Seção 14.)*
 - **TCD** (proporção de correções aceitas que fazem cair ao menos um teste de D) é calculada em cada definição; sem separação, é 0 por construção.
 
 A diferença entre as métricas nas duas definições mede quanto do resultado depende da classificação.
 
+**8. Quarta definição: `d_criterio_amplo` (decisão do grupo, 2026-10-13).** É `d_criterio` mais 13 testes (`config/conjunto_d_amplo.json`): os 12 sinalizados do item 6, que pareciam depender de uma falha mas ficaram em F pela regra "em dúvida, F", e o teste de linha do `vuln-code-snippet` (`test/api/vuln-code-snippet.test.ts`, "returns a line-number hint after all text hints are exhausted"). Esse teste afirma que a linha vulnerável do snippet `loginAdminChallenge` é a 15. Uma correção de `routes/login.ts` que reformate a consulta desloca o marcador e o derruba (JS006/P1L na E02). É um teste da infraestrutura didática, não do comportamento da aplicação.
+- Encaixe: `d_marcador ⊂ d_criterio ⊂ d_criterio_amplo`, logo `F_sem_separacao ≤ F_marcador ≤ F_criterio ≤ F_criterio_amplo`. A escada de validação passa a parar só por falha fora de `d_criterio_amplo`, para que as quatro versões saiam da mesma validação.
+- `F` e `classificacao_final` continuam seguindo `d_criterio`. A definição ampla é análise de sensibilidade, como as outras.
+- Execuções anteriores (E01, E02): a definição ausente é refeita camada por camada a partir do arquivo de validação de cada tentativa (`scripts/metricas_execucao.py`). Se a escada original parou numa camada que só falhou por testes da definição, as camadas seguintes não rodaram e o F fica indeterminado. As definições já gravadas são recalculadas do mesmo modo e conferidas: todas bateram.
+- Efeito na E02: no desenho, nenhum caso novo é aceito (sobe só o TPF: JS001/P1 e P2 passam em F, mas têm `R = 0`). No diagnóstico, JS006/P1L passa a ser aceito (P1L de 2 para 3 aceitos).
+
+
+## 14. Duas leituras das métricas: por estratégia e cadeia sequencial
+
+**Problema (identificado em 2026-10-13, depois da E02).** A cadeia da Seção 13, item 7, corta as tentativas de um caso no primeiro aceite. Calculadas sobre a cadeia, as métricas por estratégia ficam viciadas: o P2 só entra nos casos em que o P1 falhou. Na E02 com `d_criterio`, isso fazia o P2 aparecer com 0 aceites em 9 tentativas, quando na verdade ele foi aceito em JS005 e JS006. Os dois casos saíam da conta porque o P1 já tinha sido aceito neles. Comparar estratégias por essa tabela compara populações diferentes.
+
+**Decisão.** As métricas passam a ser reportadas em duas leituras separadas, em cada definição de F (sem separação, `d_marcador`, `d_criterio`):
+
+- **(a) Por estratégia, independente da cadeia.** Cada estratégia sobre todos os casos em que foi executada, com o mesmo denominador (`m` = casos). Responde à pergunta de pesquisa (qual estratégia de prompt corrige mais). Só é válida se a estratégia rodou em todos os casos. O script marca a leitura como incompleta e lista os casos faltantes quando a cadeia foi interrompida antes dela.
+- **(b) Cadeia sequencial**, como definida no TCC 1 (Figura 2): por caso, as estratégias em ordem até o primeiro aceite naquela definição. Responde se o pipeline consegue corrigir: TRV por caso e TRV por tentativa da cadeia.
+
+Implementação: `scripts/metricas_execucao.py` grava `a_por_estrategia` e `b_cadeia` em `outputs/resultados_consolidados/<EXECUCAO>_metricas.json`. A leitura (b) é numericamente idêntica ao cálculo anterior (conferido para E01 e E02).
+
+**Condição para a leitura (a) nas próximas execuções.** O orquestrador interrompe a cadeia quando uma tentativa é aceita sem separação (Seção 13, item 7). Na E01 e na E02 isso nunca ocorreu, então P1 e P2 rodaram nos 12 casos e a leitura (a) está completa. Com P3/P4, um aceite estrito deixaria as estratégias seguintes sem dado naquele caso. Para manter a leitura (a) completa, todas as estratégias precisam rodar em todos os casos, e a cadeia passa a ser reconstruída só na análise, como já é feito por definição. Essa mudança no orquestrador aumenta o custo (no pior caso, 4 chamadas por caso) e depende de decisão do grupo.
+
+**Decisão (2026-10-13).** O orquestrador passa a rodar **todas as estratégias em todos os casos, sem interromper no aceite** (`processar_caso` em `src/pipeline/run_pipeline.py`). É a condição para a leitura (a) ser válida: sem ela, uma estratégia posterior a um aceite fica sem dado naquele caso, e as estratégias passam a ser comparadas sobre populações diferentes. A cadeia sequencial do TCC 1 (leitura b) continua sendo reportada, mas reconstruída no cálculo de métricas a partir dos dados completos, em cada definição de F. O custo por caso fica fixo em 4 chamadas do desenho (mais 1 por condição de diagnóstico); o dimensionamento está na Seção 16.
+
+## 15. Sondagem: efeito do login do Semgrep sobre a cobertura (resultado para a Discussão)
+
+**Desenho.** Em 2026-10-13, a mesma varredura foi feita duas vezes: anônima e autenticada (`semgrep login`, conta pessoal), em sequência, com Semgrep 1.177.0, os cinco rulesets do catálogo v1, o worktree `wt-1` limpo no commit fixado e as mesmas exclusões. A varredura anônima do mesmo dia reproduziu exatamente os 15 achados de setembro, então a diferença abaixo se deve só ao login. Script: `scripts/sondagem_rulesets.py`. Os JSONs brutos de 13/10 não foram versionados e se perderam na reversão de 13/10 (caderno, 2026-10-16). As varreduras anônimas foram refeitas em 2026-10-16 (`outputs/sondagens/semgrep_2026-10-16/anonimo_5rulesets/` e `anonimo_11rulesets/`), com os mesmos números. A autenticada **não foi refeita** (decisão do grupo: não usar login); os números abaixo são os medidos em 13/10 e registrados no caderno.
+
+| Item | Anônimo | Autenticado |
+|---|---:|---:|
+| Achados brutos | 15 | 37 |
+| Regras distintas que dispararam | 7 | 16 |
+| Elegíveis após o filtro da Seção 3 | 12 | 29 |
+| `extra.fingerprint` preenchido | 0/15 | 37/37 |
+| `extra.lines` preenchido | 0/15 | 37/37 |
+| Erros reportados pelo Semgrep | 8 | 971 |
+
+**De onde vem a diferença.** Com login, os mesmos rulesets do registro (`p/javascript` etc.) passam a incluir regras proprietárias, marcadas com `metadata.semgrep.dev.rule.origin = pro_rules` e licença "Semgrep Rules License v1.0". As 9 regras que só aparecem com login são todas desse tipo. Nenhuma regra do modo anônimo deixou de disparar, e os 12 elegíveis do v1 continuam presentes.
+
+**Os 17 elegíveis novos.** Estão em 10 locais novos do código, todos em código da aplicação. O mais relevante: a regra `express-mongo-nosqli` aponta injeção NoSQL em seis rotas, `routes/dataExport.ts`, `likeProductReviews.ts`, `orderHistory.ts`, `showProductReviews.ts`, `trackOrder.ts` e `updateProductReviews.ts`. São rotas ligadas a desafios do Juice Shop, que o modo anônimo não detecta com nenhum dos 11 rulesets. Os demais são fixação de sessão e cookies sem atributos seguros (`lib/insecurity.ts:192`, `routes/updateUserProfile.ts:42`), chave privada embutida (`lib/insecurity.ts:21`) e segredo do Sequelize (`models/index.ts:33`). Os outros 7 novos repetem locais já do catálogo (`login.ts:34`, `search.ts:23`, `redirect.ts:19`, `userProfile.ts:61`) com regras adicionais. CWEs fora do mapa: CWE-943 (6), CWE-732 (2) e CWE-384 (2).
+
+**Os 971 erros.** 963 são "Internal matching error" de três regras proprietárias (`cryptojs-weak-algorithm`, `cors-default-config-express`, `cors-default-config-koa`). Elas usam um operador que, segundo a própria mensagem, "is only supported in the Pro engine". No motor OSS (`engine_requested: OSS`), elas falham em todos os arquivos varridos. Os 8 restantes são os mesmos avisos de parsing parcial do modo anônimo. Portanto, mesmo autenticado, parte dos rulesets não roda sem o motor pago, e só a contagem de erros denuncia isso.
+
+**Uso no trabalho.** O login não foi adotado (Seção 2). O achado entra na Discussão como evidência sobre cobertura de ferramenta SAST: a mesma ferramenta, a mesma versão e os mesmos rulesets nominais produzem 12 ou 29 casos elegíveis conforme o modo de acesso. A diferença está concentrada numa classe de vulnerabilidade (injeção NoSQL) que a versão aberta não cobre no alvo. Medidas de "taxa de remediação" baseadas em SAST dependem dessa escolha, que raramente é reportada.
+
+## 16. Dimensionamento (`N_max`) refeito com dados reais e o passo 6
+
+A F2.4 do guia dimensiona por tempo de máquina: `N_max ≈ tempo_disponível / (chamadas_por_caso × custo_por_tentativa)`, em vulnerabilidades. A D9 limita também o gasto com a API (`MAX_USD`). Como o passo 6 depende de `N_max`, a conta foi refeita em 2026-10-13 com os dados medidos, nas duas dimensões. Desde a Seção 14, todas as estratégias rodam sempre. Por caso: 4 chamadas do desenho (P1–P4) e mais 1 se o diagnóstico P1L for mantido. A conta usa 5, o caso mais caro.
+
+**Dinheiro.** 33 chamadas reais até agora (E01: 19, E02: 12, EXP01 e EXP02: 2), US$ 0,044848 no total, ou seja, **US$ 0,00136 por chamada** (mediana 0,00128; máxima 0,00352). Orçamento `MAX_USD = 5,00`, restante US$ 4,955.
+- `N_max = 4,955 / (5 × 0,00136) ≈ 729` casos.
+- Pessimista, supondo que todas as chamadas custem US$ 0,0035, acima da máxima observada (P3/P4 levam documento de RAG, prompts maiores): `4,955 / (5 × 0,0035) ≈ 283` casos.
+
+**Tempo.** Na E02, uma tentativa aplicada levou em média 121,1 s (LLM + SAST + validação; mediana 109,3 s), bem acima dos 16 s da F2.4, que só mediam a validação. Com as 8 h de máquina do exemplo do guia:
+- Sequencial: `28.800 / (5 × 121,1) ≈ 47` casos.
+- Com K = 4 worktrees em paralelo (E02: 1.050 s de parede para 36 tentativas, 29,2 s por tentativa): `28.800 / (5 × 29,2) ≈ 197` casos.
+
+**Conclusão.** O menor `N_max` é o do tempo sequencial, cerca de 47. O catálogo v2 tem 22 casos, abaixo de todos os limites. **O passo 6 foi avaliado e não disparou**; ele continua valendo para reexecuções que ampliem o catálogo.
+
+**Restrição operacional, não metodológica.** O guarda-corpo `MAX_LLM_CALLS = 60` (`.env`) já está em 33 chamadas e deixa 27, o equivalente a 5 casos com 5 chamadas. Ele foi dimensionado para o catálogo v1 e precisa ser aumentado antes da E03 (decisão do grupo). **Atualização (2026-10-16):** aumentado para `MAX_LLM_CALLS = 150` antes da E03 (decisão do Caio). Para referência, a E03 sobre o v2 faria até 22 × 5 = 110 tentativas. As de P1/P2 com prompt idêntico ao da E02 vêm do cache e não contam no orçamento (D8).

@@ -1,0 +1,98 @@
+{
+  "descricao": "Testes acrescentados a d_criterio para formar d_criterio_amplo (protocolo, Secao 13, item 8). Os 12 sinalizados de config/conjunto_d.json (rejeitados com motivo SINALIZADO) e o teste de linha do vuln-code-snippet. Decisao do grupo, 2026-10-13. d_criterio esta contido em d_criterio_amplo.",
+  "fonte_sinalizados": "config/conjunto_d.json",
+  "commit_alvo_varrido": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "extra": [
+    {
+      "arquivo": "test/api/file-serving.test.ts",
+      "linha_it": 135,
+      "nome": "GET serves a directory listing",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: listagem de diretorio sem carga de ataque (GET simples)"
+    },
+    {
+      "arquivo": "test/api/ftp-folder.test.ts",
+      "linha_it": 24,
+      "nome": "GET serves a directory listing",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: listagem de diretorio sem carga de ataque (GET simples)"
+    },
+    {
+      "arquivo": "test/api/file-serving.test.ts",
+      "linha_it": 204,
+      "nome": "GET folder containing access log files for \"Access Log\" challenge",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: log de acesso exposto, sem carga de ataque"
+    },
+    {
+      "arquivo": "test/api/logfile-server.test.ts",
+      "linha_it": 21,
+      "nome": "GET access log file for the current day",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: log de acesso exposto, sem carga de ataque"
+    },
+    {
+      "arquivo": "test/api/api.test.ts",
+      "linha_it": 29,
+      "nome": "GET error message with information leakage when calling unrecognized path with /rest in it",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: vazamento de erro que nao e de SQL (fora do criterio c)"
+    },
+    {
+      "arquivo": "test/api/redirect.test.ts",
+      "linha_it": 70,
+      "nome": "GET error message with information leakage when calling /redirect without query parameter",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: vazamento de erro que nao e de SQL (fora do criterio c)"
+    },
+    {
+      "arquivo": "test/api/redirect.test.ts",
+      "linha_it": 81,
+      "nome": "GET error message with information leakage when calling /redirect with unrecognized query parameter",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: vazamento de erro que nao e de SQL (fora do criterio c)"
+    },
+    {
+      "arquivo": "test/api/erasure-request.test.ts",
+      "linha_it": 90,
+      "nome": "POST erasure request with non-existing file path as layout parameter throws error",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: vazamento de erro do sistema de arquivos (fora do criterio c)"
+    },
+    {
+      "arquivo": "test/api/file-upload.test.ts",
+      "linha_it": 124,
+      "nome": "POST zip file with directory traversal payload",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: zip com traversal devolve 204, mas uma implementacao segura tambem pode devolver 204"
+    },
+    {
+      "arquivo": "test/api/b2b-order.test.ts",
+      "linha_it": 37,
+      "nome": "POST busy spinning regex attack does not raise an error",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: ReDoS devolve 503; nao afirma sucesso do ataque"
+    },
+    {
+      "arquivo": "test/api/data-export.test.ts",
+      "linha_it": 52,
+      "nome": "Export data with empty JSON body but valid token still succeeds without CAPTCHA",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: exportacao sem CAPTCHA; sem carga de ataque"
+    },
+    {
+      "arquivo": "test/api/data-export.test.ts",
+      "linha_it": 72,
+      "nome": "Export data without use of CAPTCHA",
+      "origem": "sinalizado",
+      "motivo": "SINALIZADO: exportacao sem CAPTCHA; sem carga de ataque"
+    },
+    {
+      "arquivo": "test/api/vuln-code-snippet.test.ts",
+      "linha_it": 177,
+      "nome": "returns a line-number hint after all text hints are exhausted",
+      "origem": "linha_vuln_code_snippet",
+      "motivo": "Afirma que a linha vulneravel do snippet loginAdminChallenge e a 15 (/Line 15 is responsible/). Qualquer correcao que reformate routes/login.ts desloca o marcador vuln-code-snippet vuln-line e derruba o teste (JS006/P1L na E02)."
+    }
+  ]
+}

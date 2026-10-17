@@ -1,5 +1,109 @@
 [
   {
+    "caso_id": "JS013",
+    "assinatura": "e0ff50997f7fcfe3ebf148afc4dc9d28699043069e7b9f4a905c091ec47d9039",
+    "check_id": "generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": false,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "frontend/src/app/navbar/navbar.component.html",
+    "linha_inicio": 17,
+    "linha_fim": 17,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "Detected a unquoted template variable as an attribute. If unquoted, a malicious actor could inject custom JavaScript handlers. To fix this, add quotes around the template expression, like this: \"{{ expr }}\".",
+    "cwe": [
+      "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+    ],
+    "owasp_2021": [
+      "A07:2017 - Cross-Site Scripting (XSS)",
+      "A03:2021 - Injection",
+      "A05:2025 - Injection"
+    ],
+    "owasp_2025": "A05",
+    "sigla_vuln": "XSS",
+    "categoria_rag": "cross_site_scripting",
+    "trecho": "\n    <button mat-button routerLink=\"/search\" class=\"buttons nav-home-button\" aria-label=\"Back to homepage\">\n      <div id=\"homeButton\">\n        <img [src]=\"logoSrc\" class=\"logo\" alt={{applicationName}}>\n        <span class=\"hide-lt-sm app-name\"> {{applicationName}} </span>\n      </div>\n    </button>\n",
+    "trecho_linha_inicio": 14,
+    "trecho_linha_fim": 20,
+    "linhas_arquivo": 243,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "falso_positivo",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS014",
+    "assinatura": "d419b683a6747ae4880293c57bd64c62da00c0802ba087211c861a3c21f2d6fc",
+    "check_id": "generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": false,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "frontend/src/app/purchase-basket/purchase-basket.component.html",
+    "linha_inicio": 15,
+    "linha_fim": 15,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "Detected a unquoted template variable as an attribute. If unquoted, a malicious actor could inject custom JavaScript handlers. To fix this, add quotes around the template expression, like this: \"{{ expr }}\".",
+    "cwe": [
+      "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+    ],
+    "owasp_2021": [
+      "A07:2017 - Cross-Site Scripting (XSS)",
+      "A03:2021 - Injection",
+      "A05:2025 - Injection"
+    ],
+    "owasp_2025": "A05",
+    "sigla_vuln": "XSS",
+    "categoria_rag": "cross_site_scripting",
+    "trecho": "  <ng-container matColumnDef=\"image\">\n    <mat-header-cell *matHeaderCellDef class=\"header-hidden\"></mat-header-cell>\n    <mat-cell *matCellDef=\"let element\" class=\"content-align\">\n      <img [src]=\"'assets/public/images/products/'+element.image\" alt={{element.name}}\n        class=\"img-responsive img-thumbnail\">\n      </mat-cell>\n      <mat-footer-cell *matFooterCellDef class=\"content-align\"></mat-footer-cell>\n",
+    "trecho_linha_inicio": 12,
+    "trecho_linha_fim": 18,
+    "linhas_arquivo": 69,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "falso_positivo",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS015",
+    "assinatura": "32e6f2b1082789b3df5fad788f8a9231ed94a8da6ada16dc3f92712a2dbaf56d",
+    "check_id": "javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": true,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "lib/insecurity.ts",
+    "linha_inicio": 42,
+    "linha_fim": 42,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "Detected a hardcoded hmac key. Avoid hardcoding secrets and consider using an alternate option such as reading the secret from a config file or using an environment variable.",
+    "cwe": [
+      "CWE-798: Use of Hard-coded Credentials"
+    ],
+    "owasp_2021": [
+      "A07:2021 - Identification and Authentication Failures",
+      "A07:2025 - Authentication Failures"
+    ],
+    "owasp_2025": "A07",
+    "sigla_vuln": "HARDCRED",
+    "categoria_rag": "cryptographic_failures",
+    "trecho": "}\n\nexport const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\nexport const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\n\nexport const cutOffPoisonNullByte = (str: string) => {\n  const nullByte = '%00'\n",
+    "trecho_linha_inicio": 39,
+    "trecho_linha_fim": 45,
+    "linhas_arquivo": 197,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
     "caso_id": "JS001",
     "assinatura": "7c99437c12bb75b8d6bb5b063ba28cf236cfeccf48d0423a8d8047c4e9516d7b",
     "check_id": "javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
@@ -29,6 +133,78 @@
     "linhas_arquivo": 197,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS016",
+    "assinatura": "0cb7f996eb86f0a1c3606f03752440187ce9122f79c5a5dce4c2c5d1451d44af",
+    "check_id": "javascript.browser.security.eval-detected.eval-detected",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": false,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "routes/captcha.ts",
+    "linha_inicio": 22,
+    "linha_fim": 22,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+    "cwe": [
+      "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+    ],
+    "owasp_2021": [
+      "A03:2021 - Injection",
+      "A05:2025 - Injection"
+    ],
+    "owasp_2025": "A05",
+    "sigla_vuln": "CODEINJ",
+    "categoria_rag": "injection",
+    "trecho": "    const secondOperator = operators[Math.floor((Math.random() * 3))]\n\n    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\n\n    const captcha = {\n      captchaId,\n",
+    "trecho_linha_inicio": 19,
+    "trecho_linha_fim": 25,
+    "linhas_arquivo": 46,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "falso_positivo",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS017",
+    "assinatura": "f01a67fc43ed935abc072e64679dcb68f2a5422496860a5268d1108527de8d8b",
+    "check_id": "javascript.express.security.audit.remote-property-injection.remote-property-injection",
+    "subcategoria_regra": "vuln",
+    "audit_no_check_id": true,
+    "modo_regra": "taint",
+    "saneadores_regra": [
+      "var $X = ..."
+    ],
+    "arquivo": "routes/currentUser.ts",
+    "linha_inicio": 31,
+    "linha_fim": 31,
+    "severidade": "ERROR",
+    "severidade_normalizada": "ALTA",
+    "mensagem": "Bracket object notation with user input is present, this might allow an attacker to access all properties of the object and even it's prototype. Use literal values for object properties.",
+    "cwe": [
+      "CWE-522: Insufficiently Protected Credentials"
+    ],
+    "owasp_2021": [
+      "A02:2017 - Broken Authentication",
+      "A04:2021 - Insecure Design",
+      "A06:2025 - Insecure Design"
+    ],
+    "owasp_2025": "A06",
+    "sigla_vuln": "CREDPROT",
+    "categoria_rag": null,
+    "trecho": "          // When fields are specified, return only those fields\n          for (const field of requestedFields) {\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\n              baseUser[field] = user?.data[field as keyof typeof user.data]\n            }\n          }\n        } else {\n",
+    "trecho_linha_inicio": 28,
+    "trecho_linha_fim": 34,
+    "linhas_arquivo": 61,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -62,6 +238,7 @@
     "linhas_arquivo": 55,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -95,6 +272,7 @@
     "linhas_arquivo": 20,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -128,6 +306,7 @@
     "linhas_arquivo": 20,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -165,6 +344,7 @@
     "linhas_arquivo": 83,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": "loginAdminChallenge, loginBenderChallenge, loginJimChallenge",
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -199,6 +379,7 @@
     "linhas_arquivo": 83,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": "loginAdminChallenge, loginBenderChallenge, loginJimChallenge",
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -232,6 +413,41 @@
     "linhas_arquivo": 20,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": null,
+    "triagem_manual": "inconclusivo",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS018",
+    "assinatura": "e6ecc8678659b3b9f53f5b32172e885a1af85b8c711187178241eafd7a6a29a2",
+    "check_id": "javascript.express.security.audit.possible-user-input-redirect.unknown-value-in-redirect",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": true,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "routes/redirect.ts",
+    "linha_inicio": 19,
+    "linha_fim": 19,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "It looks like 'toUrl' is read from user input and it is used to as a redirect. Ensure 'toUrl' is not externally controlled, otherwise this is an open redirect.",
+    "cwe": [
+      "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+    ],
+    "owasp_2021": [
+      "A01:2021 - Broken Access Control",
+      "A01:2025 - Broken Access Control"
+    ],
+    "owasp_2025": "A01",
+    "sigla_vuln": "OPENREDIR",
+    "categoria_rag": "broken_access_control",
+    "trecho": "    if (security.isRedirectAllowed(toUrl)) {\n      challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })\n      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\n      res.redirect(toUrl)\n    } else {\n      res.status(406)\n      next(new Error('Unrecognized target URL for redirect: ' + toUrl))\n",
+    "trecho_linha_inicio": 16,
+    "trecho_linha_fim": 22,
+    "linhas_arquivo": 33,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -265,6 +481,7 @@
     "linhas_arquivo": 33,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -302,6 +519,7 @@
     "linhas_arquivo": 74,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": "dbSchemaChallenge, unionSqlInjectionChallenge",
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -336,6 +554,41 @@
     "linhas_arquivo": 74,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": "dbSchemaChallenge, unionSqlInjectionChallenge",
+    "triagem_manual": "confirmado",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS019",
+    "assinatura": "d783f820b23dde3bc30086345a1ce2703fe89bf5a97753b1ad00d8deccb607f3",
+    "check_id": "javascript.browser.security.eval-detected.eval-detected",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": false,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "routes/userProfile.ts",
+    "linha_inicio": 61,
+    "linha_fim": 61,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+    "cwe": [
+      "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+    ],
+    "owasp_2021": [
+      "A03:2021 - Injection",
+      "A05:2025 - Injection"
+    ],
+    "owasp_2025": "A05",
+    "sigla_vuln": "CODEINJ",
+    "categoria_rag": "injection",
+    "trecho": "        if (!code) {\n          throw new Error('Username is null')\n        }\n        username = eval(code) // eslint-disable-line no-eval\n      } catch (err) {\n        username = '\\\\' + username\n      }\n",
+    "trecho_linha_inicio": 58,
+    "trecho_linha_fim": 64,
+    "linhas_arquivo": 103,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
   },
@@ -369,8 +622,78 @@
     "linhas_arquivo": 103,
     "modo_contexto": "arquivo_completo",
     "marcador_juiceshop": null,
+    "triagem_manual": "confirmado",
     "elegivel": true,
     "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS020",
+    "assinatura": "0b375035ad5f64e4001cdd230e77d631044b150acb7e2c3707d2c95444f33e8d",
+    "check_id": "javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": true,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "routes/videoHandler.ts",
+    "linha_inicio": 57,
+    "linha_fim": 57,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "Cannot determine what 'subs' is and it is used with a '<script>' tag. This could be susceptible to cross-site scripting (XSS). Ensure 'subs' is not externally controlled, or sanitize this data.",
+    "cwe": [
+      "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+    ],
+    "owasp_2021": [
+      "A07:2017 - Cross-Site Scripting (XSS)",
+      "A03:2021 - Injection",
+      "A05:2025 - Injection"
+    ],
+    "owasp_2025": "A05",
+    "sigla_vuln": "XSS",
+    "categoria_rag": "cross_site_scripting",
+    "trecho": "      let template = buf.toString()\n      const subs = getSubsFromFile()\n\n      challengeUtils.solveIf(challenges.videoXssChallenge, () => { return utils.contains(subs, '</script><script>alert(`xss`)</script>') })\n\n      const themeKey = config.get<string>('application.theme') as keyof typeof themes\n      const theme = themes[themeKey] || themes['bluegrey-lightgreen']\n",
+    "trecho_linha_inicio": 54,
+    "trecho_linha_fim": 60,
+    "linhas_arquivo": 92,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "falso_positivo",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": null,
+    "assinatura": "be748b6ea68e154745ff68c7c43af8b1927d05d74140b3ccf9fa4f4dc6659e6a",
+    "check_id": "javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": true,
+    "modo_regra": null,
+    "saneadores_regra": null,
+    "arquivo": "server.ts",
+    "linha_inicio": 157,
+    "linha_fim": 157,
+    "severidade": "INFO",
+    "severidade_normalizada": null,
+    "mensagem": "Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.",
+    "cwe": [
+      "CWE-134: Use of Externally-Controlled Format String"
+    ],
+    "owasp_2021": [
+      "A01:2021 - Broken Access Control",
+      "A01:2025 - Broken Access Control"
+    ],
+    "owasp_2025": null,
+    "sigla_vuln": null,
+    "categoria_rag": null,
+    "trecho": "      end()\n      return res\n    } catch (err) {\n      console.error('Error in timed startup function: ' + name, err)\n      throw err\n    }\n  }\n",
+    "trecho_linha_inicio": 154,
+    "trecho_linha_fim": 160,
+    "linhas_arquivo": null,
+    "modo_contexto": null,
+    "marcador_juiceshop": null,
+    "triagem_manual": "falso_positivo",
+    "elegivel": false,
+    "motivo_exclusao": "severidade 'INFO' fora de ['CRITICAL', 'ERROR', 'HIGH', 'MEDIUM', 'WARNING']"
   },
   {
     "caso_id": "JS012",
@@ -403,6 +726,77 @@
     "linhas_arquivo": 791,
     "modo_contexto": "janela_contexto",
     "marcador_juiceshop": "accessLogDisclosureChallenge, directoryListingChallenge",
+    "triagem_manual": "confirmado",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS021",
+    "assinatura": "7a4e222a5b1c08047a1fba1e8bd854bdfe3205cf5babade1f42c03d470db40fb",
+    "check_id": "generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": false,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "views/dataErasureForm.hbs",
+    "linha_inicio": 38,
+    "linha_fim": 38,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "Detected a unquoted template variable as an attribute. If unquoted, a malicious actor could inject custom JavaScript handlers. To fix this, add quotes around the template expression, like this: \"{{ expr }}\".",
+    "cwe": [
+      "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+    ],
+    "owasp_2021": [
+      "A07:2017 - Cross-Site Scripting (XSS)",
+      "A03:2021 - Injection",
+      "A05:2025 - Injection"
+    ],
+    "owasp_2025": "A05",
+    "sigla_vuln": "XSS",
+    "categoria_rag": "cross_site_scripting",
+    "trecho": "        <form action=\"/dataerasure\" method=\"POST\">\n            <div class=\"form-field\">\n                <label for=\"email\">Confirm Email Address</label>\n                <input type=\"email\" required placeholder={{userEmail}} name=\"email\" id=\"email\">\n            </div>\n            <div class=\"form-field\">\n                <label for=\"securityAnswer\">Answer</label>\n",
+    "trecho_linha_inicio": 35,
+    "trecho_linha_fim": 41,
+    "linhas_arquivo": 52,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "falso_positivo",
+    "elegivel": true,
+    "motivo_exclusao": null
+  },
+  {
+    "caso_id": "JS022",
+    "assinatura": "15276186ce480c1dcb4770c57d1e45b57b6447fcf195fbed065870b327b54ba4",
+    "check_id": "javascript.express.security.audit.xss.pug.explicit-unescape.template-explicit-unescape",
+    "subcategoria_regra": "audit",
+    "audit_no_check_id": true,
+    "modo_regra": "search",
+    "saneadores_regra": [],
+    "arquivo": "views/promotionVideo.pug",
+    "linha_inicio": 75,
+    "linha_fim": 75,
+    "severidade": "WARNING",
+    "severidade_normalizada": "MEDIA",
+    "mensagem": "Detected an explicit unescape in a Pug template, using either '!=' or '!{...}'. If external data can reach these locations, your application is exposed to a cross-site scripting (XSS) vulnerability. If you must do this, ensure no external data can reach this location.",
+    "cwe": [
+      "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+    ],
+    "owasp_2021": [
+      "A07:2017 - Cross-Site Scripting (XSS)",
+      "A03:2021 - Injection",
+      "A05:2025 - Injection"
+    ],
+    "owasp_2025": "A05",
+    "sigla_vuln": "XSS",
+    "categoria_rag": "cross_site_scripting",
+    "trecho": "            for (var i = 0; i < lines.length; i++) {\n            if (lines[i].indexOf('-->') >= 0) {\n            var splitted = lines[i].split(/[ \\\\t]+-->[ \\t]+/);\n            if (splitted.length != 2) {\n            throw 'Error when splitting \"-->\": ' + lines[i];\n            }\n            // Already ignoring anything past the \"end\" timestamp (i.e. cue settings).\n",
+    "trecho_linha_inicio": 72,
+    "trecho_linha_fim": 78,
+    "linhas_arquivo": 112,
+    "modo_contexto": "arquivo_completo",
+    "marcador_juiceshop": null,
+    "triagem_manual": "falso_positivo",
     "elegivel": true,
     "motivo_exclusao": null
   }

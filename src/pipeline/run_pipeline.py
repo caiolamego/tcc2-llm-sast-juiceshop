@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """Orquestracao do experimento (F6, Figura 2 do TCC 1).
 
-Para cada caso do catalogo (em paralelo, ate K worktrees), as estrategias
-rodam em sequencia e param na primeira que satisfaz R, F e M:
+Para cada caso do catalogo (em paralelo, ate K worktrees), TODAS as
+estrategias rodam, em sequencia, sem parar no aceite (decisao do grupo,
+2026-10-13; protocolo, Secao 14). A cadeia do TCC 1 (parar na primeira que
+satisfaz R, F e M) e reconstruida em scripts/metricas_execucao.py:
 
     prompt -> LLM -> patch -> SAST depois -> validacao -> R, F, M -> execucoes.jsonl
 
 Metodo do R (decisao do grupo, 2026-10-07): o "antes" e a varredura do
 worktree limpo feita no inicio da sessao (outputs/sast_antes/<EXECUCAO>_baseline_raw.json),
-e nao o baseline de setembro, porque os rulesets do registro nao sao
-versionados. O baseline de setembro continua sendo a origem do catalogo; as
-duas varreduras sao comparadas no inicio.
+e nao o baseline de referencia, porque os rulesets do registro nao sao
+versionados. O baseline de referencia (outputs/sast_antes/baseline_raw.json)
+continua sendo a origem do catalogo; as duas varreduras sao comparadas no inicio.
 
 Uso:
     python src/pipeline/run_pipeline.py --execucao E01 --estrategias P1,P2 [--casos JS001,JS003] [--k 4] [--dry-run]
@@ -19,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -47,7 +50,11 @@ from pipeline.target.workspace import PoolWorktrees  # noqa: E402
 from pipeline.validation.runner import ConfigValidacao, validar  # noqa: E402
 
 CATALOGO = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_issues.json"
-BASELINE_SETEMBRO = RAIZ_REPO / "outputs" / "sast_antes" / "baseline_raw.json"
+# Origem do catalogo vigente (v2, 11 rulesets, 2026-10-13). O de setembro
+# (v1, E01/E02) esta em baseline_raw_v1.json.
+BASELINE_REFERENCIA = RAIZ_REPO / "outputs" / "sast_antes" / "baseline_raw.json"
+# Definicoes de F (protocolo, Secao 13). F e classificacao_final seguem criterio.
+DEFS_F = ("sem_separacao", "marcador", "criterio", "criterio_amplo")
 PROJETO = "OWASP Juice Shop v20.1.1"
 
 console = Console()
@@ -59,12 +66,21 @@ console = Console()
 
 @dataclass
 class Saidas:
+    """Raiz outputs/ (ou outputs/dry_run/). sast_antes/ e resultados_consolidados/
+    sao comuns as execucoes; os artefatos de cada tentativa (prompts,
+    respostas_llm, patches, codigos_corrigidos, sast_depois, testes) ficam em
+    <raiz>/<EXECUCAO>/, para o .gitignore separar dry-run de resultado real
+    com uma linha so (decisao do grupo, 2026-10-13)."""
     raiz: Path
+    execucao: str
 
     def d(self, nome: str) -> Path:
         p = self.raiz / nome
         p.mkdir(parents=True, exist_ok=True)
         return p
+
+    def t(self, nome: str) -> Path:
+        return self.d(f"{self.execucao}/{nome}")
 
     @property
     def execucoes(self) -> Path:
@@ -91,7 +107,7 @@ def _elegiveis_dedup(findings: list[Finding]) -> set[str]:
 def varredura_da_sessao(pool: PoolWorktrees, saidas: Saidas, execucao: str,
                         catalogo: list[dict]) -> tuple[list[Finding], dict]:
     """Varre o worktree limpo (ou reaproveita a varredura desta execucao) e
-    compara com o baseline de setembro."""
+    compara com o baseline de referencia."""
     arq = saidas.baseline_sessao(execucao)
     reutilizada = arq.exists()
     with pool.alugar() as wt:
@@ -102,23 +118,23 @@ def varredura_da_sessao(pool: PoolWorktrees, saidas: Saidas, execucao: str,
                      exclusoes=ler_exclusoes(RAIZ_REPO / "config" / "semgrepignore"))
             console.log(f"  concluida em {time.monotonic() - inicio:.0f}s -> {rel(arq)}")
         sessao = carregar_resultados(arq, wt)
-        setembro = carregar_resultados(BASELINE_SETEMBRO, wt)
+        referencia = carregar_resultados(BASELINE_REFERENCIA, wt)
 
     versao_sessao = json.loads(arq.read_text(encoding="utf-8")).get("version")
-    versao_set = json.loads(BASELINE_SETEMBRO.read_text(encoding="utf-8")).get("version")
+    versao_set = json.loads(BASELINE_REFERENCIA.read_text(encoding="utf-8")).get("version")
     sig_sessao = {assinatura(f) for f in sessao}
-    sig_set = {assinatura(f) for f in setembro}
+    sig_set = {assinatura(f) for f in referencia}
     elig_sessao = _elegiveis_dedup(sessao)
     sig_catalogo = {c["assinatura"] for c in catalogo if c["elegivel"]}
-    nome = {assinatura(f): f"{f.check_id} @ {f.path}" for f in sessao + setembro}
+    nome = {assinatura(f): f"{f.check_id} @ {f.path}" for f in sessao + referencia}
     comparacao = {
-        "baseline_setembro": rel(BASELINE_SETEMBRO),
+        "baseline_referencia": rel(BASELINE_REFERENCIA),
         "baseline_sessao": rel(arq),
         "reutilizada": reutilizada,
-        "semgrep_versao": {"setembro": versao_set, "sessao": versao_sessao},
-        "achados_brutos": {"setembro": len(setembro), "sessao": len(sessao)},
-        "assinaturas_brutas_distintas": {"setembro": len(sig_set), "sessao": len(sig_sessao)},
-        "so_no_setembro": sorted(nome[s] for s in sig_set - sig_sessao),
+        "semgrep_versao": {"referencia": versao_set, "sessao": versao_sessao},
+        "achados_brutos": {"referencia": len(referencia), "sessao": len(sessao)},
+        "assinaturas_brutas_distintas": {"referencia": len(sig_set), "sessao": len(sig_sessao)},
+        "so_na_referencia": sorted(nome[s] for s in sig_set - sig_sessao),
         "so_na_sessao": sorted(nome[s] for s in sig_sessao - sig_set),
         "elegiveis_sessao": len(elig_sessao),
         "casos_do_catalogo_ausentes_na_sessao": sorted(
@@ -126,8 +142,8 @@ def varredura_da_sessao(pool: PoolWorktrees, saidas: Saidas, execucao: str,
         "elegiveis_novos_na_sessao_fora_do_catalogo": sorted(nome[s] for s in elig_sessao - sig_catalogo),
     }
     comparacao["diverge"] = bool(
-        comparacao["so_no_setembro"] or comparacao["so_na_sessao"]
-        or len(setembro) != len(sessao) or versao_set != versao_sessao)
+        comparacao["so_na_referencia"] or comparacao["so_na_sessao"]
+        or len(referencia) != len(sessao) or versao_set != versao_sessao)
     gravar_json(saidas.d("sast_antes") / f"{execucao}_comparacao_baseline.json", comparacao)
     return sessao, comparacao
 
@@ -182,7 +198,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     PoolWorktrees.restaurar(wt)
 
     prompt = builder.montar(issue, wt, estrategia)
-    gravar_json(s.d("prompts") / f"{tid}.json", prompt.to_dict())
+    gravar_json(s.t("prompts") / f"{tid}.json", prompt.to_dict())
 
     if args.dry_run:
         texto = resposta_falsa(issue, wt)
@@ -193,7 +209,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         r = ctx.cliente.gerar(prompt.mensagens)
         texto = r.conteudo
         llm = {k: v for k, v in r.to_dict().items() if k != "conteudo"}
-    gravar_json(s.d("respostas_llm") / f"{tid}.json", {"texto": texto, **llm})
+    gravar_json(s.t("respostas_llm") / f"{tid}.json", {"texto": texto, **llm})
 
     correcao = interpretar(texto)
     aplic = correcao if isinstance(correcao, ResultadoAplicacao) else aplicar(wt, correcao)
@@ -205,6 +221,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         "cwe": issue["cwe"], "owasp_2025": issue["owasp_2025"], "sigla_vuln": issue["sigla_vuln"],
         "modo_regra": issue.get("modo_regra"), "faixa_regra": faixa_regra(issue),
         "estrategia_prompt": prompt.estrategia,
+        "triagem_manual": issue.get("triagem_manual", "nao_triado"),
         # desenho = estrategia do TCC 1 (P1-P4); diagnostico = P1L (protocolo, Secao 12)
         "condicao": "diagnostico" if estrategia in builder.DIAGNOSTICOS else "desenho",
         "usa_rag": prompt.usa_rag,
@@ -217,10 +234,9 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         "status_aplicacao": aplic.status, "detalhe_aplicacao": aplic.detalhe,
         "arquivos_alterados": aplic.arquivos,
         "R": None, "F": None, "M": None, "tier_falha": None,
-        "F_sem_separacao": None, "F_marcador": None, "F_criterio": None,
-        "tier_falha_sem_separacao": None, "tier_falha_marcador": None, "tier_falha_criterio": None,
-        "testes_falhos_d_marcador": [], "testes_falhos_d_criterio": [],
-        "testes_falhos_f_marcador": [], "testes_falhos_f_criterio": [],
+        **{f"F_{k}": None for k in DEFS_F},
+        **{f"tier_falha_{k}": None for k in DEFS_F},
+        **{f"testes_falhos_{df}_{k}": [] for k in DEFS_F[1:] for df in ("d", "f")},
         "novas_issues_qtd": None, "novas_issues_ids": [],
         "testes_falhos_novos": [], "testes_falhos_intermitentes": [], "reexecucoes": 0,
         "tokens_entrada": llm["tokens_entrada"], "tokens_saida": llm["tokens_saida"],
@@ -228,28 +244,28 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         "custo_usd": llm["custo_usd"], "classificacao_final": None,
         "versao_semgrep": ctx.versao_semgrep, "worktree": wt.name,
         "sast_depois": None, "sast_depois_raw": None,
-        "artefatos": {"prompt": rel(s.d("prompts") / f"{tid}.json"),
-                      "resposta": rel(s.d("respostas_llm") / f"{tid}.json")},
+        "artefatos": {"prompt": rel(s.t("prompts") / f"{tid}.json"),
+                      "resposta": rel(s.t("respostas_llm") / f"{tid}.json")},
     }
 
     if aplic.status != "aplicado":
         linha["classificacao_final"] = f"nao_aplicada:{aplic.status}"
-        for k in ("sem_separacao", "marcador", "criterio"):
+        for k in DEFS_F:
             linha[f"classificacao_{k}"] = linha["classificacao_final"]
         return linha
 
     diff = subprocess.run(["git", "diff"], cwd=wt, capture_output=True, text=True, timeout=60).stdout
-    arq_diff = s.d("patches") / f"{tid}.diff"
+    arq_diff = s.t("patches") / f"{tid}.diff"
     arq_diff.write_text(diff, encoding="utf-8")
     for a in aplic.arquivos:
-        destino = s.d("codigos_corrigidos") / tid / a
+        destino = s.t("codigos_corrigidos") / tid / a
         destino.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(wt / a, destino)
     linha["artefatos"]["patch"] = rel(arq_diff)
 
     # SAST depois: so os arquivos tocados (a analise do Semgrep e por arquivo).
     alvos = sorted(set(aplic.arquivos) | {issue["arquivo"]})
-    arq_raw = s.d("sast_depois") / f"{tid}_raw.json"
+    arq_raw = s.t("sast_depois") / f"{tid}_raw.json"
     inicio = time.monotonic()
     depois = executar(wt, RULESETS, saida_bruta=arq_raw, caminhos=alvos)
     linha["duracao_sast_s"] = round(time.monotonic() - inicio, 2)
@@ -269,23 +285,24 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
 
     cfg = ConfigValidacao(lock_t4=ctx.lock_t4)
     v = validar(wt, aplic.arquivos, cfg)
-    gravar_json(s.d("testes") / f"{tid}.json", v.to_dict())
-    linha["artefatos"]["validacao"] = rel(s.d("testes") / f"{tid}.json")
-    # F e tier_falha seguem d_criterio (Secao 7.1); as tres versoes vao juntas
+    gravar_json(s.t("testes") / f"{tid}.json", v.to_dict())
+    linha["artefatos"]["validacao"] = rel(s.t("testes") / f"{tid}.json")
+    # F e tier_falha seguem d_criterio (Secao 7.1); as quatro versoes vao juntas
     # para a analise de sensibilidade (Secao 13).
     linha["F"] = int(v.passou)
     linha["tier_falha"] = v.tier_falha
-    for k in ("sem_separacao", "marcador", "criterio"):
+    for k in DEFS_F:
         linha[f"F_{k}"] = int(getattr(v, f"F_{k}"))
         linha[f"tier_falha_{k}"] = getattr(v, f"tier_falha_{k}")
-    for k in ("d_marcador", "d_criterio", "f_marcador", "f_criterio"):
-        linha[f"testes_falhos_{k}"] = getattr(v, f"testes_falhos_{k}")
+    for k in DEFS_F[1:]:
+        for df in ("d", "f"):
+            linha[f"testes_falhos_{df}_{k}"] = getattr(v, f"testes_falhos_{df}_{k}")
     linha["testes_falhos_novos"] = v.testes_falhos_novos
     linha["testes_falhos_intermitentes"] = v.testes_falhos_intermitentes
     linha["reexecucoes"] = v.reexecucoes
     linha["duracao_validacao_s"] = v.duracao_s
 
-    for k in ("sem_separacao", "marcador", "criterio"):
+    for k in DEFS_F:
         f = linha[f"F_{k}"]
         linha[f"classificacao_{k}"] = ("aceita" if linha["R"] and f and linha["M"] else
                                        f"rejeitada:R{linha['R']}F{f}M{linha['M']}")
@@ -301,40 +318,23 @@ def nome_tentativa(issue: dict, estrategia: str, execucao: str) -> str:
     return "_".join([issue["caso_id"], issue["owasp_2025"], issue["sigla_vuln"], estrategia, execucao])
 
 
-def _aceita_estrita(linha: dict) -> bool:
-    return linha.get("classificacao_sem_separacao", linha.get("classificacao_final")) == "aceita"
-
-
 def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
                    feitas: dict[str, dict]) -> None:
-    """Estrategias do desenho em sequencia, parando na primeira aceita; depois
-    as condicoes de diagnostico, que rodam sempre (independem do aceite)."""
+    """Todas as estrategias do desenho e as condicoes de diagnostico, sem
+    parar no aceite (protocolo, Secao 14): a leitura por estrategia so e
+    valida se cada uma rodou em todos os casos. A cadeia do TCC 1 e
+    reconstruida nas metricas. Na retomada, so roda o que falta."""
     caso = issue["caso_id"]
-    pendentes = []
-    for e in ctx.args.estrategias:
-        tid = nome_tentativa(issue, e, ctx.args.execucao)
-        if tid in feitas:
-            if _aceita_estrita(feitas[tid]):
-                console.log(f"[dim]{caso}: ja aceita em {tid} (retomada), pulando o resto da cadeia[/]")
-                pendentes = []
-                break
-            continue
-        pendentes.append((e, tid, True))
-    for e in ctx.args.diagnosticos:
-        tid = nome_tentativa(issue, e, ctx.args.execucao)
-        if tid not in feitas:
-            pendentes.append((e, tid, False))
+    pendentes = [(e, tid) for e in ctx.args.estrategias + ctx.args.diagnosticos
+                 if (tid := nome_tentativa(issue, e, ctx.args.execucao)) not in feitas]
     if not pendentes:
         console.log(f"[dim]{caso}: nada pendente (retomada)[/]")
         return
 
-    cadeia_encerrada = False
     with pool.alugar() as wt:
-        for e, tid, na_cadeia in pendentes:
+        for e, tid in pendentes:
             if ctx.parar.is_set():
                 return
-            if na_cadeia and cadeia_encerrada:
-                continue
             try:
                 linha = tentativa(ctx, issue, e, wt, tid)
             except OrcamentoEsgotado as ex:
@@ -349,15 +349,11 @@ def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
             # Resposta do cache nao e cobrada de novo (o custo na linha e o da chamada original).
             total = ctx.somar_custo(0.0 if linha["do_cache"] else (linha["custo_usd"] or 0.0))
             cor = "green" if linha["classificacao_final"] == "aceita" else "yellow"
+            fs = "/".join(str(linha.get(f"F_{k}")) for k in DEFS_F)
             console.log(f"[{cor}]{tid}[/] {linha['classificacao_final']} "
-                        f"(F sem/marc/crit={linha.get('F_sem_separacao')}/{linha.get('F_marcador')}/{linha.get('F_criterio')}) "
+                        f"(F sem/marc/crit/amplo={fs}) "
                         f"(aplic={linha['status_aplicacao']}, tier_falha={linha['tier_falha']}, "
                         f"novas={linha['novas_issues_qtd']}) | US$ sessao {total:.5f}")
-            # A cadeia so para quando a tentativa e aceita sem separacao F/D
-            # (definicao mais estrita); assim ha dados para reconstruir a
-            # cadeia de cada definicao na analise (Secao 13).
-            if na_cadeia and _aceita_estrita(linha):
-                cadeia_encerrada = True
 
 
 # --------------------------------------------------------------------------
@@ -400,6 +396,8 @@ def main() -> None:
     args = ap.parse_args()
     args.estrategias = [e.strip() for e in args.estrategias.split(",") if e.strip()]
     args.diagnosticos = [e.strip() for e in args.diagnosticos.split(",") if e.strip()]
+    if not re.fullmatch(r"[A-Z]+[0-9]+", args.execucao):
+        raise SystemExit("ERRO: --execucao no formato E01, DRY01 (vira pasta em outputs/)")
     if set(args.estrategias) & set(builder.DIAGNOSTICOS):
         raise SystemExit("ERRO: P1L e condicao de diagnostico; use --diagnosticos P1L")
     if set(args.diagnosticos) - set(builder.DIAGNOSTICOS):
@@ -426,7 +424,7 @@ def main() -> None:
             raise SystemExit(f"ERRO: casos fora do catalogo elegivel: {sorted(desconhecidos)}")
         casos = [c for c in casos if c["caso_id"] in pedidos]
 
-    saidas = Saidas(RAIZ_REPO / "outputs" / ("dry_run" if args.dry_run else ""))
+    saidas = Saidas(RAIZ_REPO / "outputs" / ("dry_run" if args.dry_run else ""), args.execucao)
     env = dotenv_values(RAIZ_REPO / ".env")
     pool = PoolWorktrees(RAIZ_REPO / "workspace", k=args.k, commit_esperado=env.get("JUICESHOP_COMMIT"))
     sessao_info = {
@@ -455,11 +453,11 @@ def main() -> None:
 
     sessao, comp = varredura_da_sessao(pool, saidas, args.execucao, catalogo)
     sessao_info["comparacao_baseline"] = rel(saidas.d("sast_antes") / f"{args.execucao}_comparacao_baseline.json")
-    console.log(f"Baseline setembro x sessao: {comp['achados_brutos']['setembro']} x "
+    console.log(f"Baseline referencia x sessao: {comp['achados_brutos']['referencia']} x "
                 f"{comp['achados_brutos']['sessao']} achados brutos, "
-                f"semgrep {comp['semgrep_versao']['setembro']} x {comp['semgrep_versao']['sessao']}")
+                f"semgrep {comp['semgrep_versao']['referencia']} x {comp['semgrep_versao']['sessao']}")
     if comp["diverge"]:
-        console.log(f"[bold yellow]AVISO: varreduras divergem. So em setembro: {comp['so_no_setembro']}; "
+        console.log(f"[bold yellow]AVISO: varreduras divergem. So na referencia: {comp['so_na_referencia']}; "
                     f"so na sessao: {comp['so_na_sessao']}[/]")
     ausentes = set(comp["casos_do_catalogo_ausentes_na_sessao"])
     if ausentes & {c["caso_id"] for c in casos}:

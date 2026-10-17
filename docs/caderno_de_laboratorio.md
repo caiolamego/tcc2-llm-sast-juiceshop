@@ -457,6 +457,167 @@ Primeiro caso real: sondagem B de JS003 (`reexecucoes = 1`), em que a falha de `
 
 ---
 
+### 2026-10-13 — Saídas reorganizadas por execução; prompts e validações das E01/E02 passam a ser versionados
+
+**Sintoma:** `outputs/prompts/`, `codigos_corrigidos/`, `sast_depois/` e `testes/` misturavam artefatos de dry-run e de execução real. Para não versionar o dry-run, o `.gitignore` ignorava essas quatro pastas inteiras. Com isso, os prompts, os códigos corrigidos, as reanálises e as validações das E01 e E02 nunca foram versionados: só respostas, patches e o `execucoes.jsonl`, que apontava para arquivos ausentes do repositório.
+
+**Causa:** a estrutura da F6 (entrada de 2026-10-07) separava por tipo de artefato, não por execução. O dry-run ia para `outputs/dry_run/`, mas o real ia direto para `outputs/<tipo>/`, sem uma pasta que o distinguisse.
+
+**Correção:**
+- Nova estrutura: `outputs/<EXECUCAO>/{prompts,respostas_llm,patches,codigos_corrigidos,sast_depois,testes}/`. Continuam comuns `outputs/sast_antes/` (baseline, catálogo e varreduras de sessão `<EXECUCAO>_baseline_raw.json`), `outputs/resultados_consolidados/` e `outputs/sondagens/`. O dry-run vai inteiro para `outputs/dry_run/`, inclusive o de `try_one.py` (antes em `outputs/tentativas/dry_run/`).
+- `Saidas` em `run_pipeline.py` ganhou o método `t()` para artefatos da execução. `--execucao` passa a exigir o formato `E01`/`DRY01`, porque vira nome de pasta.
+- Respostas e patches movidos com `git mv` (115 arquivos). Prompts, códigos corrigidos, reanálises e validações (225 arquivos), que nunca tinham sido versionados, foram movidos e adicionados.
+- Em `execucoes.jsonl`, só os campos `artefatos.*` e `sast_depois_raw` foram reescritos para os novos caminhos (285 caminhos, todos conferidos como existentes). Os demais campos das 60 linhas foram conferidos como idênticos.
+- O bloco de saídas do `.gitignore` virou uma linha: `outputs/dry_run/`. Também saíram `outputs/**/*.raw.json` e `outputs/**/*.tar.gz`, que não casavam com nenhum arquivo (os brutos se chamam `*_raw.json`). Nada rastreado precisou de `git rm --cached`, porque o dry-run nunca foi versionado.
+
+**Impacto na reprodutibilidade:** positivo. Cada linha de `execucoes.jsonl` das E01/E02 agora tem prompt, resposta, patch, código corrigido, reanálise SAST e validação versionados. Os caminhos citados na entrada de 2026-10-07 (F6) passam a ser `outputs/<EXECUCAO>/<tipo>/`.
+
+**Fase do guia:** F6.
+
+---
+
+### 2026-10-13 — Métricas por estratégia viciadas pela cadeia; duas leituras separadas
+
+**Sintoma:** em `E02_metricas.json`, com `d_criterio`, o P1 aparecia com 3 aceites em 12 tentativas e o P2 com 0 em 9. O P2 parecia inútil.
+
+**Causa:** `scripts/metricas_execucao.py` calculava as métricas por estratégia sobre a cadeia reconstruída, que corta as tentativas de um caso no primeiro aceite. O P2 só entrava nos 9 casos em que o P1 não tinha sido aceito. Nos dados brutos, o P2 rodou nos 12 casos (o orquestrador só interrompe no aceite sem separação, que não ocorreu) e foi aceito em JS005 e JS006.
+
+**Correção:** o script passou a reportar (a) por estratégia, sobre todos os casos, e (b) cadeia sequencial. Protocolo, Seção 14. E01 e E02 recalculadas; (b) é idêntica ao cálculo anterior. E02, leitura (a):
+
+| Definição | P1 aceitos | P1 TRV | P2 aceitos | P2 TRV |
+|---|---|---:|---|---:|
+| sem separação | 0/12 | 0,000 | 0/12 | 0,000 |
+| `d_marcador` | 0/12 | 0,000 | 0/12 | 0,000 |
+| `d_criterio` | 3/12 (JS005, JS006, JS011) | 0,250 | 2/12 (JS005, JS006) | 0,167 |
+
+A diferença entre P1 e P2 em `d_criterio` é um caso só (JS011: o P2 não aplicou, âncora não encontrada). Com 12 casos isso não permite dizer que uma estratégia é melhor.
+
+**Impacto na reprodutibilidade:** o formato de `<EXECUCAO>_metricas.json` mudou (`a_por_estrategia`, `b_cadeia`). Para a leitura (a) continuar completa com P3/P4, o orquestrador teria de rodar todas as estratégias em todos os casos (pendente de decisão do grupo, Seção 14).
+
+**Fase do guia:** F7.
+
+---
+
+### 2026-10-13 — Sondagem: ampliar os rulesets de 5 para 11 (sem adotar)
+
+**Motivação:** a Seção 3.4 do TCC 1 prevê tentativas sobre todos os alertas produzidos pela ferramenta. Cinco conjuntos de regras genéricos produziram só 12 achados elegíveis num projeto deliberadamente vulnerável. Ampliar a cobertura é mais fiel ao desenho original. Se o catálogo passar de cerca de 25 casos, entra o passo 6 do protocolo (amostragem estratificada por OWASP), pré-registrado e nunca usado.
+
+**Execução:** `scripts/sondagem_rulesets.py` (novo), Semgrep 1.177.0 anônimo, `wt-1` limpo no commit fixado, mesmas exclusões. Antes, o script foi conferido contra o baseline oficial: reproduz 15 brutos e 12 elegíveis. Saídas em `outputs/sondagens/semgrep_2026-10-13/`. Nada em `outputs/sast_antes/` foi alterado.
+- Controle (5 rulesets atuais, mesmo dia): 15 brutos, 12 elegíveis, os mesmos 15 triplos (regra, arquivo, linha) do oficial. O registro não mudou desde setembro para esses conjuntos.
+- Ampliado (os 5 + `p/security-audit`, `p/secrets`, `p/xss`, `p/sql-injection`, `p/jwt`, `p/default`):
+
+| Passo (Seção 3) | Contagem |
+|---|---:|
+| Brutos após exclusão de caminhos | 35 |
+| 2. categoria `security` | 35 |
+| 3. severidade (sai 1 INFO) | 34 |
+| 4. com CWE | 34 |
+| 5. dedupe `(check_id, path)` (7 duplicatas) | **27** |
+
+Os 12 elegíveis oficiais continuam presentes; há 15 novos. Os 27 caem em 23 locais distintos: quatro locais têm duas regras (`login.ts:34`, `search.ts:23`, `redirect.ts:19`, `userProfile.ts:61`).
+- Por sigla: XSS 5, OUTRO 4, PATHTRAV 4, SQLI 4, HARDCRED 3, CODEINJ 3, OPENREDIR 2, REDOS 1, INFOEXPOSURE 1.
+- Por OWASP 2025: A05 12, A06 5, A01 3, A07 3, A04 2, A02 1, A08 1.
+- CWEs fora de `config/mapa_cwe_vuln.yaml` (viram OUTRO): CWE-321 (2, JWT em `.spec.ts`), CWE-915 (1, `hacking-instructor`), CWE-522 (1, `routes/currentUser.ts`). Também aparece CWE-1333 (REDOS), que já está no mapa.
+
+**Observações para a decisão (não aplicadas):**
+1. Lacuna de escopo: o filtro da Seção 3 exclui `test/`, mas não testes do frontend (`*.spec.ts`), dados (`data/static/users.yml`) nem `frontend/src/hacking-instructor/`. Cinco dos 15 novos caem nesses arquivos ou em `lib/codingChallenges.ts`.
+2. Como referência, só para consulta e sem adotar: a triagem manual da branch `semgrep-findings` classifica 7 dos 27 como falsos positivos e 1 como inconclusivo. Todos os 7 estão entre os 15 novos.
+3. 27 passa de cerca de 25, então o passo 6 seria acionado.
+
+**Impacto na reprodutibilidade:** nenhum no experimento (catálogo oficial inalterado). Os JSONs brutos ficam arquivados porque o registro não é versionado (D2).
+
+**Fase do guia:** F3 (revisão).
+
+---
+
+### 2026-10-13 — Sondagem: Semgrep autenticado com os 5 rulesets atuais (sem adotar)
+
+**Execução:** `semgrep login` (conta pessoal do Caio), mesma varredura do controle anônimo do mesmo dia: 5 rulesets, Semgrep 1.177.0, `wt-1` limpo, mesmas exclusões. Saída em `outputs/sondagens/semgrep_2026-10-13/autenticado_5rulesets/`. Uma primeira tentativa rodou antes de o login ser concluído (saiu anônima); foi descartada, porque não era versionada e o rótulo estava errado.
+
+**Resultados, anônimo × autenticado:**
+
+| Item | Anônimo | Autenticado |
+|---|---:|---:|
+| `extra.fingerprint` preenchido | 0/15 | 37/37 |
+| `extra.lines` preenchido | 0/15 | 37/37 |
+| Brutos | 15 | 37 |
+| Regras disparadas | 7 | 16 |
+| Elegíveis (Seção 3) | 12 | 29 |
+| Erros reportados | 8 | 971 |
+
+- Os 12 elegíveis oficiais continuam presentes; nenhuma regra deixou de disparar. Os 17 novos estão em 10 locais novos (6 rotas com `express-mongo-nosqli`, `lib/insecurity.ts:21` e `:192`, `routes/updateUserProfile.ts:42`, `models/index.ts:33`). Os outros caem em locais já do catálogo (`login.ts:34`, `search.ts:23`, `redirect.ts:19`, `userProfile.ts:61`). Nenhum cai em teste, dados ou `hacking-instructor`.
+- **Causa da diferença:** com login, os mesmos `p/...` passam a incluir regras proprietárias (`metadata.semgrep.dev.rule.origin = pro_rules`, licença "Semgrep Rules License v1.0"). As 9 regras novas são todas desse tipo.
+- **Os 971 erros:** 963 são "Internal matching error" de 3 regras proprietárias (`cryptojs-weak-algorithm`, `cors-default-config-express`, `cors-default-config-koa`). Elas usam um operador que, segundo a mensagem, "is only supported in the Pro engine", e falham em todos os arquivos no motor OSS (`engine_requested: OSS`). Ou seja, mesmo autenticado, parte das regras do conjunto não rodou. Os outros 8 são os mesmos avisos de parsing parcial do anônimo.
+- CWEs fora do mapa: CWE-943 (6, NoSQL injection), CWE-732 (2), CWE-384 (2). Oito elegíveis ficam sem OWASP 2021 utilizável (só trazem rótulo 2017 ou nenhum).
+
+**Implicações para a decisão (não aplicadas):**
+1. Com `fingerprint` disponível, a assinatura D6 poderia ser revista. Ela usa `check_id|path` justamente porque o campo vinha vazio.
+2. Reprodutibilidade: quem reproduzir precisa de conta no Semgrep, e as regras proprietárias não são públicas para cópia de referência (`config/semgrep-rules-referencia/`).
+3. Enquanto o login estiver ativo nesta máquina, o pipeline também roda autenticado, o que contraria a Seção 2 ("sem login"). Para manter o protocolo, é preciso fazer `semgrep logout` antes de qualquer execução.
+
+**Impacto na reprodutibilidade:** nenhum no experimento (catálogo oficial inalterado).
+
+**Fase do guia:** F3 (revisão).
+
+---
+
+### 2026-10-13 — Catálogo v2: 11 rulesets anônimos, exclusões ampliadas, triagem manual, quarta definição de D e orquestrador sem interrupção
+
+**Sintoma:** o catálogo v1 tinha 12 casos, amostra pequena para comparar estratégias. As sondagens do mesmo dia mostraram que a cobertura depende muito dos rulesets e do login.
+
+**Causa:** cinco rulesets genéricos, anônimos, num alvo deliberadamente vulnerável.
+
+**Correção (decisões do grupo, 2026-10-13):**
+1. Catálogo oficial com os 11 rulesets, anônimo. O login não foi adotado, por quatro motivos: as regras proprietárias não podem ser inspecionadas nem versionadas na pasta de referência; três delas falharam em todos os arquivos por exigirem o motor pago; reproduzir o trabalho passaria a exigir conta no Semgrep; e o ganho do `fingerprint` só se realizaria trocando o passo 5, que é pré-registrado. Protocolo, Seção 2. `semgrep logout` conferido antes da varredura oficial (`semgrep show identity`: não logado).
+2. A sondagem do login virou a Seção 15 do protocolo, como resultado para a Discussão.
+3. Exclusões novas em `config/semgrepignore`: `*.spec.ts`, `data/static/users.yml`, `frontend/src/hacking-instructor/`, `lib/codingChallenges.ts`. Elas falham no critério de código da aplicação coberto pela suíte (Seção 3, passo 1). Removem 7 dos 35 brutos.
+4. Campo `triagem_manual` no catálogo (`config/triagem_manual.yaml`), sem excluir nenhum caso; as métricas reportam os grupos à parte (Seção 3, passo 7). A triagem une dois arquivos da branch `semgrep-findings` (commit `fa04444`), sem conflito entre eles: 35 alertas de regras do registro.
+5. CWEs mapeadas: CWE-321 → HARDCRED, CWE-522 → CREDPROT (nova), CWE-915 → MASSASSIGN (nova). Os 4 achados que estavam em OUTRO na sondagem eram exatamente essas CWEs: 2 × CWE-321 em `*.spec.ts`, CWE-915 em `hacking-instructor/helpers/helpers.ts` e CWE-522 em `routes/currentUser.ts`. Os três primeiros saíram pelas exclusões. No v2, nenhum caso fica em OUTRO.
+6. `N_max` refeito com dados reais (Seção 16): o mínimo é cerca de 47 casos (tempo, sequencial); o passo 6 não dispara para 22.
+7. O orquestrador roda todas as estratégias em todos os casos; a cadeia é reconstruída nas métricas (Seção 14).
+8. Quarta definição `d_criterio_amplo` (Seção 13, item 8), com as métricas da E01 e E02 refeitas nas quatro definições.
+9. Catálogo v2 gerado (Seção 3, "Resultado do catálogo v2"): 22 casos, IDs JS001–JS012 mantidos por assinatura, JS013–JS022 novos.
+
+**Arquivamento do v1.** `git mv` de `outputs/sast_antes/{baseline_raw,catalogo_issues,catalogo_meta,relatorio_baseline}` para `*_v1`. **As execuções E01 e E02 se referem ao catálogo v1** (`catalogo_issues_v1.json`, baseline de setembro `baseline_raw_v1.json`). O caminho do baseline foi atualizado em `E01_comparacao_baseline.json`, `E02_comparacao_baseline.json` e nos resumos das sondagens. Os 12 casos do v1 estão no v2 com o mesmo ID e a mesma assinatura. Para eles, as métricas da E01/E02 usam a triagem do v2 (11 confirmados, 1 inconclusivo: JS007).
+
+**Pasta de referência das regras.** As 7 regras novas do v2 foram copiadas do mesmo commit do `semgrep-rules` (`a84ff9c`), para preencher `modo_regra` (12 `taint`, 10 `search`).
+
+**Correção de uma afirmação anterior:** a entrada "Sondagem: ampliar os rulesets" diz que a triagem da branch classifica 7 dos 27 como falsos positivos. Com o segundo arquivo da branch (`config/auditoria_desafios.yaml`, que cobre `p/security-audit`), são 10: os 3 alertas `unquoted-attribute-var` também foram julgados falsos positivos. No v2, depois das exclusões, ficam 6 falsos positivos (JS013, JS014, JS016, JS020, JS021, JS022).
+
+**Pendências antes da E03:** `MAX_LLM_CALLS = 60` deixa só 27 chamadas (Seção 16). `CREDPROT` (JS017) não tem categoria de RAG. Faltam a base de conhecimento e os testes de regressão de segurança.
+
+**Impacto na reprodutibilidade:** muda a população do experimento a partir da E03 (v2). E01 e E02 continuam válidas e reprodutíveis sobre o v1 arquivado.
+
+**Fase do guia:** F3, F6, F7.
+
+---
+
+### 2026-10-16 — Reversão de 13/10 apagou artefatos da E01/E02; recuperação pelo `.git` e trabalho de 13/10 refeito
+
+**Sintoma:** em 13/10, o Caio desfez de propósito o trabalho do dia, para alinhar com a dupla. Em 16/10 decidiu refazê-lo. `outputs/E01/` e `outputs/E02/` estavam vazias: os 225 artefatos não commitados (prompts, códigos corrigidos, reanálises SAST e validações) tinham sumido. Também sumiram o `config/semgrep-rules-referencia/README.md` (nunca versionado) e os JSONs das sondagens de 13/10.
+
+**Causa:** na reorganização de 13/10, esses arquivos (antes ignorados pelo `.gitignore`) foram movidos e adicionados ao índice com `git add`, sem commit. A reversão descartou o índice e, com ele, os arquivos novos. O README e as sondagens eram arquivos não versionados e não foram adicionados.
+
+**Correção:**
+- **Recuperação pelo `.git`.** `git add` grava o conteúdo como objeto, que continua no `.git` até a limpeza (duas semanas). `git fsck --unreachable` listou 186 objetos órfãos. Cada um foi identificado pelo conteúdo e casado com sua tentativa no `execucoes.jsonl`:
+  - 60 prompts: 58 por `hash_prompt`. Os 2 restantes (JS003/P1, JS005/JS006 P1) não estavam órfãos porque um arquivo idêntico existe na branch `semgrep-findings` (commit `c1e1f44`, dry-run do Matheus com o mesmo construtor e o mesmo cache); confirmados pelo `hash_prompt` e pelo formato exato de gravação do orquestrador.
+  - 55 validações: casadas pela duração (única); conferidos F, camada de falha e testes falhos de cada uma.
+  - 55 reanálises SAST: casadas pelos achados. 49 estão em grupos de tentativas do mesmo caso com achados idênticos; nesses, o desempate foi pelo tempo, e só o perfil de tempo pode ter ficado trocado entre elas.
+  - 55 códigos corrigidos: regenerados aplicando cada patch versionado ao arquivo original do commit fixado; os 55 são idênticos byte a byte a objetos do `.git`.
+  - Conferência final: as métricas da E01/E02, refeitas camada por camada a partir das validações recuperadas, bateram com todos os F gravados.
+- Caderno e protocolo restaurados de objetos órfãos (versões finais de 13/10: só acréscimos sobre o commit `d645466`). O README da pasta de referência foi recriado a partir do conteúdo lido na conversa de 13/10. Guia, adendo e `CLAUDE.md`, não versionados, não tinham sido afetados.
+- Código refeito a partir do registro da sessão de 13/10: orquestrador, runner, `conjunto_d`, `semgrep_client`, `build_issue_catalog`, `metricas_execucao`, `try_one`, `sondagem_rulesets` (agora com `--exclusoes` e `--referencia`), `config/semgrepignore`, `mapa_cwe_vuln.yaml`, `conjunto_d_amplo.json`, `triagem_manual.yaml` (mesmas fontes, sem mudança entre `fa04444` e `c1e1f44`) e as 7 regras de referência (mesmo commit).
+- Reprocessamento: sondagens anônimas refeitas em `outputs/sondagens/semgrep_2026-10-16/` (5 rulesets: 15 brutos / 12 elegíveis; 11 rulesets com as exclusões antigas: 35 / 27, iguais a 13/10). A sondagem com login **não foi refeita** (decisão do Caio: não usar login); a Seção 15 do protocolo fica com os números de 13/10, sem JSON bruto. Baseline e catálogo v2 regenerados: idênticos a 13/10 em todas as contagens (28 brutos, 22 elegíveis, IDs, siglas, triagem). Métricas da E01/E02: idênticas a 13/10.
+- `MAX_LLM_CALLS` de 60 para 150 no `.env`, para a E03 (decisão do Caio).
+
+**Incidente operacional:** o primeiro dry-run (DRY04) ficou parado das 19:48 às 21:04 sem erro. O Mac estava em repouso (`pmset -g log`: repouso por inatividade de 1 min, depois tampa fechada na bateria). O `time.monotonic()` do Python não conta o tempo dormindo no macOS, então a duração medida (80 s) não acusou nada. Execuções longas passam a rodar com `caffeinate -is` e o Mac na tomada, com a tampa aberta (`caffeinate` não impede o repouso com a tampa fechada na bateria).
+
+**Impacto na reprodutibilidade:** os artefatos da E01/E02 voltaram com a ressalva acima sobre o perfil de tempo de 49 reanálises. Daqui em diante, resultado de execução é commitado logo depois de gerado.
+
+**Fase do guia:** F6, F7.
+
+---
+
 <!--
 Próxima entrada:
 

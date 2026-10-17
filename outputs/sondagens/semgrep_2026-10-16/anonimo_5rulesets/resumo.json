@@ -1,0 +1,117 @@
+{
+  "rotulo": "anonimo_5rulesets_controle",
+  "data_utc": "2026-10-16T22:01:33+00:00",
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "semgrep_versao": "1.177.0",
+  "autenticado": false,
+  "rulesets": [
+    "p/javascript",
+    "p/typescript",
+    "p/nodejs",
+    "p/expressjs",
+    "p/owasp-top-ten"
+  ],
+  "exclusoes_caminho": [
+    "node_modules/",
+    "build/",
+    "dist/",
+    "frontend/dist/",
+    "frontend/node_modules/",
+    "coverage/",
+    "test/",
+    "data/static/codefixes/",
+    "vagrant/",
+    "screenshots/",
+    "*.min.js",
+    "*.map",
+    ".github/",
+    ".npmrc",
+    "logs/",
+    "frontend/src/assets/private/three.js"
+  ],
+  "duracao_s": 9.7,
+  "json_bruto": "outputs/sondagens/semgrep_2026-10-16/anonimo_5rulesets/baseline_raw.json",
+  "erros_semgrep": 8,
+  "arquivos_varridos": 868,
+  "campos_login": {
+    "resultados": 15,
+    "fingerprint_preenchido": 0,
+    "lines_preenchido": 0,
+    "exemplo_fingerprint": null
+  },
+  "funil": {
+    "passos": {
+      "0_brutos_apos_exclusao_de_caminhos": 15,
+      "2_categoria_security": 15,
+      "3_severidade": 15,
+      "4_com_cwe": 15,
+      "5_dedup_check_id_path": 12
+    },
+    "elegiveis": 12,
+    "por_sigla": {
+      "PATHTRAV": 4,
+      "SQLI": 4,
+      "HARDCRED": 1,
+      "OPENREDIR": 1,
+      "CODEINJ": 1,
+      "INFOEXPOSURE": 1
+    },
+    "por_owasp_2025": {
+      "A01": 2,
+      "A05": 5,
+      "A06": 4,
+      "A07": 1
+    },
+    "cwes_fora_do_mapa": {},
+    "por_regra": {
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile": 4,
+      "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection": 2,
+      "javascript.express.security.injection.tainted-sql-string.tainted-sql-string": 2,
+      "javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret": 1,
+      "javascript.express.security.audit.express-open-redirect.express-open-redirect": 1,
+      "javascript.lang.security.audit.code-string-concat.code-string-concat": 1,
+      "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing": 1
+    },
+    "excluidos_por_passo": {
+      "2_categoria": {},
+      "3_severidade": {},
+      "4_sem_cwe": 0,
+      "5_duplicatas": 3
+    },
+    "elegiveis_lista": [
+      "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing @ server.ts:269",
+      "javascript.express.security.audit.express-open-redirect.express-open-redirect @ routes/redirect.ts:19",
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile @ routes/fileServer.ts:33",
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile @ routes/keyServer.ts:14",
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile @ routes/logfileServer.ts:14",
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile @ routes/quarantineServer.ts:14",
+      "javascript.express.security.injection.tainted-sql-string.tainted-sql-string @ routes/login.ts:34",
+      "javascript.express.security.injection.tainted-sql-string.tainted-sql-string @ routes/search.ts:23",
+      "javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret @ lib/insecurity.ts:54",
+      "javascript.lang.security.audit.code-string-concat.code-string-concat @ routes/userProfile.ts:61",
+      "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection @ routes/login.ts:34",
+      "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection @ routes/search.ts:23"
+    ]
+  },
+  "comparacao_referencia": {
+    "referencia": "outputs/sast_antes/baseline_raw_v1.json",
+    "brutos": {
+      "referencia": 15,
+      "esta": 15
+    },
+    "triplos_regra_arquivo_linha_so_na_referencia": [],
+    "triplos_so_nesta": 0,
+    "regras_disparadas": {
+      "referencia": 7,
+      "esta": 7
+    },
+    "regras_so_nesta": [],
+    "regras_so_na_referencia": [],
+    "elegiveis": {
+      "referencia": 12,
+      "esta": 12
+    },
+    "elegiveis_da_referencia_ausentes_nesta": [],
+    "elegiveis_novos": 0
+  }
+}

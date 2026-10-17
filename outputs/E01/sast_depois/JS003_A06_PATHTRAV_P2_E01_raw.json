@@ -1,0 +1,134 @@
+{
+  "version": "1.177.0",
+  "results": [
+    {
+      "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+      "path": "routes/keyServer.ts",
+      "start": {
+        "line": 14,
+        "col": 20,
+        "offset": 490
+      },
+      "end": {
+        "line": 14,
+        "col": 57,
+        "offset": 527
+      },
+      "extra": {
+        "message": "The application processes user-input, this is passed to res.sendFile which can allow an attacker to arbitrarily read files on the system through path traversal. It is recommended to perform input validation in addition to canonicalizing the path. This allows you to validate the path against the intended directory it should be accessing.",
+        "metadata": {
+          "references": [
+            "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html"
+          ],
+          "technology": [
+            "express"
+          ],
+          "category": "security",
+          "cwe": [
+            "CWE-73: External Control of File Name or Path"
+          ],
+          "owasp": [
+            "A04:2021 - Insecure Design",
+            "A06:2025 - Insecure Design"
+          ],
+          "subcategory": [
+            "vuln"
+          ],
+          "likelihood": "HIGH",
+          "impact": "MEDIUM",
+          "confidence": "MEDIUM",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Path Traversal"
+          ],
+          "source": "https://semgrep.dev/r/javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+          "shortlink": "https://sg.run/7DJk"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      "routes/keyServer.ts"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.2357640266418457,
+    "profiling_times": {
+      "config_time": 1.8433418273925781,
+      "core_time": 0.5012049674987793,
+      "ignores_time": 0.0007927417755126953,
+      "total_time": 2.359260082244873
+    },
+    "parsing_time": {
+      "total_time": 0.0,
+      "per_file_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.02369403839111328,
+      "per_file_time": {
+        "mean": 0.00789801279703776,
+        "std_dev": 0.0001188111615167347
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 1.0,
+      "rules_selected_ratio": 0.07407407407407407,
+      "rules_matched_ratio": 0.07407407407407407
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 538481408
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}

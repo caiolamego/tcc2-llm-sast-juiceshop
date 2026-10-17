@@ -5,8 +5,8 @@ catalogo -> prompt -> LLM (ou resposta falsa com --dry-run) -> patch no
 worktree alugado -> validacao em camadas -> git diff + resultado.
 
 Artefatos (D7): outputs/tentativas/<CASO>_<OWASP>_<VULN>_<PROMPT>_<EXECUCAO>_<ARTEFATO>.<ext>
-Com --dry-run vao para outputs/tentativas/dry_run/, para nao misturar com
-tentativas reais.
+Com --dry-run vao para outputs/dry_run/tentativas/, para nao misturar com
+tentativas reais (o .gitignore ignora outputs/dry_run/ inteiro).
 """
 from __future__ import annotations
 
@@ -57,7 +57,7 @@ def main() -> None:
 
     nome = "_".join([issue["caso_id"], issue["owasp_2025"], issue["sigla_vuln"],
                      args.estrategia, args.execucao])
-    pasta = DIR_SAIDA / "dry_run" if args.dry_run else DIR_SAIDA
+    pasta = RAIZ_REPO / "outputs" / "dry_run" / "tentativas" if args.dry_run else DIR_SAIDA
     pasta.mkdir(parents=True, exist_ok=True)
     base = pasta / nome
     existentes = sorted(pasta.glob(f"{nome}_*"))

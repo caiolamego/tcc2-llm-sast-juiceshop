@@ -95,19 +95,21 @@ class ResultadoTier:
     timeout_na_primeira_rodada: bool = False
     testes_falhos_intermitentes: list[str] = field(default_factory=list)
     testes_falhos_reexecucao: list[str] = field(default_factory=list)
-    # Separacao F/D dos testes falhos novos, nas duas definicoes (Secao 13).
+    # Separacao F/D dos testes falhos novos, nas tres definicoes (Secao 13).
     # 'passou' acima e a camada sem separacao (qualquer falha nova reprova).
     testes_falhos_d_marcador: list[str] = field(default_factory=list)
     testes_falhos_d_criterio: list[str] = field(default_factory=list)
+    testes_falhos_d_criterio_amplo: list[str] = field(default_factory=list)
     testes_falhos_f_marcador: list[str] = field(default_factory=list)
     testes_falhos_f_criterio: list[str] = field(default_factory=list)
+    testes_falhos_f_criterio_amplo: list[str] = field(default_factory=list)
     saida: str = ""
     saida_reexecucao: str = ""
 
 
 @dataclass
 class ResultadoValidacao:
-    # passou/tier_falha seguem a definicao d_criterio (Secao 7.1); as tres
+    # passou/tier_falha seguem a definicao d_criterio (Secao 7.1); as quatro
     # versoes ficam em F_* e tier_falha_*.
     passou: bool
     tier_falha: str | None
@@ -115,13 +117,17 @@ class ResultadoValidacao:
     F_sem_separacao: bool = False
     F_marcador: bool = False
     F_criterio: bool = False
+    F_criterio_amplo: bool = False
     tier_falha_sem_separacao: str | None = None
     tier_falha_marcador: str | None = None
     tier_falha_criterio: str | None = None
+    tier_falha_criterio_amplo: str | None = None
     testes_falhos_d_marcador: list[str] = field(default_factory=list)
     testes_falhos_d_criterio: list[str] = field(default_factory=list)
+    testes_falhos_d_criterio_amplo: list[str] = field(default_factory=list)
     testes_falhos_f_marcador: list[str] = field(default_factory=list)
     testes_falhos_f_criterio: list[str] = field(default_factory=list)
+    testes_falhos_f_criterio_amplo: list[str] = field(default_factory=list)
     tiers: list[ResultadoTier] = field(default_factory=list)
     t2_pulado: bool = False
     testes_t2: list[str] = field(default_factory=list)
@@ -350,12 +356,12 @@ def validar(wt: Path, arquivos_alterados: list[str],
             cfg: ConfigValidacao | None = None) -> ResultadoValidacao:
     """Escada T0 -> T2 -> T3 -> T4.
 
-    Cada camada classifica os testes falhos novos em D/F nas duas definicoes
-    (d_marcador, d_criterio). A escada so para quando a camada falha por algo
-    que nao e D nem na definicao mais ampla (d_criterio), ou por falha sem
-    testes (compilacao, timeout, erro sem relatorio). Assim, numa unica
-    validacao saem F sem separacao, F_marcador e F_criterio, encaixados:
-    F_sem_separacao <= F_marcador <= F_criterio.
+    Cada camada classifica os testes falhos novos em D/F nas tres definicoes
+    (d_marcador, d_criterio, d_criterio_amplo). A escada so para quando a
+    camada falha por algo que nao e D nem na definicao mais ampla
+    (d_criterio_amplo), ou por falha sem testes (compilacao, timeout, erro sem
+    relatorio). Assim, numa unica validacao saem as quatro versoes de F,
+    encaixadas: F_sem_separacao <= F_marcador <= F_criterio <= F_criterio_amplo.
     """
     cfg = cfg or ConfigValidacao()
     wt = Path(wt).resolve()
@@ -377,44 +383,39 @@ def validar(wt: Path, arquivos_alterados: list[str],
     if cfg.rodar_t4:
         passos.append(("T4", lambda: _t4_serializado(wt, cfg, base.get("T4", set()))))
 
-    falha = {"sem_separacao": None, "marcador": None, "criterio": None}
+    defs_d = ("marcador", "criterio", "criterio_amplo")
+    falha = {"sem_separacao": None, **{k: None for k in defs_d}}
     concluiu = True
     for tier, rodar in passos:
         r = rodar()
         c = classificar(r.testes_falhos_novos)
-        r.testes_falhos_d_marcador, r.testes_falhos_d_criterio = c["d_marcador"], c["d_criterio"]
-        r.testes_falhos_f_marcador, r.testes_falhos_f_criterio = c["f_marcador"], c["f_criterio"]
+        for k in defs_d:
+            setattr(r, f"testes_falhos_d_{k}", c[f"d_{k}"])
+            setattr(r, f"testes_falhos_f_{k}", c[f"f_{k}"])
         res.tiers.append(r)
         res.reexecucoes += r.reexecucoes
-        for origem, destino in (
-                (r.testes_falhos_novos, res.testes_falhos_novos),
-                (r.testes_falhos_intermitentes, res.testes_falhos_intermitentes),
-                (r.testes_falhos_d_marcador, res.testes_falhos_d_marcador),
-                (r.testes_falhos_d_criterio, res.testes_falhos_d_criterio),
-                (r.testes_falhos_f_marcador, res.testes_falhos_f_marcador),
-                (r.testes_falhos_f_criterio, res.testes_falhos_f_criterio)):
-            for t in origem:
+        campos = ["testes_falhos_novos", "testes_falhos_intermitentes"] + [
+            f"testes_falhos_{df}_{k}" for k in defs_d for df in ("d", "f")]
+        for campo in campos:
+            destino = getattr(res, campo)
+            for t in getattr(r, campo):
                 if t not in destino:
                     destino.append(t)
         # Falha sem testes nomeados (compilacao, timeout, sem relatorio) reprova
         # em todas as definicoes; com testes, depende de quais sao D.
         so_testes = not r.passou and bool(r.testes_falhos_novos)
         ok = {"sem_separacao": r.passou,
-              "marcador": r.passou or (so_testes and not r.testes_falhos_f_marcador),
-              "criterio": r.passou or (so_testes and not r.testes_falhos_f_criterio)}
+              **{k: r.passou or (so_testes and not getattr(r, f"testes_falhos_f_{k}")) for k in defs_d}}
         for k, v in ok.items():
             if not v and falha[k] is None:
                 falha[k] = tier
-        if not ok["criterio"]:
+        if not ok["criterio_amplo"]:
             concluiu = False
             break
 
-    res.tier_falha_sem_separacao = falha["sem_separacao"]
-    res.tier_falha_marcador = falha["marcador"]
-    res.tier_falha_criterio = falha["criterio"]
-    res.F_sem_separacao = concluiu and falha["sem_separacao"] is None
-    res.F_marcador = concluiu and falha["marcador"] is None
-    res.F_criterio = concluiu and falha["criterio"] is None
+    for k in ("sem_separacao",) + defs_d:
+        setattr(res, f"tier_falha_{k}", falha[k])
+        setattr(res, f"F_{k}", concluiu and falha[k] is None)
     res.passou, res.tier_falha = res.F_criterio, res.tier_falha_criterio
 
     res.duracao_s = round(time.monotonic() - inicio, 2)

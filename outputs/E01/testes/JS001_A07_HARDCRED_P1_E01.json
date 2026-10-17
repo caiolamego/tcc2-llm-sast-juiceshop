@@ -1,0 +1,96 @@
+{
+  "passou": false,
+  "tier_falha": "T3",
+  "duracao_s": 14.59,
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "npx",
+        "tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 4.84,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "saida": "",
+      "saida_reexecucao": ""
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/insecurity.unit.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 0.53,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "saida": "▶ insecurity\n  ▶ cutOffPoisonNullByte\n    ✔ returns string unchanged if it contains no null byte (0.891125ms)\n    ✔ returns string up to null byte (0.103125ms)\n  ✔ cutOffPoisonNullByte (1.636958ms)\n  ▶ userEmailFrom\n    ✔ returns content of \"x-user-email\" header if present (0.149334ms)\n    ✔ returns undefined if header \"x-user-email\" is not present (0.162375ms)\n  ✔ userEmailFrom (0.553292ms)\n  ▶ generateCoupon\n    ✔ returns base85-encoded month, year and discount as coupon code (0.42725ms)\n    ✔ uses current month and year if not specified (0.158834ms)\n    ✔ does not encode day of month or time into coupon code (0.479708ms)\n  ✔ generateCoupon (2.51475ms)\n  ▶ discountFromCoupon\n    ✔ returns undefined when not passing in a coupon code (0.167875ms)\n    ✔ returns undefined for malformed coupon code (0.068292ms)\n    ✔ returns undefined for coupon code not according to expected pattern (0.299875ms)\n    ✔ returns undefined for expired coupon code (0.072542ms)\n    ✔ returns discount from valid coupon code (0.087291ms)\n  ✔ discountFromCoupon (0.856292ms)\n  ▶ authenticatedUsers\n    ✔ returns user by associated token (0.5365ms)\n    ✔ returns undefined if no token is passed in (0.032291ms)\n    ✔ returns token by associated user (0.039583ms)\n    ✔ returns user by associated token from request (0.088917ms)\n    ✔ returns undefined if no token is present in request (0.033375ms)\n  ✔ authenticatedUsers (0.809084ms)\n  ▶ sanitizeHtml\n    ✔ handles empty inputs by returning their string representation (0.366916ms)\n    ✔ returns input unchanged for plain text input (0.121667ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.325666ms)\n    ✔ returns input unchanged for HTML input with only harmless links (0.8545ms)\n    ✔ removes all Javascript from HTML input (0.20725ms)\n    ✔ can be bypassed by exploiting lack of recursive sanitization (0.059916ms)\n  ✔ sanitizeHtml (2.041959ms)\n  ▶ sanitizeLegacy\n    ✔ returns empty string for undefined input (0.235666ms)\n    ✔ returns input unchanged for plain text input (0.086333ms)\n    ✔ removes all opening tags and subsequent character from HTML input (0.056041ms)\n    ✔ can be bypassed to allow working HTML payload to be returned (0.054625ms)\n  ✔ sanitizeLegacy (0.552167ms)\n  ▶ sanitizeSecure\n    ✔ handles empty inputs by returning their string representation (0.178958ms)\n    ✔ returns input unchanged for plain text input (0.08875ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.219167ms)\n    ✔ returns input unchanged for HTML input with only harmless links (0.157833ms)\n    ✔ removes all Javascript from HTML input (0.19475ms)\n    ✔ cannot be bypassed by exploiting lack of recursive sanitization (0.128042ms)\n  ✔ sanitizeSecure (1.165625ms)\n  ▶ hash\n    ✔ returns MD5 hash for any input string (0.143542ms)\n  ✔ hash (0.221375ms)\n  ▶ hmac\n    ✔ returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string (0.311833ms)\n  ✔ hmac (0.372875ms)\n✔ insecurity (13.040125ms)\nℹ tests 35\nℹ suites 11\nℹ pass 35\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 477.590166\n",
+      "saida_reexecucao": ""
+    },
+    {
+      "tier": "T3",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/**/*.unit.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 9.21,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+      ],
+      "testes_falhos_novos": [
+        "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+      ],
+      "reexecucoes": 1,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [
+        "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+      ],
+      "saida": "e (0.152916ms)\n      ✔ 403 status code (0.275ms)\n      ✔ 404 status code (0.589625ms)\n      ✔ 500 status code (0.124833ms)\n    ✔ is solved when an error occurs on a response with error (1.272917ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.121459ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.394417ms)\n      ✔ 402 status code (0.145ms)\n      ✔ 404 status code (0.089ms)\n      ✔ 500 status code (0.06725ms)\n    ✔ is not solved when no error occurs on a response with error (1.720584ms)\n    ✔ should pass occurred error on to next route (0.157792ms)\n  ✔ \"errorHandlingChallenge\" (3.662792ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (0.324375ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.086917ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.087917ms)\n    ✔ \"changeProductChallenge\" (0.571584ms)\n  ✔ databaseRelatedChallenges (0.646958ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (1.081667ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.258709ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (1.503875ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (0.359083ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (0.250792ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (0.802709ms)\n  ✔ jwtChallenges (4.356792ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.140334ms)\n    ✔ should return 1 for identical strings even if they are short (0.0495ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.042ms)\n    ✔ should return 0 for completely different strings (0.050542ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.047833ms)\n  ✔ diceCoefficient (0.40575ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.106ms)\n    ✔ should return false if similarity is below threshold (0.06625ms)\n  ✔ checkSystemPromptSimilarity (0.214709ms)\n✔ verify (40.93875ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (0.711208ms)\n    ✔ fails when supplied webhook is not a valid URL (15.803875ms)\n    ✔ submits POST with payload to existing URL (37.058458ms)\n  ✔ notify (128.585916ms)\n✔ webhook (129.059875ms)\n▶ xml\n  ✔ should parse a simple XML string (615.102291ms)\n  ✔ should expand internal entities (2.574875ms)\n  ✔ should throw error on malformed XML (3.653584ms)\n  ✔ should timeout on entity expansion bomb (35.5795ms)\n✔ xml (657.861833ms)\nℹ tests 335\nℹ suites 109\nℹ pass 332\nℹ fail 1\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 4309.093833\n\n✖ failing tests:\n\ntest at test/server/redirect.unit.test.ts:2:3622\n✖ tricking the allowlist should solve \"redirectChallenge\" (2.806708ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  false !== true\n  \n      at TestContext.<anonymous> (test/server/redirect.unit.test.ts:84:12)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "\n      ✔ 403 status code (0.069292ms)\n      ✔ 404 status code (0.100791ms)\n      ✔ 500 status code (0.0645ms)\n    ✔ is solved when an error occurs on a response with error (0.424458ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.074042ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.106541ms)\n      ✔ 402 status code (0.065709ms)\n      ✔ 404 status code (0.073875ms)\n      ✔ 500 status code (0.068083ms)\n    ✔ is not solved when no error occurs on a response with error (0.38125ms)\n    ✔ should pass occurred error on to next route (0.102334ms)\n  ✔ \"errorHandlingChallenge\" (1.258292ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (0.290083ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.080333ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.084125ms)\n    ✔ \"changeProductChallenge\" (0.508875ms)\n  ✔ databaseRelatedChallenges (0.559541ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (1.01875ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.24025ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (1.525125ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (0.394708ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (0.28975ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (0.606167ms)\n  ✔ jwtChallenges (4.1755ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.127959ms)\n    ✔ should return 1 for identical strings even if they are short (0.049666ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.047333ms)\n    ✔ should return 0 for completely different strings (0.052625ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.055833ms)\n  ✔ diceCoefficient (0.408584ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.110083ms)\n    ✔ should return false if similarity is below threshold (0.064917ms)\n  ✔ checkSystemPromptSimilarity (0.219292ms)\n✔ verify (12.136958ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (0.486875ms)\n    ✔ fails when supplied webhook is not a valid URL (15.312416ms)\n    ✔ submits POST with payload to existing URL (80.314083ms)\n  ✔ notify (96.812583ms)\n✔ webhook (97.082916ms)\n▶ xml\n  ✔ should parse a simple XML string (623.474792ms)\n  ✔ should expand internal entities (20.316625ms)\n  ✔ should throw error on malformed XML (5.527459ms)\n  ✔ should timeout on entity expansion bomb (3.905209ms)\n✔ xml (654.083375ms)\nℹ tests 335\nℹ suites 109\nℹ pass 332\nℹ fail 1\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 4759.574084\n\n✖ failing tests:\n\ntest at test/server/redirect.unit.test.ts:2:3622\n✖ tricking the allowlist should solve \"redirectChallenge\" (28.822792ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  false !== true\n  \n      at TestContext.<anonymous> (test/server/redirect.unit.test.ts:84:12)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [
+    "test/server/insecurity.unit.test.ts"
+  ],
+  "testes_falhos_novos": [
+    "test/server/redirect.unit.test.ts :: redirect > tricking the allowlist should solve \"redirectChallenge\""
+  ],
+  "reexecucoes": 1,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": "outputs/baseline_testes.json"
+}

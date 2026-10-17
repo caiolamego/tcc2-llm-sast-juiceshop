@@ -1,0 +1,171 @@
+{
+  "rotulo": "anonimo_11rulesets_ampliado",
+  "data_utc": "2026-10-16T22:01:51+00:00",
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "semgrep_versao": "1.177.0",
+  "autenticado": false,
+  "rulesets": [
+    "p/javascript",
+    "p/typescript",
+    "p/nodejs",
+    "p/expressjs",
+    "p/owasp-top-ten",
+    "p/security-audit",
+    "p/secrets",
+    "p/xss",
+    "p/sql-injection",
+    "p/jwt",
+    "p/default"
+  ],
+  "exclusoes_caminho": [
+    "node_modules/",
+    "build/",
+    "dist/",
+    "frontend/dist/",
+    "frontend/node_modules/",
+    "coverage/",
+    "test/",
+    "data/static/codefixes/",
+    "vagrant/",
+    "screenshots/",
+    "*.min.js",
+    "*.map",
+    ".github/",
+    ".npmrc",
+    "logs/",
+    "frontend/src/assets/private/three.js"
+  ],
+  "duracao_s": 11.8,
+  "json_bruto": "outputs/sondagens/semgrep_2026-10-16/anonimo_11rulesets/baseline_raw.json",
+  "erros_semgrep": 8,
+  "arquivos_varridos": 868,
+  "campos_login": {
+    "resultados": 35,
+    "fingerprint_preenchido": 0,
+    "lines_preenchido": 0,
+    "exemplo_fingerprint": null
+  },
+  "funil": {
+    "passos": {
+      "0_brutos_apos_exclusao_de_caminhos": 35,
+      "2_categoria_security": 35,
+      "3_severidade": 34,
+      "4_com_cwe": 34,
+      "5_dedup_check_id_path": 27
+    },
+    "elegiveis": 27,
+    "por_sigla": {
+      "HARDCRED": 5,
+      "XSS": 5,
+      "PATHTRAV": 4,
+      "SQLI": 4,
+      "CODEINJ": 3,
+      "OPENREDIR": 2,
+      "MASSASSIGN": 1,
+      "REDOS": 1,
+      "CREDPROT": 1,
+      "INFOEXPOSURE": 1
+    },
+    "por_owasp_2025": {
+      "A01": 3,
+      "A02": 1,
+      "A04": 2,
+      "A05": 12,
+      "A06": 5,
+      "A07": 3,
+      "A08": 1
+    },
+    "cwes_fora_do_mapa": {},
+    "por_regra": {
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile": 4,
+      "generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var": 3,
+      "generic.secrets.security.detected-jwt-token.detected-jwt-token": 2,
+      "javascript.browser.security.eval-detected.eval-detected": 2,
+      "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection": 2,
+      "javascript.express.security.injection.tainted-sql-string.tainted-sql-string": 2,
+      "generic.secrets.security.detected-generic-secret.detected-generic-secret": 1,
+      "javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop": 1,
+      "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp": 1,
+      "javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key": 1,
+      "javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret": 1,
+      "javascript.express.security.audit.remote-property-injection.remote-property-injection": 1,
+      "javascript.express.security.audit.possible-user-input-redirect.unknown-value-in-redirect": 1,
+      "javascript.express.security.audit.express-open-redirect.express-open-redirect": 1,
+      "javascript.lang.security.audit.code-string-concat.code-string-concat": 1,
+      "javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag": 1,
+      "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing": 1,
+      "javascript.express.security.audit.xss.pug.explicit-unescape.template-explicit-unescape": 1
+    },
+    "excluidos_por_passo": {
+      "2_categoria": {},
+      "3_severidade": {
+        "INFO": 1
+      },
+      "4_sem_cwe": 0,
+      "5_duplicatas": 7
+    },
+    "elegiveis_lista": [
+      "generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var @ frontend/src/app/navbar/navbar.component.html:17",
+      "generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var @ frontend/src/app/purchase-basket/purchase-basket.component.html:15",
+      "generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var @ views/dataErasureForm.hbs:38",
+      "generic.secrets.security.detected-generic-secret.detected-generic-secret @ data/static/users.yml:151",
+      "generic.secrets.security.detected-jwt-token.detected-jwt-token @ frontend/src/app/app.guard.spec.ts:46",
+      "generic.secrets.security.detected-jwt-token.detected-jwt-token @ frontend/src/app/last-login-ip/last-login-ip.component.spec.ts:72",
+      "javascript.browser.security.eval-detected.eval-detected @ routes/captcha.ts:22",
+      "javascript.browser.security.eval-detected.eval-detected @ routes/userProfile.ts:61",
+      "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing @ server.ts:269",
+      "javascript.express.security.audit.express-open-redirect.express-open-redirect @ routes/redirect.ts:19",
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile @ routes/fileServer.ts:33",
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile @ routes/keyServer.ts:14",
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile @ routes/logfileServer.ts:14",
+      "javascript.express.security.audit.express-res-sendfile.express-res-sendfile @ routes/quarantineServer.ts:14",
+      "javascript.express.security.audit.possible-user-input-redirect.unknown-value-in-redirect @ routes/redirect.ts:19",
+      "javascript.express.security.audit.remote-property-injection.remote-property-injection @ routes/currentUser.ts:31",
+      "javascript.express.security.audit.xss.pug.explicit-unescape.template-explicit-unescape @ views/promotionVideo.pug:75",
+      "javascript.express.security.injection.tainted-sql-string.tainted-sql-string @ routes/login.ts:34",
+      "javascript.express.security.injection.tainted-sql-string.tainted-sql-string @ routes/search.ts:23",
+      "javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret @ lib/insecurity.ts:54",
+      "javascript.lang.security.audit.code-string-concat.code-string-concat @ routes/userProfile.ts:61",
+      "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp @ lib/codingChallenges.ts:76",
+      "javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key @ lib/insecurity.ts:42",
+      "javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop @ frontend/src/hacking-instructor/helpers/helpers.ts:49",
+      "javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag @ routes/videoHandler.ts:57",
+      "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection @ routes/login.ts:34",
+      "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection @ routes/search.ts:23"
+    ]
+  },
+  "comparacao_referencia": {
+    "referencia": "outputs/sast_antes/baseline_raw_v1.json",
+    "brutos": {
+      "referencia": 15,
+      "esta": 35
+    },
+    "triplos_regra_arquivo_linha_so_na_referencia": [],
+    "triplos_so_nesta": 20,
+    "regras_disparadas": {
+      "referencia": 7,
+      "esta": 19
+    },
+    "regras_so_nesta": [
+      "generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var",
+      "generic.secrets.security.detected-generic-secret.detected-generic-secret",
+      "generic.secrets.security.detected-jwt-token.detected-jwt-token",
+      "javascript.browser.security.eval-detected.eval-detected",
+      "javascript.express.security.audit.possible-user-input-redirect.unknown-value-in-redirect",
+      "javascript.express.security.audit.remote-property-injection.remote-property-injection",
+      "javascript.express.security.audit.xss.pug.explicit-unescape.template-explicit-unescape",
+      "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+      "javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key",
+      "javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop",
+      "javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag",
+      "javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring"
+    ],
+    "regras_so_na_referencia": [],
+    "elegiveis": {
+      "referencia": 12,
+      "esta": 27
+    },
+    "elegiveis_da_referencia_ausentes_nesta": [],
+    "elegiveis_novos": 15
+  }
+}
