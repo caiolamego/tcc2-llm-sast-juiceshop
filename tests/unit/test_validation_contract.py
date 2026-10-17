@@ -24,6 +24,22 @@ def entrada():
 
 
 class ValidationContractTests(unittest.TestCase):
+    def test_comparadores_versionados_e_versao_desconhecida(self):
+        for comparador in ('blocos_unicos_v1','ocorrencias_contexto_v2'):
+            e=entrada();e.contrato['comparador']=comparador
+            with self.subTest(comparador=comparador),patch('pipeline.metrics.loader._perfil'):
+                _validar_contrato(e)
+        e=entrada();e.contrato['comparador']='sem_identidade'
+        with patch('pipeline.metrics.loader._perfil'),self.assertRaises(ValueError):_validar_contrato(e)
+
+    def test_troca_de_comparador_recusa_retomada_antiga(self):
+        from pipeline.execucao_ampliada import validar_compatibilidade_antiga
+        old={'schema_versao':'1.0','comparador':'blocos_unicos_v1','estrategias':['P1'],
+             'diagnosticos':[],'prompts_validacao_sha256':{}}
+        current=dict(old,schema_versao='3.0',comparador='ocorrencias_contexto_v2',validacao={})
+        with self.assertRaisesRegex(ValueError,'campos científicos'):
+            validar_compatibilidade_antiga(old,current,Path('.'),[],Path('.'))
+
     def test_fingerprint_inclui_sast_comparador_e_restauracao(self):
         fontes=componentes()
         for nome in ('src/pipeline/sast/semgrep_client.py','src/pipeline/sast/comparacao.py',

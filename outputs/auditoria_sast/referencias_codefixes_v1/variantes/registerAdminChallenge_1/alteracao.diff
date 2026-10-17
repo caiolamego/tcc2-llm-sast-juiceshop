@@ -1,0 +1,32 @@
+--- server.ts
++++ server.ts
+@@ -477,7 +477,7 @@
+   app.use(verify.databaseRelatedChallenges())
+ 
+   // vuln-code-snippet start registerAdminChallenge
+-  /* Generated API endpoints */
++/* Generated API endpoints */
+   finale.initialize({ app, sequelize: seq })
+ 
+   const autoModels = [
+@@ -507,14 +507,15 @@
+     })
+ 
+     // create a wallet when a new user is registered using API
+-    if (name === 'User') { // vuln-code-snippet neutral-line registerAdminChallenge
+-      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge
++    if (name === 'User') {
++      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => {
+         WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {
+           console.log(err)
+         })
+-        return context.continue // vuln-code-snippet neutral-line registerAdminChallenge
+-      }) // vuln-code-snippet neutral-line registerAdminChallenge
+-    } // vuln-code-snippet neutral-line registerAdminChallenge
++        context.instance.role = context.instance.role ? context.instance.role : 'customer'
++        return context.continue
++      })
++    }
+     // vuln-code-snippet end registerAdminChallenge
+ 
+     // translate challenge descriptions on-the-fly

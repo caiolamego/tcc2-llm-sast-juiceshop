@@ -33,6 +33,22 @@ Este documento é um diagnóstico e um plano de trabalho. Checkboxes marcadas re
 
 > **Atualização — feature 04 concluída:** calculador reutilizável, consolidação JSON/CSV, denominadores explícitos e separação de simulação/diagnóstico implementados. 153 testes passaram; dry-run e preflight foram consolidados e reproduzidos. RRIS real e pesos opcionais continuam sem entradas. A divergência preexistente do perfil remoto foi registrada e um snapshot exato recuperado. Veja a [entrega](../features/04-metricas-consolidacao/ENTREGA.md). Próximo passo: piloto real, selecionando um perfil íntegro.
 
+> **Referências dos desafios — 17/10/2026:** auditoria exploratória executou 63
+> alternativas de 17 desafios, cobrindo 13 casos distintos, sem LLM ou alteração
+> das regras/comparador. Foram identificadas ambiguidades por comentários e
+> reescrita de chamadas, além de associações entre desafios e alertas amplos.
+> A auditoria inicialmente recomendou comparador v2 e revisão das associações.
+> Veja o [relatório](auditoria/avaliacao_referencias_codefixes.md).
+
+> **Comparador v2 — 17/10/2026:** implementado com 236 testes passando,
+> pareamento por tokens/contexto e motivos no registro/painel. A reanálise offline
+> reduziu indeterminações de 28 para 6 nas 63 referências e de 4 para 0 nos oito
+> patches anteriores. KeyServer passou a R=0/M=1; F não foi remensurado.
+> Seis revisões documentais não alteram o catálogo. Use saída nova para executar
+> o pipeline; contratos anteriores não são migrados. Próximo passo: avaliar
+> casos variados ainda não usados na calibração e revisar a cobertura funcional.
+> Veja a [entrega e os limites](auditoria/comparador_v2.md).
+
 ## 1. Documentos que orientam o trabalho
 
 | Fonte | Como utilizar |

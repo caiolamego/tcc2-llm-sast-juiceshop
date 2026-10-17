@@ -366,3 +366,44 @@ medidas, não esta cobertura mais restrita. Testes automatizados verificam sele�
 F/D, SAST mesmo após falha e ausência das chamadas às suítes amplas. Não foram
 executados LLM, scan ou testes do alvo para esta alteração. Consulte a
 [definição operacional](validacao_relacionada.md).
+
+
+### Calibração exploratória com referências dos Coding Challenges — 17/10/2026
+
+Foram avaliadas, fora do pipeline LLM, 63 alternativas de 17 desafios em cópias
+isoladas dos arquivos completos, usando o perfil congelado. São 13 casos distintos
+do catálogo; há alternativas compartilhando casos e fontes. Todos os alertas
+originais avaliados foram reproduzidos; F não foi medido e M_fixture não é M global.
+Das 17 alternativas marcadas corretas, 12 tiveram R=1/M_fixture=1, quatro alguma
+indeterminação e uma manteve o alerta associado. Isso revela limites de pareamento
+e de associação entre desafio e regra, sem estabelecer precisão/recall do SAST.
+
+`codefixes/` permanece excluído dos prompts, RAG e escopo operacional. As referências
+pedagógicas só foram injetadas em fixtures temporárias para esta auditoria; não
+foram aplicadas às worktrees. Os scans brutos e códigos anteriores/posteriores
+ficam em saída separada, com hashes e inventário. Nenhum critério de aceite,
+comparador, regra ou catálogo foi alterado. Este conjunto foi inspecionado e não
+poderá ser apresentado como avaliação independente de um comparador ajustado a ele.
+Veja o [relatório e as mudanças recomendadas](auditoria/avaliacao_referencias_codefixes.md).
+
+### Comparação por contexto e revisão das associações — 17/10/2026
+
+Execuções ampliadas novas passam a usar `ocorrencias_contexto_v2`, mantendo a
+política de cobertura/parsing da v1. Após blocos únicos de linhas, o comparador
+usa blocos de tokens, foco único e chamadas únicas no mesmo escopo com âncora
+lexical verificável. Preserva multiplicidade e pareamento um para um; casos sem
+evidência suficiente continuam indeterminados. R=0 indica persistência do alerta,
+não confirmação de exploração. O contrato identifica o comparador e inclui o
+adaptador sintático na implementação; o ambiente identifica suas dependências.
+
+A reanálise offline dos scans arquivados reduziu indeterminações de 28 para 6
+entre 63 referências e de 4 para 0 entre oito patches. As 17 referências corretas
+tiveram 16 resultados R=1/M_fixture=1 e um R=0/M_fixture=1. F não foi remensurado;
+M_fixture não é global. Este conjunto é de calibração observado, sem inferência
+de precisão/recall. Os artefatos anteriores não são reclassificados.
+
+Revisões de associações são uma camada documental separada e versionada. Nenhuma
+regra, ocorrência, prompt, classificação da auditoria ou critério F/D foi alterado.
+Alternativas incorretas que removem alertas reforçam a necessidade de validação
+funcional independente. Retomadas com comparador divergente são recusadas; novas
+execuções usam outra saída. Veja a [entrega, comandos e evidências](auditoria/comparador_v2.md).

@@ -36,6 +36,9 @@ def resumo_tentativa(linha):
             'politica_validacao': linha.get('politica_validacao', 'historica_v1'),
             'tempos_medicao': linha.get('tempos_medicao', {}),
             'etapas_validacao': linha.get('etapas_validacao', []),
+            'motivos_indeterminacao': linha.get('motivos_indeterminacao', []),
+            'versao_comparador': linha.get('versao_comparador', 'blocos_unicos_v1'),
+            'falhas_contexto_sast': linha.get('falhas_contexto_sast', {}),
             'total_estimado': estimado}
 
 

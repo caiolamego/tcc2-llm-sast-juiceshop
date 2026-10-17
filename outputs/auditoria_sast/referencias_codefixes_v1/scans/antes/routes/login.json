@@ -1,0 +1,139 @@
+{
+  "version": "1.177.0",
+  "results": [
+    {
+      "check_id": "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection",
+      "path": "routes/login.ts",
+      "start": {
+        "line": 34,
+        "col": 28,
+        "offset": 1488
+      },
+      "end": {
+        "line": 34,
+        "col": 169,
+        "offset": 1629
+      },
+      "extra": {
+        "message": "Detected a sequelize statement that is tainted by user-input. This could lead to SQL injection if the variable is user-controlled and is not properly sanitized. In order to prevent SQL injection, it is recommended to use parameterized queries or prepared statements.",
+        "metadata": {
+          "category": "security",
+          "confidence": "HIGH",
+          "cwe": [
+            "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+          ],
+          "cwe2021-top25": true,
+          "cwe2022-top25": true,
+          "impact": "HIGH",
+          "interfile": true,
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "likelihood": "HIGH",
+          "owasp": [
+            "A01:2017 - Injection",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "references": [
+            "https://sequelize.org/docs/v6/core-concepts/raw-queries/#replacements"
+          ],
+          "shortlink": "https://sg.run/gjoe",
+          "source": "https://semgrep.dev/r/javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection",
+          "subcategory": [
+            "vuln"
+          ],
+          "technology": [
+            "express"
+          ],
+          "vulnerability_class": [
+            "SQL Injection"
+          ]
+        },
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      ".gitignore",
+      "routes/login.ts"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.3433079719543457,
+    "profiling_times": {
+      "config_time": 10.87004828453064,
+      "core_time": 0.6635618209838867,
+      "ignores_time": 0.0014567375183105469,
+      "total_time": 11.543118715286255
+    },
+    "parsing_time": {
+      "total_time": 0.0,
+      "per_file_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.06265687942504883,
+      "per_file_time": {
+        "mean": 0.012531375885009766,
+        "std_dev": 0.0005728114143403217
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 0.9894736842105263,
+      "rules_selected_ratio": 0.042105263157894736,
+      "rules_matched_ratio": 0.042105263157894736
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 713655296
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}

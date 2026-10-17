@@ -12,7 +12,8 @@ from pipeline.caminhos import RAIZ_REPO
 from pipeline.catalogo import carregar, digest, exigir
 from pipeline.sast.perfil import carregar as carregar_perfil
 from pipeline.sast.semgrep_client import scan_perfil, carregar_scan_perfil, conferir_versao
-from pipeline.sast.comparacao import gate, VERSAO
+from pipeline.sast.comparacao import gate
+from pipeline.sast.comparacao_v2 import VERSAO
 from pipeline.prompts import builder
 from pipeline.registro import ler_execucoes
 from pipeline.target.workspace import PoolWorktrees
@@ -249,7 +250,8 @@ def preparar(args, catalogo, casos):
 def sondar(args, catalogo):
     """Sondagem manual com o mesmo gate/perfil/comparador, separada das métricas."""
     import subprocess
-    from pipeline.sast.comparacao import comparar, chave_caso
+    from pipeline.sast.comparacao import chave_caso
+    from pipeline.sast.comparacao_v2 import comparar
     from pipeline.validation.runner import validar, ConfigValidacao
     args.execucao = args.rotulo
     args.estrategias, args.diagnosticos = ['P1'], []
@@ -280,7 +282,7 @@ def sondar(args, catalogo):
             from pipeline.validation.policy import alterada
             exigir(not alterada(args),'Opções de validação na sondagem requerem --validar')
             after = scan_perfil(wt,prep.perfil,prep.saida/'sast_depois/sondagem_raw.json',args.semgrep_bin)
-            comp = comparar(prep.scan,after,chave_caso(issue),fontes)
+            comp = comparar(prep.scan,after,chave_caso(issue),fontes,checkout=wt)
         data = {'aviso':'Sondagem não integra métricas de geração LLM','origem_patch':args.origem,
                 'caso_id':issue['caso_id'],'patch_sha256':digest(patch),
                 'contrato_execucao_sha256':prep.contrato_hash,'comparacao':comp}

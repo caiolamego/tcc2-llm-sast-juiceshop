@@ -291,7 +291,10 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
                      comparacao_artefato=rel(comp_file), novas_issues_qtd=comp['novas_issues_qtd'],
                      possiveis_novas_issues_qtd=comp['possiveis_novas_issues_qtd'],
                      novas_issues_ids=comp['novos'], cobertura_sast_limitada=comp['cobertura_limitada'],
-                     motivos_indeterminacao=comp['arquivos_inconclusivos'])
+                     motivos_indeterminacao=comp.get('motivos_indeterminacao', []),
+                     arquivos_inconclusivos_sast=comp['arquivos_inconclusivos'],
+                     falhas_contexto_sast=comp.get('falhas_contexto', {}),
+                     versao_comparador=comp['versao_comparador'])
         linha['sast_depois'] = [f.to_dict() for f in depois_scan.findings]
         linha['sast_depois_raw'] = rel(arq_raw) if arq_raw.exists() else None
         linha['duracao_sast_s'] = round(medicao['tempos_medicao']['sast_s'], 3)

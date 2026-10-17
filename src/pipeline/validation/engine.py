@@ -5,7 +5,8 @@ import time
 
 from pipeline.caminhos import RAIZ_REPO
 from pipeline.sast.semgrep_client import scan_perfil, carregar_scan_perfil
-from pipeline.sast.comparacao import comparar, chave_caso
+from pipeline.sast.comparacao import chave_caso
+from pipeline.sast.comparacao_v2 import comparar
 from pipeline.validation.runner import validar, ConfigValidacao, ResultadoValidacao, ResultadoTier
 from pipeline.validation.cache import CacheEvidencias
 from pipeline.validation.identity import digest, hash_json, estado, ambiente, baseline_semantico, versao
@@ -83,7 +84,7 @@ def medir(wt, issue, fontes, baseline, perfil, baseline_testes, saida_raw, args,
         meta['sast'] = info
         t = time.monotonic()
         holder['scan'] = scan
-        holder['comparacao'] = comparar(baseline,scan,chave_caso(issue),fontes)
+        holder['comparacao'] = comparar(baseline,scan,chave_caso(issue),fontes,checkout=wt)
         tempos['comparacao_s'] = time.monotonic()-t
 
     cfg = ConfigValidacao(lock_t4=lock_api, arquivo_linha_de_base=Path(baseline_testes),

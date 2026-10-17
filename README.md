@@ -505,3 +505,14 @@ python executar.py --config config/execucao_otimizada.exemplo.yaml --mostrar-com
 ```
 
 O [roteiro](features/05-otimizacao-validacao/VALIDACAO.md) descreve os replays sem LLM.
+
+
+A [auditoria das referências de desafios](docs/auditoria/avaliacao_referencias_codefixes.md)
+avaliou 63 alternativas de correção em fixtures SAST isoladas, sem LLM e sem mudar
+as regras ou o comparador. O relatório distingue limitações de pareamento,
+associações amplas e remoção de alertas sem preservação funcional comprovada.
+
+Novas execuções ampliadas usam o [comparador v2](docs/auditoria/comparador_v2.md),
+com pareamento por tokens/contexto e motivos de indeterminação no painel. A reanálise
+offline de 63 referências e oito patches preservou os artefatos antigos; novas
+medições exigem outra execução, sem retomar contratos do comparador anterior.

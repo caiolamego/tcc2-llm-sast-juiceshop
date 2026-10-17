@@ -1,0 +1,34 @@
+schema_versao: '1.0'
+catalogo_sha256: 08672899e712fbeef2070f01c58b5867e080e74f716ddc7d8fd10c6d58344aee
+finalidade: revisão documental; não modifica catálogo, seleção, prompts ou regras
+revisoes:
+  - caso_id: AMP2d60f2c545f1c37a
+    desafio: registerAdminChallenge
+    tipo: mecanismos_distintos
+    conclusao: A referência restringe role a customer; a regra continua sinalizando a exposição de escrita gerada pelo finale. O R=0 não demonstra falha da correção do desafio.
+    evidencia: outputs/auditoria_sast/referencias_codefixes_v1/variantes/registerAdminChallenge_3
+  - caso_id: AMP95adf572d3c6677f
+    desafio: null
+    tipo: sem_referencia
+    conclusao: Não há codefix associado. A persistência do sink res.sendFile não comprova a ausência de controle de caminho nem confirma exploração; exige revisão de segurança específica.
+    evidencia: workspace/catalogo-alvo/routes/keyServer.ts
+  - caso_id: AMPb65a1448bc9fba13
+    desafio: accessLogDisclosureChallenge
+    tipo: referencia_em_outro_arquivo
+    conclusao: A referência altera o registro de rotas em server.ts; não altera diretamente routes/logfileServer.ts. Não usá-la como solução local deste alerta.
+    evidencia: workspace/catalogo-alvo/routes/logfileServer.ts
+  - caso_id: AMP7f162887aff2d750
+    desafio: redirectChallenge
+    tipo: referencia_em_outro_arquivo
+    conclusao: A referência altera a validação em lib/insecurity.ts; não altera diretamente routes/redirect.ts. Validar o fluxo entre arquivos separadamente.
+    evidencia: workspace/catalogo-alvo/routes/redirect.ts
+  - caso_id: AMP8be00f4f6862bdba
+    desafio: exposedMetricsChallenge
+    tipo: fora_do_trecho
+    conclusao: A ocorrência em server.ts está fora do bloco substituído pela referência. A referência não cobre automaticamente todas as ocorrências desta regra.
+    evidencia: workspace/catalogo-alvo/server.ts
+  - caso_id: AMP41302bd0fb784039
+    desafio: weakPasswordChallenge
+    tipo: montagem_ambigua
+    conclusao: Marcadores inline não permitem a montagem automática conservadora usada na auditoria. Avaliação manual pendente; não inferir resultado SAST.
+    evidencia: workspace/catalogo-alvo/lib/insecurity.ts

@@ -32,7 +32,10 @@ function render(data) {
     strategy.title = attempt.estrategia || '';
     const hits = Object.entries(attempt.cache_validacao || {}).filter(([,v])=>v.hit).map(([k])=>k);
     const result = cell(tr, `${attempt.classificacao || '—'}${attempt.cache ? ' · cache LLM' : ''}${hits.length ? ' · reuso '+hits.join('/') : ''}`);
-    result.title = JSON.stringify({politica:attempt.politica_validacao,cache:attempt.cache_validacao,etapas:attempt.etapas_validacao},null,2);
+    const reasons = (attempt.motivos_indeterminacao || []).map(r => typeof r === 'string' ? r : `${r.campo}: ${r.descricao}`);
+    if (reasons.length) { const detail = document.createElement('small'); detail.textContent = reasons.join(' '); result.append(detail); }
+    else if (attempt.classificacao === 'indeterminada_sast') { const detail = document.createElement('small'); detail.textContent = 'Consulte a comparação arquivada para esta execução.'; result.append(detail); }
+    result.title = JSON.stringify({comparador:attempt.versao_comparador,motivos:attempt.motivos_indeterminacao,contexto:attempt.falhas_contexto_sast,politica:attempt.politica_validacao,cache:attempt.cache_validacao,etapas:attempt.etapas_validacao},null,2);
     for (const key of ['llm', 'sast', 'validacao']) {
       const td=cell(tr, duration(attempt.tempos[key]));
       const origem=attempt.cache_validacao?.[key==='validacao'?'funcional':key];

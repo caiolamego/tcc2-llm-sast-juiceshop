@@ -119,7 +119,7 @@ def _validar_contrato(entrada):
     exigir(isinstance(c.get('estrategias'),list) and isinstance(c.get('diagnosticos'),list), 'Estratégias do contrato inválidas')
     exigir(all(e in ESTRATEGIAS for e in c['estrategias']) and all(e in DIAGNOSTICOS for e in c['diagnosticos']), 'Estratégias do contrato inválidas')
     exigir(len(set(c['estrategias']+c['diagnosticos'])) == len(c['estrategias']+c['diagnosticos']), 'Estratégias duplicadas')
-    exigir(c.get('comparador') == 'blocos_unicos_v1', 'Comparador incompatível')
+    exigir(c.get('comparador') in ('blocos_unicos_v1', 'ocorrencias_contexto_v2'), 'Comparador incompatível')
     _perfil(entrada)
 
 
