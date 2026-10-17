@@ -133,6 +133,8 @@ def selecionar(data, arquivos, wt):
 def ambiente(wt, frontend=False):
     from pipeline.validation.identity import ambiente as legado, dependencias, versao
     value=legado(wt)
+    from pipeline.validation.preparacao_api import inventario
+    value['preparacao_api']=inventario(wt)
     if frontend:
         base=Path(wt)/'frontend'
         value['frontend']={'lock_sha256':digest(base/'package-lock.json'),
@@ -151,8 +153,8 @@ def identidade(data, revisao, mapa):
     return {'revisao_sha256':digest(revisao),'mapa_sha256':digest(mapa),
             'conjunto_d_sha256':digest(d),'testes_adicionais':{Path(p).relative_to(RAIZ_REPO).as_posix():h for p,h in files.items()
                                                              if Path(p).is_relative_to(RAIZ_REPO/'tests')},
-            'adaptadores_sha256':{p.name:digest(p) for p in (Path(__file__),Path(__file__).with_name('coverage_runner.py'),Path(__file__).with_name('conjunto_d.py'))},
-            'selecao':'uniao_por_arquivo_v2','execucao':{'TSX_DISABLE_CACHE':'1','frontend_CI':'true','frontend_watch':False}}
+            'adaptadores_sha256':{p.name:digest(p) for p in (Path(__file__),Path(__file__).with_name('coverage_runner.py'),Path(__file__).with_name('conjunto_d.py'),Path(__file__).with_name('preparacao_api.py'),Path(__file__).with_name('coverage_api_setup.mjs'))},
+            'falhas_operacionais':'grupo_invalido_nao_mede_f_v1','selecao':'uniao_por_arquivo_v2','execucao':{'TSX_DISABLE_CACHE':'1','frontend_CI':'true','frontend_watch':False}}
 
 
 def validar_baseline(path, data, revisao, mapa, wt, selection, conferir_ambiente=True, exigir_grupos=True):
@@ -163,9 +165,14 @@ def validar_baseline(path, data, revisao, mapa, wt, selection, conferir_ambiente
     for name,h in baseline.get('artefatos_sha256',{}).items():
         if digest(interno(Path(path).resolve().parent,name))!=h:raise ValueError('Evidência de baseline alterada')
     if conferir_ambiente:
+        if 'api' in selection['dominios']:
+            from pipeline.validation.preparacao_api import conferir
+            conferir(wt)
         current=ambiente(Path(wt),'frontend' in selection['dominios']);current.pop('porta_api',None)
         expected=dict(baseline.get('ambiente',{}))
         if 'frontend' not in selection['dominios']:expected.pop('frontend',None)
+        if 'api' not in selection['dominios']:
+            expected.pop('preparacao_api',None);current.pop('preparacao_api',None)
         if current!=expected:
             raise ValueError('Ambiente funcional diverge do baseline')
     for gid in selection['grupos']:

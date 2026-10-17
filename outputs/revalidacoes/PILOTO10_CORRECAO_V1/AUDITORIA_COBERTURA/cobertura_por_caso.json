@@ -1,0 +1,3085 @@
+[
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMP095fcc0f303ff032",
+    "check_id": "tcc.authorization.security.asymmetric-method-guard",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 371,
+      "linha_inicio": 371,
+      "trecho": "  // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\n  app.delete('/api/Products/:id', security.denyAll())\n  /* Challenges: GET list of challenges allowed. Everything else forbidden entirely */"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta asymmetric-method-guard.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/likeProductReviews.ts",
+    "caso_id": "AMP0cc5eab3009f9402",
+    "check_id": "tcc.mongodb.security.unscoped-document-write",
+    "comportamentos_esperados": [
+      "Leitura, criação e atualização autenticada de avaliações",
+      "Persistência de contador, identidade do usuário e recusa de repetição sequencial"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 51,
+      "linha_inicio": 51,
+      "trecho": "        const result = await db.reviewsCollection.update(\n          { _id: id },\n          { $set: { likedBy: updatedLikedBy } }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Persistência de contador, identidade do usuário e recusa de repetição sequencial / Leitura, criação e atualização autenticada de avaliações",
+    "grupos": [
+      "likes_extra",
+      "reviews"
+    ],
+    "grupos_necessarios_arquivo": [
+      "likes_extra",
+      "reviews"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta unscoped-document-write.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/orderHistory.ts",
+    "caso_id": "AMP0de5113d9249c2c3",
+    "check_id": "tcc.identity.security.masked-email-selector",
+    "comportamentos_esperados": [
+      "Histórico e atualização de estado de entrega por perfil"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 17,
+      "linha_inicio": 17,
+      "trecho": "      const updatedEmail = email.replace(/[aeiou]/gi, '*')\n      const order = await ordersCollection.find({ email: updatedEmail })\n      res.status(200).json({ status: 'success', data: order })"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Histórico e atualização de estado de entrega por perfil",
+    "grupos": [
+      "history"
+    ],
+    "grupos_necessarios_arquivo": [
+      "history"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta masked-email-selector.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/codingChallenges.ts",
+    "caso_id": "AMP15048bdd08a98d80",
+    "check_id": "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+    "comportamentos_esperados": [],
+    "dominio": "servidor",
+    "dominios": [],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 76,
+      "linha_inicio": 76,
+      "trecho": "  for (let i = 0; i < lines.length; i++) {\n    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\n      vulnLines.push(i + 1)"
+    },
+    "execucao_baseline": "nao_executada",
+    "funcionalidade": "Revisar contrato de lib/codingChallenges.ts",
+    "grupos": [],
+    "grupos_necessarios_arquivo": [],
+    "justificativa": "Os testes getVerdict verificam a seleção de linhas, mas não demonstram a extração dos marcadores dinâmicos de getCodeChallenges nesta ocorrência.",
+    "lacunas": [
+      "Os testes getVerdict verificam a seleção de linhas, mas não demonstram a extração dos marcadores dinâmicos de getCodeChallenges nesta ocorrência."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP15048bdd08a98d80: Os testes getVerdict verificam a seleção de linhas, mas não demonstram a extração dos marcadores dinâmicos de getCodeChallenges nesta ocorrência.",
+      "AMP6d2d86db2ada00b2: Os testes getVerdict verificam a seleção de linhas, mas não demonstram a extração dos marcadores dinâmicos de getCodeChallenges nesta ocorrência.",
+      "seleção de testes vazia"
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "routes/currentUser.ts",
+    "caso_id": "AMP18ca957afb416967",
+    "check_id": "javascript.express.security.audit.remote-property-injection.remote-property-injection",
+    "comportamentos_esperados": [
+      "Identidade do usuário corrente, seleção de campos e ausência de token"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 31,
+      "linha_inicio": 31,
+      "trecho": "            if (user?.data[field as keyof typeof user.data] !== undefined) {\n              baseUser[field] = user?.data[field as keyof typeof user.data]\n            }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token",
+    "grupos": [
+      "current_user"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta remote-property-injection.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/chat.ts",
+    "caso_id": "AMP1f800f046503c14c",
+    "check_id": "tcc.mongodb.security.dynamic-where",
+    "comportamentos_esperados": [],
+    "dominio": "servidor",
+    "dominios": [],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 149,
+      "linha_inicio": 149,
+      "trecho": "          const productId = Number(id)\n          return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]\n        }"
+    },
+    "execucao_baseline": "nao_executada",
+    "funcionalidade": "Revisar contrato de routes/chat.ts",
+    "grupos": [],
+    "grupos_necessarios_arquivo": [],
+    "justificativa": "O fluxo de ferramenta getProductReviews passa pelo servidor SSE/mock LLM e precisa de seleção revisada de suas asserções e dependências; nenhum teste amplo será disparado para suprir essa lacuna.",
+    "lacunas": [
+      "O fluxo de ferramenta getProductReviews passa pelo servidor SSE/mock LLM e precisa de seleção revisada de suas asserções e dependências; nenhum teste amplo será disparado para suprir essa lacuna."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP1f800f046503c14c: O fluxo de ferramenta getProductReviews passa pelo servidor SSE/mock LLM e precisa de seleção revisada de suas asserções e dependências; nenhum teste amplo será disparado para suprir essa lacuna.",
+      "seleção de testes vazia"
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "routes/trackOrder.ts",
+    "caso_id": "AMP20721d202c8b96d6",
+    "check_id": "tcc.mongodb.security.dynamic-where",
+    "comportamentos_esperados": [
+      "Rastreamento de pedido por identificador"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 18,
+      "linha_inicio": 18,
+      "trecho": "    challengeUtils.solveIf(challenges.reflectedXssChallenge, () => { return utils.contains(id, '<iframe src=\"javascript:alert(`xss`)\">') })\n    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\n      const result = utils.queryResultToJson(order)"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Rastreamento de pedido por identificador",
+    "grupos": [
+      "track"
+    ],
+    "grupos_necessarios_arquivo": [
+      "track"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta dynamic-where.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/search.ts",
+    "caso_id": "AMP2ab02d839a97d47d",
+    "check_id": "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection",
+    "comportamentos_esperados": [
+      "Busca de produto com/sem resultado e consistência da resposta"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 23,
+      "linha_inicio": 23,
+      "trecho": "    criteria = (criteria.length <= 200) ? criteria : criteria.substring(0, 200)\n    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\n      .then(([products]: any) => {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Busca de produto com/sem resultado e consistência da resposta",
+    "grupos": [
+      "search"
+    ],
+    "grupos_necessarios_arquivo": [
+      "search"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-sequelize-injection.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/currentUser.ts",
+    "caso_id": "AMP2bf027ab02da7396",
+    "check_id": "tcc.exposure.security.jsonp-response",
+    "comportamentos_esperados": [
+      "Identidade do usuário corrente, seleção de campos e ausência de token"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 58,
+      "linha_inicio": 58,
+      "trecho": "      challengeUtils.solveIf(challenges.emailLeakChallenge, () => { return true })\n      res.jsonp(response)\n    }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token",
+    "grupos": [
+      "current_user"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta jsonp-response.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/orderHistory.ts",
+    "caso_id": "AMP2ce11812b3368861",
+    "check_id": "tcc.mongodb.security.unscoped-document-write",
+    "comportamentos_esperados": [
+      "Histórico e atualização de estado de entrega por perfil"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 36,
+      "linha_inicio": 36,
+      "trecho": "    const eta = deliveryStatus ? '0' : '1'\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\n    res.status(200).json({ status: 'success' })"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Histórico e atualização de estado de entrega por perfil",
+    "grupos": [
+      "history"
+    ],
+    "grupos_necessarios_arquivo": [
+      "history"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta unscoped-document-write.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMP2d60f2c545f1c37a",
+    "check_id": "tcc.finale.security.generated-default-writes",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 507,
+      "linha_inicio": 501,
+      "trecho": "  for (const { name, exclude, model, include } of autoModels) {\n    const resource = finale.resource({\n      model,\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\n      excludeAttributes: exclude,\n      pagination: false,\n      include\n    })\n"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+    "lacunas": [
+      "O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "routes/b2bOrder.ts",
+    "caso_id": "AMP317527c78d15fb94",
+    "check_id": "tcc.vm.security.untrusted-evaluator",
+    "comportamentos_esperados": [
+      "Pedidos B2B JSON autorizado e rejeição sem token"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 23,
+      "linha_inicio": 23,
+      "trecho": "        vm.createContext(sandbox)\n        vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })\n        res.json({ cid: body.cid, orderNo: uniqueOrderNumber(), paymentDue: dateTwoWeeksFromNow() })"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Pedidos B2B JSON autorizado e rejeição sem token",
+    "grupos": [
+      "b2b"
+    ],
+    "grupos_necessarios_arquivo": [
+      "b2b"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta untrusted-evaluator.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/insecurity.ts",
+    "caso_id": "AMP3378312f4d217863",
+    "check_id": "tcc.redirect.security.substring-allowlist",
+    "comportamentos_esperados": [
+      "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento",
+      "Complementa os contratos de tokens/usuário e cupom sem fixar segredos"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "servidor"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 137,
+      "linha_inicio": 135,
+      "trecho": "  let allowed = false\n  for (const allowedUrl of redirectAllowlist) {\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\n  }\n  return allowed"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento / Complementa os contratos de tokens/usuário e cupom sem fixar segredos",
+    "grupos": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "grupos_necessarios_arquivo": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta substring-allowlist.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/insecurity.ts",
+    "caso_id": "AMP38978d46852a6db3",
+    "check_id": "tcc.integrity.security.encoded-numeric-value",
+    "comportamentos_esperados": [
+      "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento",
+      "Complementa os contratos de tokens/usuário e cupom sem fixar segredos"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "servidor"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 112,
+      "linha_inicio": 112,
+      "trecho": "      const discount = parts[1]\n      return parseInt(discount)\n    }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento / Complementa os contratos de tokens/usuário e cupom sem fixar segredos",
+    "grupos": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "grupos_necessarios_arquivo": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta encoded-numeric-value.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/insecurity.ts",
+    "caso_id": "AMP3aec6cd362844193",
+    "check_id": "javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
+    "comportamentos_esperados": [
+      "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento",
+      "Complementa os contratos de tokens/usuário e cupom sem fixar segredos"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "servidor"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 54,
+      "linha_inicio": 54,
+      "trecho": "export const denyAll = () => expressJwt({ secret: '' + Math.random() } as any)\nexport const authorize = (user = {}) => jwt.sign(user, privateKey, { expiresIn: '6h', algorithm: 'RS256' })\nexport const verify = (token: string) => token ? (jws.verify as ((token: string, secret: string) => boolean))(token, publicKey) : false"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento / Complementa os contratos de tokens/usuário e cupom sem fixar segredos",
+    "grupos": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "grupos_necessarios_arquivo": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta hardcoded-jwt-secret.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/updateProductReviews.ts",
+    "caso_id": "AMP3d463bdbd0a7b446",
+    "check_id": "tcc.mongodb.security.untrusted-id-multi-update",
+    "comportamentos_esperados": [
+      "Leitura, criação e atualização autenticada de avaliações"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 21,
+      "linha_inicio": 17,
+      "trecho": "    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\n      { $set: { message: req.body.message } },\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\n    ).then(\n      (result: { modified: number, original: Array<{ author: any }> }) => {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Leitura, criação e atualização autenticada de avaliações",
+    "grupos": [
+      "reviews"
+    ],
+    "grupos_necessarios_arquivo": [
+      "reviews"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta untrusted-id-multi-update.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/insecurity.ts",
+    "caso_id": "AMP41302bd0fb784039",
+    "check_id": "tcc.crypto.security.md5-hash",
+    "comportamentos_esperados": [
+      "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento",
+      "Complementa os contratos de tokens/usuário e cupom sem fixar segredos"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "servidor"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 41,
+      "linha_inicio": 41,
+      "trecho": "\nexport const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\nexport const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento / Complementa os contratos de tokens/usuário e cupom sem fixar segredos",
+    "grupos": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "grupos_necessarios_arquivo": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta md5-hash.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/app/last-login-ip/last-login-ip.component.ts",
+    "caso_id": "AMP417d1da8d7caa6bd",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente last-login-ip: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 39,
+      "linha_inicio": 39,
+      "trecho": "\n        this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)\n      }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente last-login-ip: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "last_ip"
+    ],
+    "grupos_necessarios_arquivo": [
+      "last_ip"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "data/static/users.yml",
+    "caso_id": "AMP44554338d6458933",
+    "check_id": "generic.secrets.security.detected-generic-secret.detected-generic-secret",
+    "comportamentos_esperados": [],
+    "dominio": "configuracao_dados",
+    "dominios": [],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 151,
+      "linha_inicio": 151,
+      "trecho": "  password: 'EinBelegtesBrotMitSchinkenSCHINKEN!'\n  totpSecret: IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH\n  key: timo"
+    },
+    "execucao_baseline": "nao_executada",
+    "funcionalidade": "Revisar contrato de data/static/users.yml",
+    "grupos": [],
+    "grupos_necessarios_arquivo": [],
+    "justificativa": "O segredo TOTP está no seed de timo; asserções de login genéricas não demonstram que o seed e o segundo fator desse usuário permanecem utilizáveis.",
+    "lacunas": [
+      "O segredo TOTP está no seed de timo; asserções de login genéricas não demonstram que o seed e o segundo fator desse usuário permanecem utilizáveis."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP44554338d6458933: O segredo TOTP está no seed de timo; asserções de login genéricas não demonstram que o seed e o segundo fator desse usuário permanecem utilizáveis.",
+      "seleção de testes vazia"
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMP44846a9aa9036ad6",
+    "check_id": "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 281,
+      "linha_inicio": 281,
+      "trecho": "  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-check-directory-listing.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMP488a4d26d36eaa6f",
+    "check_id": "tcc.express.security.public-metrics-route",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 729,
+      "linha_inicio": 729,
+      "trecho": "const Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\napp.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta public-metrics-route.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/updateProductReviews.ts",
+    "caso_id": "AMP4a7e01977b7eba72",
+    "check_id": "tcc.mongodb.security.unscoped-document-write",
+    "comportamentos_esperados": [
+      "Leitura, criação e atualização autenticada de avaliações"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 18,
+      "linha_inicio": 18,
+      "trecho": "    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\n      { $set: { message: req.body.message } },"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Leitura, criação e atualização autenticada de avaliações",
+    "grupos": [
+      "reviews"
+    ],
+    "grupos_necessarios_arquivo": [
+      "reviews"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta unscoped-document-write.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/likeProductReviews.ts",
+    "caso_id": "AMP4d17cfb2a40ccabf",
+    "check_id": "tcc.mongodb.security.unscoped-document-write",
+    "comportamentos_esperados": [
+      "Leitura, criação e atualização autenticada de avaliações",
+      "Persistência de contador, identidade do usuário e recusa de repetição sequencial"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 36,
+      "linha_inicio": 36,
+      "trecho": "      await db.reviewsCollection.update(\n        { _id: id },\n        { $inc: { likesCount: 1 } }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Persistência de contador, identidade do usuário e recusa de repetição sequencial / Leitura, criação e atualização autenticada de avaliações",
+    "grupos": [
+      "likes_extra",
+      "reviews"
+    ],
+    "grupos_necessarios_arquivo": [
+      "likes_extra",
+      "reviews"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta unscoped-document-write.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/captcha.ts",
+    "caso_id": "AMP4d38adc404310ebe",
+    "check_id": "tcc.captcha.security.answer-in-response",
+    "comportamentos_esperados": [
+      "CAPTCHA autenticado e consumo na exportação"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 31,
+      "linha_inicio": 31,
+      "trecho": "    await captchaInstance.save()\n    res.json(captcha)\n  }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Geração e persistência de CAPTCHA aritmético e verificação na submissão de feedback",
+    "grupos": [
+      "feedback"
+    ],
+    "grupos_necessarios_arquivo": [
+      "feedback"
+    ],
+    "justificativa": "O teste de feedback consome a resposta fornecida pelo próprio endpoint, sem calcular o resultado da expressão de forma independente. O CAPTCHA de imagem da exportação é outra funcionalidade.",
+    "lacunas": [
+      "O teste de feedback consome a resposta fornecida pelo próprio endpoint, sem calcular o resultado da expressão de forma independente. O CAPTCHA de imagem da exportação é outra funcionalidade."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP4d38adc404310ebe: O teste de feedback consome a resposta fornecida pelo próprio endpoint, sem calcular o resultado da expressão de forma independente. O CAPTCHA de imagem da exportação é outra funcionalidade.",
+      "AMP869de4721b99fc7c: O teste de feedback consome a resposta fornecida pelo próprio endpoint, sem calcular o resultado da expressão de forma independente. O CAPTCHA de imagem da exportação é outra funcionalidade."
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Adicionar aritmética com operandos/operadores controlados, persistência da resposta e aceitação/recusa no feedback."
+    ]
+  },
+  {
+    "arquivo": "routes/showProductReviews.ts",
+    "caso_id": "AMP58b496188973b659",
+    "check_id": "tcc.mongodb.security.dynamic-where",
+    "comportamentos_esperados": [
+      "Leitura, criação e atualização autenticada de avaliações"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 36,
+      "linha_inicio": 36,
+      "trecho": "\n    db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\n      const t1 = new Date().getTime()"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Leitura, criação e atualização autenticada de avaliações",
+    "grupos": [
+      "reviews"
+    ],
+    "grupos_necessarios_arquivo": [
+      "reviews"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta dynamic-where.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/videoHandler.ts",
+    "caso_id": "AMP5936615902690208",
+    "check_id": "javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag",
+    "comportamentos_esperados": [
+      "Página do vídeo, legendas e resposta de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 71,
+      "linha_inicio": 71,
+      "trecho": "      let compiledTemplate = fn()\n      compiledTemplate = compiledTemplate.replace('<script id=\"subtitle\"></script>', '<script id=\"subtitle\" type=\"text/vtt\" data-label=\"English\" data-lang=\"en\">' + subs + '</script>')\n      res.send(compiledTemplate)"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Página do vídeo, legendas e resposta de conteúdo",
+    "grupos": [
+      "video"
+    ],
+    "grupos_necessarios_arquivo": [
+      "video"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta unknown-value-with-script-tag.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMP5b6593d097204fd4",
+    "check_id": "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 277,
+      "linha_inicio": 277,
+      "trecho": "  /* /encryptionkeys directory browsing */\n  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\n  app.use('/encryptionkeys/:file', serveKeyFiles())"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-check-directory-listing.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/app/search-result/search-result.component.ts",
+    "caso_id": "AMP5bc31b97699a0901",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente search-result: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 143,
+      "linha_inicio": 143,
+      "trecho": "      this.dataSource.filter = queryParam.toLowerCase()\n      this.searchValue = this.sanitizer.bypassSecurityTrustHtml(queryParam) // vuln-code-snippet vuln-line localXssChallenge xssBonusChallenge\n      if (this.gridDataSourceSubscription) {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente search-result: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "search_ui"
+    ],
+    "grupos_necessarios_arquivo": [
+      "search_ui"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/likeProductReviews.ts",
+    "caso_id": "AMP5c9cd865e297e422",
+    "check_id": "tcc.concurrency.security.delayed-counter-update",
+    "comportamentos_esperados": [
+      "Leitura, criação e atualização autenticada de avaliações",
+      "Persistência de contador, identidade do usuário e recusa de repetição sequencial"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 38,
+      "linha_inicio": 35,
+      "trecho": "\n      await db.reviewsCollection.update(\n        { _id: id },\n        { $inc: { likesCount: 1 } }\n      )\n"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Persistência de contador, identidade do usuário e recusa de repetição sequencial / Leitura, criação e atualização autenticada de avaliações",
+    "grupos": [
+      "likes_extra",
+      "reviews"
+    ],
+    "grupos_necessarios_arquivo": [
+      "likes_extra",
+      "reviews"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta delayed-counter-update.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/app/track-result/track-result.component.ts",
+    "caso_id": "AMP5ea3343a04b7e82b",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente track-result: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 48,
+      "linha_inicio": 48,
+      "trecho": "\n      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\n      this.results.email = results.data[0].email"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente track-result: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "track_ui"
+    ],
+    "grupos_necessarios_arquivo": [
+      "track_ui"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/insecurity.ts",
+    "caso_id": "AMP60988b73f0db52a7",
+    "check_id": "javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key",
+    "comportamentos_esperados": [
+      "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento",
+      "Complementa os contratos de tokens/usuário e cupom sem fixar segredos"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "servidor"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 150,
+      "linha_inicio": 150,
+      "trecho": "export const deluxeToken = (email: string) => {\n  const hmac = crypto.createHmac('sha256', privateKey)\n  return hmac.update(email + roles.deluxe).digest('hex')"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento / Complementa os contratos de tokens/usuário e cupom sem fixar segredos",
+    "grupos": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "grupos_necessarios_arquivo": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta hardcoded-hmac-key.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/codingChallenges.ts",
+    "caso_id": "AMP6d2d86db2ada00b2",
+    "check_id": "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+    "comportamentos_esperados": [],
+    "dominio": "servidor",
+    "dominios": [],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 78,
+      "linha_inicio": 78,
+      "trecho": "      vulnLines.push(i + 1)\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\n      neutralLines.push(i + 1)"
+    },
+    "execucao_baseline": "nao_executada",
+    "funcionalidade": "Revisar contrato de lib/codingChallenges.ts",
+    "grupos": [],
+    "grupos_necessarios_arquivo": [],
+    "justificativa": "Os testes getVerdict verificam a seleção de linhas, mas não demonstram a extração dos marcadores dinâmicos de getCodeChallenges nesta ocorrência.",
+    "lacunas": [
+      "Os testes getVerdict verificam a seleção de linhas, mas não demonstram a extração dos marcadores dinâmicos de getCodeChallenges nesta ocorrência."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP15048bdd08a98d80: Os testes getVerdict verificam a seleção de linhas, mas não demonstram a extração dos marcadores dinâmicos de getCodeChallenges nesta ocorrência.",
+      "AMP6d2d86db2ada00b2: Os testes getVerdict verificam a seleção de linhas, mas não demonstram a extração dos marcadores dinâmicos de getCodeChallenges nesta ocorrência.",
+      "seleção de testes vazia"
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "routes/userProfile.ts",
+    "caso_id": "AMP6fe766b977040093",
+    "check_id": "javascript.lang.security.audit.code-string-concat.code-string-concat",
+    "comportamentos_esperados": [
+      "Renderização do perfil e atualização de nome com autenticação"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 61,
+      "linha_inicio": 61,
+      "trecho": "        }\n        username = eval(code) // eslint-disable-line no-eval\n      } catch (err) {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Renderização do perfil e atualização de nome com autenticação",
+    "grupos": [
+      "profile"
+    ],
+    "grupos_necessarios_arquivo": [
+      "profile"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta code-string-concat.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/dataErasure.ts",
+    "caso_id": "AMP70923219351e683a",
+    "check_id": "tcc.template.security.render-request-options",
+    "comportamentos_esperados": [
+      "Renderização do formulário e submissão de pedido de exclusão"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 118,
+      "linha_inicio": 107,
+      "trecho": "        if (!isForbiddenFile) {\n          res.render('dataErasureResult', {\n            ...req.body,\n            ...themeVars\n          }, (error, html) => {\n            if (!html || error) {\n              next(new Error(error.message))\n            } else {\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\n              res.send(sendlfrResponse)\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\n            }\n          })\n        } else {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Renderização do formulário e submissão de pedido de exclusão",
+    "grupos": [
+      "erasure"
+    ],
+    "grupos_necessarios_arquivo": [
+      "erasure"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta render-request-options.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/app/about/about.component.ts",
+    "caso_id": "AMP746c0b4d1a2f8ed4",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente about: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 121,
+      "linha_inicio": 119,
+      "trecho": "          }</p><div class=\"feedback-stars\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\n            feedbacks[i].comment\n          )\n"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente about: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "about"
+    ],
+    "grupos_necessarios_arquivo": [
+      "about"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/app/last-login-ip/last-login-ip.component.spec.ts",
+    "caso_id": "AMP755998f61209381a",
+    "check_id": "generic.secrets.security.detected-jwt-token.detected-jwt-token",
+    "comportamentos_esperados": [],
+    "dominio": "teste",
+    "dominios": [],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 78,
+      "linha_inicio": 78,
+      "trecho": "    it('should not set Last-Login IP if none is present in JWT', () => {\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7fX0.bVBhvll6IaeR3aUdoOeyR8YZe2S2DfhGAxTGfd9enLw')\n        component.ngOnInit()"
+    },
+    "execucao_baseline": "nao_executada",
+    "funcionalidade": "Revisar contrato de frontend/src/app/last-login-ip/last-login-ip.component.spec.ts",
+    "grupos": [],
+    "grupos_necessarios_arquivo": [],
+    "justificativa": "O arquivo alvo é o próprio avaliador. A suíte que o patch altera não é prova independente da sua integridade.",
+    "lacunas": [
+      "O arquivo alvo é o próprio avaliador. A suíte que o patch altera não é prova independente da sua integridade."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP755998f61209381a: O arquivo alvo é o próprio avaliador. A suíte que o patch altera não é prova independente da sua integridade.",
+      "AMP986bde724bde5588: O arquivo alvo é o próprio avaliador. A suíte que o patch altera não é prova independente da sua integridade.",
+      "seleção de testes vazia"
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "frontend/src/app/score-board/score-board.component.ts",
+    "caso_id": "AMP7ad56931086256e5",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente score-board: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 82,
+      "linha_inicio": 82,
+      "trecho": "          originalDescription: challenge.description as string,\n          description: this.sanitizer.bypassSecurityTrustHtml(challenge.description as string)\n        }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente score-board: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "score"
+    ],
+    "grupos_necessarios_arquivo": [
+      "score"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/redirect.ts",
+    "caso_id": "AMP7f162887aff2d750",
+    "check_id": "javascript.express.security.audit.express-open-redirect.express-open-redirect",
+    "comportamentos_esperados": [
+      "Redirecionamento permitido e rejeição de destino não permitido"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 19,
+      "linha_inicio": 19,
+      "trecho": "      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\n      res.redirect(toUrl)\n    } else {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Redirecionamento permitido e rejeição de destino não permitido",
+    "grupos": [
+      "redirect"
+    ],
+    "grupos_necessarios_arquivo": [
+      "redirect"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-open-redirect.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMP8655da69167e4466",
+    "check_id": "tcc.validation.security.optional-validation-gate",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 418,
+      "linha_inicio": 409,
+      "trecho": "  app.post('/api/Users', (req: Request, res: Response, next: NextFunction) => {\n    if (req.body.email !== undefined && req.body.password !== undefined && req.body.passwordRepeat !== undefined) {\n      if (req.body.email.length !== 0 && req.body.password.length !== 0) {\n        req.body.email = req.body.email.trim()\n        req.body.password = req.body.password.trim()\n        req.body.passwordRepeat = req.body.passwordRepeat.trim()\n      } else {\n        res.status(400).send(res.__('Invalid email/password cannot be empty'))\n      }\n    }\n    next()\n  })"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta optional-validation-gate.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/captcha.ts",
+    "caso_id": "AMP869de4721b99fc7c",
+    "check_id": "javascript.browser.security.eval-detected.eval-detected",
+    "comportamentos_esperados": [
+      "CAPTCHA autenticado e consumo na exportação"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 22,
+      "linha_inicio": 22,
+      "trecho": "    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\n"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Geração e persistência de CAPTCHA aritmético e verificação na submissão de feedback",
+    "grupos": [
+      "feedback"
+    ],
+    "grupos_necessarios_arquivo": [
+      "feedback"
+    ],
+    "justificativa": "O teste de feedback consome a resposta fornecida pelo próprio endpoint, sem calcular o resultado da expressão de forma independente. O CAPTCHA de imagem da exportação é outra funcionalidade.",
+    "lacunas": [
+      "O teste de feedback consome a resposta fornecida pelo próprio endpoint, sem calcular o resultado da expressão de forma independente. O CAPTCHA de imagem da exportação é outra funcionalidade."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP4d38adc404310ebe: O teste de feedback consome a resposta fornecida pelo próprio endpoint, sem calcular o resultado da expressão de forma independente. O CAPTCHA de imagem da exportação é outra funcionalidade.",
+      "AMP869de4721b99fc7c: O teste de feedback consome a resposta fornecida pelo próprio endpoint, sem calcular o resultado da expressão de forma independente. O CAPTCHA de imagem da exportação é outra funcionalidade."
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Adicionar aritmética com operandos/operadores controlados, persistência da resposta e aceitação/recusa no feedback."
+    ]
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMP8736e19c3edd4a24",
+    "check_id": "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 273,
+      "linha_inicio": 273,
+      "trecho": "\n  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\n  app.use('/.well-known', express.static('.well-known'))"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-check-directory-listing.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/deluxe.ts",
+    "caso_id": "AMP8acdcde5bd3bac8f",
+    "check_id": "tcc.business.security.optional-mode-role-update",
+    "comportamentos_esperados": [
+      "Adesão deluxe por cartão/carteira e erros de pagamento"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 43,
+      "linha_inicio": 43,
+      "trecho": "      try {\n        const updatedUser = await user.update({ role: security.roles.deluxe, deluxeToken: security.deluxeToken(user.email) })\n        challengeUtils.solveIf(challenges.freeDeluxeChallenge, () => {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Adesão deluxe por cartão/carteira e erros de pagamento",
+    "grupos": [
+      "deluxe"
+    ],
+    "grupos_necessarios_arquivo": [
+      "deluxe"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta optional-mode-role-update.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMP8be00f4f6862bdba",
+    "check_id": "tcc.express.security.public-metrics-route",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 676,
+      "linha_inicio": 676,
+      "trecho": "  /* Serve metrics before the Angular catch-all so the route is reachable in all environments */\n  app.get('/metrics', utils.asyncHandler(metrics.serveMetrics()))\n"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta public-metrics-route.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/keyServer.ts",
+    "caso_id": "AMP95adf572d3c6677f",
+    "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+    "comportamentos_esperados": [
+      "Entrega/listagem de arquivos e erros de caminho"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 14,
+      "linha_inicio": 14,
+      "trecho": "    if (!file.includes('/')) {\n      res.sendFile(path.resolve('encryptionkeys/', file))\n    } else {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Entrega/listagem de arquivos e erros de caminho",
+    "grupos": [
+      "key"
+    ],
+    "grupos_necessarios_arquivo": [
+      "key"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-res-sendfile.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/basket.ts",
+    "caso_id": "AMP966898b58995c2e3",
+    "check_id": "tcc.orm.security.request-id-unscoped-query",
+    "comportamentos_esperados": [
+      "Consulta de cesta existente e conteúdo dos produtos"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 19,
+      "linha_inicio": 19,
+      "trecho": "      const id = req.params.id\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\n      /* jshint eqeqeq:false */"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Consulta de cesta existente e conteúdo dos produtos",
+    "grupos": [
+      "basket"
+    ],
+    "grupos_necessarios_arquivo": [
+      "basket"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta request-id-unscoped-query.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/app/last-login-ip/last-login-ip.component.spec.ts",
+    "caso_id": "AMP986bde724bde5588",
+    "check_id": "generic.secrets.security.detected-jwt-token.detected-jwt-token",
+    "comportamentos_esperados": [],
+    "dominio": "teste",
+    "dominios": [],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 72,
+      "linha_inicio": 72,
+      "trecho": "    it('should set Last-Login IP from JWT as trusted HTML', () => {\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\n        component.ngOnInit()"
+    },
+    "execucao_baseline": "nao_executada",
+    "funcionalidade": "Revisar contrato de frontend/src/app/last-login-ip/last-login-ip.component.spec.ts",
+    "grupos": [],
+    "grupos_necessarios_arquivo": [],
+    "justificativa": "O arquivo alvo é o próprio avaliador. A suíte que o patch altera não é prova independente da sua integridade.",
+    "lacunas": [
+      "O arquivo alvo é o próprio avaliador. A suíte que o patch altera não é prova independente da sua integridade."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP755998f61209381a: O arquivo alvo é o próprio avaliador. A suíte que o patch altera não é prova independente da sua integridade.",
+      "AMP986bde724bde5588: O arquivo alvo é o próprio avaliador. A suíte que o patch altera não é prova independente da sua integridade.",
+      "seleção de testes vazia"
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "routes/fileServer.ts",
+    "caso_id": "AMP994f19c5eaf2d95e",
+    "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 33,
+      "linha_inicio": 33,
+      "trecho": "\n      res.sendFile(path.resolve('ftp/', file))\n    } else {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+    "grupos": [
+      "ftp"
+    ],
+    "grupos_necessarios_arquivo": [
+      "ftp"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-res-sendfile.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/app/administration/administration.component.ts",
+    "caso_id": "AMP9bd88cd744835b41",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente administration: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 91,
+      "linha_inicio": 91,
+      "trecho": "        for (const feedback of this.feedbackDataSource) {\n          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\n        }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente administration: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "administration"
+    ],
+    "grupos_necessarios_arquivo": [
+      "administration"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/changePassword.ts",
+    "caso_id": "AMP9ea0dd6316734fd8",
+    "check_id": "tcc.auth.security.optional-current-password",
+    "comportamentos_esperados": [
+      "Troca de senha, credenciais e erros de validação"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 42,
+      "linha_inicio": 39,
+      "trecho": "\n    if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\n      res.status(401).send(res.__('Current password is not correct.'))\n      return\n    }\n"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Troca de senha, credenciais e erros de validação",
+    "grupos": [
+      "password"
+    ],
+    "grupos_necessarios_arquivo": [
+      "password"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta optional-current-password.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/fileUpload.ts",
+    "caso_id": "AMP9fadf8b83430a8a6",
+    "check_id": "tcc.archive.security.entry-path-write",
+    "comportamentos_esperados": [
+      "Upload PDF e tratamento de tipo/tamanho inválido"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 34,
+      "linha_inicio": 34,
+      "trecho": "    if (absolutePath.includes(path.resolve('.'))) {\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\n    }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Upload PDF e tratamento de tipo/tamanho inválido",
+    "grupos": [
+      "upload"
+    ],
+    "grupos_necessarios_arquivo": [
+      "upload"
+    ],
+    "justificativa": "Os testes de upload PDF e desafios de tipo/tamanho não verificam preservação da extração ZIP normal e dos bytes gravados no destino.",
+    "lacunas": [
+      "Os testes de upload PDF e desafios de tipo/tamanho não verificam preservação da extração ZIP normal e dos bytes gravados no destino."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP9fadf8b83430a8a6: Os testes de upload PDF e desafios de tipo/tamanho não verificam preservação da extração ZIP normal e dos bytes gravados no destino."
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Acrescentar fixture ZIP normal, conferir nomes e bytes extraídos e limpar o destino; distinguir dos testes de exploração."
+    ]
+  },
+  {
+    "arquivo": "routes/dataErasure.ts",
+    "caso_id": "AMPa39e4fbccbd037fd",
+    "check_id": "tcc.template.security.render-request-options",
+    "comportamentos_esperados": [
+      "Renderização do formulário e submissão de pedido de exclusão"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 126,
+      "linha_inicio": 123,
+      "trecho": "      } else {\n        res.render('dataErasureResult', {\n          ...req.body,\n          ...themeVars\n        })\n      }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Renderização do formulário e submissão de pedido de exclusão",
+    "grupos": [
+      "erasure"
+    ],
+    "grupos_necessarios_arquivo": [
+      "erasure"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta render-request-options.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/quarantineServer.ts",
+    "caso_id": "AMPa4fbc80b66819196",
+    "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+    "comportamentos_esperados": [
+      "Entrega de arquivo de quarentena e recusa de slash"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 14,
+      "linha_inicio": 14,
+      "trecho": "    if (!file.includes('/')) {\n      res.sendFile(path.resolve('ftp/quarantine/', file))\n    } else {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Entrega de arquivo de quarentena e recusa de slash",
+    "grupos": [
+      "quarantine"
+    ],
+    "grupos_necessarios_arquivo": [
+      "quarantine"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-res-sendfile.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/order.ts",
+    "caso_id": "AMPab8d19b259bd5d75",
+    "check_id": "tcc.validation.security.client-campaign-date",
+    "comportamentos_esperados": [
+      "Checkout, cupom e falhas dos repositórios"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 201,
+      "linha_inicio": 201,
+      "trecho": "\n    if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Consulta de cesta existente e conteúdo dos produtos",
+    "grupos": [
+      "basket"
+    ],
+    "grupos_necessarios_arquivo": [
+      "basket"
+    ],
+    "justificativa": "A aplicação de couponData de campanha não tem asserção do desconto efetivo. O unitário should handle base64 coupon data termina em assert.ok(true); checkout e cupom codificado são outros contratos.",
+    "lacunas": [
+      "A aplicação de couponData de campanha não tem asserção do desconto efetivo. O unitário should handle base64 coupon data termina em assert.ok(true); checkout e cupom codificado são outros contratos."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMPab8d19b259bd5d75: A aplicação de couponData de campanha não tem asserção do desconto efetivo. O unitário should handle base64 coupon data termina em assert.ok(true); checkout e cupom codificado são outros contratos."
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Testar campanha vigente, data inválida e desconto final do pedido, com relógio controlado e asserções de valor."
+    ]
+  },
+  {
+    "arquivo": "frontend/src/app/search-result/search-result.component.ts",
+    "caso_id": "AMPad5710627036ab1a",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente search-result: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 110,
+      "linha_inicio": 110,
+      "trecho": "    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\n      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge\n    } // vuln-code-snippet neutral-line restfulXssChallenge"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente search-result: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "search_ui"
+    ],
+    "grupos_necessarios_arquivo": [
+      "search_ui"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/basketItems.ts",
+    "caso_id": "AMPaf88892821bf5a51",
+    "check_id": "tcc.validation.security.first-last-mismatch",
+    "comportamentos_esperados": [
+      "Inclusão/atualização/remoção de item e restrições de quantidade"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 42,
+      "linha_inicio": 42,
+      "trecho": "        ProductId: productIds[productIds.length - 1],\n        BasketId: basketIds[basketIds.length - 1],\n        quantity: quantities[quantities.length - 1]"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Inclusão/atualização/remoção de item e restrições de quantidade",
+    "grupos": [
+      "basket_items"
+    ],
+    "grupos_necessarios_arquivo": [
+      "basket_items"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta first-last-mismatch.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/logfileServer.ts",
+    "caso_id": "AMPb65a1448bc9fba13",
+    "check_id": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+    "comportamentos_esperados": [
+      "Entrega de log corrente e recusa de slash"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 14,
+      "linha_inicio": 14,
+      "trecho": "    if (!file.includes('/')) {\n      res.sendFile(path.resolve('logs/', file))\n    } else {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Entrega de log corrente e recusa de slash",
+    "grupos": [
+      "logs"
+    ],
+    "grupos_necessarios_arquivo": [
+      "logs"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-res-sendfile.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/basketItems.ts",
+    "caso_id": "AMPba6a42f81dbc573f",
+    "check_id": "tcc.orm.security.request-id-unscoped-query",
+    "comportamentos_esperados": [
+      "Inclusão/atualização/remoção de item e restrições de quantidade"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 68,
+      "linha_inicio": 68,
+      "trecho": "    try {\n      const item = await BasketItemModel.findOne({ where: { id: req.params.id } })\n      const user = security.authenticatedUsers.from(req)"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Inclusão/atualização/remoção de item e restrições de quantidade",
+    "grupos": [
+      "basket_items"
+    ],
+    "grupos_necessarios_arquivo": [
+      "basket_items"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta request-id-unscoped-query.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/order.ts",
+    "caso_id": "AMPbd16f473e192b7d4",
+    "check_id": "tcc.orm.security.request-id-unscoped-query",
+    "comportamentos_esperados": [
+      "Checkout, cupom e falhas dos repositórios"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 35,
+      "linha_inicio": 35,
+      "trecho": "    const id = req.params.id\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\n      .then(async (basket: BasketModel | null) => {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Consulta de cesta existente e conteúdo dos produtos",
+    "grupos": [
+      "basket"
+    ],
+    "grupos_necessarios_arquivo": [
+      "basket"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta request-id-unscoped-query.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMPab8d19b259bd5d75: A aplicação de couponData de campanha não tem asserção do desconto efetivo. O unitário should handle base64 coupon data termina em assert.ok(true); checkout e cupom codificado são outros contratos."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "views/promotionVideo.pug",
+    "caso_id": "AMPc0372089a0f8df39",
+    "check_id": "javascript.express.security.audit.xss.pug.explicit-unescape.template-explicit-unescape",
+    "comportamentos_esperados": [
+      "Página do vídeo, legendas e resposta de conteúdo"
+    ],
+    "dominio": "template",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 75,
+      "linha_inicio": 75,
+      "trecho": "            var splitted = lines[i].split(/[ \\\\t]+-->[ \\t]+/);\n            if (splitted.length != 2) {\n            throw 'Error when splitting \"-->\": ' + lines[i];"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Página do vídeo, legendas e resposta de conteúdo",
+    "grupos": [
+      "video"
+    ],
+    "grupos_necessarios_arquivo": [
+      "video"
+    ],
+    "justificativa": "A API verifica HTML, fonte de vídeo e presença da tag de legendas; não executa o parser de legendas nem comprova seu comportamento no cliente.",
+    "lacunas": [
+      "A API verifica HTML, fonte de vídeo e presença da tag de legendas; não executa o parser de legendas nem comprova seu comportamento no cliente."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMPc0372089a0f8df39: A API verifica HTML, fonte de vídeo e presença da tag de legendas; não executa o parser de legendas nem comprova seu comportamento no cliente."
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Testar interpretação de legendas e renderização do conteúdo com avaliação independente do template, incluindo entrada válida e erro."
+    ]
+  },
+  {
+    "arquivo": "frontend/src/app/administration/administration.component.ts",
+    "caso_id": "AMPd3ce8433d603cb7e",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente administration: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 73,
+      "linha_inicio": 73,
+      "trecho": "        for (const user of this.userDataSource) {\n          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class=\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\">${user.email}</span>`)\n        }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente administration: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "administration"
+    ],
+    "grupos_necessarios_arquivo": [
+      "administration"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/userProfile.ts",
+    "caso_id": "AMPd5224d38bf219213",
+    "check_id": "javascript.browser.security.eval-detected.eval-detected",
+    "comportamentos_esperados": [
+      "Renderização do perfil e atualização de nome com autenticação"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 61,
+      "linha_inicio": 61,
+      "trecho": "        }\n        username = eval(code) // eslint-disable-line no-eval\n      } catch (err) {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Renderização do perfil e atualização de nome com autenticação",
+    "grupos": [
+      "profile"
+    ],
+    "grupos_necessarios_arquivo": [
+      "profile"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta eval-detected.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/hacking-instructor/helpers/helpers.ts",
+    "caso_id": "AMPd53a8fdb9fb5d682",
+    "check_id": "javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop",
+    "comportamentos_esperados": [
+      "Resolução de propriedade aninhada de configuração para comparação do input"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 49,
+      "linha_inicio": 49,
+      "trecho": "      for (const property of propertyChain) {\n        replacementValue = replacementValue[property]\n      }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Resolução de propriedade aninhada de configuração para comparação do input",
+    "grupos": [
+      "instructor"
+    ],
+    "grupos_necessarios_arquivo": [
+      "instructor"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta prototype-pollution-loop.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/delivery.ts",
+    "caso_id": "AMPd55302a18ee2c911",
+    "check_id": "tcc.orm.security.request-id-unscoped-query",
+    "comportamentos_esperados": [
+      "Catálogo e consulta de entrega por ID"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 34,
+      "linha_inicio": 34,
+      "trecho": "  return async (req: Request, res: Response, next: NextFunction) => {\n    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\n    if (method != null) {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Catálogo e consulta de entrega por ID",
+    "grupos": [
+      "delivery"
+    ],
+    "grupos_necessarios_arquivo": [
+      "delivery"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta request-id-unscoped-query.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMPdab2e8f71cbc8047",
+    "check_id": "tcc.express.security.trust-all-proxies-rate-limit",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 347,
+      "linha_inicio": 342,
+      "trecho": "  /* Rate limiting */\n  app.enable('trust proxy')\n  app.use('/rest/user/reset-password', rateLimit({\n    windowMs: 5 * 60 * 1000,\n    max: 100,\n    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\n  }))\n  // vuln-code-snippet end resetPasswordMortyChallenge"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta trust-all-proxies-rate-limit.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "frontend/src/app/app.guard.spec.ts",
+    "caso_id": "AMPdbe817f9e31f0aa0",
+    "check_id": "generic.secrets.security.detected-jwt-token.detected-jwt-token",
+    "comportamentos_esperados": [],
+    "dominio": "teste",
+    "dominios": [],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 46,
+      "linha_inicio": 46,
+      "trecho": "\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')\n        expect(guard.tokenDecode()).toEqual({"
+    },
+    "execucao_baseline": "nao_executada",
+    "funcionalidade": "Revisar contrato de frontend/src/app/app.guard.spec.ts",
+    "grupos": [],
+    "grupos_necessarios_arquivo": [],
+    "justificativa": "O arquivo alvo é o próprio avaliador; substituir/remover o token fixture não prova preservação funcional do guard por uma avaliação independente.",
+    "lacunas": [
+      "O arquivo alvo é o próprio avaliador; substituir/remover o token fixture não prova preservação funcional do guard por uma avaliação independente."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMPdbe817f9e31f0aa0: O arquivo alvo é o próprio avaliador; substituir/remover o token fixture não prova preservação funcional do guard por uma avaliação independente.",
+      "seleção de testes vazia"
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "frontend/src/app/data-export/data-export.component.ts",
+    "caso_id": "AMPdcb27f655cc85555",
+    "check_id": "tcc.angular.security.bypass-security-trust-html",
+    "comportamentos_esperados": [
+      "Contrato do componente data-export: apresentação, dados e tratamento das dependências simuladas"
+    ],
+    "dominio": "frontend",
+    "dominios": [
+      "frontend"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 57,
+      "linha_inicio": 57,
+      "trecho": "    this.imageCaptchaService.getCaptcha().subscribe((data: any) => {\n      this.captcha = this.sanitizer.bypassSecurityTrustHtml(data.image)\n    })"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contrato do componente data-export: apresentação, dados e tratamento das dependências simuladas",
+    "grupos": [
+      "data_export"
+    ],
+    "grupos_necessarios_arquivo": [
+      "data_export"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta bypass-security-trust-html.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/basketItems.ts",
+    "caso_id": "AMPdecc0f9244357cec",
+    "check_id": "tcc.validation.security.quantity-upper-bound-only",
+    "comportamentos_esperados": [
+      "Inclusão/atualização/remoção de item e restrições de quantidade"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 97,
+      "linha_inicio": 93,
+      "trecho": "  if (!product.limitPerUser || (product.limitPerUser && product.limitPerUser >= quantity) || security.isDeluxe(req)) {\n    if (product.quantity >= quantity) { // enough in stock?\n      next()\n    } else {\n      res.status(400).json({ error: res.__('We are out of stock! Sorry for the inconvenience.') })\n    }\n  } else {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Inclusão/atualização/remoção de item e restrições de quantidade",
+    "grupos": [
+      "basket_items"
+    ],
+    "grupos_necessarios_arquivo": [
+      "basket_items"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta quantity-upper-bound-only.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMPdff9fb93329a027e",
+    "check_id": "javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 157,
+      "linha_inicio": 157,
+      "trecho": "    } catch (err) {\n      console.error('Error in timed startup function: ' + name, err)\n      throw err"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow.",
+    "lacunas": [
+      "A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMPed3156151264a524",
+    "check_id": "tcc.authorization.security.asymmetric-method-guard",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 429,
+      "linha_inicio": 429,
+      "trecho": "  /* Accounting users are allowed to check and update quantities */\n  app.delete('/api/Quantitys/:id', security.denyAll())\n  app.post('/api/Quantitys', security.denyAll())"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta asymmetric-method-guard.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "server.ts",
+    "caso_id": "AMPee9d50eba0ea870a",
+    "check_id": "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing",
+    "comportamentos_esperados": [
+      "Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos",
+      "Entrega/listagem de arquivos e erros de caminho",
+      "Entrega de log corrente e recusa de slash",
+      "Troca de senha, credenciais e erros de validação",
+      "Cadastro/consulta/alteração de produto conforme acesso vigente",
+      "Cadastro e restrições de acesso aos dados do usuário",
+      "Consulta/alteração de estoque e bloqueios por papel/IP",
+      "Endpoint de métricas e tipos de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 269,
+      "linha_inicio": 269,
+      "trecho": "  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Identidade do usuário corrente, seleção de campos e ausência de token / Entrega de arquivos permitidos e recusa de tipos/caminhos inválidos / Entrega/listagem de arquivos e erros de caminho / Entrega de log corrente e recusa de slash / Endpoint de métricas e tipos de conteúdo / Troca de senha, credenciais e erros de validação / Cadastro/consulta/alteração de produto conforme acesso vigente / Consulta/alteração de estoque e bloqueios por papel/IP",
+    "grupos": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "grupos_necessarios_arquivo": [
+      "current_user",
+      "ftp",
+      "key",
+      "logs",
+      "metrics",
+      "password",
+      "product",
+      "quantity"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-check-directory-listing.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMP2d60f2c545f1c37a: O trecho gera recursos para vários modelos; os testes de usuário/produto não cobrem todos os hooks e contratos CRUD gerados.",
+      "AMPdff9fb93329a027e: A ocorrência está no tratamento de erro de startup; testes HTTP de rotas não exercitam a falha do agendamento e seu log/rethrow."
+    ],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/videoHandler.ts",
+    "caso_id": "AMPf50218b7fbd39171",
+    "check_id": "javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag",
+    "comportamentos_esperados": [
+      "Página do vídeo, legendas e resposta de conteúdo"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 57,
+      "linha_inicio": 57,
+      "trecho": "\n      challengeUtils.solveIf(challenges.videoXssChallenge, () => { return utils.contains(subs, '</script><script>alert(`xss`)</script>') })\n"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Página do vídeo, legendas e resposta de conteúdo",
+    "grupos": [
+      "video"
+    ],
+    "grupos_necessarios_arquivo": [
+      "video"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta unknown-value-with-script-tag.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/profileImageUrlUpload.ts",
+    "caso_id": "AMPf6324e7620b8e159",
+    "check_id": "tcc.http.security.request-url-fetch",
+    "comportamentos_esperados": [
+      "Download simulado de imagem, escrita local e fallback por erro"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 24,
+      "linha_inicio": 24,
+      "trecho": "        try {\n          const response = await fetch(url)\n          if (!response.ok || !response.body) {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Download simulado de imagem, escrita local e fallback por erro",
+    "grupos": [
+      "profile_upload"
+    ],
+    "grupos_necessarios_arquivo": [
+      "profile_upload"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta request-url-fetch.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/xml.ts",
+    "caso_id": "AMPf7a5e2edd454d398",
+    "check_id": "tcc.xml.security.external-entity-expansion",
+    "comportamentos_esperados": [
+      "Parsing XML válido, documento malformado e limites de expansão"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "servidor"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 35,
+      "linha_inicio": 35,
+      "trecho": "  const libxml2 = await loadLibxml2()\n  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\n  const sandbox = { libxml2, data, option }"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Parsing XML válido, documento malformado e limites de expansão",
+    "grupos": [
+      "xml"
+    ],
+    "grupos_necessarios_arquivo": [
+      "xml"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta external-entity-expansion.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "lib/insecurity.ts",
+    "caso_id": "AMPf9cfcac6567b2213",
+    "check_id": "javascript.lang.security.audit.hardcoded-hmac-key.hardcoded-hmac-key",
+    "comportamentos_esperados": [
+      "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento",
+      "Complementa os contratos de tokens/usuário e cupom sem fixar segredos"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "servidor"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 42,
+      "linha_inicio": 42,
+      "trecho": "export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\nexport const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\n"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Contratos compartilhados de hash, HMAC, cupom, token e redirecionamento / Complementa os contratos de tokens/usuário e cupom sem fixar segredos",
+    "grupos": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "grupos_necessarios_arquivo": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta hardcoded-hmac-key.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/login.ts",
+    "caso_id": "AMPfb154534099cb3ca",
+    "check_id": "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection",
+    "comportamentos_esperados": [
+      "Autenticação válida e rejeição de credenciais inválidas"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 34,
+      "linha_inicio": 34,
+      "trecho": "    verifyPreLoginChallenges(req) // vuln-code-snippet hide-line\n    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\n      .then((authenticatedUser) => { // vuln-code-snippet neutral-line loginAdminChallenge loginBenderChallenge loginJimChallenge"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Autenticação válida e rejeição de credenciais inválidas",
+    "grupos": [
+      "login"
+    ],
+    "grupos_necessarios_arquivo": [
+      "login"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta express-sequelize-injection.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "routes/dataExport.ts",
+    "caso_id": "AMPfb70ed2beee585fe",
+    "check_id": "tcc.identity.security.masked-email-selector",
+    "comportamentos_esperados": [
+      "Exportação autenticada de dados e falhas de dependências"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 33,
+      "linha_inicio": 33,
+      "trecho": "        try {\n          orders = await db.ordersCollection.find({ email: updatedEmail })\n        } catch (error) {"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "CAPTCHA autenticado e consumo na exportação",
+    "grupos": [
+      "export"
+    ],
+    "grupos_necessarios_arquivo": [
+      "export"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta masked-email-selector.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  },
+  {
+    "arquivo": "Gruntfile.js",
+    "caso_id": "AMPfd83fe121712cbab",
+    "check_id": "tcc.crypto.security.md5-hash",
+    "comportamentos_esperados": [],
+    "dominio": "configuracao_dados",
+    "dominios": [],
+    "elegivel_f_positivo": false,
+    "evidencia_codigo": {
+      "linha_fim": 75,
+      "linha_inicio": 75,
+      "trecho": "      const buffer = fs.readFileSync('dist/' + file)\n      const md5 = crypto.createHash('md5')\n      md5.update(buffer)"
+    },
+    "execucao_baseline": "nao_executada",
+    "funcionalidade": "Revisar contrato de Gruntfile.js",
+    "grupos": [],
+    "grupos_necessarios_arquivo": [],
+    "justificativa": "O checksum depende do empacotamento dist; os testes de API não validam a geração dos artefatos e manifesto de distribuição.",
+    "lacunas": [
+      "O checksum depende do empacotamento dist; os testes de API não validam a geração dos artefatos e manifesto de distribuição."
+    ],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [
+      "AMPfd83fe121712cbab: O checksum depende do empacotamento dist; os testes de API não validam a geração dos artefatos e manifesto de distribuição.",
+      "seleção de testes vazia"
+    ],
+    "revisao": "insuficiente",
+    "testes_adicionais": [
+      "Criar avaliação independente do comportamento descrito e validar seus controles."
+    ]
+  },
+  {
+    "arquivo": "models/feedback.ts",
+    "caso_id": "AMPff4689848e9b84b8",
+    "check_id": "tcc.validation.security.rating-without-range",
+    "comportamentos_esperados": [
+      "Persistência de feedback com rating obrigatório e consultas permitidas"
+    ],
+    "dominio": "servidor",
+    "dominios": [
+      "api"
+    ],
+    "elegivel_f_positivo": true,
+    "evidencia_codigo": {
+      "linha_fim": 66,
+      "linha_inicio": 57,
+      "trecho": "      },\n      rating: {\n        type: DataTypes.INTEGER,\n        allowNull: false,\n        set (rating: number) {\n          this.setDataValue('rating', rating)\n          challengeUtils.solveIf(challenges.zeroStarsChallenge, () => {\n            return Number(rating) === 0\n          })\n        }\n      }\n    },"
+    },
+    "execucao_baseline": "comparavel",
+    "funcionalidade": "Persistência de feedback com rating obrigatório e consultas permitidas",
+    "grupos": [
+      "feedback"
+    ],
+    "grupos_necessarios_arquivo": [
+      "feedback"
+    ],
+    "justificativa": "Asserções e preparação inspecionadas nos grupos selecionados; exercitam o fluxo normal e erros declarados, sem confirmar segurança do alerta rating-without-range.",
+    "lacunas": [],
+    "limitacoes": [
+      "Aprovação refere-se somente ao alcance dos grupos executados; não comprova ausência de regressões globais ou exploração.",
+      "Bibliotecas/servidor compartilhados exigem união dos grupos por arquivo; lacunas de outro caso no mesmo arquivo bloqueiam F positivo."
+    ],
+    "motivos_selecao": [],
+    "revisao": "adequada",
+    "testes_adicionais": []
+  }
+]

@@ -535,3 +535,10 @@ Veja [como executar e auditar](docs/cobertura_funcional.md) e a
 Esse exemplo executa somente preflight de quatro casos com P1/P2 e K=1, sem LLM.
 A configuração padrão do piloto de dez issues usa `relacionada_v2`, K=4. Contratos novos da política
 v2 usam schema 4.0, sem migrar execuções anteriores; lacunas impedem F positivo.
+
+
+O primeiro piloto K=4 revelou falhas de preparação e classificação operacional.
+A [correção com revalidação sem LLM](docs/auditoria/correcao_validacao_piloto10.md)
+acrescenta verificação dos builds no preflight, espera de startup e baseline novo.
+Os dados originais permanecem preservados; consulte o comparativo antes de usar
+as primeiras métricas do piloto como resultados finais.

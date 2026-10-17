@@ -8,6 +8,7 @@ def componentes():
     for pasta in ('validation','sast','target','patching'):
         fontes.extend((RAIZ_REPO/'src/pipeline'/pasta).glob('*.py'))
     fontes.extend((RAIZ_REPO/'src/pipeline/sast').glob('*.cjs'))
+    fontes.extend((RAIZ_REPO/'src/pipeline/validation').glob('*.mjs'))
     fontes.extend(RAIZ_REPO/p for p in (
         'src/pipeline/run_pipeline.py','src/pipeline/execucao_ampliada.py',
         'src/pipeline/catalogo.py','src/pipeline/registro.py','config/conjunto_d.json'))

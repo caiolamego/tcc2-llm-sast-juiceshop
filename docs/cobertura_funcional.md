@@ -61,7 +61,7 @@ O auditor só lê entradas e publica relatórios determinísticos em destino nov
   --checkout workspace/wt-1 \
   --mapa-testes config/mapa_testes_relacionados_v2.yaml \
   --revisao config/cobertura_funcional_v1.yaml \
-  --baseline-testes outputs/feature06/BASELINE_06/baseline_testes.json \
+  --baseline-testes outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE/baseline_testes.json \
   --saida outputs/cobertura_funcional/NOVA_AUDITORIA
 ```
 
@@ -96,3 +96,33 @@ payload malicioso continuam F conforme o critério vigente. Isso pode limitar a
 aceitação de correções e está documentado, sem reclassificação retrospectiva.
 
 Consulte as [contagens, evidências e pendências da entrega](../features/06-cobertura-funcional/ENTREGA.md).
+
+
+## Correção da preparação e de falhas operacionais
+
+O piloto com quatro worktrees revelou que os builds ignorados pelo Git também
+são pré-condições da API. A política atual confere o servidor compilado, os
+entrypoints frontend, o chunk do instructor, seus hashes e a porta de cada slot.
+O inventário desses arquivos integra o ambiente funcional do baseline e do cache.
+O preflight continua somente por leitura; não gera esses arquivos implicitamente.
+
+Para preparar árvores ausentes a partir de uma worktree validada:
+
+```bash
+.venv/bin/python scripts/setup/prepare_api_worktrees.py --origem workspace/wt-1 --k 4
+```
+
+O comando exige mesmo commit e fontes limpas, copia diretórios ausentes de forma
+isolada e recusa substituir artefatos divergentes. Não instala dependências nem
+transforma um build desconhecido em referência confiável.
+
+Antes de descobrir testes de API, o adaptador aguarda `preconditionsReady`. Assim,
+`--test-force-exit` não pode encerrar o processo antes da verificação de startup.
+JUnit com falha de arquivo sem identidade de teste, seleção divergente, timeout
+ou erro de carregamento é evidência operacional, sem reprovação funcional daquele
+grupo. F fica nulo quando não há outra reprovação funcional comprovada. Falhas
+reais de compilação e asserções de grupos íntegros continuam produzindo F=0.
+
+Os adaptadores mudaram e exigem baseline novo. O baseline da feature 06 permanece
+como evidência histórica; o YAML corrente aponta para a referência corrigida.
+Veja [a correção e a revalidação dos patches](auditoria/correcao_validacao_piloto10.md).

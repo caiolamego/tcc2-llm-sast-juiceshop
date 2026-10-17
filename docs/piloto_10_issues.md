@@ -36,7 +36,7 @@ as métricas ao terminar. A configuração fica em `config/execucao.yaml`:
   tentativas**, podendo haver menos quando a cadeia termina antes.
 - K=4: até quatro issues podem avançar em worktrees distintas. As estratégias de uma
   mesma issue continuam em sequência; testes de API continuam serializados.
-- Política `relacionada_v2`, mapa 2.0 e baseline da feature 06. Lacunas não
+- Política `relacionada_v2`, mapa 2.0 e baseline corrigido da revalidação. Lacunas não
   autorizam F positivo e não disparam suíte ampla como fallback.
 - Cache de validação desligado para observar as medições desta execução.
   O cache LLM existente permanece ativo; respostas já disponíveis podem ser
@@ -106,3 +106,11 @@ não implica quatro suítes de API simultâneas nem ganho de quatro vezes no tem
 O painel foi reiniciado para carregar a política da feature 06 e a nova
 configuração. Abrir a página não inicia chamadas à LLM: selecione **Real** e
 clique em **Iniciar pipeline** quando quiser executar.
+
+
+A execução real inicial revelou falta de builds nas worktrees novas. A política
+atual inclui esses artefatos no gate e aguarda a inicialização antes dos testes.
+Falhas operacionais não são mais convertidas em testes funcionais reprovados.
+O baseline corrente é `outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE/`.
+A [revalidação sem LLM](auditoria/correcao_validacao_piloto10.md) preserva a
+execução inicial e permite comparar as mesmas correções em ambiente preparado.

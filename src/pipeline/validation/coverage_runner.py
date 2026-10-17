@@ -54,6 +54,7 @@ def relatorio(xml, wt, group):
                 if group['dominio']=='frontend':name=html.unescape(child.get('name',''))
                 else:name=' > '.join(n for n in suites+[html.unescape(child.get('name',''))] if n and n!=raw)
                 file=aliases[raw]
+                if not name.strip():raise ValueError('Falha de carregamento do arquivo sem identidade de teste')
                 records.append({'id':file+' :: '+name,'arquivo':file,'nome':name,
                                 'estado':'ignorado' if child.find('skipped') is not None else
                                          'falhou' if child.find('failure') is not None or child.find('error') is not None else 'passou'})
@@ -96,12 +97,17 @@ def _compilar(wt, dominio, output):
 
 
 def executar_grupo(wt, gid, group, output, baseline=None, lock_api=None):
-    from pipeline.validation.runner import _rodar, cmd_testes, SETUP_SERVIDOR, SETUP_API, porta_t4
+    from pipeline.validation.runner import _rodar, cmd_testes, SETUP_SERVIDOR, SETUP_API, porta_t4, ResultadoTier
     output.mkdir(parents=True,exist_ok=False)
     selection=[t.get('destino',t['arquivo']) for t in group['testes']]
     frontend=group['dominio']=='frontend';api=group['dominio']=='api'
     xml=output/'primeira.xml';records=[];operational=None
     def round_run(xml):
+        if api:
+            from pipeline.validation.preparacao_api import conferir
+            try:conferir(wt)
+            except (ValueError,OSError) as exc:
+                return ResultadoTier('T2_API',[],False,0,motivo='preparacao_api_invalida',saida=str(exc)),[],'preparacao_api_invalida'
         if frontend:
             cmd=['node','node_modules/@angular/cli/bin/ng.js','test','--watch=false','--progress=false',
                  '--reporters=junit','--output-file='+str(xml.resolve())]
@@ -113,9 +119,14 @@ def executar_grupo(wt, gid, group, output, baseline=None, lock_api=None):
             # unitárias aninhadas. Unitários terminam naturalmente; APIs mantêm
             # o isolamento existente por conexões abertas.
             if not api:cmd.remove('--test-force-exit')
+            else:
+                index=cmd.index('--test')
+                cmd[index:index]=['--import',str(Path(__file__).with_name('coverage_api_setup.mjs').resolve())]
             env={'TSX_DISABLE_CACHE':'1',**({'PORT':str(porta_t4(wt))} if api else {})};timeout=300 if api else 60
         result,_=_rodar('T_FRONTEND' if frontend else 'T2_API' if api else 'T2',cmd,cwd,timeout,env)
         if result.motivo in ('timeout','comando_nao_encontrado'):return result,[],result.motivo
+        if 'unsatisfied precondition' in result.saida.lower():
+            return result,[],'precondicao_api_nao_satisfeita'
         try:
             parsed=relatorio(xml,wt,group)
             if result.codigo_saida not in (0,1) or (result.codigo_saida and not any(r['estado']=='falhou' for r in parsed)):
@@ -130,7 +141,7 @@ def executar_grupo(wt, gid, group, output, baseline=None, lock_api=None):
             failed={r['id'] for r in records if r['estado']=='falhou'}
             old=set(baseline.get('falhos',[])) if baseline else set()
             new=failed-old;intermittent=set();repetitions=0
-            if baseline is not None and (new or operational=='timeout'):
+            if baseline is not None and (new or operational):
                 second,again,op2=round_run(output/'segunda.xml');repetitions=1
                 result.duracao_s+=second.duracao_s
                 if operational or op2:
@@ -146,8 +157,11 @@ def executar_grupo(wt, gid, group, output, baseline=None, lock_api=None):
                 expected=set(baseline['executados'])
                 if expected != {r['id'] for r in records if r['estado']!='ignorado'}:
                     operational=operational or 'testes_ausentes_ou_ignorados'
+            # Falha do harness não é uma asserção funcional persistente.
+            observed_new=sorted(new)
+            if operational:new=set()
             measured={'grupo':gid,'dominio':group['dominio'],'testes':records,'falhos':sorted(failed),
-                      'falhos_novos':sorted(new),'intermitentes':sorted(intermittent),'reexecucoes':repetitions,
+                      'falhos_novos':sorted(new),'falhos_novos_observados':observed_new,'intermitentes':sorted(intermittent),'reexecucoes':repetitions,
                       'descobertos':sorted(r['id'] for r in records),
                       'esperados':sorted(baseline['executados']) if baseline else sorted(r['id'] for r in records if r['estado']!='ignorado'),
                       'ignorados':sorted(r['id'] for r in records if r['estado']=='ignorado'),
@@ -204,6 +218,7 @@ def validar(wt, arquivos, cfg, callback=None):
                 result.tiers.append(r);result.etapas.append({'tier':r.tier,'grupo':gid,'status':'executada','duracao_s':r.duracao_s})
                 if g['falha_operacional']:
                     unknown=True;result.cobertura_detalhada['motivos'].append(g['falha_operacional'])
+                    continue  # Nenhuma definição de F recebe reprovação de um grupo inválido.
                 split=classificar(g['falhos_novos'],RAIZ_REPO/data['conjunto_d']['arquivo'])
                 for d in values:
                     failures=g['falhos_novos'] if d=='sem_separacao' else split['f_'+d]

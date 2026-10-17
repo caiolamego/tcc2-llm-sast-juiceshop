@@ -58,6 +58,13 @@ Este documento é um diagnóstico e um plano de trabalho. Checkboxes marcadas re
 > Veja [a entrega](../features/06-cobertura-funcional/ENTREGA.md) e
 > [os comandos e limites](cobertura_funcional.md).
 
+> **Correção do piloto K=4 — 17/10/2026:** a preparação passa a conferir também
+> os builds ignorados pelo Git. Grupos que falham na inicialização não fornecem
+> F=0. A execução original foi preservada e os patches arquivados foram separados
+> para revalidação sem LLM, com baseline novo. Consulte o
+> [relatório da correção](auditoria/correcao_validacao_piloto10.md) antes de usar
+> as métricas do primeiro piloto de dez casos como resultados finais.
+
 ## 1. Documentos que orientam o trabalho
 
 | Fonte | Como utilizar |

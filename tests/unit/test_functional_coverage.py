@@ -246,7 +246,36 @@ class CoverageTests(unittest.TestCase):
             r=run.executar_grupo(self.wt,'front',group,self.root/'angular')
         self.assertTrue(r['comparavel']);self.assertIn('primeira.xml',r['relatorios_junit'])
 
+    def test_operational_file_failure_does_not_become_f_zero(self):
+        g=dict(self.group_result,falha_operacional='testes_ausentes_ou_ignorados',
+               falhos_novos=[self.file+' :: '])
+        callback=Mock()
+        with patch.object(run,'compilar',return_value=ResultadoTier('T0',[],True,0.1)),patch.object(run,'executar_grupo',return_value=g):
+            result=validar(self.wt,['a.ts'],self.cfg(),callback)
+        self.assertEqual((result.F_sem_separacao,result.F_marcador,result.F_criterio),(None,None,None))
+        self.assertTrue(result.cobertura_insuficiente);callback.assert_called_once()
+        self.assertEqual(result.testes_falhos_f_criterio,[])
+
+    def test_empty_file_testcase_is_loading_failure(self):
+        xml=self.root/'file.xml'
+        xml.write_text(f'<testsuites><testcase file="{self.file}" name="{self.file}"><failure/></testcase></testsuites>')
+        with self.assertRaisesRegex(ValueError,'carregamento'):run.relatorio(xml,self.wt,self.data['grupos']['g'])
+
+    def test_precondition_output_cannot_supply_failed_assertions(self):
+        result=ResultadoTier('T2',[],False,0.1,codigo_saida=1,saida='Exiting due to unsatisfied precondition!')
+        with patch('pipeline.validation.runner._rodar',return_value=(result,0)):
+            measured=run.executar_grupo(self.wt,'g',self.data['grupos']['g'],self.root/'precondition',self.group_result)
+        self.assertEqual(measured['falha_operacional'],'precondicao_api_nao_satisfeita')
+        self.assertEqual(measured['falhos_novos'],[])
+        self.assertFalse(measured['comparavel'])
+
+    def test_preflight_requires_api_artifacts_even_if_dependencies_match(self):
+        selection={'grupos':[],'dominios':['api']}
+        with self.assertRaisesRegex(ValueError,'Preparação API incompleta'):
+            c.validar_baseline(self.base,self.data,self.rev,self.mapa,self.wt,selection)
+
     def test_api_disabled_and_compiler_failure_do_not_call_broad_suites(self):
+        readiness=patch('pipeline.validation.preparacao_api.conferir');readiness.start();self.addCleanup(readiness.stop)
         self.data['grupos']['g']['dominio']='api'
         self.data['grupos']['g']['testes'][0]['arquivo']='test/api/a.test.ts'
         p=self.wt/'test/api/a.test.ts';p.parent.mkdir();p.write_text('api fixture')

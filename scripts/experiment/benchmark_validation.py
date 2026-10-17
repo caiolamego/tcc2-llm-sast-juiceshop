@@ -62,15 +62,17 @@ def salvar(path, data):
 
 def replay(args):
     origem, saida = args.origem.resolve(), args.saida.resolve()
-    if not saida.is_relative_to(RAIZ_REPO/'outputs/feature05') or saida == RAIZ_REPO/'outputs/feature05':
-        raise ValueError('Benchmark requer saída nova sob outputs/feature05/')
+    revalidacao=getattr(args,'revalidacao',False)
+    area=RAIZ_REPO/('outputs/revalidacoes' if revalidacao else 'outputs/feature05')
+    if not saida.is_relative_to(area) or saida==area:
+        raise ValueError('Replay requer saída nova sob '+str(area.relative_to(RAIZ_REPO)))
     if saida.is_relative_to(origem) or origem.is_relative_to(saida):
         raise ValueError('Saída sobreposta à origem')
     if saida.exists():
         raise ValueError('Destino já existe; escolha uma saída nova')
     contrato = json.loads((origem/'contrato_execucao.json').read_text())
     entrada = carregar(origem,contrato['execucao'],args.catalogo)
-    if digest(args.baseline_testes) != contrato['baseline_testes_sha256']:
+    if not revalidacao and digest(args.baseline_testes) != contrato['baseline_testes_sha256']:
         raise ValueError('Baseline funcional diverge da origem')
     perfil = entrada.perfil
     casos = {c['caso_id']:c for c in entrada.catalogo.casos}
@@ -96,6 +98,14 @@ def replay(args):
             if not (wt/necessario).is_file():
                 raise ValueError(f'Preparação incompleta em {wt.name}: falta {necessario}; '
                                  'prepare o build antes do benchmark')
+    if args.politica_validacao=='relacionada_v2':
+        from pipeline.validation import coverage as cobertura
+        data=cobertura.carregar(args.cobertura_funcional,args.mapa_testes,RAIZ_REPO/'workspace/wt-1',entrada.catalogo)
+        for i in range(1,args.k+1):
+            wt=RAIZ_REPO/f'workspace/wt-{i}'
+            sel=cobertura.selecionar(data,[casos[c]['arquivo'] for c in jobs],wt)
+            if not sel['suficiente']:raise ValueError('Cobertura insuficiente para replay')
+            cobertura.validar_baseline(args.baseline_testes,data,args.cobertura_funcional,args.mapa_testes,wt,sel)
     pool = PoolWorktrees(RAIZ_REPO/'workspace',args.k,entrada.catalogo.commit)
     lock_path = saida.with_name(saida.name+'.lock')
     saida.parent.mkdir(parents=True,exist_ok=True)
@@ -111,6 +121,11 @@ def replay(args):
                  'commit_alvo':entrada.catalogo.commit,'fontes_sha256':entrada.fontes,
                  'k':args.k,'repeticoes':args.repeticoes,'cache':args.cache_validacao}
     manifesto['benchmark_sha256'] = digest(__file__)
+    if revalidacao:
+        manifesto.update(tipo='revalidacao_patches_sem_llm',
+            baseline_origem_sha256=contrato['baseline_testes_sha256'],baseline_atual_sha256=digest(args.baseline_testes),
+            registros_originais=len(entrada.linhas),patches_planejados=sum(len(x) for x in jobs.values()),
+            sem_patch=[l['tentativa_id'] for l in entrada.linhas if not l['artefatos'].get('patch')])
     try:
         saida.mkdir(exist_ok=False)
         criou_saida = True
@@ -219,7 +234,8 @@ def main(argv=None):
     ap.add_argument('--catalogo',type=Path,default=RAIZ_REPO/'outputs/catalogos/ampliado_v1/catalogo_issues.json')
     ap.add_argument('--baseline-testes',type=Path,default=RAIZ_REPO/'outputs/feature02/validacao/baseline_testes.json')
     ap.add_argument('--semgrep-bin',default=str(RAIZ_REPO/'.venv/bin/semgrep'))
-    ap.add_argument('--k',type=int,choices=(1,2),default=1)
+    ap.add_argument('--k',type=int,choices=(1,2,3,4),default=1)
+    ap.add_argument('--revalidacao',action='store_true',help='Revalida patches em outputs/revalidacoes com baseline novo explícito; não gera tentativas LLM')
     ap.add_argument('--repeticoes',type=int,default=1)
     ap.add_argument('--somente-primeiro',action='store_true')
     ap.add_argument('--arquivo-parada',type=Path)

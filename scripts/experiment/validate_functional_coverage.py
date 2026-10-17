@@ -60,6 +60,9 @@ def executar(args):
     selected=sorted(args.grupos.split(',')) if args.grupos else sorted(data['grupos'])
     if not selected or len(set(selected))!=len(selected) or set(selected)-set(data['grupos']):
         raise ValueError('Grupos inválidos')
+    if any(data['grupos'][g]['dominio']=='api' for g in selected):
+        from pipeline.validation.preparacao_api import conferir
+        conferir(wt)
     if output.exists() or output.is_relative_to(RAIZ_REPO/'workspace'):raise ValueError('Destino inválido/existente')
     output.mkdir(parents=True,exist_ok=False)
     if args.controles:

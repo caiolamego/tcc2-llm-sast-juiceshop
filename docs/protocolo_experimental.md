@@ -440,3 +440,23 @@ pendente. Baselines compartilhados não são 78 medições independentes. Métri
 acrescentam agrupamento por alcance funcional, sem mudar denominadores; registros
 antigos não recebem alcance inventado. Consulte a
 [entrega, controles e evidências](../features/06-cobertura-funcional/ENTREGA.md).
+
+
+### Correção da medição funcional do piloto K=4 — 17/10/2026
+
+A primeira execução de dez casos revelou ausência de builds ignorados pelo Git
+em duas worktrees. Falhas de startup foram interpretadas como asserções F em
+13 registros. A execução original permanece preservada como evidência do problema,
+sem substituição retrospectiva de métricas.
+
+A política `relacionada_v2` passa a exigir artefatos de inicialização e porta
+disponível, vinculando os hashes desses artefatos ao ambiente. O adaptador de API
+aguarda as pré-condições assíncronas antes de descobrir testes. Falha operacional
+de um grupo não fornece reprovação F; sem outra reprovação comprovada, a medição
+fica nula. As três definições F/D e o tratamento dos desafios permanecem iguais.
+
+Foi gerado baseline novo, seguido de revalidação isolada dos patches existentes.
+A revalidação não gera respostas LLM nem constitui nova amostra independente.
+Mudanças de ambiente/implementação impedem retomadas antigas; os YAMLs atuais
+referenciam a nova evidência. Veja o
+[diagnóstico, comandos e resultados](auditoria/correcao_validacao_piloto10.md).
