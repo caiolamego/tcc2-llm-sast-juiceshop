@@ -255,6 +255,78 @@ O item 3 (escopo) ainda está em aberto — aguardando a contagem exata de quant
 
 ---
 
+### 2026-10-18 — Ambiente dependente da máquina; adoção de um ambiente único em Docker (F2)
+
+**Sintoma:** na branch `semgrep-findings`, o preflight no Mac do Caio falhou com `FileNotFoundError: workspace/wt-1/package-lock.json`, e 15 testes Python falharam ou deram erro no macOS: a publicação exclusiva das métricas usa `renameat2`, que não existe fora do Linux (ENOTSUP), e há caminhos comparados como `/var` × `/private/var`. O baseline funcional `outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE` só vale no ambiente em que foi gerado, porque registra as versões, o hash do lockfile e o hash das dependências instaladas.
+
+**Causa:** o ambiente variava de máquina para máquina. O Node local era v26.7.0 e o do baseline, v24.14.0. O Juice Shop não versiona lockfile (o `.npmrc` tem `package-lock=false`), então cada `npm install` resolve as dependências na data em que roda. E o `renameat2` só existe no Linux.
+
+**Correção:** ambiente único em Docker (branch `feat/docker`, guia em `docs/docker.md`). Arquivos: `Dockerfile`, `compose.yaml`, `.dockerignore`, `docker/gerar_lockfiles.sh`, `docker/preparar_workspace.sh` e alvos `docker-*` no `Makefile`. O que fica fixo:
+- plataforma `linux/amd64` (Rosetta nos Macs Apple Silicon);
+- imagem `node:24.14.0-bookworm`, fixada pelo digest;
+- Python 3.11.2 da imagem, com os pacotes Python (incluindo o Semgrep 1.177.0) travados em `requirements.lock.txt`;
+- Juice Shop no commit `f915bddd…`, com lockfiles gerados uma única vez (2026-10-18T20:06:59Z, npm 11.9.0) e versionados em `docker/juice-shop/`;
+- `TZ=UTC`.
+
+As worktrees `wt-1..wt-K` são cópias exatas (`cp -a`) do Juice Shop de referência da imagem, num volume do Docker. O `preparar_workspace.sh` também cria `workspace/catalogo-alvo` (checkout limpo), exigido pelo teste `test_recompare_archived_scans`. O painel ganhou `--endereco 0.0.0.0`, usado só dentro do container; o compose publica a porta apenas em `127.0.0.1`.
+
+Verificação no container:
+- imagem construída;
+- 315 testes Python OK, incluindo 2 que eram pulados no Mac;
+- `semgrep --test rules` 28/28;
+- identidade de ambiente igual nas 4 worktrees (`b11c70b9…`);
+- consolidação de métricas do piloto `AMP_PAINEL_20261017T064627Z_bf4efba0` refeita: os 14 artefatos saíram idênticos byte a byte aos arquivados;
+- painel respondendo;
+- com o baseline do Docker (`DOCKER_V2`, entrada seguinte), o preflight dos 10 casos do piloto passou: 40 prompts e baseline SAST reproduzido (78 de 78). Os campos do contrato que dependem do ambiente (casos, catálogo, perfil, versão do Semgrep, componentes dos prompts, RAG) são iguais aos do piloto. O `prompts_validacao_sha256` difere só porque o `runner.py` mudou no commit `d03fe57`, depois do piloto;
+- dry-run completo, sem LLM (P1 a P4, K=4, `relacionada_v2`): 40 tentativas, todas `R0F1M1` com comparação SAST conclusiva, 0 erros, US$ 0, 15 artefatos de métricas, 15min34s. As worktrees voltaram limpas. Saída em `.cache/teste_docker/` (não versionada).
+
+**Impacto na reprodutibilidade:** sim, positivo, mas com quebra de continuidade. Daqui em diante, as execuções oficiais devem rodar no container. Os resultados anteriores (E01 a E03 e o piloto de 10 casos) foram gerados em outros ambientes e têm outra identidade de ambiente; não devem ser misturados sem registro. Limitação que continua: os pacotes do sistema (apt) não são fixados, então reconstruir a imagem em outra data pode trazê-los um pouco diferentes. Mitigação proposta: publicar a imagem num registro e citá-la pelo digest.
+
+**Fase do guia:** F2 (ambiente e preparação do alvo). O guia ainda não tem o passo com Docker.
+
+---
+
+### 2026-10-18 — `npm rebuild` executa o `postinstall` da raiz; `libxmljs2` compilado do fonte (F2)
+
+**Sintoma:** no primeiro build da imagem, a checagem `test ! -e frontend/node_modules` falhou depois de `npm ci --package-lock=true --ignore-scripts && npm rebuild`.
+
+**Causa:** o `npm rebuild` também executa os scripts de ciclo de vida do próprio pacote raiz. O `postinstall` do Juice Shop roda `cd frontend && npm install`, o que instalaria o frontend sem lockfile (o `.npmrc` o desliga) e anularia a fixação das versões. A suposição de que o `rebuild` só tocava nas dependências estava errada; o comportamento foi reproduzido num container descartável.
+
+**Correção:** o `postinstall` sai do `package.json` só durante o `npm ci` (`npm pkg delete scripts.postinstall`). O `npm ci` continua rodando os scripts das dependências (binários nativos). Depois, o `package.json` é restaurado com `git checkout` e o build exige `git status` limpo. O frontend é instalado à parte, com `npm ci --package-lock=true`, e os builds usam os mesmos comandos do `postinstall` original. Na mesma investigação: o binário pré-compilado do `libxmljs2` exige GLIBC 2.38 e o bookworm tem 2.36, então o `libxmljs2` é compilado do fonte durante o build da imagem.
+
+**Impacto na reprodutibilidade:** seria alto (frontend sem lockfile), mas foi corrigido antes de qualquer execução. O binário compilado do `libxmljs2` faz parte da imagem: outra construção pode compilá-lo de outro jeito, o que é mais um motivo para citar a imagem pelo digest.
+
+**Fase do guia:** F2.
+
+---
+
+### 2026-10-18 — No Docker, o Juice Shop desliga sozinho 17 desafios (`safetyMode: auto`) (F2/F4)
+
+**Sintoma:** o primeiro baseline funcional gerado no container (`outputs/revalidacoes/DOCKER_V1/BASELINE`) teve os 39 grupos comparáveis. Mas, comparado ao baseline do piloto (`outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE`), havia 10 testes em 8 grupos que passavam no ambiente do Matheus e falhavam no container:
+- b2b (3 testes);
+- current_user, feedback, login, product, profile, track e upload (1 cada).
+
+Exemplo: o teste de login "saved as remote IP when True-Client-IP is not present" recebeu `''` em vez de `'127.0.0.1'`. A comparação completa está em `outputs/revalidacoes/DOCKER_V1/comparacao_baseline_piloto10.json`.
+
+**Causa:** o `config/default.yml` do Juice Shop traz `challenges.safetyMode: auto`. Nesse modo, `lib/utils.ts` (`isChallengeEnabled`) desliga os desafios cujo `disabledEnv` inclui `Docker` quando `lib/is-docker.ts` detecta um container (`/.dockerenv`, cgroup ou mountinfo). O `data/static/challenges.yml` marca 17 desafios assim:
+
+> restfulXss, fileWrite, rce, usernameXss, persistedXssUser, httpHeaderXss, noSqlCommand, noSqlOrders, reflectedXss, ssti, persistedXssFeedback, rceOccupy, videoXss, xxeFileDisclosure, xxeDos, yamlBomb e lfr
+
+Os 10 testes que falharam correspondem a 9 desses desafios. Fora de container, o modo `auto` mantém todos ligados; por isso o ambiente do Matheus não tinha o problema. Sem correção, o alvo no Docker teria 17 vulnerabilidades desativadas em tempo de execução. O SAST, que é estático, não muda, mas os testes funcionais e o conjunto D mudam, e o alvo deixa de ser o alvo estudado.
+
+**Correção:** o `Dockerfile` define `ENV NODE_CONFIG='{"challenges":{"safetyMode":"disabled"}}'`. É a opção oficial do Juice Shop, a mesma de `config/unsafe.yml` e `config/ctf.yml`, e o pacote `config` (3.3.12) a aplica por cima de `config/test.yml`. A trava tem três partes:
+1. o build confere o valor efetivo com `NODE_ENV=test` e falha se não for `disabled`;
+2. o valor fica registrado em `/opt/ambiente.json`;
+3. a variável já faz parte de `identity.ambiente` (`variaveis_sha256`), então um container sem ela é recusado pelo preflight.
+
+O runner repassa as variáveis do processo aos testes (`llm/provider.py::ambiente_alvo`, que remove só as credenciais da LLM). O baseline foi refeito em `outputs/revalidacoes/DOCKER_V2/BASELINE`: os 39 grupos são equivalentes aos do piloto (mesmos testes, estados, falhas e obrigatórios aprovados). A comparação está em `outputs/revalidacoes/DOCKER_V2/comparacao_baseline_piloto10.json`, gerada por `scripts/audit/compare_functional_baselines.py`. O `DOCKER_V1` fica como evidência deste incidente e não deve ser usado; o preflight o recusaria, porque o `variaveis_sha256` dele é outro.
+
+**Impacto na reprodutibilidade:** alto, se não for corrigido. Quem rodar o Juice Shop em container sem `safetyMode: disabled`, inclusive com a imagem oficial do projeto, mede um alvo diferente. Isso precisa constar no protocolo como cuidado obrigatório.
+
+**Fase do guia:** F2 (ambiente) e F4 (validação, linha de base do F).
+
+---
+
 <!--
 Próxima entrada:
 

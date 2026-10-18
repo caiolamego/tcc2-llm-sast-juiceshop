@@ -10,6 +10,7 @@
 | Commit fixado | `f915bddd82790d0f3018902d36ae9b4241a5f51f` ("Bump to v20.1.1") |
 | Node.js exigido (`engines`) | `22 - 26` |
 | Node.js confirmado no ambiente | `v26.7.0` (confirmado em 2026-10-07; dentro da faixa exigida) |
+| Ambiente de execução a partir de 2026-10-18 | Docker `linux/amd64`, Node `v24.14.0`, npm `11.9.0`, Python `3.11.2` (seção "Ambiente único em Docker") |
 | npm | `11.19.0` |
 | Python | `3.11.16` |
 | git | `2.50.1` |
@@ -464,3 +465,42 @@ referenciam a nova evidência. Veja o
 ## Provedor Colab e identidade de inferência
 
 Novas execuções ampliadas podem selecionar Qwen no Colab e usam contrato 5.0. Modelo/revisão/tokenizer/template/quantização/geração são identificados separadamente do endpoint. Preservam-se prompts, critérios R/F/M, denominadores e parada da cadeia. O contador Colab é independente do histórico OpenAI; custos não informados permanecem nulos. Erro operacional interrompe a fila e não é reprovação funcional; resposta truncada não é aplicada. A entrega 07 foi testada offline, sem demonstrar desempenho ou eficácia na GPU. [Preparação e limites](modelo_colab.md).
+
+## Ambiente único em Docker — 18/10/2026
+
+A partir desta data, as execuções oficiais rodam no container definido no repositório (`Dockerfile`, `compose.yaml`,
+guia em [docker.md](docker.md)). O objetivo é que autores, orientadora e banca usem o mesmo ambiente. As respostas da
+LLM continuam podendo variar; o ambiente em que elas são geradas e validadas, não.
+
+Itens fixados:
+- plataforma `linux/amd64`;
+- imagem `node:24.14.0-bookworm`, fixada pelo digest;
+- Python 3.11.2, com os pacotes Python travados em `requirements.lock.txt` (Semgrep 1.177.0, sem login);
+- Juice Shop no commit fixado, com as dependências npm travadas por lockfiles gerados uma única vez e versionados em
+  `docker/juice-shop/`;
+- `TZ=UTC`;
+- `challenges.safetyMode = disabled`.
+
+As worktrees são cópias exatas do Juice Shop de referência da imagem, por isso a identidade de ambiente é a mesma em
+qualquer máquina. As versões efetivas ficam em `/opt/ambiente.json`.
+
+**Modo de segurança do alvo.** Em container, o modo padrão do Juice Shop (`auto`) desliga 17 desafios marcados
+`disabledEnv: Docker` e o código vulnerável deles. Fora de container, eles ficam ligados. O valor `disabled` reproduz
+no container o comportamento de uma máquina comum. Sem ele, 10 testes do baseline funcional mudavam de resultado. É
+um cuidado obrigatório para qualquer reprodução em container.
+
+**Baseline funcional.** O baseline do piloto foi gerado em outro ambiente e não vale no container, porque os lockfiles
+e as dependências instaladas diferem. Foi gerado um baseline novo, sem LLM, em
+`outputs/revalidacoes/DOCKER_V2/BASELINE`. Comparado ao do piloto, os 39 grupos são equivalentes: mesmos testes,
+estados, falhas e obrigatórios aprovados (`outputs/revalidacoes/DOCKER_V2/comparacao_baseline_piloto10.json`). O
+ambiente difere apenas nos hashes dos lockfiles, das dependências e das variáveis; os builds do alvo são idênticos
+byte a byte. No mesmo container, o baseline SAST foi reproduzido (78 de 78 alertas) e a consolidação de métricas do
+piloto reproduziu os 14 artefatos arquivados byte a byte.
+
+**Continuidade.** Os resultados anteriores (E01 a E03, pilotos e revalidação de 17/10) permanecem como foram gerados,
+cada um com a identidade do seu ambiente. Eles não devem ser somados a resultados do container sem que a diferença de
+ambiente seja declarada.
+
+**Limite.** Os pacotes do sistema (apt) não são fixados. Reconstruir a imagem em outra data pode trazê-los um pouco
+diferentes, e o `libxmljs2` é compilado do fonte durante o build. Para a reprodução pela banca, a imagem construída
+deve ser publicada e citada pelo digest.
