@@ -126,14 +126,14 @@ def main() -> None:
             texto = resposta_falsa(issue, wt)
             resumo["llm"] = {"dry_run": True}
         else:
-            from pipeline.llm.openai_client import ClienteLLM, ConfigLLM
-            r = ClienteLLM(ConfigLLM.do_env()).gerar(prompt.mensagens)
-            texto = r.conteudo
+            from pipeline.llm.provider import criar_cliente, texto_aplicavel
+            r = criar_cliente().gerar(prompt.mensagens)
+            texto = texto_aplicavel(r)
             resumo["llm"] = {k: v for k, v in r.to_dict().items() if k != "conteudo"}
             print(f"  llm: {r.modelo}, fingerprint={r.system_fingerprint}, "
-                  f"{r.tokens_entrada}+{r.tokens_saida} tokens, {r.latencia_s}s, "
-                  f"US$ {r.custo_usd:.5f}{' (cache)' if r.do_cache else ''}")
-        salvar(base, "resposta", {"texto": texto})
+                  f"{r.tokens_entrada}+{r.tokens_saida} tokens, {r.latencia_s}s, " +
+                  ('custo não informado' if r.custo_usd is None else f'US$ {r.custo_usd:.5f}') + (' (cache)' if r.do_cache else ''))
+        salvar(base, "resposta", {"texto": r.conteudo if not args.dry_run else texto})
 
         correcao = interpretar(texto)
         if isinstance(correcao, ResultadoAplicacao):

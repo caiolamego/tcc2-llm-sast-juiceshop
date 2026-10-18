@@ -10,5 +10,6 @@ Especificações de entregas técnicas, com escopo, contratos e critérios de ac
 | 04 | [Métricas e consolidação dos resultados](04-metricas-consolidacao/README.md) | Implementada e validada offline — [entrega](04-metricas-consolidacao/ENTREGA.md) |
 | 05 | [Otimização da validação e do tempo de execução](05-otimizacao-validacao/README.md) | Implementada; 96 replays, resultados e limites na [entrega](05-otimizacao-validacao/ENTREGA.md) — [reproduzir](05-otimizacao-validacao/VALIDACAO.md) |
 | 06 | [Cobertura funcional dos 78 casos](06-cobertura-funcional/README.md) | Implementada e auditada — 52 casos preparados, 26 bloqueados; campanha pendente — [entrega](06-cobertura-funcional/ENTREGA.md) |
+| 07 | [Modelo hospedado no Colab](07-modelo-colab/README.md) | Implementada e testada offline — conexão Colab e piloto pendentes — [entrega](07-modelo-colab/ENTREGA.md) |
 
 Contexto geral: [guia de continuidade do TCC2](../docs/GUIA_CONTINUIDADE_TCC2.md).

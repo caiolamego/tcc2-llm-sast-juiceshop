@@ -121,6 +121,12 @@ def custos_atual(rows, sessoes):
             'duracoes_sessoes':[{'inicio':s.get('inicio'),'fim':s.get('fim'),'duracao_s':s.get('duracao_s'),
                                  'abortada':s.get('abortada'),'interrompida_por_orcamento':s.get('interrompida_por_orcamento')} for s in sessoes],
             'erros_sessoes':errors,'limite':'Chamadas sem registro não têm custo/tokens inferidos; durações acumuladas não são tempo de parede.'}
+    colab=[r for r in calls if r.get('provedor')=='colab']
+    if colab:
+        resultado['custos_colab']={'api_usd':known(colab,'custo_api_usd'),
+                                  'infraestrutura_usd':known(colab,'custo_infraestrutura_usd'),
+                                  'envios_registrados':known(colab,'chamadas_enviadas'),
+                                  'limite':'Infraestrutura e chamadas operacionais sem tentativa não têm custo inferido.'}
     if any('cache_validacao' in r for r in rows):
         resultado['validacao_reutilizada'] = {
             comp: {'reusos':sum(bool(r.get('cache_validacao',{}).get(comp,{}).get('hit')) for r in rows),
@@ -165,7 +171,10 @@ def calcular(entrada, definicao_principal='criterio', pesos=None):
                              'F_nao_medido':sum(l.get('F_'+d) is None for l in ls),
                              'normalizacao_incompleta':sum(l.get('incompleto_'+d,False) for l in ls)} for d in DEFS}}
         aggregate[name]={}
-        for dim,field in DIMENSOES.items():
+        dimensions=dict(DIMENSOES)
+        if entrada.contrato and entrada.contrato.get('schema_versao')=='5.0':
+            dimensions.update(inferencia='identidade_inferencia')
+        for dim,field in dimensions.items():
             by=defaultdict(list)
             for l in ls:
                 value=l.get(field)
@@ -175,7 +184,7 @@ def calcular(entrada, definicao_principal='criterio', pesos=None):
                                    'casos_alcancados':len({l['caso_id'] for l in sub}),
                                    'definicoes':{d:metricas(sub,d,entrada.catalogo.ampliado,pesos) for d in DEFS}}
                                   for key,sub in sorted(by.items())]
-        if entrada.contrato and entrada.contrato.get('schema_versao')=='4.0':
+        if entrada.contrato and (entrada.contrato.get('schema_versao')=='4.0' or entrada.contrato.get('schema_versao')=='5.0' and entrada.contrato.get('contrato_validacao_versao')=='4.0'):
             by=defaultdict(list)
             for row in ls:
                 detail=row.get('cobertura_detalhada') or {}

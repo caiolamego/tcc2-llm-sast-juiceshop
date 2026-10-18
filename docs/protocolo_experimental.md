@@ -460,3 +460,7 @@ A revalidação não gera respostas LLM nem constitui nova amostra independente.
 Mudanças de ambiente/implementação impedem retomadas antigas; os YAMLs atuais
 referenciam a nova evidência. Veja o
 [diagnóstico, comandos e resultados](auditoria/correcao_validacao_piloto10.md).
+
+## Provedor Colab e identidade de inferência
+
+Novas execuções ampliadas podem selecionar Qwen no Colab e usam contrato 5.0. Modelo/revisão/tokenizer/template/quantização/geração são identificados separadamente do endpoint. Preservam-se prompts, critérios R/F/M, denominadores e parada da cadeia. O contador Colab é independente do histórico OpenAI; custos não informados permanecem nulos. Erro operacional interrompe a fila e não é reprovação funcional; resposta truncada não é aplicada. A entrega 07 foi testada offline, sem demonstrar desempenho ou eficácia na GPU. [Preparação e limites](modelo_colab.md).

@@ -205,7 +205,8 @@ def _rodar(tier: str, cmd: list[str], wt: Path, timeout_s: float,
            env_extra: dict[str, str] | None = None) -> tuple[ResultadoTier, int | None]:
     """Roda em grupo de processos proprio para matar netos (npx/npm -> node) no
     timeout. Devolve o resultado e o codigo de saida (None em timeout)."""
-    env = {**os.environ, "TZ": "UTC", **(env_extra or {})}
+    from pipeline.llm.provider import ambiente_alvo
+    env = ambiente_alvo({"TZ": "UTC", **(env_extra or {})})
     cmd_registro = [relativizar_texto(c) for c in cmd]
     inicio = time.monotonic()
     try:

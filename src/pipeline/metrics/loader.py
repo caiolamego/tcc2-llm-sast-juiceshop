@@ -120,8 +120,17 @@ def _cobertura(entrada):
 
 def _validar_contrato(entrada):
     c = entrada.contrato; cat = entrada.catalogo
-    exigir(c.get('schema_versao') in ('1.0','2.0','3.0','4.0') and c.get('execucao') == entrada.execucao, 'Schema/execução do contrato inválido')
-    if c.get('schema_versao') in ('3.0','4.0'):
+    exigir(c.get('schema_versao') in ('1.0','2.0','3.0','4.0','5.0') and c.get('execucao') == entrada.execucao, 'Schema/execução do contrato inválido')
+    if c.get('schema_versao')=='5.0':
+        inf=c.get('inferencia')
+        exigir(c.get('contrato_validacao_versao') in ('3.0','4.0'), 'Contexto de validação v5 ausente')
+        exigir(isinstance(inf,dict) and inf.get('provedor') in ('openai','colab','simulado') and isinstance(inf.get('modelo'),str), 'Identidade de inferência ausente')
+        if inf['provedor']=='colab':
+            from pipeline.llm.colab_protocol import sha, validar_manifesto
+            validar_manifesto({'schema_versao':'1.0','cientifica':inf.get('cientifica'),
+                'identidade_sha256':inf.get('modelo_identidade_sha256'),'ambiente':{'gpu':'registrada_por_resposta'}})
+            exigir(isinstance(inf.get('geracao'),dict) and isinstance(inf.get('implementacao'),dict), 'Configuração de inferência ausente')
+    if c.get('schema_versao') in ('3.0','4.0','5.0'):
         from pipeline.validation.policy import CHOICES
         v = c.get('validacao')
         exigir(isinstance(v,dict) and all(v.get(k) in choices for k,choices in CHOICES.items()), 'Política de validação inválida')
@@ -129,7 +138,7 @@ def _validar_contrato(entrada):
         exigir(bool(v['implementacao']) and all(isinstance(h,str) and re.fullmatch('[0-9a-f]{64}',h) for h in v['implementacao'].values()), 'Hashes de implementação inválidos')
         if v['politica_validacao'] in ('otimizada_v1','relacionada_v1','relacionada_v2'):
             exigir(isinstance(v.get('mapa_testes_sha256'),str) and re.fullmatch('[0-9a-f]{64}',v['mapa_testes_sha256']), 'Mapa de testes sem hash')
-        if c['schema_versao']=='4.0':
+        if (c['schema_versao']=='4.0' or c['schema_versao']=='5.0' and c.get('contrato_validacao_versao')=='4.0'):
             exigir(v['politica_validacao']=='relacionada_v2' and isinstance(v.get('cobertura'),dict),'Contrato 4.0 sem cobertura')
             exigir(v['repeticao_api']=='ampla','Contrato v4 requer repetição integral')
             for k in ('revisao_sha256','mapa_sha256','conjunto_d_sha256'):
@@ -146,7 +155,7 @@ def _validar_contrato(entrada):
     exigir(len(set(c['estrategias']+c['diagnosticos'])) == len(c['estrategias']+c['diagnosticos']), 'Estratégias duplicadas')
     exigir(c.get('comparador') in ('blocos_unicos_v1', 'ocorrencias_contexto_v2'), 'Comparador incompatível')
     _perfil(entrada)
-    if c.get('schema_versao')=='4.0':_cobertura(entrada)
+    if (c.get('schema_versao')=='4.0' or c.get('schema_versao')=='5.0' and c.get('contrato_validacao_versao')=='4.0'):_cobertura(entrada)
 
 
 def carregar(raiz, execucao, catalogo_path):
@@ -232,6 +241,8 @@ def carregar(raiz, execucao, catalogo_path):
                 if row.get(f'classificacao_{d}')=='aceita':
                     exigir(row.get('status_aplicacao')=='aplicado' and (row.get('R'),row.get(f'F_{d}'),row.get('M'))==(1,1,1), 'Aceite contraditório')
             exigir(row.get('classificacao_final') == row.get('classificacao_criterio'), 'Classificação principal divergente')
+            if contract.get('schema_versao')=='5.0' and not row.get('dry_run'):
+                exigir(row.get('identidade_inferencia')==contract['inferencia'] and row.get('provedor')==contract['inferencia']['provedor'], 'Inferência da tentativa diverge do contrato')
             ledger=row.get('artefatos_sha256');exigir(isinstance(ledger,dict) and bool(ledger),'Hashes de artefatos ausentes')
             for file, old in ledger.items():
                 artifact=relativo(raiz,file)
@@ -239,7 +250,7 @@ def carregar(raiz, execucao, catalogo_path):
                 entrada.registrar(artifact,'artefatos/'+file)
             # Cada referência declarada deve estar coberta pelo ledger, incluindo cópias portáteis.
             declared=row.get('artefatos');exigir(isinstance(declared,dict),'Referências de artefatos ausentes')
-            if contract.get('schema_versao') in ('3.0','4.0') and row['status_aplicacao']=='aplicado':
+            if contract.get('schema_versao') in ('3.0','4.0','5.0') and row['status_aplicacao']=='aplicado':
                 exigir(row.get('politica_validacao')==contract['validacao']['politica_validacao'], 'Política da tentativa diverge do contrato')
                 cache=row.get('cache_validacao')
                 exigir(isinstance(cache,dict) and set(cache)=={'sast','funcional'}, 'Proveniência de cache ausente')
@@ -252,7 +263,7 @@ def carregar(raiz, execucao, catalogo_path):
                 candidato=candidato if candidato.is_absolute() else RAIZ_REPO/candidato
                 candidato=relativo(raiz,candidato.resolve().relative_to(raiz).as_posix())
                 exigir(digest(candidato)==cache['funcional'].get('evidencia_sha256'),'Hash da evidência funcional divergente')
-                if contract['schema_versao']=='4.0':
+                if (contract['schema_versao']=='4.0' or contract['schema_versao']=='5.0' and contract.get('contrato_validacao_versao')=='4.0'):
                     functional=ler_json(candidato)
                     exigir(isinstance(row.get('cobertura_detalhada'),dict) and row['cobertura_detalhada']==functional.get('cobertura_detalhada'),
                            'Cobertura funcional divergente da evidência')

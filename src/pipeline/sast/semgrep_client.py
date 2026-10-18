@@ -1,6 +1,8 @@
 """Execucao e normalizacao dos resultados do Semgrep."""
 from __future__ import annotations
 
+from pipeline.llm.provider import ambiente_alvo
+
 import hashlib
 import json
 import subprocess
@@ -84,7 +86,7 @@ def executar(
     cmd += caminhos if caminhos else ["."]
 
     proc = subprocess.run(cmd, capture_output=True, text=True, cwd=alvo,
-                          timeout=TIMEOUT_SEMGREP_S)
+                          timeout=TIMEOUT_SEMGREP_S, env=ambiente_alvo())
     # Semgrep usa codigo 1 quando encontra findings; so >1 e erro real.
     if proc.returncode > 1:
         raise RuntimeError(f"Semgrep falhou ({proc.returncode}): {proc.stderr[:800]}")
@@ -176,7 +178,7 @@ def carregar_scan_perfil(path: Path, alvo: Path, perfil) -> ScanResultado:
 
 def conferir_versao(semgrep_bin, perfil):
     executable = str(Path(semgrep_bin).resolve()) if '/' in str(semgrep_bin) else str(semgrep_bin)
-    v = subprocess.run([executable,'--version'],capture_output=True,text=True,timeout=30)
+    v = subprocess.run([executable,'--version'],capture_output=True,text=True,timeout=30,env=ambiente_alvo())
     lines = v.stdout.strip().splitlines()
     if v.returncode or not lines or lines[-1] != perfil.dados['semgrep_versao']:
         raise ValueError('Versão Semgrep incompatível com o perfil')
@@ -192,7 +194,7 @@ def scan_perfil(alvo: Path, perfil, saida: Path, semgrep_bin='semgrep') -> ScanR
     cmd += ['.']
     saida.parent.mkdir(parents=True,exist_ok=True)
     try:
-        proc = subprocess.run(cmd,cwd=alvo,capture_output=True,text=True,timeout=perfil.dados['timeout_processo_s'])
+        proc = subprocess.run(cmd,cwd=alvo,capture_output=True,text=True,timeout=perfil.dados['timeout_processo_s'],env=ambiente_alvo())
     except subprocess.TimeoutExpired:
         return ScanResultado([], [], perfil.dados['semgrep_versao'], 'timeout_processo')
     saida.with_suffix('.stderr.log').write_text(proc.stderr)

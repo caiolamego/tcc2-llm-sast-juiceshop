@@ -59,9 +59,11 @@ def _metric_rows(ex, pop, d, group, values):
 def construir(report, entrada):
     artifacts={'metricas.json':json_bytes(report)}
     colunas = list(COL_ROW)
-    if entrada.contrato and entrada.contrato.get('schema_versao') in ('3.0','4.0'):
+    if entrada.contrato and entrada.contrato.get('schema_versao') in ('3.0','4.0','5.0'):
         colunas += ['politica_validacao','cache_validacao','tempos_medicao','selecao_testes','etapas_validacao']
-        if entrada.contrato['schema_versao']=='4.0':colunas+=['cobertura_funcional','cobertura_detalhada']
+        if (entrada.contrato['schema_versao']=='4.0' or entrada.contrato['schema_versao']=='5.0' and entrada.contrato.get('contrato_validacao_versao')=='4.0'):colunas+=['cobertura_funcional','cobertura_detalhada']
+    if entrada.contrato and entrada.contrato.get('schema_versao')=='5.0':
+        colunas += ['provedor','identidade_inferencia','custo_motivo','custo_api_usd','custo_infraestrutura_usd','espera_inferencia_s','requisicao_s','chamadas_enviadas','estado_geracao']
     rows=[]
     for l in entrada.linhas:
         row={k:l.get(k) for k in colunas}
@@ -82,6 +84,7 @@ def construir(report, entrada):
     general+=_metric_rows(report['execucao'],'conjunto',report['definicao_f_principal'],None,{'RRIS':report['RRIS']})
     artifacts['metricas_gerais.csv']=csv_bytes(COL_AGG,general)
     dims={'estrategia':'estrategia','caso':'caso','cwe':'cwe','owasp':'owasp','severidade':'severidade','regra':'regra','auditoria':'auditoria'}
+    if entrada.contrato and entrada.contrato.get('schema_versao')=='5.0':dims['inferencia']='inferencia'
     for suffix,dim in dims.items():
         agg=[]
         for pop,dimensions in report['agregacoes'].items():
@@ -95,7 +98,7 @@ def construir(report, entrada):
                 for d in DEFS:
                     rag += [{**row,'dimensao':dim} for row in _metric_rows(report['execucao'],pop,d,item['grupo'],item['definicoes'][d])]
     artifacts['metricas_por_rag.csv']=csv_bytes(['dimensao',*COL_AGG],rag)
-    if entrada.contrato and entrada.contrato.get('schema_versao')=='4.0':
+    if entrada.contrato and (entrada.contrato.get('schema_versao')=='4.0' or entrada.contrato.get('schema_versao')=='5.0' and entrada.contrato.get('contrato_validacao_versao')=='4.0'):
         coverage=[]
         for pop,dimensions in report['agregacoes'].items():
             for item in dimensions['cobertura_funcional']:

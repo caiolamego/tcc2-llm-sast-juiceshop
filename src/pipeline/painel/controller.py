@@ -27,7 +27,8 @@ def resumo_tentativa(linha):
         partes = [tempos[n] for n in ('llm', 'sast', 'validacao')]
         # Não tratar etapas ausentes como zero ou chamar esta soma de tempo total medido.
         tempos['total'] = sum(partes) if all(v is not None for v in partes) else None
-    return {'caso': linha.get('caso_id'), 'arquivo': linha.get('arquivo'),
+    return {**{k:linha.get(k) for k in ('provedor','modelo','custo_usd','espera_inferencia_s','requisicao_s')},
+            'caso': linha.get('caso_id'), 'arquivo': linha.get('arquivo'),
             'estrategia': linha.get('estrategia_prompt'),
             'classificacao': linha.get('classificacao_final'),
             'R': linha.get('R'), 'F': linha.get('F_criterio', linha.get('F')), 'M': linha.get('M'),
@@ -184,7 +185,23 @@ class Controle:
             'execucao', 'modo', 'status', 'inicio', 'fim', 'etapa', 'casos', 'estrategias', 'erro')}
         if publico:
             publico['decorrido_s'] = (atual['fim'] or time.time()) - atual['inicio']
-        return {'atual': publico, 'ativo': ativo, 'tentativas': tentativas, 'avisos': avisos,
+        from pipeline.llm.provider import resumo_publico
+        llm=resumo_publico(self.raiz/'.env')
+        if pasta:
+            contrato_path=self.caminho_local(pasta/'contrato_execucao.json')
+            if contrato_path.is_file():
+                inf=json.loads(contrato_path.read_text(encoding='utf-8')).get('inferencia')
+                if isinstance(inf,dict):
+                    llm={'provedor':inf.get('provedor'),'modelo':inf.get('modelo'),
+                         'revisao':inf.get('cientifica',{}).get('revisao','')[:12],
+                         'estado':'identidade_do_contrato','conexao':'não consultada agora'}
+            eventos_path=self.caminho_local(pasta/'llm_operacional.jsonl')
+            if eventos_path.is_file():
+                try:
+                    ultimo=json.loads(eventos_path.read_text(encoding='utf-8').splitlines()[-1])
+                    llm['conexao']='verificada na sessão; não consultada agora' if ultimo.get('tipo')=='conexao_verificada' else 'falha/parada registrada na sessão'
+                except (ValueError,IndexError):pass  # Escrita em andamento.
+        return {'inferencia':llm, 'atual': publico, 'ativo': ativo, 'tentativas': tentativas, 'avisos': avisos,
                 'log': logs, 'config': {'modo': config['modo'], 'casos': config['casos'],
                                        'estrategias': config['estrategias'], 'k': config['k'],
                                        'politica_validacao':config.get('politica_validacao','historica_v1'),

@@ -407,3 +407,7 @@ O último comando ainda usa os 12 casos históricos. Não existe atualmente um a
 - [ ] Monografia revisada com a orientadora e material de defesa preparado.
 
 Ao marcar um item, acrescente commit, arquivo, execução ou relatório que demonstra a conclusão. Evite usar apenas “funcionou na minha máquina” como evidência.
+
+## Feature 07 — Colab
+
+Cliente Qwen/Colab implementado e testado offline, com contrato 5.0, cache/contador próprios e diagnóstico explícito. O `.env` pessoal e a configuração K=4 foram preservados. A próxima verificação é iniciar o notebook manualmente, exportar o manifesto e validar conexão/schema antes de um piloto novo. [Procedimento](modelo_colab.md).

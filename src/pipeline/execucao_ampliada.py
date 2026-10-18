@@ -73,6 +73,15 @@ def contrato(args, catalogo, perfil, casos, worktrees=()):
     return data
 
 
+def contrato_com_inferencia(current, identity, old=None):
+    """Nova versão sem migrar saídas antigas; reconexão não muda a identidade."""
+    if old is not None and old.get('schema_versao')!='5.0':
+        exigir(identity['provedor']!='colab', 'Colab requer nova execução com contrato 5.0; saída antiga preservada')
+        return current
+    return {**current, 'schema_versao':'5.0', 'inferencia':identity,
+            'contrato_validacao_versao':current['schema_versao']}
+
+
 def projecao_prompt(data):
     # Novos metadados opcionais não alteram a equivalência textual histórica.
     return {k:data.get(k) for k in ('mensagens','hash_prompt')}
@@ -226,6 +235,10 @@ def preparar(args, catalogo, casos):
         exigir(not saida.is_relative_to(RAIZ_REPO/'outputs'/protected),'Saída sobreposta a evidências históricas')
     contract_path=saida/'contrato_execucao.json'
     current=contrato(args,catalogo,perfil,casos,worktrees)
+    from pipeline.llm.provider import identidade_offline
+    args.llm_identidade=identidade_offline(simulada=args.dry_run)
+    antigo_existente=json.loads(contract_path.read_text()) if contract_path.exists() else None
+    current=contrato_com_inferencia(current,args.llm_identidade,antigo_existente)
     if saida.exists() and not contract_path.exists():
         exigir(not any(saida.iterdir()),'Saída existente sem contrato de execução')
     saida.mkdir(parents=True,exist_ok=True)

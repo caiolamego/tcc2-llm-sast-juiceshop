@@ -542,3 +542,7 @@ A [correção com revalidação sem LLM](docs/auditoria/correcao_validacao_pilot
 acrescenta verificação dos builds no preflight, espera de startup e baseline novo.
 Os dados originais permanecem preservados; consulte o comparativo antes de usar
 as primeiras métricas do piloto como resultados finais.
+
+## Modelo no Colab
+
+A feature 07 adiciona seleção de provedor pela configuração local, preservando OpenAI como padrão. Integração validada offline; GPU, conexão e piloto reais pendentes. Consulte [o procedimento manual](docs/modelo_colab.md) e [a entrega](features/07-modelo-colab/ENTREGA.md).

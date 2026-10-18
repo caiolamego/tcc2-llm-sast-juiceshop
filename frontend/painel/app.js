@@ -19,6 +19,7 @@ function render(data) {
   $('mode').disabled = data.ativo || busy;
   if (!configured) { $('mode').value = data.config.modo; configured = true; }
   $('config').textContent = `Casos: ${data.config.casos.join(', ')} · Estratégias: ${data.config.estrategias.join(' → ')} · K=${data.config.k} · ${data.config.politica_validacao} · Cache de validação: ${data.config.cache_validacao} · Repetição API: ${data.config.repeticao_api}`;
+  if (data.inferencia) $('config').textContent += ` · LLM: ${data.inferencia.provedor} / ${data.inferencia.modelo || 'configuração pendente'} ${data.inferencia.revisao || ''} · ${data.inferencia.conexao}`;
   const labels = {executando: 'Executando', parando: 'Aguardando parada', finalizada: 'Processo finalizado', interrompida: 'Interrompida', falhou: 'Falhou'};
   $('status').textContent = current ? `${labels[current.status] || current.status} · ${current.etapa}` : 'Aguardando';
   $('elapsed').textContent = current ? duration(current.decorrido_s) : '—';
@@ -30,6 +31,7 @@ function render(data) {
     const first = cell(tr, attempt.caso || '—'); const file = document.createElement('small'); file.textContent = attempt.arquivo || '—'; first.append(file);
     const strategy = cell(tr, attempt.estrategia?.split('_')[0] || '—');
     strategy.title = attempt.estrategia || '';
+    if (attempt.provedor) { const info=document.createElement('small'); info.textContent=`${attempt.provedor} · ${attempt.modelo || ''} · custo: ${attempt.custo_usd == null ? 'não informado' : 'US$ '+attempt.custo_usd.toFixed(6)}`; strategy.append(info); }
     const hits = Object.entries(attempt.cache_validacao || {}).filter(([,v])=>v.hit).map(([k])=>k);
     const result = cell(tr, `${attempt.classificacao || '—'}${attempt.cache ? ' · cache LLM' : ''}${hits.length ? ' · reuso '+hits.join('/') : ''}`);
     const reasons = (attempt.motivos_indeterminacao || []).map(r => typeof r === 'string' ? r : `${r.campo}: ${r.descricao}`);
@@ -44,6 +46,7 @@ function render(data) {
     result.title = JSON.stringify({comparador:attempt.versao_comparador,motivos:attempt.motivos_indeterminacao,contexto:attempt.falhas_contexto_sast,politica:attempt.politica_validacao,cache:attempt.cache_validacao,etapas:attempt.etapas_validacao,cobertura:attempt.cobertura_detalhada ? {dominios:attempt.cobertura_detalhada.dominios,baseline:attempt.cobertura_detalhada.baseline_sha256,suficiente:attempt.cobertura_detalhada.suficiente,selecionados:attempt.cobertura_detalhada.grupos_selecionados,compilacoes:attempt.cobertura_detalhada.compilacoes,grupos:attempt.cobertura_detalhada.grupos.map(g=>({grupo:g.grupo,esperados:g.esperados?.length,executados:g.executados?.length,ignorados:g.testes?.filter(t=>t.estado==='ignorado').length}))} : null},null,2);
     for (const key of ['llm', 'sast', 'validacao']) {
       const td=cell(tr, duration(attempt.tempos[key]));
+      if(key==='llm' && attempt.espera_inferencia_s != null) td.title=`Espera de inferência: ${duration(attempt.espera_inferencia_s)} · Requisição: ${duration(attempt.requisicao_s)}${attempt.cache ? ' · cache, sem nova geração' : ''}`;
       const origem=attempt.cache_validacao?.[key==='validacao'?'funcional':key];
       if(origem?.hit) td.title=`Tempo gasto agora. Evidência original: ${duration(origem.duracao_original_s)}`;
     }

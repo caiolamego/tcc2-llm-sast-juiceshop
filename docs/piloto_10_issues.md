@@ -114,3 +114,9 @@ Falhas operacionais não são mais convertidas em testes funcionais reprovados.
 O baseline corrente é `outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE/`.
 A [revalidação sem LLM](auditoria/correcao_validacao_piloto10.md) preserva a
 execução inicial e permite comparar as mesmas correções em ambiente preparado.
+
+## Worktrees adicionais preparadas
+
+A configuração atual usa K=4. `wt-5` e `wt-6` foram preservadas no disco e não são utilizadas pela configuração padrão. Elas foram preparadas no mesmo commit, com cópias independentes das dependências, lockfile e artefatos de preparação API. O preflight deve continuar exigindo compatibilidade de ambiente e baseline para todas as seis. A criação das worktrees não executa a campanha.
+
+A máquina possui 16 CPUs lógicas e cerca de 15 GiB de RAM total; K=6 precisa ser avaliado em execução, pois compilação/SAST concorrem por memória. Não há ganho garantido sobre K=4. Os testes de API continuam serializados e `COLAB_MAX_IN_FLIGHT=1` mantém uma geração por vez no Colab. Se houver swap significativo ou piora de desempenho, reduza `k` para 4 no YAML.
