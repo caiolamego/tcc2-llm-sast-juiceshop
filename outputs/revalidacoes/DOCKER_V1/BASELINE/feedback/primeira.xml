@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/api/Feedbacks" time="0.816376" disabled="0" errors="0" tests="11" failures="1" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET all feedback" time="0.065245" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST sanitizes unsafe HTML from comment" time="0.048751" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST fails to sanitize masked XSS-attack by not applying sanitization recursively" time="0.037125" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts" failure="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'The sanitize-html module up to at least version 1.4.2 has this issue: '&#10;- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'The sanitize-html module up to at least version 1.4.2 has this issue: '&#10;- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
++ actual - expected
+
++ 'The sanitize-html module up to at least version 1.4.2 has this issue: '
+- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src="javascript:alert(`xss`)">'
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'The sanitize-html module up to at least version 1.4.2 has this issue: '
+  - 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src="javascript:alert(`xss`)">'
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/feedback.test.ts:68:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'The sanitize-html module up to at least version 1.4.2 has this issue: ',
+    expected: 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src="javascript:alert(`xss`)">',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="POST feedback in another users name as anonymous user" time="0.033881" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST feedback in a non-existing users name as anonymous user fails with constraint error" time="0.022200" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST feedback is associated with current user" time="0.051511" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST feedback is associated with any passed user ID" time="0.026351" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST feedback can be created without actually supplying comment" time="0.021732" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST feedback cannot be created without actually supplying rating" time="0.013816" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST feedback cannot be created with wrong CAPTCHA answer" time="0.012698" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="POST feedback cannot be created with invalid CAPTCHA id" time="0.009097" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+	</testsuite>
+	<testsuite name="/api/Feedbacks/:id" time="0.044942" disabled="0" errors="0" tests="6" failures="0" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET existing feedback by id is forbidden via public API" time="0.004351" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="GET existing feedback by id" time="0.009083" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="PUT update existing feedback is forbidden via public API" time="0.002343" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="PUT update existing feedback" time="0.002650" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="DELETE existing feedback is forbidden via public API" time="0.001061" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+		<testcase name="DELETE existing feedback" time="0.025128" classname="test" file="/repo/workspace/wt-1/test/api/feedback.test.ts"/>
+	</testsuite>
+	<!-- tests 17 -->
+	<!-- suites 2 -->
+	<!-- pass 16 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 3253.55996 -->
+</testsuites>

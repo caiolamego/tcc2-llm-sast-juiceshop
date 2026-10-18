@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/api/Users" time="0.689475" disabled="0" errors="0" tests="12" failures="1" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET all users is forbidden via public API" time="0.021313" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET all users" time="0.053953" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET all users doesnt include passwords" time="0.020709" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST new user" time="0.022330" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST new admin" time="0.019365" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST new blank user" time="0.014775" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST same blank user in database" time="0.025813" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST whitespaces user" time="0.018846" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST new deluxe user" time="0.018912" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST new accounting user" time="0.014027" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST user not belonging to customer, deluxe, accounting, admin is forbidden" time="0.005918" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="POST new user with XSS attack in email address" time="0.021123" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts" failure="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ ''&#10;- '&lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ ''&#10;- '&lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
++ actual - expected
+
++ ''
+- '&lt;iframe src="javascript:alert(`xss`)">'
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + ''
+  - '&lt;iframe src="javascript:alert(`xss`)">'
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/user.test.ts:193:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: '&lt;iframe src="javascript:alert(`xss`)">',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite name="/api/Users/:id" time="0.043096" disabled="0" errors="0" tests="6" failures="0" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET existing user by id is forbidden via public API" time="0.007150" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="PUT update existing user is forbidden via public API" time="0.003449" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="DELETE existing user is forbidden via public API" time="0.006703" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET existing user by id" time="0.020658" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="PUT update existing user is forbidden via API even when authenticated" time="0.002644" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="DELETE existing user is forbidden via API even when authenticated" time="0.002155" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+	</testsuite>
+	<testsuite name="/rest/user/whoami" time="0.141248" disabled="0" errors="0" tests="8" failures="0" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET own user id and email on who-am-i request" time="0.026130" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET who-am-i request returns nothing on missing auth token" time="0.005042" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET who-am-i request returns nothing on invalid auth token" time="0.004435" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET who-am-i request returns nothing on broken auth token" time="0.004301" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET who-am-i request returns nothing on expired auth token" time="0.004103" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET who-am-i with fields parameter returns only requested fields" time="0.047552" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET who-am-i with fields parameter does not return password by default" time="0.023188" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+		<testcase name="GET who-am-i with fields parameter can be tricked into returning password" time="0.026029" classname="test" file="/repo/workspace/wt-1/test/api/user.test.ts"/>
+	</testsuite>
+	<!-- tests 26 -->
+	<!-- suites 3 -->
+	<!-- pass 25 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 3251.524169 -->
+</testsuites>
