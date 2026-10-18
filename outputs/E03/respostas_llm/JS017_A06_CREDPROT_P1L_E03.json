@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Remote Property Injection via user-controlled 'fields' query parameter allowing access to unintended user object properties, potentially exposing sensitive data.\",\"causa_da_vulnerabilidade\":\"O código utiliza acesso dinâmico a propriedades do objeto 'user.data' baseado diretamente em valores fornecidos pelo usuário através do parâmetro 'fields' da query string, sem validação ou restrição, permitindo que um atacante especifique qualquer propriedade, incluindo sensíveis ou do protótipo do objeto.\",\"estrategia_de_correcao\":\"Implementar uma lista branca (whitelist) de campos permitidos para serem acessados e retornados ao usuário. Somente os campos presentes nessa lista serão incluídos na resposta, ignorando quaisquer outros campos solicitados pelo usuário.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\",\"trecho_corrigido\":\"          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\"}],\"justificativa_tecnica\":\"Ao restringir os campos que podem ser acessados via parâmetro 'fields' a uma lista explícita de campos permitidos, evitamos que usuários maliciosos acessem propriedades sensíveis ou do protótipo do objeto, mitigando a vulnerabilidade de Remote Property Injection. Essa abordagem mantém o comportamento funcional original, permitindo que o cliente solicite campos específicos, porém somente dentre os autorizados.\",\"limitacoes_da_correcao\":\"A correção depende da manutenção da lista branca de campos permitidos atualizada conforme o modelo de dados evolui. Campos adicionais que se deseje expor deverão ser explicitamente adicionados à lista. Essa abordagem não previne outras formas de vazamento de dados que possam ocorrer em outras partes do sistema.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1123,
+  "tokens_saida": 463,
+  "latencia_s": 3.646,
+  "custo_usd": 0.00119,
+  "hash_prompt": "70b38b694f73490c55bf308a968f0c8c4fdb919960d167b47f3a9c2eaa4e606e",
+  "do_cache": false
+}

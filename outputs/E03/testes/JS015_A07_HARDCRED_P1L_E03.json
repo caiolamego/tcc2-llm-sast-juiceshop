@@ -1,0 +1,109 @@
+{
+  "passou": false,
+  "tier_falha": "T2",
+  "duracao_s": 4.77,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "F_criterio_amplo": false,
+  "tier_falha_sem_separacao": "T2",
+  "tier_falha_marcador": "T2",
+  "tier_falha_criterio": "T2",
+  "tier_falha_criterio_amplo": "T2",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_d_criterio_amplo": [],
+  "testes_falhos_f_marcador": [
+    "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+  ],
+  "testes_falhos_f_criterio_amplo": [
+    "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "npx",
+        "tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 3.79,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_criterio_amplo": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_criterio_amplo": [],
+      "saida": "",
+      "saida_reexecucao": ""
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/insecurity.unit.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 0.98,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+      ],
+      "testes_falhos_novos": [
+        "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [
+        "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+      ],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_criterio_amplo": [],
+      "testes_falhos_f_marcador": [
+        "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+      ],
+      "testes_falhos_f_criterio": [
+        "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+      ],
+      "testes_falhos_f_criterio_amplo": [
+        "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+      ],
+      "saida": " ▶ generateCoupon\n    ✔ returns base85-encoded month, year and discount as coupon code (0.481916ms)\n    ✔ uses current month and year if not specified (0.242833ms)\n    ✔ does not encode day of month or time into coupon code (0.2685ms)\n  ✔ generateCoupon (1.241166ms)\n  ▶ discountFromCoupon\n    ✔ returns undefined when not passing in a coupon code (0.123667ms)\n    ✔ returns undefined for malformed coupon code (0.062209ms)\n    ✔ returns undefined for coupon code not according to expected pattern (0.2445ms)\n    ✔ returns undefined for expired coupon code (0.060542ms)\n    ✔ returns discount from valid coupon code (0.062583ms)\n  ✔ discountFromCoupon (0.681ms)\n  ▶ authenticatedUsers\n    ✔ returns user by associated token (0.468875ms)\n    ✔ returns undefined if no token is passed in (0.029666ms)\n    ✔ returns token by associated user (0.038666ms)\n    ✔ returns user by associated token from request (0.073666ms)\n    ✔ returns undefined if no token is present in request (0.646416ms)\n  ✔ authenticatedUsers (1.38625ms)\n  ▶ sanitizeHtml\n    ✔ handles empty inputs by returning their string representation (0.951083ms)\n    ✔ returns input unchanged for plain text input (0.268625ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.690833ms)\n    ✔ returns input unchanged for HTML input with only harmless links (0.869542ms)\n    ✔ removes all Javascript from HTML input (0.215ms)\n    ✔ can be bypassed by exploiting lack of recursive sanitization (0.062625ms)\n  ✔ sanitizeHtml (3.533708ms)\n  ▶ sanitizeLegacy\n    ✔ returns empty string for undefined input (0.099541ms)\n    ✔ returns input unchanged for plain text input (0.02825ms)\n    ✔ removes all opening tags and subsequent character from HTML input (0.028625ms)\n    ✔ can be bypassed to allow working HTML payload to be returned (0.027291ms)\n  ✔ sanitizeLegacy (0.242542ms)\n  ▶ sanitizeSecure\n    ✔ handles empty inputs by returning their string representation (0.079375ms)\n    ✔ returns input unchanged for plain text input (0.050125ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.068042ms)\n    ✔ returns input unchanged for HTML input with only harmless links (0.108ms)\n    ✔ removes all Javascript from HTML input (0.1385ms)\n    ✔ cannot be bypassed by exploiting lack of recursive sanitization (0.089208ms)\n  ✔ sanitizeSecure (0.70775ms)\n  ▶ hash\n    ✔ returns MD5 hash for any input string (0.100459ms)\n  ✔ hash (0.130292ms)\n  ▶ hmac\n    ✖ returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string (1.602375ms)\n  ✖ hmac (1.66125ms)\n✖ insecurity (11.989125ms)\nℹ tests 35\nℹ suites 11\nℹ pass 34\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 420.895917\n\n✖ failing tests:\n\ntest at test/server/insecurity.unit.test.ts:2:10368\n✖ returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string (1.602375ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + '69f2a0df77976a22fcf1af4696cf0c2c272d405b42df2376febb0dabdd88c9c7'\n  - '6be13e2feeada221f29134db71c0ab0be0e27eccfc0fb436ba4096ba73aafb20'\n  \n      at TestContext.<anonymous> (test/server/insecurity.unit.test.ts:201:14)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at Test.start (node:internal/test_runner/test:1257:17)\n      at node:internal/test_runner/test:1887:71\n      at node:internal/per_context/primordials:504:82\n      at new Promise (<anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:478:3)\n      at node:internal/per_context/primordials:504:9\n      at Array.map (<anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '69f2a0df77976a22fcf1af4696cf0c2c272d405b42df2376febb0dabdd88c9c7',\n    expected: '6be13e2feeada221f29134db71c0ab0be0e27eccfc0fb436ba4096ba73aafb20',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "\n  ▶ generateCoupon\n    ✔ returns base85-encoded month, year and discount as coupon code (0.22ms)\n    ✔ uses current month and year if not specified (0.085042ms)\n    ✔ does not encode day of month or time into coupon code (0.128416ms)\n  ✔ generateCoupon (0.5715ms)\n  ▶ discountFromCoupon\n    ✔ returns undefined when not passing in a coupon code (0.107417ms)\n    ✔ returns undefined for malformed coupon code (0.05025ms)\n    ✔ returns undefined for coupon code not according to expected pattern (0.274708ms)\n    ✔ returns undefined for expired coupon code (0.06475ms)\n    ✔ returns discount from valid coupon code (0.061958ms)\n  ✔ discountFromCoupon (0.669708ms)\n  ▶ authenticatedUsers\n    ✔ returns user by associated token (0.497375ms)\n    ✔ returns undefined if no token is passed in (0.030167ms)\n    ✔ returns token by associated user (0.038083ms)\n    ✔ returns user by associated token from request (0.075084ms)\n    ✔ returns undefined if no token is present in request (0.030083ms)\n  ✔ authenticatedUsers (0.763041ms)\n  ▶ sanitizeHtml\n    ✔ handles empty inputs by returning their string representation (0.3735ms)\n    ✔ returns input unchanged for plain text input (0.109625ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.339708ms)\n    ✔ returns input unchanged for HTML input with only harmless links (2.349208ms)\n    ✔ removes all Javascript from HTML input (1.783ms)\n    ✔ can be bypassed by exploiting lack of recursive sanitization (1.168334ms)\n  ✔ sanitizeHtml (6.451875ms)\n  ▶ sanitizeLegacy\n    ✔ returns empty string for undefined input (1.467833ms)\n    ✔ returns input unchanged for plain text input (0.071208ms)\n    ✔ removes all opening tags and subsequent character from HTML input (0.083666ms)\n    ✔ can be bypassed to allow working HTML payload to be returned (0.0475ms)\n  ✔ sanitizeLegacy (1.780209ms)\n  ▶ sanitizeSecure\n    ✔ handles empty inputs by returning their string representation (2.144458ms)\n    ✔ returns input unchanged for plain text input (0.1205ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.109209ms)\n    ✔ returns input unchanged for HTML input with only harmless links (0.141875ms)\n    ✔ removes all Javascript from HTML input (0.155625ms)\n    ✔ cannot be bypassed by exploiting lack of recursive sanitization (0.0925ms)\n  ✔ sanitizeSecure (2.924208ms)\n  ▶ hash\n    ✔ returns MD5 hash for any input string (0.1085ms)\n  ✔ hash (0.141125ms)\n  ▶ hmac\n    ✖ returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string (4.863416ms)\n  ✖ hmac (4.940958ms)\n✖ insecurity (23.528625ms)\nℹ tests 35\nℹ suites 11\nℹ pass 34\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 446.491292\n\n✖ failing tests:\n\ntest at test/server/insecurity.unit.test.ts:2:10368\n✖ returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string (4.863416ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + '69f2a0df77976a22fcf1af4696cf0c2c272d405b42df2376febb0dabdd88c9c7'\n  - '6be13e2feeada221f29134db71c0ab0be0e27eccfc0fb436ba4096ba73aafb20'\n  \n      at TestContext.<anonymous> (test/server/insecurity.unit.test.ts:201:14)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1397:25)\n      at Test.start (node:internal/test_runner/test:1257:17)\n      at node:internal/test_runner/test:1887:71\n      at node:internal/per_context/primordials:504:82\n      at new Promise (<anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:478:3)\n      at node:internal/per_context/primordials:504:9\n      at Array.map (<anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '69f2a0df77976a22fcf1af4696cf0c2c272d405b42df2376febb0dabdd88c9c7',\n    expected: '6be13e2feeada221f29134db71c0ab0be0e27eccfc0fb436ba4096ba73aafb20',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [
+    "test/server/insecurity.unit.test.ts"
+  ],
+  "testes_falhos_novos": [
+    "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string"
+  ],
+  "reexecucoes": 1,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": "outputs/baseline_testes.json"
+}

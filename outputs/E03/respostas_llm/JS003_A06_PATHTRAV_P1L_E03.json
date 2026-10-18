@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: External Control of File Name or Path - A entrada do usuário é usada diretamente em res.sendFile, permitindo leitura arbitrária de arquivos via path traversal.\",\"causa_da_vulnerabilidade\":\"O parâmetro 'file' vindo da URL é usado diretamente em res.sendFile sem validação adequada, permitindo que um atacante utilize sequências como '../' para acessar arquivos fora do diretório pretendido.\",\"estrategia_de_correcao\":\"Realizar a normalização do caminho usando path.resolve e verificar se o caminho resultante está dentro do diretório 'encryptionkeys'. Se não estiver, rejeitar a requisição com erro 403.\",\"edicoes\":[{\"arquivo\":\"routes/keyServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    if (!file.includes('/')) {\\n      const resolvedPath = path.resolve('encryptionkeys/', file)\\n      if (resolvedPath.startsWith(path.resolve('encryptionkeys/'))) {\\n        res.sendFile(resolvedPath)\\n      } else {\\n        res.status(403)\\n        next(new Error('File names cannot contain forward slashes!'))\\n      }\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"A validação original apenas checava a presença de '/' no nome do arquivo, o que não impede sequências de path traversal como '..'. Ao resolver o caminho absoluto e garantir que ele começa com o diretório base esperado, evitamos que arquivos fora do diretório 'encryptionkeys' sejam acessados, mitigando a vulnerabilidade.\",\"limitacoes_da_correcao\":\"A correção assume que o sistema de arquivos e permissões estão configurados corretamente. Se houver links simbólicos dentro do diretório 'encryptionkeys' apontando para fora, ainda pode haver risco. Além disso, nomes de arquivos contendo '\\\\' (barra invertida) em sistemas Windows não são tratados explicitamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 799,
+  "tokens_saida": 475,
+  "latencia_s": 4.362,
+  "custo_usd": 0.00108,
+  "hash_prompt": "d0c38fbbd8f62ce07244cd4a47a978f184dc5531fd71d1d9b9c719ac3e19e2b5",
+  "do_cache": true
+}

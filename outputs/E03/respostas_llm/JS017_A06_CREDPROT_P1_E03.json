@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de campos sensíveis do usuário via parâmetro 'fields' na query string, permitindo que campos como 'password' sejam retornados na resposta JSON.\",\"causa_da_vulnerabilidade\":\"O código permite que o cliente especifique arbitrariamente quais campos do objeto 'user.data' deseja receber, sem nenhuma validação ou restrição para impedir o acesso a campos sensíveis como 'password'.\",\"estrategia_de_correcao\":\"Adicionar uma lista de campos proibidos (por exemplo, ['password', 'passwordHash']) e impedir que esses campos sejam incluídos na resposta mesmo que solicitados via parâmetro 'fields'.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"if (user?.data[field as keyof typeof user.data] !== undefined) {\\n  baseUser[field] = user?.data[field as keyof typeof user.data]\\n}\",\"trecho_corrigido\":\"const forbiddenFields = ['password', 'passwordHash']\\nif (user?.data[field as keyof typeof user.data] !== undefined && !forbiddenFields.includes(field)) {\\n  baseUser[field] = user?.data[field as keyof typeof user.data]\\n}\"}],\"justificativa_tecnica\":\"Permitir que o cliente especifique campos arbitrários sem restrição pode levar à exposição de informações sensíveis, como senhas ou hashes de senha. Ao filtrar explicitamente campos proibidos, evitamos que tais dados sejam expostos, mitigando o risco de vazamento de credenciais.\",\"limitacoes_da_correcao\":\"A correção depende da manutenção da lista de campos proibidos atualizada conforme o modelo de dados evolui. Campos sensíveis adicionais devem ser adicionados manualmente à lista para garantir proteção contínua.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1020,
+  "tokens_saida": 361,
+  "latencia_s": 3.477,
+  "custo_usd": 0.000986,
+  "hash_prompt": "092178182ffc78d8028467fc1eb4307335edcebc583a2f5a4229ef297ef93e88",
+  "do_cache": false
+}

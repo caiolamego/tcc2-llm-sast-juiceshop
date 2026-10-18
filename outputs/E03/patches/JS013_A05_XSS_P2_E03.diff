@@ -1,0 +1,32 @@
+diff --git a/frontend/src/app/navbar/navbar.component.html b/frontend/src/app/navbar/navbar.component.html
+index 6c0ad0113..8c2e079c2 100644
+--- a/frontend/src/app/navbar/navbar.component.html
++++ b/frontend/src/app/navbar/navbar.component.html
+@@ -35,7 +35,7 @@
+       </button>
+ 
+     <mat-menu #userMenu="matMenu">
+-      @if (isLoggedIn()) {
++      <ng-container *ngIf="isLoggedIn(); else loginButton">
+         <button (click)="goToProfilePage()" mat-menu-item aria-label="Go to user profile">
+           <mat-icon>
+             account_circle
+@@ -44,7 +44,8 @@
+             {{userEmail}}
+           </span>
+         </button>
+-      } @else {
++      </ng-container>
++      <ng-template #loginButton>
+         <button mat-menu-item routerLink="/login" aria-label="Go to login page"
+           id="navbarLoginButton">
+           <mat-icon>
+@@ -54,7 +55,7 @@
+             {{"TITLE_LOGIN" | translate }}
+           </span>
+         </button>
+-      }
++      </ng-template>
+       @if (isLoggedIn() && isAccounting()) {
+         <button mat-menu-item routerLink="/accounting"
+           aria-label="Go to accounting page">

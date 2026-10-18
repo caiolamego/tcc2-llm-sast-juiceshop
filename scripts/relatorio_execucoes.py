@@ -55,7 +55,8 @@ def secao_issues() -> list[str]:
     c = [x for x in ler_json(SA / "catalogo_issues.json") if x["elegivel"]]
     tri = Counter(x["triagem_manual"] for x in c)
     out += ["", f"- Triagem manual do v2: {tri['confirmado']} confirmados, {tri['falso_positivo']} falsos positivos, "
-            f"{tri['inconclusivo']} inconclusivo(s), {tri['nao_triado']} não triados (nenhum é excluído).",
+            f"{tri['inconclusivo']} {'inconclusivo' if tri['inconclusivo'] == 1 else 'inconclusivos'}, "
+            f"{tri['nao_triado']} não triados (nenhum é excluído).",
             "- Siglas do v2: " + ", ".join(f"{k} {v}" for k, v in Counter(x["sigla_vuln"] for x in c).most_common()) + ".",
             "- OWASP 2025 do v2: " + ", ".join(f"{k} {v}" for k, v in sorted(Counter(x["owasp_2025"] for x in c).items())) + "."]
     sond = RAIZ / "outputs" / "sondagens" / "semgrep_2026-10-16"
@@ -99,7 +100,7 @@ def main() -> None:
         media = lambda k: st.mean([(l[k] or 0) for l in apl]) if apl else 0  # noqa: E731
         tot = st.mean([(l["duracao_llm_s"] or 0) + (l["duracao_sast_s"] or 0) + (l["duracao_validacao_s"] or 0)
                        for l in apl]) if apl else 0
-        tempo.append((e, f"{fmt_s(dur)} ({len(sess)} sessão(ões), K = {sess[-1].get('k')})", fmt_s(tot),
+        tempo.append((e, f"{fmt_s(dur)} ({len(sess)} {'sessão' if len(sess) == 1 else 'sessões'}, K = {sess[-1].get('k')})", fmt_s(tot),
                       fmt_s(media("duracao_llm_s")), fmt_s(media("duracao_sast_s")), fmt_s(media("duracao_validacao_s"))))
     out += tabela(lin) + ["", "Chamada do cache: prompt idêntico a uma chamada anterior; não é cobrada de novo (D8).", "",
                           "## Tempo", ""] + tabela(tempo) + [

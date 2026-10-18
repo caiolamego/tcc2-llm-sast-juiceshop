@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função eval para executar código contido no nome de usuário, que pode ser controlado pelo usuário, levando a execução arbitrária de código (CWE-95).\",\"causa_da_vulnerabilidade\":\"O código extrai um trecho do nome de usuário que contém uma expressão entre '#{...}' e executa essa expressão usando eval, sem validação ou sanitização adequada, permitindo que um atacante injete código malicioso para execução no servidor.\",\"estrategia_de_correcao\":\"Remover o uso de eval para executar código arbitrário extraído do nome de usuário. Em vez disso, tratar o nome de usuário como texto simples, escapando caracteres especiais para evitar injeção de código. Manter a funcionalidade de exibir o nome de usuário sem executar código dinâmico.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  const code = username?.substring(2, username.length - 1)\\n  try {\\n    if (!code) {\\n      throw new Error('Username is null')\\n    }\\n    username = eval(code) // eslint-disable-line no-eval\\n  } catch (err) {\\n    username = '\\\\\\\\' + username\\n  }\\n} else {\\n  username = '\\\\\\\\' + username\\n}\",\"trecho_corrigido\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  // Removido o uso de eval para evitar execução de código arbitrário\\n  username = '\\\\\\\\' + username\\n} else {\\n  username = '\\\\\\\\' + username\\n}\"}],\"justificativa_tecnica\":\"O uso de eval com dados controlados pelo usuário é uma vulnerabilidade crítica que permite execução arbitrária de código no servidor, podendo comprometer toda a aplicação e o sistema hospedeiro. A correção elimina o uso de eval, tratando o nome de usuário como texto simples, mantendo a funcionalidade e prevenindo a vulnerabilidade.\",\"limitacoes_da_correcao\":\"A correção remove a funcionalidade de executar código dinâmico embutido no nome de usuário, o que pode impactar desafios ou funcionalidades específicas que dependem dessa execução. No entanto, essa prática é insegura e deve ser evitada para garantir a segurança da aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 1499,
+  "tokens_saida": 542,
+  "latencia_s": 5.194,
+  "custo_usd": 0.001467,
+  "hash_prompt": "849f62f99ab5373bdc909ad6566cb40a036d8b393f9a968e26128ab08be7b264",
+  "do_cache": true
+}

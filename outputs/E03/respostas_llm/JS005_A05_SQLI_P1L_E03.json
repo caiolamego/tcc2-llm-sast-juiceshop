@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection via interpolated user input in raw SQL query.\",\"causa_da_vulnerabilidade\":\"O código constrói uma query SQL concatenando diretamente os valores de entrada do usuário (req.body.email e req.body.password) dentro da string da query, sem usar parâmetros preparados ou sanitização adequada, permitindo que um atacante injete código SQL malicioso.\",\"estrategia_de_correcao\":\"Substituir a query raw SQL que concatena diretamente os valores do usuário por uma query parametrizada usando os recursos do Sequelize para evitar injeção de SQL. Utilizar a opção replacements para passar os parâmetros de forma segura.\",\"edicoes\":[{\"arquivo\":\"routes/login.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\",\"trecho_corrigido\":\"models.sequelize.query(`SELECT * FROM Users WHERE email = :email AND password = :password AND deletedAt IS NULL`, { replacements: { email: req.body.email || '', password: security.hash(req.body.password || '') }, model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\"}],\"justificativa_tecnica\":\"O uso de queries parametrizadas com Sequelize evita que os valores de entrada do usuário sejam interpretados como código SQL, prevenindo injeção de SQL. A alteração mantém a mesma lógica funcional, apenas muda a forma de passar os parâmetros para a query, garantindo segurança sem alterar o comportamento.\",\"limitacoes_da_correcao\":\"A correção depende do suporte do Sequelize para queries parametrizadas e do correto uso da API. Se outras partes do código utilizarem concatenação direta em queries, podem existir vulnerabilidades similares não corrigidas aqui.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 1879,
+  "tokens_saida": 404,
+  "latencia_s": 4.281,
+  "custo_usd": 0.001398,
+  "hash_prompt": "0b7a0c4175685bcc6b978bee5534d615c4ad96590396641ebe51a02a3fa84786",
+  "do_cache": true
+}

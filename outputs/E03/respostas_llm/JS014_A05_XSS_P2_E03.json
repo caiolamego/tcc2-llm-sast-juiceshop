@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) devido à interpolação insegura do atributo alt na tag <img>.\",\"causa_da_vulnerabilidade\":\"O atributo alt da tag <img> está sendo interpolado diretamente com {{element.name}} sem qualquer sanitização ou escape, permitindo que um atacante injete código HTML ou JavaScript malicioso se controlar o valor de element.name.\",\"estrategia_de_correcao\":\"Utilizar a binding Angular [attr.alt] para garantir que o valor seja tratado como texto e não como HTML, evitando a execução de código malicioso.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/purchase-basket/purchase-basket.component.html\",\"trecho_original\":\"<img [src]=\\\"'assets/public/images/products/'+element.image\\\" alt={{element.name}}\\n        class=\\\"img-responsive img-thumbnail\\\">\",\"trecho_corrigido\":\"<img [src]=\\\"'assets/public/images/products/'+element.image\\\" [attr.alt]=\\\"element.name\\\"\\n        class=\\\"img-responsive img-thumbnail\\\">\"}],\"justificativa_tecnica\":\"Ao usar [attr.alt] em vez de interpolação direta no atributo alt, Angular trata o valor como texto puro, evitando que caracteres especiais sejam interpretados como código HTML ou JavaScript, mitigando assim a vulnerabilidade XSS.\",\"limitacoes_da_correcao\":\"A correção protege contra XSS no atributo alt, mas não valida ou sanitiza outros campos que possam ser exibidos; é recomendável revisar outras interpolations para garantir segurança completa.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1369,
+  "tokens_saida": 315,
+  "latencia_s": 2.561,
+  "custo_usd": 0.001052,
+  "hash_prompt": "ee78ee887cd9a9100ef233046d9448bda40e3c13f1667ba0862bda4c5740603d",
+  "do_cache": false
+}

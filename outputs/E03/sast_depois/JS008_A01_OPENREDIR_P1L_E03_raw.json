@@ -1,0 +1,190 @@
+{
+  "version": "1.177.0",
+  "results": [
+    {
+      "check_id": "javascript.express.security.audit.possible-user-input-redirect.unknown-value-in-redirect",
+      "path": "routes/redirect.ts",
+      "start": {
+        "line": 19,
+        "col": 7,
+        "offset": 1041
+      },
+      "end": {
+        "line": 19,
+        "col": 26,
+        "offset": 1060
+      },
+      "extra": {
+        "message": "It looks like 'toUrl' is read from user input and it is used to as a redirect. Ensure 'toUrl' is not externally controlled, otherwise this is an open redirect.",
+        "metadata": {
+          "owasp": [
+            "A01:2021 - Broken Access Control",
+            "A01:2025 - Broken Access Control"
+          ],
+          "cwe": [
+            "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+          ],
+          "asvs": {
+            "control_id": "5.5.1 Insecue Redirect",
+            "control_url": "https://github.com/OWASP/ASVS/blob/master/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md#v51-input-validation",
+            "section": "V5 Validation, Sanitization and Encoding",
+            "version": "4"
+          },
+          "category": "security",
+          "technology": [
+            "express"
+          ],
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "references": [
+            "https://owasp.org/Top10/A01_2021-Broken_Access_Control"
+          ],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Open Redirect"
+          ],
+          "source": "https://semgrep.dev/r/javascript.express.security.audit.possible-user-input-redirect.unknown-value-in-redirect",
+          "shortlink": "https://sg.run/OPv2"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.express.security.audit.express-open-redirect.express-open-redirect",
+      "path": "routes/redirect.ts",
+      "start": {
+        "line": 19,
+        "col": 20,
+        "offset": 1054
+      },
+      "end": {
+        "line": 19,
+        "col": 25,
+        "offset": 1059
+      },
+      "extra": {
+        "message": "The application redirects to a URL specified by user-supplied input `query` that is not validated. This could redirect users to malicious locations. Consider using an allow-list approach to validate URLs, or warn users they are being redirected to a third-party website.",
+        "metadata": {
+          "technology": [
+            "express"
+          ],
+          "references": [
+            "https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html"
+          ],
+          "cwe": [
+            "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+          ],
+          "category": "security",
+          "owasp": [
+            "A01:2021 - Broken Access Control",
+            "A01:2025 - Broken Access Control"
+          ],
+          "subcategory": [
+            "vuln"
+          ],
+          "likelihood": "HIGH",
+          "impact": "MEDIUM",
+          "confidence": "HIGH",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Open Redirect"
+          ],
+          "source": "https://semgrep.dev/r/javascript.express.security.audit.express-open-redirect.express-open-redirect",
+          "shortlink": "https://sg.run/EpoP"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      "routes/redirect.ts"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.3931610584259033,
+    "profiling_times": {
+      "config_time": 4.960406064987183,
+      "core_time": 0.702164888381958,
+      "ignores_time": 0.0016281604766845703,
+      "total_time": 5.673187971115112
+    },
+    "parsing_time": {
+      "total_time": 0.0,
+      "per_file_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.022698163986206055,
+      "per_file_time": {
+        "mean": 0.0075660546620686855,
+        "std_dev": 0.00010147646819152417
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 0.9861751152073732,
+      "rules_selected_ratio": 0.059907834101382486,
+      "rules_matched_ratio": 0.059907834101382486
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 798471040
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}

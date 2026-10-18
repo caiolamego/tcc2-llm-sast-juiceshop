@@ -1,0 +1,179 @@
+{
+  "passou": false,
+  "tier_falha": "T4",
+  "duracao_s": 537.95,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "F_criterio_amplo": false,
+  "tier_falha_sem_separacao": "T4",
+  "tier_falha_marcador": "T4",
+  "tier_falha_criterio": "T4",
+  "tier_falha_criterio_amplo": "T4",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_d_criterio_amplo": [],
+  "testes_falhos_f_marcador": [
+    "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+  ],
+  "testes_falhos_f_criterio_amplo": [
+    "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "npx",
+        "tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 1.62,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_criterio_amplo": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_criterio_amplo": [],
+      "saida": "",
+      "saida_reexecucao": ""
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/currentUser.unit.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 0.36,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_criterio_amplo": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_criterio_amplo": [],
+      "saida": "▶ currentUser\n  ✔ should return neither ID nor email if no cookie was present in the request headers (0.616209ms)\n  ✔ should return ID and email of user belonging to cookie from the request (0.51775ms)\n✔ currentUser (1.45525ms)\nℹ tests 2\nℹ suites 1\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 327.094\n",
+      "saida_reexecucao": ""
+    },
+    {
+      "tier": "T3",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/**/*.unit.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 1.83,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_criterio_amplo": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_criterio_amplo": [],
+      "saida": "eChallenge\" is solved when the 56px.png transpixel is requested (0.780334ms)\n    ✔ \"extraLanguageChallenge\" is solved when the Klingon translation file is requested (0.188792ms)\n    ✔ \"retrieveBlueprintChallenge\" is solved when the blueprint file is requested (0.1605ms)\n    ✔ \"missingEncodingChallenge\" is solved when the crazy cat photo is requested (0.152ms)\n    ✔ \"accessLogDisclosureChallenge\" is solved when any server access log file is requested (0.161042ms)\n  ✔ accessControlChallenges (2.351958ms)\n  ▶ \"errorHandlingChallenge\"\n    ✔ is solved when an error occurs on a response with OK 200 status code (0.264583ms)\n    ▶ is solved when an error occurs on a response with error\n      ✔ 402 status code (0.119958ms)\n      ✔ 403 status code (0.079166ms)\n      ✔ 404 status code (0.150417ms)\n      ✔ 500 status code (0.100417ms)\n    ✔ is solved when an error occurs on a response with error (0.55325ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.134584ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.152333ms)\n      ✔ 402 status code (0.112875ms)\n      ✔ 404 status code (0.100834ms)\n      ✔ 500 status code (0.096875ms)\n    ✔ is not solved when no error occurs on a response with error (0.582208ms)\n    ✔ should pass occurred error on to next route (0.094667ms)\n  ✔ \"errorHandlingChallenge\" (1.742333ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (0.211042ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.056042ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.055292ms)\n    ✔ \"changeProductChallenge\" (0.360125ms)\n  ✔ databaseRelatedChallenges (0.405459ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (0.685916ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.158041ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (1.025417ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (0.27525ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (0.207417ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (0.423541ms)\n  ✔ jwtChallenges (2.842625ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.089417ms)\n    ✔ should return 1 for identical strings even if they are short (0.035292ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.031792ms)\n    ✔ should return 0 for completely different strings (0.039166ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.036334ms)\n  ✔ diceCoefficient (0.2825ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.080708ms)\n    ✔ should return false if similarity is below threshold (0.0485ms)\n  ✔ checkSystemPromptSimilarity (0.161125ms)\n✔ verify (9.750625ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (0.54975ms)\n    ✔ fails when supplied webhook is not a valid URL (9.072791ms)\n    ✔ submits POST with payload to existing URL (19.19425ms)\n  ✔ notify (29.548667ms)\n✔ webhook (29.733375ms)\n▶ xml\n  ✔ should parse a simple XML string (180.801584ms)\n  ✔ should expand internal entities (2.002292ms)\n  ✔ should throw error on malformed XML (2.511959ms)\n  ✔ should timeout on entity expansion bomb (1.27125ms)\n✔ xml (187.1725ms)\nℹ tests 335\nℹ suites 109\nℹ pass 333\nℹ fail 0\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 1798.70325\n",
+      "saida_reexecucao": ""
+    },
+    {
+      "tier": "T4",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/api/**/*.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 30.64,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available",
+        "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+      ],
+      "testes_falhos_novos": [
+        "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [
+        "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available",
+        "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+      ],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_criterio_amplo": [],
+      "testes_falhos_f_marcador": [
+        "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+      ],
+      "testes_falhos_f_criterio": [
+        "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+      ],
+      "testes_falhos_f_criterio_amplo": [
+        "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+      ],
+      "saida": "cked into returning password (11.88425ms)\n✖ /rest/user/whoami (85.619709ms)\n▶ /snippets/fixes/:key\n  ✔ GET fixes for unknown challenge key throws error (14.095667ms)\n  ✔ GET fixes for existing challenge key (7.035709ms)\n✔ /snippets/fixes/:key (491.733625ms)\n▶ /snippets/fixes\n  ✔ POST fix for non-existing challenge key throws error (18.577ms)\n  ✔ POST wrong fix for existing challenge key gives negative verdict and explanation (8.217875ms)\n  ✔ POST non-existing fix for existing challenge key gives negative verdict and no explanation (8.980834ms)\n  ✔ POST correct fix for existing challenge key gives positive verdict and explanation (30.273167ms)\n✔ /snippets/fixes (66.446417ms)\n▶ /snippets/:challenge\n  ✔ GET code snippet retrieval for unknown challenge key throws error (16.472041ms)\n  ✔ GET code snippet retrieval for challenge without code snippet throws error (5.932083ms)\n  ✔ GET code snippet retrieval for challenge with code snippet (4.854083ms)\n✔ /snippets/:challenge (463.426792ms)\n▶ snippets/verdict\n  ✔ should check for the incorrect lines (18.121042ms)\n  ✔ should check for the correct lines (25.015708ms)\n  ✔ POST with unknown challenge key returns 404 (18.477625ms)\n  ✔ POST without selectedLines returns false verdict (6.800792ms)\n  ✔ POST with empty selectedLines array returns false verdict (6.652167ms)\n✔ snippets/verdict (75.392875ms)\n▶ snippets/verdict (hint progression for loginAdminChallenge)\n  ✔ returns no hint on the first wrong attempt (4.744042ms)\n  ✔ returns the first hint text on the second wrong attempt (5.378541ms)\n  ✔ returns a line-number hint after all text hints are exhausted (18.319042ms)\n✔ snippets/verdict (hint progression for loginAdminChallenge) (28.611625ms)\n▶ /api/Wallets\n  ✔ GET wallet is forbidden via public API (7.327375ms)\n  ✔ GET wallet retrieves wallet amount of requesting user (18.560083ms)\n  ✔ PUT wallet is forbidden via public API (5.943666ms)\n  ✔ PUT charge wallet from credit card of requesting user (26.2735ms)\n  ✔ PUT charge wallet from foreign credit card is forbidden (8.100459ms)\n  ✔ PUT charge wallet without credit card is forbidden (4.179333ms)\n  ✔ GET wallet balance for user without a wallet returns 404 (33.457041ms)\n✔ /api/Wallets (496.746542ms)\n﹣ /rest/web3/walletExploitAddress (0.359375ms) # ALCHEMY_API_KEY not set\nℹ tests 555\nℹ suites 114\nℹ pass 547\nℹ fail 2\nℹ cancelled 0\nℹ skipped 6\nℹ todo 0\nℹ duration_ms 17314.663958\n\n✖ failing tests:\n\ntest at test/api/internet-resources.test.ts:2:4679\n✖ StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available (112.120416ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  403 !== 200\n  \n      at TestContext.<anonymous> (test/api/internet-resources.test.ts:78:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 403,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/user.test.ts:2:13205\n✖ GET who-am-i with fields parameter can be tricked into returning password (11.88425ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.<anonymous> (test/api/user.test.ts:327:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "be tricked into returning password (16.3085ms)\n✖ /rest/user/whoami (93.007459ms)\n▶ /snippets/fixes/:key\n  ✔ GET fixes for unknown challenge key throws error (14.822541ms)\n  ✔ GET fixes for existing challenge key (6.670458ms)\n✔ /snippets/fixes/:key (512.192084ms)\n▶ /snippets/fixes\n  ✔ POST fix for non-existing challenge key throws error (17.357958ms)\n  ✔ POST wrong fix for existing challenge key gives negative verdict and explanation (7.002583ms)\n  ✔ POST non-existing fix for existing challenge key gives negative verdict and no explanation (6.545958ms)\n  ✔ POST correct fix for existing challenge key gives positive verdict and explanation (26.941834ms)\n✔ /snippets/fixes (58.116667ms)\n▶ /snippets/:challenge\n  ✔ GET code snippet retrieval for unknown challenge key throws error (14.417417ms)\n  ✔ GET code snippet retrieval for challenge without code snippet throws error (5.630083ms)\n  ✔ GET code snippet retrieval for challenge with code snippet (4.781333ms)\n✔ /snippets/:challenge (474.0395ms)\n▶ snippets/verdict\n  ✔ should check for the incorrect lines (23.199958ms)\n  ✔ should check for the correct lines (26.822ms)\n  ✔ POST with unknown challenge key returns 404 (16.279167ms)\n  ✔ POST without selectedLines returns false verdict (8.399875ms)\n  ✔ POST with empty selectedLines array returns false verdict (6.743458ms)\n✔ snippets/verdict (81.815167ms)\n▶ snippets/verdict (hint progression for loginAdminChallenge)\n  ✔ returns no hint on the first wrong attempt (4.392167ms)\n  ✔ returns the first hint text on the second wrong attempt (9.495958ms)\n  ✔ returns a line-number hint after all text hints are exhausted (16.557292ms)\n✔ snippets/verdict (hint progression for loginAdminChallenge) (30.619208ms)\n▶ /api/Wallets\n  ✔ GET wallet is forbidden via public API (6.714792ms)\n  ✔ GET wallet retrieves wallet amount of requesting user (14.019166ms)\n  ✔ PUT wallet is forbidden via public API (4.542667ms)\n  ✔ PUT charge wallet from credit card of requesting user (25.194834ms)\n  ✔ PUT charge wallet from foreign credit card is forbidden (7.983ms)\n  ✔ PUT charge wallet without credit card is forbidden (4.054125ms)\n  ✔ GET wallet balance for user without a wallet returns 404 (31.66825ms)\n✔ /api/Wallets (488.248209ms)\n﹣ /rest/web3/walletExploitAddress (0.253542ms) # ALCHEMY_API_KEY not set\nℹ tests 555\nℹ suites 114\nℹ pass 547\nℹ fail 2\nℹ cancelled 0\nℹ skipped 6\nℹ todo 0\nℹ duration_ms 13231.473334\n\n✖ failing tests:\n\ntest at test/api/internet-resources.test.ts:2:4679\n✖ StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available (120.206042ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  403 !== 200\n  \n      at TestContext.<anonymous> (test/api/internet-resources.test.ts:78:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 403,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/user.test.ts:2:13205\n✖ GET who-am-i with fields parameter can be tricked into returning password (16.3085ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.<anonymous> (test/api/user.test.ts:327:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1404:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:969:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [
+    "test/server/currentUser.unit.test.ts"
+  ],
+  "testes_falhos_novos": [
+    "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+  ],
+  "reexecucoes": 1,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": "outputs/baseline_testes.json"
+}

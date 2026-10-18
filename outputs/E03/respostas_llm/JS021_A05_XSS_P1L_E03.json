@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site Scripting (XSS) devido a variável de template não estar entre aspas em atributo HTML.\",\"causa_da_vulnerabilidade\":\"A variável {{userEmail}} está sendo usada como valor do atributo placeholder sem aspas, permitindo que um atacante injete código malicioso que pode ser interpretado como JavaScript.\",\"estrategia_de_correcao\":\"Adicionar aspas ao redor da variável {{userEmail}} no atributo placeholder para garantir que o valor seja tratado como string literal e evitar a execução de código malicioso.\",\"edicoes\":[{\"arquivo\":\"views/dataErasureForm.hbs\",\"trecho_original\":\"<input type=\\\"email\\\" required placeholder={{userEmail}} name=\\\"email\\\" id=\\\"email\\\">\",\"trecho_corrigido\":\"<input type=\\\"email\\\" required placeholder=\\\"{{userEmail}}\\\" name=\\\"email\\\" id=\\\"email\\\">\"}],\"justificativa_tecnica\":\"Colocar a variável entre aspas no atributo HTML impede que caracteres especiais ou scripts sejam interpretados como código, mitigando a vulnerabilidade XSS detectada pela ferramenta Semgrep.\",\"limitacoes_da_correcao\":\"A correção protege apenas contra injeção via atributo placeholder neste ponto específico. É necessário garantir que outras variáveis usadas em atributos HTML também estejam devidamente escapadas e entre aspas para evitar vulnerabilidades similares.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1330,
+  "tokens_saida": 275,
+  "latencia_s": 3.588,
+  "custo_usd": 0.000972,
+  "hash_prompt": "938565a3c8f38ebec36fad4c3e722afa094081d7556a3ab4f8c30d1a127f8d7a",
+  "do_cache": false
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: External Control of File Name or Path - A entrada do usuário é usada diretamente em res.sendFile, permitindo possível leitura arbitrária de arquivos via path traversal.\",\"causa_da_vulnerabilidade\":\"O parâmetro 'file' vindo da requisição é usado diretamente para construir o caminho do arquivo sem validação adequada, permitindo que um atacante utilize sequências como '../' para acessar arquivos fora do diretório 'logs/'.\",\"estrategia_de_correcao\":\"Realizar a canonicalização do caminho usando path.resolve e verificar se o caminho resultante está dentro do diretório 'logs/'. Se não estiver, rejeitar a requisição com erro 403. Isso impede path traversal mesmo que o parâmetro contenha caracteres maliciosos.\",\"edicoes\":[{\"arquivo\":\"routes/logfileServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('logs/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const resolvedPath = path.resolve('logs/', file)\\n    if (resolvedPath.startsWith(path.resolve('logs/'))) {\\n      res.sendFile(resolvedPath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"A validação original apenas checava a presença de '/' no nome do arquivo, o que é insuficiente para prevenir path traversal, pois sequências como '../' podem ser usadas para escapar do diretório. Ao resolver o caminho completo e verificar se ele começa com o caminho absoluto do diretório 'logs/', garantimos que o arquivo servido está dentro do diretório permitido, mitigando a vulnerabilidade.\",\"limitacoes_da_correcao\":\"A correção assume que o diretório 'logs/' é o único local válido para servir arquivos. Se houver links simbólicos ou outras formas de acesso indireto, pode ser necessário um controle adicional. Além disso, nomes de arquivos com caracteres especiais ou codificados podem precisar de tratamento extra para evitar bypass.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 799,
+  "tokens_saida": 458,
+  "latencia_s": 6.545,
+  "custo_usd": 0.001052,
+  "hash_prompt": "97330233ffbf33b42342a2346db43aa7f9b7e081dc063f9a8cea91dbcecc14d4",
+  "do_cache": true
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site Scripting (XSS) na inserção direta do conteúdo do arquivo de legendas dentro de uma tag <script> no HTML sem sanitização adequada.\",\"causa_da_vulnerabilidade\":\"O conteúdo da variável 'subs', que é lido diretamente de um arquivo de legendas, é inserido diretamente dentro de uma tag <script> no HTML sem qualquer sanitização ou escape, permitindo que um atacante possa injetar código JavaScript malicioso se controlar o conteúdo do arquivo de legendas.\",\"estrategia_de_correcao\":\"Sanitizar o conteúdo da variável 'subs' antes de inseri-lo na tag <script> para neutralizar caracteres que possam ser interpretados como código JavaScript. Como o conteúdo é texto de legenda (WebVTT), deve-se escapar caracteres especiais para evitar execução de scripts, utilizando a entidade HTML adequada para escapar o conteúdo inserido dentro da tag <script>.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</script>')\"}],\"justificativa_tecnica\":\"A vulnerabilidade ocorre porque o conteúdo do arquivo de legendas é inserido diretamente dentro de uma tag <script> sem escape, permitindo injeção de código JavaScript. Ao usar 'entities.encode(subs)', todos os caracteres especiais são convertidos em entidades HTML, prevenindo a execução de scripts maliciosos. Essa abordagem mantém o conteúdo textual das legendas visível e seguro, mitigando o risco de XSS.\",\"limitacoes_da_correcao\":\"A correção assume que o conteúdo do arquivo de legendas é texto simples e que a codificação HTML é suficiente para prevenir XSS nesse contexto. Se o conteúdo das legendas precisar ser interpretado como código VTT válido dentro da tag <script>, essa abordagem pode afetar a funcionalidade de legendas. Além disso, se o arquivo de legendas for controlado por usuários não confiáveis, outras validações podem ser necessárias para garantir a integridade do conteúdo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1533,
+  "tokens_saida": 503,
+  "latencia_s": 3.917,
+  "custo_usd": 0.001418,
+  "hash_prompt": "645884d92355f05fe06c6ae6c6d052b859fee561068ff6642024edcb4a0ea8db",
+  "do_cache": false
+}

@@ -1,0 +1,136 @@
+{
+  "version": "1.177.0",
+  "results": [
+    {
+      "check_id": "javascript.express.security.audit.remote-property-injection.remote-property-injection",
+      "path": "routes/currentUser.ts",
+      "start": {
+        "line": 32,
+        "col": 15,
+        "offset": 1372
+      },
+      "end": {
+        "line": 32,
+        "col": 76,
+        "offset": 1433
+      },
+      "extra": {
+        "message": "Bracket object notation with user input is present, this might allow an attacker to access all properties of the object and even it's prototype. Use literal values for object properties.",
+        "metadata": {
+          "confidence": "LOW",
+          "owasp": [
+            "A02:2017 - Broken Authentication",
+            "A04:2021 - Insecure Design",
+            "A06:2025 - Insecure Design"
+          ],
+          "cwe": [
+            "CWE-522: Insufficiently Protected Credentials"
+          ],
+          "category": "security",
+          "technology": [
+            "express"
+          ],
+          "references": [
+            "https://github.com/nodesecurity/eslint-plugin-security/blob/3c7522ca1be800353513282867a1034c795d9eb4/docs/the-dangers-of-square-bracket-notation.md"
+          ],
+          "cwe2021-top25": true,
+          "subcategory": [
+            "vuln"
+          ],
+          "likelihood": "MEDIUM",
+          "impact": "MEDIUM",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cryptographic Issues"
+          ],
+          "source": "https://semgrep.dev/r/javascript.express.security.audit.remote-property-injection.remote-property-injection",
+          "shortlink": "https://sg.run/Z4gn"
+        },
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      "routes/currentUser.ts"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.18620800971984863,
+    "profiling_times": {
+      "config_time": 2.3740322589874268,
+      "core_time": 0.3539121150970459,
+      "ignores_time": 0.0005459785461425781,
+      "total_time": 2.732743978500366
+    },
+    "parsing_time": {
+      "total_time": 0.0,
+      "per_file_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.023865699768066406,
+      "per_file_time": {
+        "mean": 0.007955233256022135,
+        "std_dev": 0.0001082477158560222
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 0.9861751152073732,
+      "rules_selected_ratio": 0.041474654377880185,
+      "rules_matched_ratio": 0.041474654377880185
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 810448064
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}

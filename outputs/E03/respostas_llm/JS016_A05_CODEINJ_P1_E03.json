@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função eval para calcular a resposta do CAPTCHA.\",\"causa_da_vulnerabilidade\":\"A função eval executa código JavaScript arbitrário, o que pode permitir a execução de código malicioso se a expressão for manipulada ou controlada externamente.\",\"estrategia_de_correcao\":\"Substituir o uso de eval por uma função segura que avalie a expressão matemática sem executar código arbitrário, garantindo que apenas operações matemáticas simples sejam processadas.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\"trecho_corrigido\":\"    function safeEval(expr: string): number {\\n      const operators = ['+', '-', '*'];\\n      let tokens = expr.match(/\\\\d+|[+\\\\-*]/g);\\n      if (!tokens) throw new Error('Invalid expression');\\n      let result = parseInt(tokens[0], 10);\\n      for (let i = 1; i < tokens.length; i += 2) {\\n        const operator = tokens[i];\\n        const operand = parseInt(tokens[i + 1], 10);\\n        if (!operators.includes(operator) || isNaN(operand)) {\\n          throw new Error('Invalid expression');\\n        }\\n        if (operator === '+') result += operand;\\n        else if (operator === '-') result -= operand;\\n        else if (operator === '*') result *= operand;\\n      }\\n      return result;\\n    }\\n    const answer = safeEval(expression).toString() // eslint-disable-line no-eval\"}],\"justificativa_tecnica\":\"O uso de eval é uma prática insegura pois pode executar código arbitrário, abrindo brechas para ataques de injeção. Ao implementar uma função de avaliação segura que apenas processa números e operadores matemáticos conhecidos, eliminamos o risco de execução de código malicioso, mantendo a funcionalidade original do CAPTCHA.\",\"limitacoes_da_correcao\":\"A função safeEval implementada suporta apenas expressões simples com operadores +, - e *. Expressões mais complexas ou com outros operadores não serão avaliadas, mas isso é suficiente para o propósito do CAPTCHA atual.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 923,
+  "tokens_saida": 474,
+  "latencia_s": 3.779,
+  "custo_usd": 0.001128,
+  "hash_prompt": "dd45fce5c3d3ced035cb17974f78241769a4dc2ad35c970fa36cb383166b6b12",
+  "do_cache": false
+}

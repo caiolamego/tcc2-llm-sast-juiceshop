@@ -618,6 +618,30 @@ Os 12 elegíveis oficiais continuam presentes; há 15 novos. Os 27 caem em 23 lo
 
 ---
 
+### 2026-10-17 — Execução E03 (P1, P2 e diagnóstico P1L; catálogo v2, 22 casos)
+
+**Sintoma:** primeira execução sobre o catálogo v2 e com o orquestrador rodando todas as estratégias sem interromper no aceite (Seção 14). Sessão de 2026-10-17 02:31 a 03:38 UTC: 7 min de checagem de ambiente (4 worktrees OK) e 60 min de processamento (`duracao_s` 3.597,8; K = 4). Rodou com `caffeinate -is`, o Mac na tomada e a tampa aberta. 66 tentativas (22 casos × P1, P2, P1L), 0 erros. Varredura da sessão igual ao baseline v2 (28 × 28). Resumo em `docs/relatorio_execucoes.md` (`scripts/relatorio_execucoes.py`); métricas em `outputs/resultados_consolidados/E03_metricas.json`.
+
+**Chamadas:** 24 pagas (US$ 0,039756; 37.075 + 16.296 tokens) e 42 do cache. As 36 dos casos JS001–JS012 têm o mesmo prompt da E02. As 6 restantes (P1 e P2 de JS015, JS018 e JS019) têm prompt idêntico ao de JS001, JS008 e JS011, que estão no mesmo arquivo: P1 e P2 não informam o alerta. Orçamento acumulado: 57 chamadas, US$ 0,0846.
+
+**Resultados (`d_criterio`):**
+- Leitura (a): P1 aceita 7/22 (JS005, JS006, JS011, JS013, JS014, JS016, JS019); P2 aceita 4/22 (JS005, JS006, JS014, JS016).
+- Cadeia (b): 7/22 casos, TRV por tentativa 0,189. Sem separação e com `d_marcador`: 3/22 (JS013, JS014, JS016), TRV 0,073. `d_criterio_amplo`: igual a `d_criterio` no desenho.
+- Por triagem: confirmados 4/15 (JS005, JS006, JS011, JS019); falsos positivos 3/6 (JS013, JS014, JS016); inconclusivo 0/1. Ou seja, quase metade dos aceites é de alertas que não eram vulnerabilidade.
+- Diagnóstico P1L: 7/22 (8/22 com `d_criterio_amplo`). Só ele aceitou JS001 e JS021.
+- Não aplicadas: 9, todas por âncora não encontrada (JS011, JS012, JS017, JS019, JS022).
+
+**Achados:**
+1. O critério M barrou uma regressão real. Em JS021/P1 (falso positivo em `views/dataErasureForm.hbs`), a LLM trocou `{{_title_}}` por `{{{_title_}}}`, que desliga o escape do Handlebars; apareceu o alerta `template-explicit-unescape` e a tentativa ficou R1F1M0. Material para a Discussão: a "correção" de um falso positivo introduziu uma XSS.
+2. Nos três falsos positivos aceitos, o alerta sumiu e os testes passaram sem haver vulnerabilidade. É a razão de reportar a triagem à parte (Seção 3, passo 7).
+3. T4 mais lento que na E02 (média de 76 s contra 41 s; 26 reexecuções contra 14), o que explica parte dos 60 min.
+
+**Impacto na reprodutibilidade:** E03 é a primeira execução do catálogo v2. Os casos JS001–JS012 reaproveitam as respostas da E02 (cache), mas R e M foram medidos de novo com os 11 rulesets. P3 e P4 ainda não rodaram (base de conhecimento ausente).
+
+**Fase do guia:** F6, F7, F8.
+
+---
+
 <!--
 Próxima entrada:
 

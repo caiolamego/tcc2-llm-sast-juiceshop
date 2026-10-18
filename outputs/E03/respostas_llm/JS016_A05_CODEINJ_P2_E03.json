@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função eval para calcular a resposta do CAPTCHA.\",\"causa_da_vulnerabilidade\":\"O código utiliza a função eval para avaliar a expressão matemática gerada dinamicamente para o CAPTCHA. A função eval executa código JavaScript arbitrário, o que pode ser explorado se um atacante conseguir manipular a expressão, levando à execução de código malicioso.\",\"estrategia_de_correcao\":\"Substituir o uso da função eval por uma avaliação segura da expressão matemática, implementando manualmente a lógica para calcular o resultado da expressão com os operadores permitidos.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\\n\",\"trecho_corrigido\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const compute = (a: number, op: string, b: number): number => {\\n      switch (op) {\\n        case '*': return a * b\\n        case '+': return a + b\\n        case '-': return a - b\\n        default: throw new Error('Invalid operator')\\n      }\\n    }\\n    const answer = compute(compute(firstTerm, firstOperator, secondTerm), secondOperator, thirdTerm).toString()\\n\"}],\"justificativa_tecnica\":\"A função eval permite a execução de código arbitrário, o que é uma vulnerabilidade crítica. Ao substituir eval por uma função que calcula explicitamente o resultado da expressão usando apenas os operadores permitidos, eliminamos a possibilidade de execução de código malicioso, mantendo a funcionalidade original do CAPTCHA.\",\"limitacoes_da_correcao\":\"A correção assume que a expressão sempre terá exatamente três termos e dois operadores dentre '*', '+', '-'. Caso a lógica do CAPTCHA seja alterada para expressões mais complexas, a função de cálculo precisará ser adaptada para suportar tais casos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1031,
+  "tokens_saida": 444,
+  "latencia_s": 4.198,
+  "custo_usd": 0.001123,
+  "hash_prompt": "2da48db26cde2fc2340522fe605465c7b4031f32ae975727953ffe5833b4cb2d",
+  "do_cache": false
+}

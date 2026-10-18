@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função eval() para calcular a expressão matemática do CAPTCHA.\",\"causa_da_vulnerabilidade\":\"A função eval() executa código JavaScript arbitrário, o que pode levar a vulnerabilidades de injeção de código se a expressão avaliada puder ser manipulada externamente. Embora neste caso a expressão seja gerada internamente, o uso de eval() é uma prática insegura e deve ser evitada.\",\"estrategia_de_correcao\":\"Substituir o uso de eval() por uma função segura que avalie a expressão matemática composta apenas por números e operadores aritméticos permitidos, evitando a execução de código arbitrário.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\"trecho_corrigido\":\"    const safeEval = (expr: string): number => {\\n      const tokens = expr.match(/\\\\d+|[+\\\\-*]/g)\\n      if (!tokens) throw new Error('Invalid expression')\\n      let result = parseInt(tokens[0], 10)\\n      for (let i = 1; i < tokens.length; i += 2) {\\n        const operator = tokens[i]\\n        const operand = parseInt(tokens[i + 1], 10)\\n        if (operator === '+') result += operand\\n        else if (operator === '-') result -= operand\\n        else if (operator === '*') result *= operand\\n        else throw new Error('Invalid operator')\\n      }\\n      return result\\n    }\\n    const answer = safeEval(expression).toString() // eslint-disable-line no-eval\"}],\"justificativa_tecnica\":\"O uso de eval() é uma prática insegura que pode levar a vulnerabilidades de injeção de código. Ao implementar uma função de avaliação segura que apenas processa números e operadores aritméticos conhecidos, eliminamos o risco associado ao eval(), mantendo a funcionalidade original de cálculo da expressão do CAPTCHA.\",\"limitacoes_da_correcao\":\"A correção assume que a expressão gerada contém apenas números inteiros positivos e os operadores '+', '-', '*'. Caso a expressão seja alterada para incluir outros operadores ou formatos, a função segura precisará ser atualizada para suportá-los.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1048,
+  "tokens_saida": 484,
+  "latencia_s": 3.955,
+  "custo_usd": 0.001194,
+  "hash_prompt": "ca96c6fd68e4dc575f76e99d9812975d4fb2761e2fdb61ba1ab3c7f9e87fe6b9",
+  "do_cache": false
+}
