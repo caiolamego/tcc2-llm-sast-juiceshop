@@ -1,0 +1,33 @@
+# Ambiente do TCC2. Guia: docs/docker.md
+# Uso básico:   docker compose run --rm tcc <comando>
+# Atalhos:      make docker-help
+name: tcc2
+
+services:
+  tcc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms: [linux/amd64]
+    image: tcc2-llm-sast-juiceshop:1.0
+    platform: linux/amd64
+    working_dir: /repo
+    init: true
+    volumes:
+      # Código, configurações, .env e resultados (outputs/) do host.
+      - .:/repo
+      # Ambiente Python da imagem, por cima do .venv do host (que é de outro
+      # sistema). Volume anônimo: recriado a partir da imagem a cada execução.
+      - /repo/.venv
+      # Juice Shop e worktrees wt-1..wt-K: volume nomeado, persistente e rápido.
+      # Preparado por: make docker-setup
+      - workspace:/repo/workspace
+    environment:
+      TZ: UTC
+    # Painel: publicado só no próprio computador (127.0.0.1), nunca na rede.
+    # Vale para 'docker compose run --service-ports' (make docker-painel).
+    ports:
+      - "127.0.0.1:8765:8765"
+
+volumes:
+  workspace:

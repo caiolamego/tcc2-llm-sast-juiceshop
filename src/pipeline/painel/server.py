@@ -82,6 +82,10 @@ def handler(controle, token):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--porta', type=int, default=8765)
+    # 0.0.0.0 só dentro do container (docs/docker.md): o compose publica a porta
+    # apenas em 127.0.0.1 do host, e o cabeçalho Host continua exigindo 127.0.0.1.
+    parser.add_argument('--endereco', choices=('127.0.0.1', '0.0.0.0'), default='127.0.0.1',
+                        help='Endereço de escuta; 0.0.0.0 somente dentro do container Docker')
     parser.add_argument('--config', type=Path, default=RAIZ / 'config/execucao.yaml')
     args = parser.parse_args(argv)
     if not 1 <= args.porta <= 65535:
@@ -96,7 +100,7 @@ def main(argv=None):
         controle = Controle(RAIZ, args.config, lock.fileno())
         try:
             controle.configuracao()
-            servidor = ThreadingHTTPServer(('127.0.0.1', args.porta), handler(controle, secrets.token_urlsafe(32)))
+            servidor = ThreadingHTTPServer((args.endereco, args.porta), handler(controle, secrets.token_urlsafe(32)))
         except (ValueError, OSError) as exc:
             parser.exit(1, f'ERRO: {exc}\n')
         print(f'Painel: http://127.0.0.1:{args.porta}', flush=True)
