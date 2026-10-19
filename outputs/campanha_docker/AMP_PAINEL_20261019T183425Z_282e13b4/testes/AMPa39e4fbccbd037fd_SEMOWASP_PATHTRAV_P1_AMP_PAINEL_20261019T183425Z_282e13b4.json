@@ -1,0 +1,301 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 44.58813824599929,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+    "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 12.29,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_ogttfqot/erasure/primeira.xml",
+        "test/api/erasure-request.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 11.96,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+        "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+      ],
+      "testes_falhos_novos": [
+        "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+        "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /dataerasure\n  ✔ GET erasure form for logged-in users includes their email and security question (337.049327ms)\n  ✔ GET erasure form rendering fails for users without assigned security answer (99.204309ms)\n  ✔ GET erasure form rendering fails on unauthenticated access (26.121847ms)\n  ✔ POST erasure request does not actually delete the user (157.648598ms)\n  ✔ POST erasure form  fails on unauthenticated access (29.075915ms)\n  ✔ POST erasure request with empty layout parameter returns (91.96229ms)\n  ✖ POST erasure request with non-existing file path as layout parameter throws error (71.189297ms)\n  ✖ POST erasure request with existing file path as layout parameter returns content truncated (96.677326ms)\n✖ /dataerasure (1705.887083ms)\nℹ tests 8\nℹ suites 1\nℹ pass 6\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5732.580583\n\n✖ failing tests:\n\ntest at test/api/erasure-request.test.ts:2:3924\n✖ POST erasure request with non-existing file path as layout parameter throws error (71.189297ms)\n  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(res.text.includes('no such file or directory'))\n  \n      at TestContext.<anonymous> (test/api/erasure-request.test.ts:99:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/erasure-request.test.ts:2:4440\n✖ POST erasure request with existing file path as layout parameter returns content truncated (96.677326ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.<anonymous> (test/api/erasure-request.test.ts:110:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 16.030459150999377,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+    "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/dataErasure.ts"
+    ],
+    "grupos": [
+      "erasure"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 12.29
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "erasure",
+      "status": "executada",
+      "duracao_s": 11.96
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "erasure"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 12.29
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "erasure",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form for logged-in users includes their email and security question",
+            "arquivo": "test/api/erasure-request.test.ts",
+            "nome": "/dataerasure > GET erasure form for logged-in users includes their email and security question",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form rendering fails for users without assigned security answer",
+            "arquivo": "test/api/erasure-request.test.ts",
+            "nome": "/dataerasure > GET erasure form rendering fails for users without assigned security answer",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form rendering fails on unauthenticated access",
+            "arquivo": "test/api/erasure-request.test.ts",
+            "nome": "/dataerasure > GET erasure form rendering fails on unauthenticated access",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/erasure-request.test.ts :: /dataerasure > POST erasure form  fails on unauthenticated access",
+            "arquivo": "test/api/erasure-request.test.ts",
+            "nome": "/dataerasure > POST erasure form  fails on unauthenticated access",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request does not actually delete the user",
+            "arquivo": "test/api/erasure-request.test.ts",
+            "nome": "/dataerasure > POST erasure request does not actually delete the user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with empty layout parameter returns",
+            "arquivo": "test/api/erasure-request.test.ts",
+            "nome": "/dataerasure > POST erasure request with empty layout parameter returns",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+            "arquivo": "test/api/erasure-request.test.ts",
+            "nome": "/dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error",
+            "arquivo": "test/api/erasure-request.test.ts",
+            "nome": "/dataerasure > POST erasure request with non-existing file path as layout parameter throws error",
+            "estado": "falhou"
+          }
+        ],
+        "falhos": [
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+        ],
+        "falhos_novos": [
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+        ],
+        "falhos_novos_observados": [
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form for logged-in users includes their email and security question",
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form rendering fails for users without assigned security answer",
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form rendering fails on unauthenticated access",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure form  fails on unauthenticated access",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request does not actually delete the user",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with empty layout parameter returns",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+        ],
+        "esperados": [
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form for logged-in users includes their email and security question",
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form rendering fails for users without assigned security answer",
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form rendering fails on unauthenticated access",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure form  fails on unauthenticated access",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request does not actually delete the user",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with empty layout parameter returns",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form for logged-in users includes their email and security question",
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form rendering fails for users without assigned security answer",
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form rendering fails on unauthenticated access",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure form  fails on unauthenticated access",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request does not actually delete the user",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with empty layout parameter returns",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with existing file path as layout parameter returns content truncated",
+          "test/api/erasure-request.test.ts :: /dataerasure > POST erasure request with non-existing file path as layout parameter throws error"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/erasure-request.test.ts :: /dataerasure > GET erasure form for logged-in users includes their email and security question"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 11.96,
+        "espera_api_s": 16.030459150999377,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_ogttfqot/erasure/primeira.xml",
+            "test/api/erasure-request.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 11.96,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /dataerasure\n  ✔ GET erasure form for logged-in users includes their email and security question (337.049327ms)\n  ✔ GET erasure form rendering fails for users without assigned security answer (99.204309ms)\n  ✔ GET erasure form rendering fails on unauthenticated access (26.121847ms)\n  ✔ POST erasure request does not actually delete the user (157.648598ms)\n  ✔ POST erasure form  fails on unauthenticated access (29.075915ms)\n  ✔ POST erasure request with empty layout parameter returns (91.96229ms)\n  ✖ POST erasure request with non-existing file path as layout parameter throws error (71.189297ms)\n  ✖ POST erasure request with existing file path as layout parameter returns content truncated (96.677326ms)\n✖ /dataerasure (1705.887083ms)\nℹ tests 8\nℹ suites 1\nℹ pass 6\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5732.580583\n\n✖ failing tests:\n\ntest at test/api/erasure-request.test.ts:2:3924\n✖ POST erasure request with non-existing file path as layout parameter throws error (71.189297ms)\n  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(res.text.includes('no such file or directory'))\n  \n      at TestContext.<anonymous> (test/api/erasure-request.test.ts:99:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/erasure-request.test.ts:2:4440\n✖ POST erasure request with existing file path as layout parameter returns content truncated (96.677326ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.<anonymous> (test/api/erasure-request.test.ts:110:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/dataerasure\" time=\"1.705887\" disabled=\"0\" errors=\"0\" tests=\"8\" failures=\"2\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET erasure form for logged-in users includes their email and security question\" time=\"0.337049\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"GET erasure form rendering fails for users without assigned security answer\" time=\"0.099204\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"GET erasure form rendering fails on unauthenticated access\" time=\"0.026122\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"POST erasure request does not actually delete the user\" time=\"0.157649\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"POST erasure form  fails on unauthenticated access\" time=\"0.029076\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"POST erasure request with empty layout parameter returns\" time=\"0.091962\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"POST erasure request with non-existing file path as layout parameter throws error\" time=\"0.071189\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\" failure=\"The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('no such file or directory'))&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('no such file or directory'))\">\n[Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(res.text.includes('no such file or directory'))\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(res.text.includes('no such file or directory'))\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-5/test/api/erasure-request.test.ts:99:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST erasure request with existing file path as layout parameter returns content truncated\" time=\"0.096677\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-5/test/api/erasure-request.test.ts:110:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 8 -->\n\t<!-- suites 1 -->\n\t<!-- pass 6 -->\n\t<!-- fail 2 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5732.580583 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/dataerasure\" time=\"1.801371\" disabled=\"0\" errors=\"0\" tests=\"8\" failures=\"2\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET erasure form for logged-in users includes their email and security question\" time=\"0.271068\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"GET erasure form rendering fails for users without assigned security answer\" time=\"0.099663\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"GET erasure form rendering fails on unauthenticated access\" time=\"0.030210\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"POST erasure request does not actually delete the user\" time=\"0.207409\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"POST erasure form  fails on unauthenticated access\" time=\"0.026816\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"POST erasure request with empty layout parameter returns\" time=\"0.115840\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\"/>\n\t\t<testcase name=\"POST erasure request with non-existing file path as layout parameter throws error\" time=\"0.090202\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\" failure=\"The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('no such file or directory'))&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('no such file or directory'))\">\n[Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(res.text.includes('no such file or directory'))\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(res.text.includes('no such file or directory'))\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-5/test/api/erasure-request.test.ts:99:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST erasure request with existing file path as layout parameter returns content truncated\" time=\"0.075018\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/erasure-request.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-5/test/api/erasure-request.test.ts:110:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 8 -->\n\t<!-- suites 1 -->\n\t<!-- pass 6 -->\n\t<!-- fail 2 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 6057.395991 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função bypassSecurityTrustHtml para exibir conteúdo potencialmente controlado pelo usuário, permitindo Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código utiliza this.sanitizer.bypassSecurityTrustHtml para inserir diretamente o valor payload.data.lastLoginIp no HTML, desabilitando a sanitização automática do Angular. Como o valor vem de um token JWT que pode ser manipulado, isso permite a injeção de código malicioso.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o valor lastLoginIp como texto simples, utilizando bindings seguros do Angular que aplicam sanitização automática, evitando a interpretação de código HTML ou scripts.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)\\n\",\"trecho_corrigido\":\"this.lastLoginIp = payload.data.lastLoginIp\\n\"}],\"justificativa_tecnica\":\"Ao remover bypassSecurityTrustHtml e atribuir diretamente o valor lastLoginIp como texto, o Angular aplica automaticamente a sanitização e o escaping necessários para evitar a execução de código malicioso. Isso elimina a possibilidade de XSS via injeção de HTML ou scripts no conteúdo exibido.\",\"limitacoes_da_correcao\":\"A correção assume que lastLoginIp é um texto simples e não requer formatação HTML. Caso seja necessário algum estilo ou marcação, deve-se aplicar sanitização adequada ou usar bindings seguros para evitar XSS. A exibição perde a tag <small>, que pode ser adicionada diretamente no template para preservar o estilo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1460,
+  "tokens_saida": 363,
+  "latencia_s": 3.844,
+  "custo_usd": 0.001165,
+  "hash_prompt": "f83ab0c39e716cfaf43b7d2ed3e1bf44daabbb5e6ea5e764f2f0bc40972ef3c0",
+  "do_cache": false
+}

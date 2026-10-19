@@ -1,0 +1,302 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 33.59032063900122,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 8.13,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_c_m0c15n/redirect/primeira.xml",
+        "test/api/redirect.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 5.41,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /redirect\n  ✔ GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter (82.449886ms)\n  ✔ GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter (31.541579ms)\n  ✔ GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter (20.918125ms)\n  ✔ GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter (27.798909ms)\n  ✔ GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter (33.350997ms)\n  ✔ GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter (32.578748ms)\n  ✔ GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter (33.865727ms)\n  ✔ GET error message with information leakage when calling /redirect without query parameter (35.092476ms)\n  ✔ GET error message with information leakage when calling /redirect with unrecognized query parameter (27.188607ms)\n  ✔ GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target (25.30986ms)\n  ✔ GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string (66.939491ms)\n✔ /redirect (1391.03729ms)\nℹ tests 11\nℹ suites 1\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5339.326544\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 3.4737492760013993,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/redirect.ts"
+    ],
+    "grupos": [
+      "redirect"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 8.13
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "redirect",
+      "status": "executada",
+      "duracao_s": 5.41
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "redirect"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 8.13
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "redirect",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET error message with information leakage when calling /redirect without query parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/redirect.test.ts :: /redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+        ],
+        "esperados": [
+          "test/api/redirect.test.ts :: /redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/redirect.test.ts :: /redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 5.41,
+        "espera_api_s": 3.4737492760013993,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_c_m0c15n/redirect/primeira.xml",
+            "test/api/redirect.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 5.41,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /redirect\n  ✔ GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter (82.449886ms)\n  ✔ GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter (31.541579ms)\n  ✔ GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter (20.918125ms)\n  ✔ GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter (27.798909ms)\n  ✔ GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter (33.350997ms)\n  ✔ GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter (32.578748ms)\n  ✔ GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter (33.865727ms)\n  ✔ GET error message with information leakage when calling /redirect without query parameter (35.092476ms)\n  ✔ GET error message with information leakage when calling /redirect with unrecognized query parameter (27.188607ms)\n  ✔ GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target (25.30986ms)\n  ✔ GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string (66.939491ms)\n✔ /redirect (1391.03729ms)\nℹ tests 11\nℹ suites 1\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5339.326544\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/redirect\" time=\"1.391037\" disabled=\"0\" errors=\"0\" tests=\"11\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.082450\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.031542\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.020918\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.027799\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.033351\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.032579\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.033866\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET error message with information leakage when calling /redirect without query parameter\" time=\"0.035092\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET error message with information leakage when calling /redirect with unrecognized query parameter\" time=\"0.027189\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET error message hinting at allowlist validation when calling /redirect with an unrecognized &amp;quot;to&amp;quot; target\" time=\"0.025310\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to target URL in &amp;quot;to&amp;quot; parameter when a allow-listed URL is part of the query string\" time=\"0.066939\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/redirect.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 11 -->\n\t<!-- suites 1 -->\n\t<!-- pass 11 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5339.326544 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

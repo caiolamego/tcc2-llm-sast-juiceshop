@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Bypass de autorização na atualização de avaliações de produtos, permitindo que um usuário autenticado modifique avaliações que não lhe pertencem.\",\"causa_da_vulnerabilidade\":\"A consulta de atualização no banco de dados utiliza apenas o _id do documento recebido no corpo da requisição para identificar o documento a ser atualizado, sem verificar se o usuário autenticado é o proprietário da avaliação.\",\"estrategia_de_correcao\":\"Adicionar uma condição na consulta de atualização que verifique se o autor da avaliação corresponde ao usuário autenticado, garantindo que apenas o proprietário possa modificar sua avaliação.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\\n    ).then(\",\"trecho_corrigido\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id, author: user?.data?.email }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\\n    ).then(\"}],\"justificativa_tecnica\":\"A alteração adiciona uma restrição na consulta de atualização para garantir que apenas o autor da avaliação autenticado possa modificar o documento correspondente. Isso impede que usuários alterem avaliações de terceiros, mitigando a vulnerabilidade de bypass de autorização detectada pela ferramenta de análise estática.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'author' no documento da avaliação corresponde ao email do usuário autenticado e que o método 'security.authenticatedUsers.from(req)' retorna corretamente o usuário autenticado com o campo 'data.email'. Se esses pressupostos não forem verdadeiros, a autorização pode não ser efetiva. Além disso, a atualização continua permitindo múltiplos documentos serem atualizados se houver mais de um com o mesmo _id e author, o que pode não ser esperado; porém, essa alteração preserva o comportamento funcional existente conforme solicitado.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1467,
+  "tokens_saida": 490,
+  "latencia_s": 4.049,
+  "custo_usd": 0.001371,
+  "hash_prompt": "e8555cd9f76be64ae8bcded12d4c5e0307108f50ddc3d222af7f3639898fab66",
+  "do_cache": false
+}

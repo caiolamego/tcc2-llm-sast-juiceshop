@@ -1,0 +1,13 @@
+diff --git a/frontend/src/app/score-board/score-board.component.ts b/frontend/src/app/score-board/score-board.component.ts
+index a3ca8d8aa..1b6b14ea5 100644
+--- a/frontend/src/app/score-board/score-board.component.ts
++++ b/frontend/src/app/score-board/score-board.component.ts
+@@ -79,7 +79,7 @@ export class ScoreBoardComponent implements OnInit, OnDestroy {
+           hintsAvailable: hints.filter((hint) => hint.ChallengeId === challenge.id).length,
+           tagList: challenge.tags ? challenge.tags.split(',').map((tag) => tag.trim()) : [],
+           originalDescription: challenge.description as string,
+-          description: this.sanitizer.bypassSecurityTrustHtml(challenge.description as string)
++          description: challenge.description as string
+         }
+       })
+ 

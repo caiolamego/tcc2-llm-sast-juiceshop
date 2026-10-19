@@ -1,0 +1,13 @@
+diff --git a/routes/videoHandler.ts b/routes/videoHandler.ts
+index 7b82edbc1..d1fbe4a91 100644
+--- a/routes/videoHandler.ts
++++ b/routes/videoHandler.ts
+@@ -68,7 +68,7 @@ export const promotionVideo = () => {
+       const pug = (await import('pug')).default
+       const fn = pug.compile(template)
+       let compiledTemplate = fn()
+-      compiledTemplate = compiledTemplate.replace('<script id="subtitle"></script>', '<script id="subtitle" type="text/vtt" data-label="English" data-lang="en">' + subs + '</script>')
++      compiledTemplate = compiledTemplate.replace('<script id="subtitle"></script>', '<script id="subtitle" type="text/vtt" data-label="English" data-lang="en">' + subs.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;') + '</script>')
+       res.send(compiledTemplate)
+     })
+   }

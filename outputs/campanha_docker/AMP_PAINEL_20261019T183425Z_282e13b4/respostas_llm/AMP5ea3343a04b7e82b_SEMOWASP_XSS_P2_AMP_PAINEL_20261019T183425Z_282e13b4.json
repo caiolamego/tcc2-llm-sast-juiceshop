@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml com dados não confiáveis, levando a vulnerabilidade de Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código utiliza 'this.sanitizer.bypassSecurityTrustHtml' para inserir diretamente o valor 'results.data[0].orderId' dentro de um elemento HTML <code> sem sanitização adequada. Isso permite que um atacante injete código HTML ou JavaScript malicioso se controlar o valor de 'orderId'.\",\"estrategia_de_correcao\":\"Remover o uso de 'bypassSecurityTrustHtml' e atribuir o valor 'orderId' diretamente como string, permitindo que o Angular faça a sanitização automática e segura do conteúdo exibido.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n\",\"trecho_corrigido\":\"this.results.orderNo = results.data[0].orderId\\n\"}],\"justificativa_tecnica\":\"Ao remover o uso de 'bypassSecurityTrustHtml', o Angular trata o valor como texto simples, aplicando sanitização automática que previne a execução de código malicioso. Isso elimina a possibilidade de injeção de scripts via 'orderId', mitigando a vulnerabilidade XSS.\",\"limitacoes_da_correcao\":\"Se o template HTML espera que 'orderNo' contenha tags HTML (como <code>), a remoção do 'bypassSecurityTrustHtml' pode alterar a apresentação visual. Contudo, a segurança deve prevalecer e a apresentação pode ser ajustada no template para usar elementos HTML estáticos em vez de inserir HTML dinâmico.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1289,
+  "tokens_saida": 371,
+  "latencia_s": 3.21,
+  "custo_usd": 0.001109,
+  "hash_prompt": "9439891eb5cdb72623670e0efdc4d6cbebee87488fd0b34b0d77293167662249",
+  "do_cache": false
+}

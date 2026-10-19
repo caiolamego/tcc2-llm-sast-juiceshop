@@ -1,0 +1,13 @@
+diff --git a/routes/dataExport.ts b/routes/dataExport.ts
+index ee3b4afcd..22a25bbed 100644
+--- a/routes/dataExport.ts
++++ b/routes/dataExport.ts
+@@ -23,7 +23,7 @@ export function dataExport () {
+ 
+         let memories, orders, reviews
+         try {
+-          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })
++          memories = await MemoryModel.findAll({ where: { UserId: loggedInUser.data.id } })
+         } catch (error) {
+           next(error)
+           return

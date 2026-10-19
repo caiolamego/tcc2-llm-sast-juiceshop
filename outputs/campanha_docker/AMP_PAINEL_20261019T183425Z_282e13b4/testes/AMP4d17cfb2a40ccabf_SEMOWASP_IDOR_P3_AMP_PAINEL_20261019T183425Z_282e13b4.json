@@ -1,0 +1,229 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 38.88535065399992,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+  ],
+  "testes_falhos_f_criterio": [
+    "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 8.19,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_dg73yxyy/likes_extra/primeira.xml",
+        "test/api/tcc_coverage_review_likes.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 10.34,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+      ],
+      "testes_falhos_novos": [
+        "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ TCC review likes contracts\n  ✖ increments the selected review once and rejects the same user twice (432.621301ms)\n✖ TCC review likes contracts (1234.926152ms)\nℹ tests 1\nℹ suites 1\nℹ pass 0\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4895.26685\n\n✖ failing tests:\n\ntest at test/api/tcc_coverage_review_likes.test.ts:2:1203\n✖ increments the selected review once and rejects the same user twice (432.621301ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_review_likes.test.ts:24:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 5.691001206287183e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/likeProductReviews.ts"
+    ],
+    "grupos": [
+      "likes_extra",
+      "reviews"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 8.19
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "likes_extra",
+      "status": "executada",
+      "duracao_s": 10.34
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "likes_extra",
+      "reviews"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 8.19
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "likes_extra",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice",
+            "arquivo": "tests/functional/juice_shop/review_likes.test.ts",
+            "nome": "TCC review likes contracts > increments the selected review once and rejects the same user twice",
+            "estado": "falhou"
+          }
+        ],
+        "falhos": [
+          "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+        ],
+        "falhos_novos": [
+          "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+        ],
+        "falhos_novos_observados": [
+          "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/review_likes.test.ts :: TCC review likes contracts > increments the selected review once and rejects the same user twice"
+        ],
+        "obrigatorios_aprovados": [],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 10.34,
+        "espera_api_s": 5.691001206287183e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_dg73yxyy/likes_extra/primeira.xml",
+            "test/api/tcc_coverage_review_likes.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 10.34,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ TCC review likes contracts\n  ✖ increments the selected review once and rejects the same user twice (432.621301ms)\n✖ TCC review likes contracts (1234.926152ms)\nℹ tests 1\nℹ suites 1\nℹ pass 0\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4895.26685\n\n✖ failing tests:\n\ntest at test/api/tcc_coverage_review_likes.test.ts:2:1203\n✖ increments the selected review once and rejects the same user twice (432.621301ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_review_likes.test.ts:24:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC review likes contracts\" time=\"1.234926\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"increments the selected review once and rejects the same user twice\" time=\"0.432621\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_review_likes.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0 !== 1\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/tcc_coverage_review_likes.test.ts:24:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 1 -->\n\t<!-- suites 1 -->\n\t<!-- pass 0 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 4895.26685 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC review likes contracts\" time=\"1.191772\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"increments the selected review once and rejects the same user twice\" time=\"0.386682\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_review_likes.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0 !== 1\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/tcc_coverage_review_likes.test.ts:24:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 1 -->\n\t<!-- suites 1 -->\n\t<!-- pass 0 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5292.659001 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

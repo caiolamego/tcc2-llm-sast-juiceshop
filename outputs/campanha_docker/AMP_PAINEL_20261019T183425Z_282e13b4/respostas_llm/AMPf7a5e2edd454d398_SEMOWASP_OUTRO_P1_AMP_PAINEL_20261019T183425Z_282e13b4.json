@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade de XML External Entity (XXE) que permite a inclusão e processamento de entidades externas, possibilitando leitura arbitrária de arquivos do sistema e ataques de negação de serviço.\",\"causa_da_vulnerabilidade\":\"O código ativa as opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD, que habilitam a substituição de entidades e o carregamento de DTDs externos, permitindo que entidades externas sejam processadas e arquivos locais sejam acessados.\",\"estrategia_de_correcao\":\"Remover as opções que habilitam a substituição de entidades e o carregamento de DTDs externos, especificamente XML_PARSE_NOENT e XML_PARSE_DTDLOAD, para desabilitar o processamento de entidades externas e prevenir XXE.\",\"edicoes\":[{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\"trecho_corrigido\":\"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"}],\"justificativa_tecnica\":\"As opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD são responsáveis por habilitar a substituição de entidades e o carregamento de DTDs externos, que são a raiz da vulnerabilidade XXE. Removendo essas opções, o parser XML não processará entidades externas, mitigando a vulnerabilidade sem alterar o comportamento funcional esperado para o processamento XML básico.\",\"limitacoes_da_correcao\":\"Esta correção desabilita intencionalmente o processamento de entidades externas, o que pode impactar funcionalidades que dependem da resolução de entidades externas ou DTDs. Caso o processamento de entidades externas seja necessário para funcionalidades específicas (como desafios de segurança), essa correção pode impedir seu funcionamento.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1026,
+  "tokens_saida": 400,
+  "latencia_s": 3.345,
+  "custo_usd": 0.00105,
+  "hash_prompt": "11a852b3be77792f5e5530b155b3eb3cd412748195542bf6d0de600ac3582dbd",
+  "do_cache": true
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso inseguro de bypassSecurityTrustHtml que desativa a sanitização HTML do Angular, permitindo possível Cross-Site Scripting (XSS).\",\n  \"causa_da_vulnerabilidade\": \"O código utiliza 'this.sanitizer.bypassSecurityTrustHtml' para inserir diretamente HTML no DOM sem sanitização adequada, aplicando-o a dados que podem ser controlados por usuários (como 'user.email' e 'feedback.comment'). Isso permite que conteúdo malicioso seja interpretado como HTML/JS no navegador.\",\n  \"estrategia_de_correcao\": \"Remover o uso de 'bypassSecurityTrustHtml' e exibir os dados como texto puro, utilizando bindings seguros do Angular que aplicam sanitização automática, evitando a interpretação de conteúdo HTML potencialmente malicioso.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"for (const user of this.userDataSource) {\\n  user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`)\\n}\",\n      \"trecho_corrigido\": \"for (const user of this.userDataSource) {\\n  user.email = user.email\\n}\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"for (const feedback of this.feedbackDataSource) {\\n  feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n}\",\n      \"trecho_corrigido\": \"for (const feedback of this.feedbackDataSource) {\\n  feedback.comment = feedback.comment\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Ao remover o uso de 'bypassSecurityTrustHtml', o Angular passa a tratar os dados como texto simples, aplicando sua sanitização padrão e evitando a execução de scripts maliciosos embutidos. Isso elimina a possibilidade de XSS via injeção de HTML/JS nos campos 'email' e 'comment'.\",\n  \"limitacoes_da_correcao\": \"A correção remove a formatação HTML aplicada originalmente (como a adição de classes CSS para destacar emails com sessão ativa), o que pode impactar a apresentação visual. Caso a formatação seja necessária, deve-se implementar uma sanitização customizada que permita apenas tags e atributos seguros.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2407,
+  "tokens_saida": 524,
+  "latencia_s": 6.223,
+  "custo_usd": 0.001225,
+  "hash_prompt": "5f7245bec147b751a03e521992305cc15011403ce3213935f729ef0b239a4aef",
+  "do_cache": false
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL via uso dinâmico do operador $where com concatenação de entrada não confiável.\",\"causa_da_vulnerabilidade\":\"O código constrói dinamicamente uma consulta MongoDB usando o operador $where com uma string JavaScript que inclui diretamente o parâmetro 'id' da requisição, permitindo que um atacante injete código JavaScript malicioso na consulta.\",\"estrategia_de_correcao\":\"Substituir a consulta que utiliza $where por uma consulta tipada e segura que utilize um filtro direto no campo 'product' com o valor 'id' validado e convertido para número, evitando a execução de código JavaScript dinâmico.\",\"edicoes\":[{\"arquivo\":\"routes/showProductReviews.ts\",\"trecho_original\":\"db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\",\"trecho_corrigido\":\"db.reviewsCollection.find({ product: id }).then((reviews: Review[]) => {\"}],\"justificativa_tecnica\":\"O operador $where executa código JavaScript no servidor MongoDB, o que pode ser explorado para injeção de código se a entrada não for devidamente sanitizada. Ao substituir por uma consulta direta no campo 'product' com um valor numérico validado, eliminamos a execução dinâmica de código e prevenimos a injeção NoSQL, mantendo a funcionalidade original de buscar avaliações pelo produto.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'product' é um valor escalar (número) e que a entrada 'id' pode ser convertida para número sem perda de funcionalidade. Caso o desafio 'noSqlCommandChallenge' esteja habilitado e utilize valores não numéricos, a consulta pode não funcionar como esperado. A correção não altera o comportamento para entradas inválidas, que continuarão retornando erro.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1603,
+  "tokens_saida": 392,
+  "latencia_s": 3.425,
+  "custo_usd": 0.001268,
+  "hash_prompt": "1a8dfc997940c1627716a0e4ec8cd942f2c22f464fd7f712efd3e410e7d4e98b",
+  "do_cache": false
+}

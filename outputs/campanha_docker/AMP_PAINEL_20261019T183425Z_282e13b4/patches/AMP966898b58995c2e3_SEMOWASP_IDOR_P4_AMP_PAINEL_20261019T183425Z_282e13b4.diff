@@ -1,0 +1,14 @@
+diff --git a/routes/basket.ts b/routes/basket.ts
+index c916bb584..259435d1a 100644
+--- a/routes/basket.ts
++++ b/routes/basket.ts
+@@ -16,7 +16,8 @@ export function retrieveBasket () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+     try {
+       const id = req.params.id
+-      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
++      const user = security.authenticatedUsers.from(req)
++      const basket = await BasketModel.findOne({ where: { id, UserId: user?.bid }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
+       /* jshint eqeqeq:false */
+       challengeUtils.solveIf(challenges.basketAccessChallenge, () => {
+         const user = security.authenticatedUsers.from(req)

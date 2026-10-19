@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) devido à inserção direta de conteúdo não sanitizado dentro de uma tag <script> no HTML renderizado.\",\"causa_da_vulnerabilidade\":\"O conteúdo da variável 'subs', que é lido de um arquivo externo e pode conter dados arbitrários, é inserido diretamente dentro de uma tag <script> no HTML sem qualquer sanitização ou validação, permitindo a execução de código JavaScript malicioso.\",\"estrategia_de_correcao\":\"Sanitizar o conteúdo da variável 'subs' para escapar caracteres especiais que possam ser interpretados como código JavaScript dentro da tag <script>. Como o conteúdo é um arquivo VTT (legendas), deve-se escapar caracteres especiais para evitar execução de scripts, mantendo o conteúdo legível como texto.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;') + '</script>')\"}],\"justificativa_tecnica\":\"Escapar os caracteres especiais '<', '>', e '&' dentro do conteúdo inserido em uma tag <script> impede que o navegador interprete o conteúdo como código JavaScript executável, mitigando a vulnerabilidade XSS. Como o conteúdo é texto de legenda, essa abordagem preserva a legibilidade e evita execução de scripts maliciosos.\",\"limitacoes_da_correcao\":\"A sanitização simples pode alterar a renderização original do arquivo VTT se ele depender de marcações HTML específicas. Se o conteúdo legítimo precisar conter HTML, uma sanitização mais sofisticada ou uso de um parser específico para VTT pode ser necessário. Além disso, essa correção assume que o conteúdo do arquivo VTT não é controlado por usuários maliciosos; se for, outras medidas de validação e controle de acesso devem ser aplicadas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2056,
+  "tokens_saida": 482,
+  "latencia_s": 4.991,
+  "custo_usd": 0.001594,
+  "hash_prompt": "99e320aa3c01244188976b3692f8ef991e586360e11a2cb700ab267f78895f71",
+  "do_cache": false
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL via uso dinâmico do operador $where com concatenação de entrada não confiável.\",\"causa_da_vulnerabilidade\":\"O código constrói dinamicamente uma consulta MongoDB usando o operador $where com uma string JavaScript que concatena diretamente o parâmetro 'id' da requisição, permitindo que um atacante injete código JavaScript arbitrário na consulta.\",\"estrategia_de_correcao\":\"Substituir a consulta que utiliza $where por uma consulta tipada e segura que utilize um filtro direto no campo 'product' com o valor 'id' validado e convertido para número, evitando a execução de código JavaScript dinâmico.\",\"edicoes\":[{\"arquivo\":\"routes/showProductReviews.ts\",\"trecho_original\":\"db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\",\"trecho_corrigido\":\"db.reviewsCollection.find({ product: id }).then((reviews: Review[]) => {\"}],\"justificativa_tecnica\":\"Ao substituir a consulta que utiliza $where por uma consulta direta no campo 'product', eliminamos a execução de código JavaScript dinâmico dentro do banco, removendo a possibilidade de injeção de código malicioso. O filtro direto é seguro pois o 'id' é previamente validado e convertido para número, garantindo que apenas valores escalares sejam usados na consulta.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'product' é do tipo numérico e que a conversão para Number do parâmetro 'id' é válida. Caso o parâmetro 'id' não seja um número válido, a consulta pode falhar ou retornar vazia. Além disso, a limitação do truncamento para o desafio 'noSqlCommandChallenge' permanece, mas não afeta a segurança da consulta.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1711,
+  "tokens_saida": 383,
+  "latencia_s": 3.358,
+  "custo_usd": 0.001297,
+  "hash_prompt": "d525b589a215a1648a4717fe5fb7223c714ef15652c1140ae76a4867dc4507f8",
+  "do_cache": false
+}

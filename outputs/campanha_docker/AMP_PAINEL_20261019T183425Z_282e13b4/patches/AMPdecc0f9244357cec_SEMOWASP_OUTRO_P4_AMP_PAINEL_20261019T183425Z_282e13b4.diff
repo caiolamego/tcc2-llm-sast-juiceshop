@@ -1,0 +1,17 @@
+diff --git a/routes/basketItems.ts b/routes/basketItems.ts
+index 077a0d4d2..1105ef9ae 100644
+--- a/routes/basketItems.ts
++++ b/routes/basketItems.ts
+@@ -88,6 +88,12 @@ async function quantityCheck (req: Request, res: Response, next: NextFunction, i
+     throw new Error('No such product found!')
+   }
+ 
++  // Validate quantity is a positive integer greater than zero
++  if (!Number.isSafeInteger(quantity) || quantity <= 0) {
++    res.status(400).json({ error: res.__('Quantity must be a positive integer greater than zero.') })
++    return
++  }
++
+   // is product limited per user and order, except if user is deluxe?
+   if (!product.limitPerUser || (product.limitPerUser && product.limitPerUser >= quantity) || security.isDeluxe(req)) {
+     if (product.quantity >= quantity) { // enough in stock?

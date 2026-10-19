@@ -1,0 +1,25 @@
+--- a/frontend/src/app/administration/administration.component.ts
++++ b/frontend/src/app/administration/administration.component.ts
+@@ -70,7 +70,9 @@
+         this.userDataSource = users
+         this.userDataSourceHidden = users
+         for (const user of this.userDataSource) {
+-          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class="${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}">${user.email}</span>`)
++          // Removido bypassSecurityTrustHtml para evitar XSS
++          // A classe CSS será aplicada na template usando binding condicional
++          user.email = user.email
+         }
+         this.userDataSource = new MatTableDataSource(this.userDataSource)
+         this.userDataSource.paginator = this.paginatorUsers
+@@ -87,9 +89,8 @@
+     this.feedbackService.find().subscribe({
+       next: (feedbacks) => {
+         this.feedbackDataSource = feedbacks
+-        for (const feedback of this.feedbackDataSource) {
+-          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)
+-        }
++        // Removido o loop que aplica bypassSecurityTrustHtml para feedback.comment
++        // O Angular fará a sanitização automaticamente ao exibir o texto no template
+         this.feedbackDataSource = new MatTableDataSource(this.feedbackDataSource)
+         this.feedbackDataSource.paginator = this.paginatorFeedb
+         this.resultsLengthFeedback = feedbacks.length

@@ -37,7 +37,7 @@ from rich.console import Console  # noqa: E402
 from pipeline.caminhos import RAIZ_REPO, rel  # noqa: E402
 from pipeline.llm.falso import resposta_falsa, resposta_falsa_ampliada  # noqa: E402
 from pipeline.llm.openai_client import OrcamentoEsgotado  # noqa: E402
-from pipeline.patching.applier import ResultadoAplicacao, aplicar, interpretar  # noqa: E402
+from pipeline.patching.applier import VERSAO as VERSAO_APLICADOR, ResultadoAplicacao, aplicar, interpretar  # noqa: E402
 from pipeline.prompts import builder  # noqa: E402
 from pipeline.registro import ler_execucoes, registrar_execucao  # noqa: E402
 from pipeline.sast.filtro import filtrar  # noqa: E402
@@ -246,6 +246,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         "finish_reason": llm["finish_reason"], "recusa": llm["recusa"],
         "modo_contexto": prompt.modo_contexto,
         "status_aplicacao": aplic.status, "detalhe_aplicacao": aplic.detalhe,
+        "aplicador_versao": VERSAO_APLICADOR, "correspondencias_aplicacao": aplic.correspondencias,
         "arquivos_alterados": aplic.arquivos,
         "R": None, "F": None, "M": None, "tier_falha": None,
         "F_sem_separacao": None, "F_marcador": None, "F_criterio": None,

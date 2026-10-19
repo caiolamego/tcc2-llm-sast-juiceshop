@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de eval() para executar código dinâmico extraído do nome de usuário, permitindo execução arbitrária de código (CWE-95: Eval Injection).\",\"causa_da_vulnerabilidade\":\"O código extrai um trecho do nome de usuário e o executa diretamente com eval(), sem validação ou sanitização adequada, possibilitando que um atacante injete código malicioso que será executado no servidor.\",\"estrategia_de_correcao\":\"Remover o uso de eval() e substituir por uma abordagem segura que não execute código arbitrário. Como o objetivo parece ser demonstrar um desafio de SSTI, manter a funcionalidade mas evitar execução real de código, retornando o código como string literal escapada para evitar execução.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  const code = username?.substring(2, username.length - 1)\\n  try {\\n    if (!code) {\\n      throw new Error('Username is null')\\n    }\\n    username = eval(code) // eslint-disable-line no-eval\\n  } catch (err) {\\n    username = '\\\\\\\\' + username\\n  }\\n} else {\\n  username = '\\\\\\\\' + username\\n}\",\"trecho_corrigido\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  const code = username?.substring(2, username.length - 1)\\n  try {\\n    if (!code) {\\n      throw new Error('Username is null')\\n    }\\n    // Evitar execução de código com eval, retornar código como string escapada\\n    username = entities.encode(code)\\n  } catch (err) {\\n    username = '\\\\\\\\' + username\\n  }\\n} else {\\n  username = '\\\\\\\\' + username\\n}\"}],\"justificativa_tecnica\":\"O uso de eval() com conteúdo derivado do nome de usuário permite execução arbitrária de código, o que é uma vulnerabilidade crítica. Substituir eval() por uma codificação segura do conteúdo impede a execução de código malicioso, mantendo a funcionalidade de exibir o conteúdo do código no template sem riscos de injeção.\",\"limitacoes_da_correcao\":\"A correção impede a execução dinâmica de código, o que pode alterar o comportamento esperado do desafio SSTI original. No entanto, essa alteração é necessária para eliminar a vulnerabilidade crítica de segurança. A funcionalidade de demonstração do desafio pode precisar ser ajustada para refletir essa mudança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2006,
+  "tokens_saida": 592,
+  "latencia_s": 5.294,
+  "custo_usd": 0.00175,
+  "hash_prompt": "2aaabe5c1d5b005fe603702125a249aabb22f8b4093869aa804c03703e521479",
+  "do_cache": false
+}

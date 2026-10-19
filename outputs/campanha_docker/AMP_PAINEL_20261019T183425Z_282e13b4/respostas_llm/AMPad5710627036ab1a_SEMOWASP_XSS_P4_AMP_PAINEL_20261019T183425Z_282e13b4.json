@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para desabilitar a sanitização do Angular em conteúdo HTML potencialmente não confiável, permitindo Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O método trustProductDescription aplica sanitizer.bypassSecurityTrustHtml diretamente ao campo description dos produtos, que são dados externos e não validados, desabilitando a sanitização automática do Angular e permitindo que scripts maliciosos sejam executados no navegador.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml para o campo description e exibir o conteúdo como texto simples, garantindo que o Angular faça a sanitização automática e evite a execução de código malicioso.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/search-result/search-result.component.ts\",\"trecho_original\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\",\"trecho_corrigido\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      // Removido bypassSecurityTrustHtml para evitar XSS\\n      // Mantém o conteúdo original para que Angular faça a sanitização automática\\n      tableData[i].description = tableData[i].description\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\"}],\"justificativa_tecnica\":\"Ao remover o uso de bypassSecurityTrustHtml, o Angular passa a sanitizar automaticamente o conteúdo HTML, impedindo a execução de scripts maliciosos inseridos no campo description. Isso elimina a vulnerabilidade de XSS sem alterar a funcionalidade de exibição dos dados.\",\"limitacoes_da_correcao\":\"Se o campo description contiver HTML legítimo que precise ser renderizado, essa correção pode fazer com que o HTML seja exibido como texto simples, perdendo a formatação. Para suportar HTML seguro, seria necessário implementar uma sanitização customizada que permita apenas tags e atributos seguros.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2986,
+  "tokens_saida": 544,
+  "latencia_s": 5.799,
+  "custo_usd": 0.001489,
+  "hash_prompt": "ec3130b5d974e0f233385c808d4e472c4bb867db7666216f00a4a436a611d6c5",
+  "do_cache": false
+}

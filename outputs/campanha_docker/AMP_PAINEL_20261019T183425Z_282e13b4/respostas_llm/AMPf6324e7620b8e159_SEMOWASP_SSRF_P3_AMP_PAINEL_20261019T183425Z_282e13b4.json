@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Server-Side Request Forgery (SSRF)\",\"causa_da_vulnerabilidade\":\"O código aceita uma URL arbitrária do usuário e realiza uma requisição fetch diretamente para essa URL sem validação adequada do esquema, host ou se o destino é interno, permitindo que um atacante faça requisições para recursos internos ou não autorizados.\",\"estrategia_de_correcao\":\"Implementar uma validação da URL recebida para restringir os esquemas permitidos (apenas http e https), garantir que o host não seja um endereço interno (como localhost, 127.0.0.1, ou IPs privados) e que não seja um domínio proibido. Caso a URL não passe na validação, rejeitar a requisição antes de realizar o fetch.\",\"edicoes\":[{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"          const response = await fetch(url)\",\"trecho_corrigido\":\"          const parsedUrl = new URL(url)\\n          const allowedProtocols = ['http:', 'https:']\\n          const forbiddenHosts = ['localhost', '127.0.0.1', '::1']\\n          const forbiddenHostPatterns = [/^192\\\\.168\\\\./, /^10\\\\./, /^172\\\\.(1[6-9]|2[0-9]|3[0-1])\\\\./]\\n\\n          if (!allowedProtocols.includes(parsedUrl.protocol)) {\\n            throw new Error('Invalid URL protocol')\\n          }\\n\\n          const hostname = parsedUrl.hostname.toLowerCase()\\n\\n          if (forbiddenHosts.includes(hostname) || forbiddenHostPatterns.some(pattern => pattern.test(hostname))) {\\n            throw new Error('URL host is forbidden')\\n          }\\n\\n          const response = await fetch(url)\"}],\"justificativa_tecnica\":\"A validação da URL antes do fetch impede que o servidor realize requisições para endereços internos ou não autorizados, mitigando a vulnerabilidade SSRF. A restrição dos protocolos e hosts proibidos é uma prática recomendada para evitar que usuários maliciosos explorem o servidor para acessar recursos internos ou externos indevidos.\",\"limitacoes_da_correcao\":\"A validação baseada em listas pode não cobrir todos os casos de endereços internos, especialmente se forem usados IPs alternativos ou DNS internos. Além disso, a validação não impede que URLs externas maliciosas sejam acessadas, o que pode ter outros impactos. Para maior segurança, recomenda-se implementar uma lista branca de domínios permitidos ou outras políticas de controle de acesso mais rigorosas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1618,
+  "tokens_saida": 543,
+  "latencia_s": 5.015,
+  "custo_usd": 0.001516,
+  "hash_prompt": "ce7f52475f7f4203b15191fb0ffc571706c259807d0d74c2661ed45a74459eea",
+  "do_cache": false
+}

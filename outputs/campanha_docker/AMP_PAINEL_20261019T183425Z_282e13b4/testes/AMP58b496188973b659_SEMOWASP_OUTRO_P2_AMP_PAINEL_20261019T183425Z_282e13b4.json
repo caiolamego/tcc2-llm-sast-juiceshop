@@ -1,0 +1,299 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 30.60547441900053,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 11.45,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_cbwqvynu/reviews/primeira.xml",
+        "test/api/product-review.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 15.26,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id"
+      ],
+      "testes_falhos_novos": [
+        "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /rest/products/:id/reviews\n  ✖ GET product reviews by product id (108.001521ms)\n  ✔ GET product reviews attack by injecting a mongoDB sleep command (50.672329ms)\n  ﹣ GET product reviews by alphanumeric non-mongoDB-command product id (0.44453ms) # SKIP\n  ✔ PUT single product review can be created (62.170119ms)\n✖ /rest/products/:id/reviews (2528.34665ms)\n▶ /rest/products/reviews\n  ✔ PATCH single product review can be edited (54.840918ms)\n  ✔ PATCH single product review editing need an authenticated user (42.969854ms)\n  ✔ POST non-existing product review cannot be liked (339.349676ms)\n  ✔ POST single product review can be liked (276.728193ms)\n  ✔ PATCH multiple product review via injection (36.292016ms)\n✔ /rest/products/reviews (794.460429ms)\nℹ tests 9\nℹ suites 2\nℹ pass 7\nℹ fail 1\nℹ cancelled 0\nℹ skipped 1\nℹ todo 0\nℹ duration_ms 9497.904484\n\n✖ failing tests:\n\ntest at test/api/product-review.test.ts:2:1420\n✖ GET product reviews by product id (108.001521ms)\n  TypeError: Cannot read properties of undefined (reading 'product')\n      at TestContext.<anonymous> (test/api/product-review.test.ts:32:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 4.606001311913133e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/showProductReviews.ts"
+    ],
+    "grupos": [
+      "reviews"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 11.45
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "reviews",
+      "status": "executada",
+      "duracao_s": 15.26
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "reviews"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 11.45
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "reviews",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews attack by injecting a mongoDB sleep command",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/:id/reviews > GET product reviews attack by injecting a mongoDB sleep command",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by alphanumeric non-mongoDB-command product id",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/:id/reviews > GET product reviews by alphanumeric non-mongoDB-command product id",
+            "estado": "ignorado"
+          },
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/:id/reviews > GET product reviews by product id",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/:id/reviews > PUT single product review can be created",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/:id/reviews > PUT single product review can be created",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/reviews > PATCH multiple product review via injection",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/reviews > PATCH multiple product review via injection",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/reviews > PATCH single product review can be edited",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/reviews > PATCH single product review can be edited",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/reviews > PATCH single product review editing need an authenticated user",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/reviews > PATCH single product review editing need an authenticated user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/reviews > POST non-existing product review cannot be liked",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/reviews > POST non-existing product review cannot be liked",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/product-review.test.ts :: /rest/products/reviews > POST single product review can be liked",
+            "arquivo": "test/api/product-review.test.ts",
+            "nome": "/rest/products/reviews > POST single product review can be liked",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id"
+        ],
+        "falhos_novos": [
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id"
+        ],
+        "falhos_novos_observados": [
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews attack by injecting a mongoDB sleep command",
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by alphanumeric non-mongoDB-command product id",
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id",
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > PUT single product review can be created",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH multiple product review via injection",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH single product review can be edited",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH single product review editing need an authenticated user",
+          "test/api/product-review.test.ts :: /rest/products/reviews > POST non-existing product review cannot be liked",
+          "test/api/product-review.test.ts :: /rest/products/reviews > POST single product review can be liked"
+        ],
+        "esperados": [
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews attack by injecting a mongoDB sleep command",
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id",
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > PUT single product review can be created",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH multiple product review via injection",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH single product review can be edited",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH single product review editing need an authenticated user",
+          "test/api/product-review.test.ts :: /rest/products/reviews > POST non-existing product review cannot be liked",
+          "test/api/product-review.test.ts :: /rest/products/reviews > POST single product review can be liked"
+        ],
+        "ignorados": [
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by alphanumeric non-mongoDB-command product id"
+        ],
+        "executados": [
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews attack by injecting a mongoDB sleep command",
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > GET product reviews by product id",
+          "test/api/product-review.test.ts :: /rest/products/:id/reviews > PUT single product review can be created",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH multiple product review via injection",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH single product review can be edited",
+          "test/api/product-review.test.ts :: /rest/products/reviews > PATCH single product review editing need an authenticated user",
+          "test/api/product-review.test.ts :: /rest/products/reviews > POST non-existing product review cannot be liked",
+          "test/api/product-review.test.ts :: /rest/products/reviews > POST single product review can be liked"
+        ],
+        "obrigatorios_aprovados": [],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 15.26,
+        "espera_api_s": 4.606001311913133e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_cbwqvynu/reviews/primeira.xml",
+            "test/api/product-review.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 15.26,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /rest/products/:id/reviews\n  ✖ GET product reviews by product id (108.001521ms)\n  ✔ GET product reviews attack by injecting a mongoDB sleep command (50.672329ms)\n  ﹣ GET product reviews by alphanumeric non-mongoDB-command product id (0.44453ms) # SKIP\n  ✔ PUT single product review can be created (62.170119ms)\n✖ /rest/products/:id/reviews (2528.34665ms)\n▶ /rest/products/reviews\n  ✔ PATCH single product review can be edited (54.840918ms)\n  ✔ PATCH single product review editing need an authenticated user (42.969854ms)\n  ✔ POST non-existing product review cannot be liked (339.349676ms)\n  ✔ POST single product review can be liked (276.728193ms)\n  ✔ PATCH multiple product review via injection (36.292016ms)\n✔ /rest/products/reviews (794.460429ms)\nℹ tests 9\nℹ suites 2\nℹ pass 7\nℹ fail 1\nℹ cancelled 0\nℹ skipped 1\nℹ todo 0\nℹ duration_ms 9497.904484\n\n✖ failing tests:\n\ntest at test/api/product-review.test.ts:2:1420\n✖ GET product reviews by product id (108.001521ms)\n  TypeError: Cannot read properties of undefined (reading 'product')\n      at TestContext.<anonymous> (test/api/product-review.test.ts:32:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/products/:id/reviews\" time=\"2.528347\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"1\" skipped=\"1\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET product reviews by product id\" time=\"0.108002\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\" failure=\"Cannot read properties of undefined (reading 'product')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'product')\">\nError [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'product')\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of undefined (reading 'product')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/product-review.test.ts:32:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product reviews attack by injecting a mongoDB sleep command\" time=\"0.050672\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"GET product reviews by alphanumeric non-mongoDB-command product id\" time=\"0.000445\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"true\"/>\n\t\t</testcase>\n\t\t<testcase name=\"PUT single product review can be created\" time=\"0.062170\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/products/reviews\" time=\"0.794460\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"PATCH single product review can be edited\" time=\"0.054841\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"PATCH single product review editing need an authenticated user\" time=\"0.042970\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"POST non-existing product review cannot be liked\" time=\"0.339350\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"POST single product review can be liked\" time=\"0.276728\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"PATCH multiple product review via injection\" time=\"0.036292\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 9 -->\n\t<!-- suites 2 -->\n\t<!-- pass 7 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 1 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 9497.904484 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/products/:id/reviews\" time=\"1.107503\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"1\" skipped=\"1\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET product reviews by product id\" time=\"0.077310\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\" failure=\"Cannot read properties of undefined (reading 'product')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'product')\">\nError [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'product')\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of undefined (reading 'product')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/product-review.test.ts:32:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product reviews attack by injecting a mongoDB sleep command\" time=\"0.034115\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"GET product reviews by alphanumeric non-mongoDB-command product id\" time=\"0.000314\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"true\"/>\n\t\t</testcase>\n\t\t<testcase name=\"PUT single product review can be created\" time=\"0.074754\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/products/reviews\" time=\"0.499717\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"PATCH single product review can be edited\" time=\"0.032435\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"PATCH single product review editing need an authenticated user\" time=\"0.027571\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"POST non-existing product review cannot be liked\" time=\"0.162696\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"POST single product review can be liked\" time=\"0.221098\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t\t<testcase name=\"PATCH multiple product review via injection\" time=\"0.029265\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/product-review.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 9 -->\n\t<!-- suites 2 -->\n\t<!-- pass 7 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 1 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5563.6894 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

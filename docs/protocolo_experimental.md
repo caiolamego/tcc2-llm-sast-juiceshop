@@ -504,3 +504,32 @@ ambiente seja declarada.
 **Limite.** Os pacotes do sistema (apt) não são fixados. Reconstruir a imagem em outra data pode trazê-los um pouco
 diferentes, e o `libxmljs2` é compilado do fonte durante o build. Para a reprodução pela banca, a imagem construída
 deve ser publicada e citada pelo digest.
+
+## Aplicação de âncoras com indentação uniforme (19/10/2026)
+
+O aplicador `ancora_exata_indentacao_uniforme_js_ts_v2` preserva a procura exata
+como primeira opção. Na ausência dela, blocos de duas ou mais linhas JS/TS
+podem ser associados ignorando apenas um prefixo uniforme de espaços/tabs.
+O conteúdo restante de cada linha, inclusive espaços internos e finais, precisa
+coincidir; múltiplos blocos candidatos são recusados. Outras linguagens mantêm
+a aplicação exata.
+
+O fallback exige o parser TypeScript instalado no checkout. Comparações de
+tokens antes/depois do ajuste verificam separadamente a âncora original e a
+solução proposta, recusando alterações em strings/templates, sintaxe inválida
+ou parser indisponível. O código do alvo não é executado nessa conferência.
+O prefixo é ajustado também na substituição, preservando o entorno e finais
+de linha do arquivo. Nenhum arquivo é escrito antes de validar todas as edições.
+
+Registros novos incluem versão do aplicador, método de correspondência, linhas,
+deslocamento e hashes da âncora recebida/real. Os hashes do aplicador e da
+implementação já integram o contrato científico; a mudança exige execução nova,
+sem retomar nem reclassificar a execução anterior. Prompts, respostas brutas,
+regras, comparador SAST e critérios F/D permanecem inalterados.
+
+O replay diagnóstico das oito respostas de `administration.component.ts` da
+execução `AMP_PAINEL_20261019T181245Z_1aca0df2` aplicou oito em cópias temporárias,
+sem LLM, SAST ou testes funcionais. Artefatos em
+`outputs/revalidacoes/ANCORAS_INDENTACAO_V1/`. Esse resultado mede aplicabilidade,
+não remoção da vulnerabilidade nem aceite funcional. Detalhes em
+[aplicacao_ancoras.md](aplicacao_ancoras.md).

@@ -1,0 +1,383 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 28.70100441500108,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 11.78,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_ljp1onxq/basket_items/primeira.xml",
+        "test/api/basket-item.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 5.93,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /api/BasketItems\n  ✔ GET all basket items is forbidden via public API (17.921394ms)\n  ✔ POST new basket item is forbidden via public API (10.818038ms)\n  ✔ GET all basket items (52.162664ms)\n  ✔ POST new basket item (14.884539ms)\n  ✔ POST new basket item with more than available quantity is forbidden (10.212281ms)\n  ✔ POST new basket item with more than allowed quantity is forbidden (11.994222ms)\n  ✔ POST new basket item with invalid basket ID is forbidden (8.22123ms)\n  ✔ POST new basket item with non-existent product ID is forbidden (8.951703ms)\n✔ /api/BasketItems (1059.961583ms)\n▶ /api/BasketItems/:id\n  ✔ GET basket item by id is forbidden via public API (7.926633ms)\n  ✔ PUT update basket item is forbidden via public API (4.812758ms)\n  ✔ DELETE basket item is forbidden via public API (3.971175ms)\n  ✔ GET newly created basket item by id (45.956643ms)\n  ✔ PUT update newly created basket item (55.730112ms)\n  ✔ PUT update basket ID of basket item is forbidden (60.850013ms)\n  ✔ PUT update basket ID of basket item without basket ID (58.134818ms)\n  ✔ PUT update product ID of basket item is forbidden (55.12551ms)\n  ✔ PUT update newly created basket item with more than available quantity is forbidden (20.187053ms)\n  ✔ PUT update basket item with more than allowed quantity is forbidden (42.256125ms)\n  ✔ DELETE newly created basket item (47.751628ms)\n  ✔ PUT update non-existent basket item (7.361035ms)\n✔ /api/BasketItems/:id (411.846227ms)\nℹ tests 20\nℹ suites 2\nℹ pass 20\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5850.331404\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 6.2230010371422395e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/basketItems.ts"
+    ],
+    "grupos": [
+      "basket_items"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 11.78
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "basket_items",
+      "status": "executada",
+      "duracao_s": 5.93
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "basket_items"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 11.78
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "basket_items",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems > GET all basket items",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems > GET all basket items",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems > GET all basket items is forbidden via public API",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems > GET all basket items is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems > POST new basket item",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item is forbidden via public API",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems > POST new basket item is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with invalid basket ID is forbidden",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems > POST new basket item with invalid basket ID is forbidden",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with more than allowed quantity is forbidden",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems > POST new basket item with more than allowed quantity is forbidden",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with more than available quantity is forbidden",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems > POST new basket item with more than available quantity is forbidden",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with non-existent product ID is forbidden",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems > POST new basket item with non-existent product ID is forbidden",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > DELETE basket item is forbidden via public API",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > DELETE basket item is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > DELETE newly created basket item",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > DELETE newly created basket item",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > GET basket item by id is forbidden via public API",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > GET basket item by id is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > GET newly created basket item by id",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > GET newly created basket item by id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket ID of basket item is forbidden",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > PUT update basket ID of basket item is forbidden",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket ID of basket item without basket ID",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > PUT update basket ID of basket item without basket ID",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket item is forbidden via public API",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > PUT update basket item is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket item with more than allowed quantity is forbidden",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > PUT update basket item with more than allowed quantity is forbidden",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update newly created basket item",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > PUT update newly created basket item",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update newly created basket item with more than available quantity is forbidden",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > PUT update newly created basket item with more than available quantity is forbidden",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update non-existent basket item",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > PUT update non-existent basket item",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update product ID of basket item is forbidden",
+            "arquivo": "test/api/basket-item.test.ts",
+            "nome": "/api/BasketItems/:id > PUT update product ID of basket item is forbidden",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/basket-item.test.ts :: /api/BasketItems > GET all basket items",
+          "test/api/basket-item.test.ts :: /api/BasketItems > GET all basket items is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with invalid basket ID is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with more than allowed quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with more than available quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with non-existent product ID is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > DELETE basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > DELETE newly created basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > GET basket item by id is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > GET newly created basket item by id",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket ID of basket item is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket ID of basket item without basket ID",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket item with more than allowed quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update newly created basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update newly created basket item with more than available quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update non-existent basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update product ID of basket item is forbidden"
+        ],
+        "esperados": [
+          "test/api/basket-item.test.ts :: /api/BasketItems > GET all basket items",
+          "test/api/basket-item.test.ts :: /api/BasketItems > GET all basket items is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with invalid basket ID is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with more than allowed quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with more than available quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with non-existent product ID is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > DELETE basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > DELETE newly created basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > GET basket item by id is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > GET newly created basket item by id",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket ID of basket item is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket ID of basket item without basket ID",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket item with more than allowed quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update newly created basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update newly created basket item with more than available quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update non-existent basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update product ID of basket item is forbidden"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/basket-item.test.ts :: /api/BasketItems > GET all basket items",
+          "test/api/basket-item.test.ts :: /api/BasketItems > GET all basket items is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with invalid basket ID is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with more than allowed quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with more than available quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item with non-existent product ID is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > DELETE basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > DELETE newly created basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > GET basket item by id is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > GET newly created basket item by id",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket ID of basket item is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket ID of basket item without basket ID",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket item is forbidden via public API",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update basket item with more than allowed quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update newly created basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update newly created basket item with more than available quantity is forbidden",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update non-existent basket item",
+          "test/api/basket-item.test.ts :: /api/BasketItems/:id > PUT update product ID of basket item is forbidden"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/basket-item.test.ts :: /api/BasketItems > POST new basket item"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 5.93,
+        "espera_api_s": 6.2230010371422395e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_ljp1onxq/basket_items/primeira.xml",
+            "test/api/basket-item.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 5.93,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /api/BasketItems\n  ✔ GET all basket items is forbidden via public API (17.921394ms)\n  ✔ POST new basket item is forbidden via public API (10.818038ms)\n  ✔ GET all basket items (52.162664ms)\n  ✔ POST new basket item (14.884539ms)\n  ✔ POST new basket item with more than available quantity is forbidden (10.212281ms)\n  ✔ POST new basket item with more than allowed quantity is forbidden (11.994222ms)\n  ✔ POST new basket item with invalid basket ID is forbidden (8.22123ms)\n  ✔ POST new basket item with non-existent product ID is forbidden (8.951703ms)\n✔ /api/BasketItems (1059.961583ms)\n▶ /api/BasketItems/:id\n  ✔ GET basket item by id is forbidden via public API (7.926633ms)\n  ✔ PUT update basket item is forbidden via public API (4.812758ms)\n  ✔ DELETE basket item is forbidden via public API (3.971175ms)\n  ✔ GET newly created basket item by id (45.956643ms)\n  ✔ PUT update newly created basket item (55.730112ms)\n  ✔ PUT update basket ID of basket item is forbidden (60.850013ms)\n  ✔ PUT update basket ID of basket item without basket ID (58.134818ms)\n  ✔ PUT update product ID of basket item is forbidden (55.12551ms)\n  ✔ PUT update newly created basket item with more than available quantity is forbidden (20.187053ms)\n  ✔ PUT update basket item with more than allowed quantity is forbidden (42.256125ms)\n  ✔ DELETE newly created basket item (47.751628ms)\n  ✔ PUT update non-existent basket item (7.361035ms)\n✔ /api/BasketItems/:id (411.846227ms)\nℹ tests 20\nℹ suites 2\nℹ pass 20\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5850.331404\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/BasketItems\" time=\"1.059962\" disabled=\"0\" errors=\"0\" tests=\"8\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET all basket items is forbidden via public API\" time=\"0.017921\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"POST new basket item is forbidden via public API\" time=\"0.010818\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"GET all basket items\" time=\"0.052163\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"POST new basket item\" time=\"0.014885\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"POST new basket item with more than available quantity is forbidden\" time=\"0.010212\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"POST new basket item with more than allowed quantity is forbidden\" time=\"0.011994\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"POST new basket item with invalid basket ID is forbidden\" time=\"0.008221\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"POST new basket item with non-existent product ID is forbidden\" time=\"0.008952\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/BasketItems/:id\" time=\"0.411846\" disabled=\"0\" errors=\"0\" tests=\"12\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET basket item by id is forbidden via public API\" time=\"0.007927\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"PUT update basket item is forbidden via public API\" time=\"0.004813\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"DELETE basket item is forbidden via public API\" time=\"0.003971\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"GET newly created basket item by id\" time=\"0.045957\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"PUT update newly created basket item\" time=\"0.055730\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"PUT update basket ID of basket item is forbidden\" time=\"0.060850\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"PUT update basket ID of basket item without basket ID\" time=\"0.058135\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"PUT update product ID of basket item is forbidden\" time=\"0.055126\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"PUT update newly created basket item with more than available quantity is forbidden\" time=\"0.020187\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"PUT update basket item with more than allowed quantity is forbidden\" time=\"0.042256\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"DELETE newly created basket item\" time=\"0.047752\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t\t<testcase name=\"PUT update non-existent basket item\" time=\"0.007361\" classname=\"test\" file=\"/repo/workspace/wt-5/test/api/basket-item.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 20 -->\n\t<!-- suites 2 -->\n\t<!-- pass 20 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5850.331404 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

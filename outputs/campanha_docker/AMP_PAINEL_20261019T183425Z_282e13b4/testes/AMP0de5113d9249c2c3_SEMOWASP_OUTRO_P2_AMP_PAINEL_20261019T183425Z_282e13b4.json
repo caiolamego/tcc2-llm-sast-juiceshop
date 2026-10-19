@@ -1,0 +1,266 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 26.82957594799882,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 12.15,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_z3dh75z8/history/primeira.xml",
+        "test/api/order-history.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 6.79,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /rest/order-history\n  ✔ GET own previous orders (220.906476ms)\n✔ /rest/order-history (1582.742411ms)\n▶ /rest/order-history/orders\n  ✔ GET all orders is forbidden for customers (132.607504ms)\n  ✔ GET all orders is forbidden for admin (118.007739ms)\n  ✔ GET all orders for accountant (161.491742ms)\n✔ /rest/order-history/orders (413.067573ms)\n▶ /rest/order-history/:id/delivery-status\n  ✔ PUT delivery status is forbidden for admin (190.673614ms)\n  ✔ PUT delivery status is forbidden for customer (147.026763ms)\n  ✔ PUT delivery status is allowed for accountant (189.922577ms)\n✔ /rest/order-history/:id/delivery-status (528.603492ms)\nℹ tests 7\nℹ suites 3\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 6645.354666\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 2.4279989500009833,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/orderHistory.ts"
+    ],
+    "grupos": [
+      "history"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 12.15
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "history",
+      "status": "executada",
+      "duracao_s": 6.79
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "history"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 12.15
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "history",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history > GET own previous orders",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders for accountant",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/orders > GET all orders for accountant",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for admin",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/orders > GET all orders is forbidden for admin",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for customers",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/orders > GET all orders is forbidden for customers",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for customers"
+        ],
+        "esperados": [
+          "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for customers"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for customers"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 6.79,
+        "espera_api_s": 2.4279989500009833,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_z3dh75z8/history/primeira.xml",
+            "test/api/order-history.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 6.79,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /rest/order-history\n  ✔ GET own previous orders (220.906476ms)\n✔ /rest/order-history (1582.742411ms)\n▶ /rest/order-history/orders\n  ✔ GET all orders is forbidden for customers (132.607504ms)\n  ✔ GET all orders is forbidden for admin (118.007739ms)\n  ✔ GET all orders for accountant (161.491742ms)\n✔ /rest/order-history/orders (413.067573ms)\n▶ /rest/order-history/:id/delivery-status\n  ✔ PUT delivery status is forbidden for admin (190.673614ms)\n  ✔ PUT delivery status is forbidden for customer (147.026763ms)\n  ✔ PUT delivery status is allowed for accountant (189.922577ms)\n✔ /rest/order-history/:id/delivery-status (528.603492ms)\nℹ tests 7\nℹ suites 3\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 6645.354666\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/order-history\" time=\"1.582742\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET own previous orders\" time=\"0.220906\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/order-history.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/order-history/orders\" time=\"0.413068\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET all orders is forbidden for customers\" time=\"0.132608\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"GET all orders is forbidden for admin\" time=\"0.118008\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"GET all orders for accountant\" time=\"0.161492\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/order-history.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/order-history/:id/delivery-status\" time=\"0.528603\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"PUT delivery status is forbidden for admin\" time=\"0.190674\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"PUT delivery status is forbidden for customer\" time=\"0.147027\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"PUT delivery status is allowed for accountant\" time=\"0.189923\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/order-history.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 7 -->\n\t<!-- suites 3 -->\n\t<!-- pass 7 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 6645.354666 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

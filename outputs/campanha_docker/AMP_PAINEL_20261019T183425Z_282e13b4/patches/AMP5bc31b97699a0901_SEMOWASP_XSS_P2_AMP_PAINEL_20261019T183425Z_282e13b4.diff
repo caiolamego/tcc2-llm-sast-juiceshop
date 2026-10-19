@@ -1,0 +1,24 @@
+diff --git a/frontend/src/app/search-result/search-result.component.ts b/frontend/src/app/search-result/search-result.component.ts
+index 1920febe3..35bd1ba1c 100644
+--- a/frontend/src/app/search-result/search-result.component.ts
++++ b/frontend/src/app/search-result/search-result.component.ts
+@@ -106,9 +106,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
+   }
+ 
+   trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge
+-    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge
+-      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge
+-    } // vuln-code-snippet neutral-line restfulXssChallenge
++    // Removido uso inseguro de bypassSecurityTrustHtml para prevenir XSS
+   } // vuln-code-snippet neutral-line restfulXssChallenge
+ 
+   // vuln-code-snippet end restfulXssChallenge
+@@ -140,7 +138,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
+         this.io.socket().emit('verifyLocalXssChallenge', queryParam)
+       }) // vuln-code-snippet hide-end
+       this.dataSource.filter = queryParam.toLowerCase()
+-      this.searchValue = this.sanitizer.bypassSecurityTrustHtml(queryParam) // vuln-code-snippet vuln-line localXssChallenge xssBonusChallenge
++      this.searchValue = queryParam // vulnerabilidade corrigida: não marca como HTML seguro para evitar XSS
+       if (this.gridDataSourceSubscription) {
+         this.gridDataSourceSubscription.unsubscribe()
+       }

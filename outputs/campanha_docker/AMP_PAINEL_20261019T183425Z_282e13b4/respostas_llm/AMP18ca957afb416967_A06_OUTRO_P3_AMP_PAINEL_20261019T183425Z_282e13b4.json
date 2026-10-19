@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção remota de propriedade via acesso dinâmico a campos do objeto user.data com base em entrada do usuário (req.query.fields).\",\"causa_da_vulnerabilidade\":\"O código utiliza a notação de colchetes para acessar propriedades do objeto user.data com base em valores fornecidos diretamente pelo usuário (parâmetro fields da query), permitindo que um atacante especifique propriedades arbitrárias, incluindo propriedades do protótipo, potencialmente expondo dados sensíveis ou causando comportamento inesperado.\",\"estrategia_de_correcao\":\"Validar estritamente os campos permitidos antes de acessar as propriedades do objeto user.data. Substituir o acesso dinâmico por uma verificação contra uma lista branca de campos permitidos para evitar acesso a propriedades não autorizadas ou do protótipo.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\",\"trecho_corrigido\":\"          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\"}],\"justificativa_tecnica\":\"Ao restringir os campos acessados a uma lista explícita de propriedades permitidas, eliminamos o risco de um atacante acessar propriedades arbitrárias ou do protótipo do objeto user.data. Isso impede a injeção remota de propriedade e protege dados sensíveis, mantendo o comportamento funcional esperado da API.\",\"limitacoes_da_correcao\":\"A correção depende da manutenção da lista de campos permitidos atualizada conforme o modelo de dados evolui. Campos legítimos adicionais devem ser adicionados explicitamente à lista para serem acessíveis via parâmetro fields. A validação não impede ataques que explorem outras partes do sistema, portanto outras camadas de segurança devem ser mantidas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1542,
+  "tokens_saida": 466,
+  "latencia_s": 4.871,
+  "custo_usd": 0.001362,
+  "hash_prompt": "6321bde484f92bc1bab18e0cb0603aed72b600ff75ed14534cee5167c06d714d",
+  "do_cache": false
+}

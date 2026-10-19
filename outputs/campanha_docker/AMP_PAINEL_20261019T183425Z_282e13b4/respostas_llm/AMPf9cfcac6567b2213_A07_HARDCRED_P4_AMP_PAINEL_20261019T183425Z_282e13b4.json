@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de chave HMAC codificada diretamente no código fonte (hardcoded key) na função hmac.\",\"causa_da_vulnerabilidade\":\"A chave secreta usada para gerar o HMAC está definida diretamente como uma string fixa no código ('pa4qacea4VK9t9nGv7yZtwmj'), o que expõe o segredo a qualquer pessoa que tenha acesso ao código fonte.\",\"estrategia_de_correcao\":\"Remover a chave secreta hardcoded e obter a chave a partir de uma variável de ambiente, garantindo que a chave secreta não fique exposta no código fonte e possa ser gerenciada de forma segura fora do código.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\",\"trecho_corrigido\":\"export const hmac = (data: string) => {\\n  const secret = process.env.HMAC_SECRET\\n  if (!secret) {\\n    throw new Error('Missing HMAC secret configuration')\\n  }\\n  return crypto.createHmac('sha256', secret).update(data).digest('hex')\\n}\"}],\"justificativa_tecnica\":\"Ao retirar a chave secreta do código fonte e utilizar uma variável de ambiente para fornecê-la, evita-se a exposição do segredo em repositórios ou distribuições do código. Isso permite que a chave seja gerenciada de forma segura, rotacionada e mantida confidencial, mitigando o risco de comprometimento da chave HMAC.\",\"limitacoes_da_correcao\":\"A correção depende da configuração correta da variável de ambiente HMAC_SECRET no ambiente de execução. Se a variável não estiver definida, a aplicação lançará um erro, o que requer que o ambiente esteja devidamente configurado. Além disso, a segurança da chave depende da proteção do ambiente onde a variável está armazenada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3655,
+  "tokens_saida": 429,
+  "latencia_s": 5.105,
+  "custo_usd": 0.001265,
+  "hash_prompt": "18e5185df3f64984c616d9b998e584c3b087a4672e54003949ed2d5b65f8d711",
+  "do_cache": false
+}

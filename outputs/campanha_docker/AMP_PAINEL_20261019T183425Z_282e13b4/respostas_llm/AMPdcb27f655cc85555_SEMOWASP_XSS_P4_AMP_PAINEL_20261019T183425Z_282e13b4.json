@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função bypassSecurityTrustHtml para inserir HTML potencialmente não confiável no DOM, permitindo Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código utiliza a função bypassSecurityTrustHtml do Angular DomSanitizer para inserir diretamente no DOM o conteúdo HTML retornado pela API de captcha sem validação ou sanitização adequada. Isso desativa a sanitização padrão do Angular, permitindo que conteúdo malicioso seja interpretado como código HTML/JavaScript.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o conteúdo do captcha como texto simples, evitando a interpretação de HTML. Caso seja necessário exibir uma imagem, utilizar uma abordagem segura para carregar a imagem, como usar a URL da imagem diretamente em um elemento <img> com binding seguro, sem inserir HTML bruto.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"this.imageCaptchaService.getCaptcha().subscribe((data: any) => {\\n      this.captcha = this.sanitizer.bypassSecurityTrustHtml(data.image)\\n    })\",\"trecho_corrigido\":\"this.imageCaptchaService.getCaptcha().subscribe((data: any) => {\\n      this.captcha = data.image\\n    })\"}],\"justificativa_tecnica\":\"Ao remover bypassSecurityTrustHtml, o Angular aplicará sua sanitização padrão ao conteúdo, prevenindo a execução de scripts maliciosos. Exibir o conteúdo como texto simples ou usar bindings seguros impede a injeção de código malicioso, mitigando a vulnerabilidade XSS.\",\"limitacoes_da_correcao\":\"Se o conteúdo do captcha for realmente HTML complexo necessário para a funcionalidade, a remoção do bypass pode afetar a renderização visual. Nesse caso, seria necessário implementar uma sanitização customizada ou garantir que a origem do conteúdo seja absolutamente confiável. A correção assume que o captcha pode ser exibido sem necessidade de interpretar HTML bruto.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2030,
+  "tokens_saida": 411,
+  "latencia_s": 6.118,
+  "custo_usd": 0.00147,
+  "hash_prompt": "8d7f7074f79d7026aaafb72ecc9efa37344183b41a6299a9583ddffac9f1745e",
+  "do_cache": false
+}

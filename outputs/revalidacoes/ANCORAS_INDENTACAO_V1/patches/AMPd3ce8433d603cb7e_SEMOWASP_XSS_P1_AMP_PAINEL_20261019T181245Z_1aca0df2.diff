@@ -1,0 +1,20 @@
+--- a/frontend/src/app/administration/administration.component.ts
++++ b/frontend/src/app/administration/administration.component.ts
+@@ -70,7 +70,7 @@
+         this.userDataSource = users
+         this.userDataSourceHidden = users
+         for (const user of this.userDataSource) {
+-          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class="${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}">${user.email}</span>`)
++          user.email = `<span class="${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}">${user.email}</span>`
+         }
+         this.userDataSource = new MatTableDataSource(this.userDataSource)
+         this.userDataSource.paginator = this.paginatorUsers
+@@ -88,7 +88,7 @@
+       next: (feedbacks) => {
+         this.feedbackDataSource = feedbacks
+         for (const feedback of this.feedbackDataSource) {
+-          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)
++          feedback.comment = feedback.comment
+         }
+         this.feedbackDataSource = new MatTableDataSource(this.feedbackDataSource)
+         this.feedbackDataSource.paginator = this.paginatorFeedb

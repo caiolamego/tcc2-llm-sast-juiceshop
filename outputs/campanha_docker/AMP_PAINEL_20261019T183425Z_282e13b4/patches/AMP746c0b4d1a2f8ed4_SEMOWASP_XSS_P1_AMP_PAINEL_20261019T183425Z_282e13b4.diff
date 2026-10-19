@@ -1,0 +1,19 @@
+diff --git a/frontend/src/app/about/about.component.ts b/frontend/src/app/about/about.component.ts
+index c33b1c813..641ff2e18 100644
+--- a/frontend/src/app/about/about.component.ts
++++ b/frontend/src/app/about/about.component.ts
+@@ -113,12 +113,8 @@ export class AboutComponent implements OnInit {
+       .subscribe((feedbacks) => {
+         for (let i = 0; i < feedbacks.length; i++) {
+ 
+-          feedbacks[i].comment = `<figcaption><p class="feedback-comment">${
+-            feedbacks[i].comment
+-          }</p><div class="feedback-stars">(${this.stars[feedbacks[i].rating]})</div></figcaption>`
+-          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(
+-            feedbacks[i].comment
+-          )
++          const safeComment = feedbacks[i].comment.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
++          feedbacks[i].comment = `<figcaption><p class="feedback-comment">${safeComment}</p><div class="feedback-stars">(${this.stars[feedbacks[i].rating]})</div></figcaption>`
+ 
+           this.galleryRef.addImage({
+             src: this.images[i % this.images.length],

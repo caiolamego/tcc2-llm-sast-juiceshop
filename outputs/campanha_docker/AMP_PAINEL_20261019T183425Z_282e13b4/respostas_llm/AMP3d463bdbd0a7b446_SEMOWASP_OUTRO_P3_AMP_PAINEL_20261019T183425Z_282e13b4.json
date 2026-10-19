@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL devido à utilização direta do campo 'id' da requisição para construir o filtro da atualização, permitindo manipulação do seletor e atualização múltipla de documentos não autorizados.\",\"causa_da_vulnerabilidade\":\"O código utiliza diretamente 'req.body.id' como filtro para a operação de atualização no MongoDB sem validação ou sanitização, permitindo que um atacante envie um objeto ou valor malicioso que expanda o filtro e atualize múltiplos documentos.\",\"estrategia_de_correcao\":\"Validar e sanitizar o campo 'id' recebido na requisição, garantindo que seja uma string representando um ObjectId válido. Converter o 'id' para ObjectId para evitar injeção e limitar a atualização a um único documento correspondente ao id autorizado.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n  { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n  { $set: { message: req.body.message } },\\n  { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\\n).then(\",\"trecho_corrigido\":\"import { ObjectId } from 'mongodb'\\n\\n    const id = typeof req.body.id === 'string' && ObjectId.isValid(req.body.id) ? new ObjectId(req.body.id) : null\\n    if (!id) {\\n      res.status(400).json({ error: 'Invalid id' })\\n      return\\n    }\\n\\n    db.reviewsCollection.update(\\n      { _id: id },\\n      { $set: { message: req.body.message } },\\n      { multi: false }\\n    ).then(\"}],\"justificativa_tecnica\":\"Ao validar e converter o 'id' para um ObjectId válido, evitamos que um objeto malicioso seja interpretado como filtro, prevenindo injeção NoSQL. Além disso, ao definir 'multi: false', garantimos que apenas um documento seja atualizado, evitando alterações em múltiplos registros não autorizados.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'id' é sempre uma string representando um ObjectId válido. Se o sistema utilizar outro formato de identificador, a validação deve ser ajustada. Também depende do cliente enviar o 'id' corretamente. A validação adicional pode ser necessária para outros campos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1514,
+  "tokens_saida": 524,
+  "latencia_s": 5.058,
+  "custo_usd": 0.001444,
+  "hash_prompt": "039129211eff4937e7f8b2db08f1c29e702503111058b4c9e24b7bef339175c2",
+  "do_cache": false
+}

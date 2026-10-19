@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para conteúdo potencialmente não confiável, permitindo Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código utiliza this.sanitizer.bypassSecurityTrustHtml para marcar como seguro um conteúdo HTML que inclui comentários de usuários (feedbacks[i].comment) sem sanitização adequada, permitindo que scripts maliciosos inseridos no comentário sejam executados no navegador.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o comentário do usuário como texto puro, evitando a interpretação de HTML potencialmente malicioso. Para preservar a formatação legítima, pode-se usar bindings seguros do Angular que escapam o conteúdo automaticamente.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\"trecho_corrigido\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n              .replace(/&/g, '&amp;')\\n              .replace(/</g, '&lt;')\\n              .replace(/>/g, '&gt;')\\n              .replace(/\\\"/g, '&quot;')\\n              .replace(/'/g, '&#39;')\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          // Removido bypassSecurityTrustHtml para evitar XSS\"}],\"justificativa_tecnica\":\"Ao escapar os caracteres especiais HTML no comentário do usuário, o conteúdo é tratado como texto puro, impedindo a execução de scripts maliciosos. A remoção do bypassSecurityTrustHtml evita que o Angular confie cegamente no conteúdo HTML, eliminando a vulnerabilidade XSS.\",\"limitacoes_da_correcao\":\"A correção remove a possibilidade de incluir HTML legítimo no comentário do usuário, o que pode afetar a formatação desejada. Caso seja necessário permitir HTML seguro, deve-se implementar uma sanitização rigorosa ou usar uma biblioteca de sanitização confiável.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2414,
+  "tokens_saida": 524,
+  "latencia_s": 6.499,
+  "custo_usd": 0.001228,
+  "hash_prompt": "2496df615adcde61485a8b7e68a5f292ec12a660ac9c9b6e58c0ef22251fcdad",
+  "do_cache": false
+}

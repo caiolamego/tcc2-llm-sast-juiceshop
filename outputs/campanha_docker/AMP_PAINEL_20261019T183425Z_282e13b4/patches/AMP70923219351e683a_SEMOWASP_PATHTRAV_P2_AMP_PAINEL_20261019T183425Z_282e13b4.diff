@@ -1,0 +1,44 @@
+diff --git a/routes/dataErasure.ts b/routes/dataErasure.ts
+index a8fea2cc5..859aabe2f 100644
+--- a/routes/dataErasure.ts
++++ b/routes/dataErasure.ts
+@@ -101,24 +101,23 @@ router.post('/', (req: Request<Record<string, unknown>, Record<string, unknown>,
+       }
+ 
+       if (req.body.layout) {
+-        const filePath: string = path.resolve(req.body.layout).toLowerCase()
+-        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))
+-        if (!isForbiddenFile) {
+-          res.render('dataErasureResult', {
+-            ...req.body,
+-            ...themeVars
+-          }, (error, html) => {
+-            if (!html || error) {
+-              next(new Error(error.message))
+-            } else {
+-              const sendlfrResponse: string = html.slice(0, 100) + '......'
+-              res.send(sendlfrResponse)
+-              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })
+-            }
+-          })
+-        } else {
++        const allowedLayouts = ['default', 'compact', 'detailed']
++        if (!allowedLayouts.includes(req.body.layout)) {
+           next(new Error('File access not allowed'))
++          return
+         }
++        res.render('dataErasureResult', {
++          ...req.body,
++          ...themeVars
++        }, (error, html) => {
++          if (!html || error) {
++            next(new Error(error.message))
++          } else {
++            const sendlfrResponse: string = html.slice(0, 100) + '......'
++            res.send(sendlfrResponse)
++            challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })
++          }
++        })
+       } else {
+         res.render('dataErasureResult', {
+           ...req.body,

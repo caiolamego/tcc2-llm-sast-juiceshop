@@ -1,0 +1,23 @@
+diff --git a/routes/profileImageUrlUpload.ts b/routes/profileImageUrlUpload.ts
+index 55184083e..753373a61 100644
+--- a/routes/profileImageUrlUpload.ts
++++ b/routes/profileImageUrlUpload.ts
+@@ -21,7 +21,17 @@ export function profileImageUrlUpload () {
+       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
+       if (loggedInUser) {
+         try {
+-          const response = await fetch(url)
++          const parsedUrl = new URL(url)
++      const hostname = parsedUrl.hostname
++      const blockedHosts = ['localhost', '127.0.0.1', '::1']
++      const isPrivateIp = (host) => {
++        // Simples verificação para IPs privados (10.x.x.x, 172.16.x.x - 172.31.x.x, 192.168.x.x)
++        return /^10\./.test(host) || /^192\.168\./.test(host) || /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(host)
++      }
++      if (blockedHosts.includes(hostname) || isPrivateIp(hostname)) {
++        throw new Error('Blocked URL due to security policy')
++      }
++      const response = await fetch(url)
+           if (!response.ok || !response.body) {
+             throw new Error('url returned a non-OK status code or an empty body')
+           }

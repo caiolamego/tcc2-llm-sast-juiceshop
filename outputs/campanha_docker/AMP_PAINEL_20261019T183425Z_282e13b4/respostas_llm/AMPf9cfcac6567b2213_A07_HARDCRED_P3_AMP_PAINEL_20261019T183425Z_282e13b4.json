@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de chave HMAC hardcoded (CWE-798)\",\"causa_da_vulnerabilidade\":\"A chave secreta usada para gerar o HMAC está codificada diretamente no código-fonte, o que pode levar à exposição da chave e comprometer a segurança do sistema.\",\"estrategia_de_correcao\":\"Remover a chave secreta hardcoded e obter a chave a partir de uma variável de ambiente, garantindo que a chave secreta não fique exposta no código-fonte e possa ser gerenciada de forma segura fora do código.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\",\"trecho_corrigido\":\"export const hmac = (data: string) => {\\n  const secret = process.env.HMAC_SECRET\\n  if (!secret) {\\n    throw new Error('Missing HMAC secret configuration')\\n  }\\n  return crypto.createHmac('sha256', secret).update(data).digest('hex')\\n}\"}],\"justificativa_tecnica\":\"Manter a chave secreta fora do código-fonte evita exposição acidental em repositórios e facilita a rotação e gerenciamento seguro da chave. A utilização de variável de ambiente é uma prática recomendada para segredos em aplicações Node.js.\",\"limitacoes_da_correcao\":\"É necessário garantir que a variável de ambiente HMAC_SECRET esteja configurada corretamente no ambiente de execução da aplicação. Caso contrário, a aplicação lançará um erro e não funcionará até que a configuração seja corrigida.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3547,
+  "tokens_saida": 361,
+  "latencia_s": 3.569,
+  "custo_usd": 0.00142,
+  "hash_prompt": "4b63681ff851d24c3d771f91c3cee3cd4cab59e3dbd2ee2d35dd40f37653a002",
+  "do_cache": false
+}

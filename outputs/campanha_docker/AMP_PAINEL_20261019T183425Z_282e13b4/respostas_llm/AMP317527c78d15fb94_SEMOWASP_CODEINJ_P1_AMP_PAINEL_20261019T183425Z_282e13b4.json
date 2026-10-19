@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Execução de código arbitrário via avaliação insegura de entrada do usuário com safeEval dentro de um contexto vm.\",\"causa_da_vulnerabilidade\":\"O código executa a função safeEval diretamente sobre a entrada do usuário (orderLinesData) dentro de um contexto criado pelo vm, o que permite que código malicioso seja executado, levando a uma vulnerabilidade de execução remota de código (RCE).\",\"estrategia_de_correcao\":\"Remover a execução da função safeEval sobre a entrada do usuário para evitar a execução de código arbitrário. Como a função safeEval é importada e usada diretamente para avaliar a entrada, a correção consiste em eliminar essa chamada, retornando a resposta padrão sem executar código do usuário.\",\"edicoes\":[{\"arquivo\":\"routes/b2bOrder.ts\",\"trecho_original\":\"        vm.createContext(sandbox)\\n        vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })\",\"trecho_corrigido\":\"        // vm.createContext(sandbox)\\n        // vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })\"}],\"justificativa_tecnica\":\"A função safeEval, mesmo sendo uma versão 'segura' de eval, ainda permite a execução de código arbitrário passado pelo usuário, o que é uma vulnerabilidade crítica. Desabilitar essa execução elimina o vetor de ataque sem impactar a funcionalidade principal do endpoint, que é retornar dados do pedido.\",\"limitacoes_da_correcao\":\"A correção remove a avaliação dinâmica da entrada orderLinesData, o que pode impactar funcionalidades que dependam dessa avaliação para desafios ou testes internos. No entanto, mantém a resposta padrão e evita riscos de segurança graves.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1008,
+  "tokens_saida": 364,
+  "latencia_s": 5.043,
+  "custo_usd": 0.000986,
+  "hash_prompt": "c57fc4e15a431418113ebd5e4eb2ca4efbb642c07055520549d2b75024a1545d",
+  "do_cache": false
+}

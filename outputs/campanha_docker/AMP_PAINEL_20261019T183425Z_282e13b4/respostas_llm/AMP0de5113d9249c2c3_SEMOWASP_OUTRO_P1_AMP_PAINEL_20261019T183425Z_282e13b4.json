@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de dados de pedidos de outros usuários devido à busca por email alterado (com vogais substituídas por '*') que não corresponde ao email real do usuário autenticado.\",\"causa_da_vulnerabilidade\":\"O código substitui as vogais do email do usuário autenticado por '*' antes de realizar a consulta no banco de dados, o que resulta em uma busca incorreta e pode retornar pedidos de outros usuários cujos emails correspondam ao padrão alterado, permitindo acesso não autorizado a dados de pedidos.\",\"estrategia_de_correcao\":\"Remover a substituição das vogais no email e utilizar o email real do usuário autenticado para realizar a consulta no banco de dados, garantindo que apenas os pedidos do usuário autenticado sejam retornados.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ email: updatedEmail })\",\"trecho_corrigido\":\"      const email = loggedInUser.data.email\\n      const order = await ordersCollection.find({ email: email })\"}],\"justificativa_tecnica\":\"A substituição das vogais no email para '*' altera o valor original do email, causando uma consulta incorreta que pode retornar dados de outros usuários. Utilizando o email original do usuário autenticado para a consulta, garantimos que apenas os pedidos pertencentes a esse usuário sejam retornados, evitando exposição indevida de dados.\",\"limitacoes_da_correcao\":\"A correção assume que os emails armazenados no banco de dados estão no formato original e que a consulta por email é suficiente para garantir o isolamento dos dados dos usuários. Se houver outros problemas de autenticação ou autorização, eles não são tratados por esta correção.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 893,
+  "tokens_saida": 379,
+  "latencia_s": 3.839,
+  "custo_usd": 0.000964,
+  "hash_prompt": "56ffd265693f4a105b69c8ebc19392710012fb935b013bf9faf0b488f12c77e8",
+  "do_cache": false
+}

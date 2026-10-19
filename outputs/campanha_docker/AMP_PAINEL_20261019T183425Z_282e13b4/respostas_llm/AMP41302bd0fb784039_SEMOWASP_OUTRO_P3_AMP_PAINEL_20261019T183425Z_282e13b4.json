@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso do algoritmo MD5 para hashing, que é considerado inseguro para armazenamento de senhas ou dados sensíveis devido à sua velocidade e vulnerabilidades conhecidas.\",\"causa_da_vulnerabilidade\":\"O código utiliza a função crypto.createHash('md5') para gerar hashes, o que não oferece esforço computacional suficiente para proteger contra ataques de força bruta ou colisões.\",\"estrategia_de_correcao\":\"Substituir o uso do algoritmo MD5 por uma função de derivação de chave segura e com salt, como bcrypt, para garantir maior segurança no armazenamento de senhas ou dados sensíveis. Como a função hash é genérica, alterar para usar bcrypt.hashSync com salt gerado internamente, mantendo a assinatura da função e comportamento esperado.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\",\"trecho_corrigido\":\"import bcrypt from 'bcrypt'\\n\\nexport const hash = (data: string) => bcrypt.hashSync(data, 10)\"}],\"justificativa_tecnica\":\"MD5 é um algoritmo de hash rápido e vulnerável a ataques de colisão e força bruta, inadequado para proteger senhas ou dados sensíveis. O uso de bcrypt, que é uma função de derivação de chave com salt e custo configurável, aumenta significativamente a segurança contra ataques, pois é computacionalmente custoso e inclui salt automaticamente, prevenindo ataques de rainbow table.\",\"limitacoes_da_correcao\":\"A alteração para bcrypt pode impactar a compatibilidade com hashes MD5 existentes, exigindo migração dos dados armazenados. Além disso, bcrypt é assíncrono por padrão, mas aqui foi usado o método síncrono para manter a assinatura da função. Caso o hash seja usado para outros propósitos que não senhas, pode ser necessário avaliar o impacto da mudança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3545,
+  "tokens_saida": 402,
+  "latencia_s": 9.529,
+  "custo_usd": 0.001485,
+  "hash_prompt": "9cc11e36f0d7a6fedce581d291b0bfc08db7ae7dfaebc6c2c1098b6c8d2a08a4",
+  "do_cache": false
+}

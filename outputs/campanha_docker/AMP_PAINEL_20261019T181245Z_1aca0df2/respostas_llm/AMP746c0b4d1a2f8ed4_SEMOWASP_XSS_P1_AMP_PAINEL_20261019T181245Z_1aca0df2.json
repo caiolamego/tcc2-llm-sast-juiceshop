@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) devido ao uso inseguro de bypassSecurityTrustHtml com conteúdo não sanitizado.\",\"causa_da_vulnerabilidade\":\"O código utiliza DomSanitizer.bypassSecurityTrustHtml para marcar como seguro um HTML que inclui conteúdo vindo diretamente do usuário (feedbacks[i].comment) sem sanitização adequada, permitindo a injeção de scripts maliciosos.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml para evitar marcar conteúdo potencialmente malicioso como seguro. Em vez disso, exibir o comentário como texto simples para prevenir execução de código malicioso. Ajustar a montagem do comentário para separar o texto do usuário da marcação HTML, evitando concatenação direta de HTML com conteúdo do usuário.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\"trecho_corrigido\":\"          const safeComment = feedbacks[i].comment.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\\\"/g, '&quot;').replace(/'/g, '&#39;');\\n          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${safeComment}</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\"}],\"justificativa_tecnica\":\"Ao escapar manualmente os caracteres especiais no comentário do usuário, prevenimos a injeção de código HTML ou JavaScript malicioso. Remover o uso de bypassSecurityTrustHtml impede que o Angular confie cegamente em conteúdo potencialmente perigoso, mitigando a vulnerabilidade XSS.\",\"limitacoes_da_correcao\":\"A correção assume que a exibição do comentário como texto simples é aceitável para o caso de uso. Caso seja necessário permitir alguma formatação HTML segura, seria necessário implementar uma sanitização mais sofisticada ou usar uma biblioteca de sanitização de HTML. Além disso, a codificação manual pode ser substituída por uma função utilitária para maior robustez.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1778,
+  "tokens_saida": 525,
+  "latencia_s": 4.978,
+  "custo_usd": 0.001551,
+  "hash_prompt": "000fadc015488741b1f667d5d1b3eb34454411942e503ff14ac6e087857ad1c3",
+  "do_cache": false
+}

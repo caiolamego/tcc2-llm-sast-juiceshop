@@ -1,8 +1,13 @@
-"""Aplicacao de correcoes por ancora (search/replace exato) (F5.5, D3)."""
+"""Âncora exata com fallback conservador de indentação JS/TS (F5.5, D3)."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+import hashlib
+
+from pipeline.patching.indentacao import resolver
+
+VERSAO = "ancora_exata_indentacao_uniforme_js_ts_v2"
 
 from pydantic import ValidationError
 
@@ -16,6 +21,7 @@ class ResultadoAplicacao:
     status: str
     arquivos: list[str] = field(default_factory=list)
     detalhe: str = ""
+    correspondencias: list[dict] = field(default_factory=list)
 
 
 PROIBIDOS = ("test/", "node_modules/", "package.json", "package-lock.json")
@@ -31,7 +37,7 @@ def interpretar(texto: str | None) -> Correcao | ResultadoAplicacao:
         return ResultadoAplicacao("json_invalido", [], str(e)[:2000])
 
 
-def aplicar(wt: Path, correcao: Correcao) -> ResultadoAplicacao:
+def aplicar(wt: Path, correcao: Correcao, *, checkout_parser: Path | None = None) -> ResultadoAplicacao:
     if not correcao.edicoes:
         return ResultadoAplicacao("sem_edicoes", [], "modelo nao devolveu edicoes")
 
@@ -39,6 +45,7 @@ def aplicar(wt: Path, correcao: Correcao) -> ResultadoAplicacao:
     # Conteudo em memoria por arquivo: varias edicoes no mesmo arquivo se
     # acumulam (lendo do disco a cada edicao, a segunda apagaria a primeira).
     planejado: dict[Path, str] = {}
+    evidencias = []
     for ed in correcao.edicoes:
         rel = ed.arquivo.strip().removeprefix("./")
         if any(rel.startswith(p) for p in PROIBIDOS):
@@ -50,17 +57,34 @@ def aplicar(wt: Path, correcao: Correcao) -> ResultadoAplicacao:
 
         conteudo = planejado.get(alvo)
         if conteudo is None:
-            conteudo = alvo.read_text(encoding="utf-8")
+            with alvo.open(encoding="utf-8", newline="") as source:
+                conteudo = source.read()
         ocorrencias = conteudo.count(ed.trecho_original) if ed.trecho_original else 0
         if ocorrencias == 0:
-            return ResultadoAplicacao("ancora_nao_encontrada", [], ed.arquivo)
+            result, metodo = resolver(rel, conteudo, ed.trecho_original, ed.trecho_corrigido,
+                                      checkout_parser or raiz)
+            if result is None:
+                status = "ancora_ambigua" if metodo == "ancora_ambigua" else "ancora_nao_encontrada"
+                return ResultadoAplicacao(status, [], f"{ed.arquivo}: {metodo}")
+            novo, match = result
+            evidencias.append({"arquivo":rel,"metodo":metodo,
+                               "linha_inicio":match['linha_inicio'],"linha_fim":match['linha_fim'],
+                               "deslocamento":list(match['deslocamento']),
+                               "ancora_resposta_sha256":hashlib.sha256(ed.trecho_original.encode()).hexdigest(),
+                               "ancora_real_sha256":hashlib.sha256(conteudo[match['inicio']:match['fim']].encode()).hexdigest()})
+            planejado[alvo] = novo
+            continue
         if ocorrencias > 1:
             return ResultadoAplicacao("ancora_ambigua", [], f"{ed.arquivo} ({ocorrencias}x)")
 
+        evidencias.append({"arquivo":rel,"metodo":"exata",
+                           "ancora_resposta_sha256":hashlib.sha256(ed.trecho_original.encode()).hexdigest()})
         planejado[alvo] = conteudo.replace(ed.trecho_original, ed.trecho_corrigido, 1)
 
     # So escreve depois que TODAS as edicoes foram validadas (atomicidade).
     for alvo, novo in planejado.items():
-        alvo.write_text(novo, encoding="utf-8")
+        with alvo.open("w", encoding="utf-8", newline="") as output:
+            output.write(novo)
 
-    return ResultadoAplicacao("aplicado", [a.relative_to(raiz).as_posix() for a in planejado])
+    return ResultadoAplicacao("aplicado", [a.relative_to(raiz).as_posix() for a in planejado],
+                              correspondencias=evidencias)

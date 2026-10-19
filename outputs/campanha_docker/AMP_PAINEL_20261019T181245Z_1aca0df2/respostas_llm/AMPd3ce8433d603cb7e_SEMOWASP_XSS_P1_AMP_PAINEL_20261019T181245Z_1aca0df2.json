@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml que pode permitir Cross-Site Scripting (XSS) ao confiar cegamente em dados externos sem sanitização adequada.\",\"causa_da_vulnerabilidade\":\"O método sanitizer.bypassSecurityTrustHtml é utilizado para marcar strings HTML como seguras sem realizar sanitização real, aplicando-se diretamente ao conteúdo de 'user.email' e 'feedback.comment' que podem conter código malicioso inserido por usuários.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml para que o Angular aplique sua sanitização padrão automaticamente, evitando a inserção de HTML arbitrário e prevenindo XSS.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"for (const user of this.userDataSource) {\\n  user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`)\\n}\",\"trecho_corrigido\":\"for (const user of this.userDataSource) {\\n  user.email = `<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`\\n}\"},{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"for (const feedback of this.feedbackDataSource) {\\n  feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n}\",\"trecho_corrigido\":\"for (const feedback of this.feedbackDataSource) {\\n  feedback.comment = feedback.comment\\n}\"}],\"justificativa_tecnica\":\"O uso de bypassSecurityTrustHtml instrui o Angular a confiar no conteúdo HTML fornecido, o que pode permitir a execução de scripts maliciosos se o conteúdo não for devidamente sanitizado. Ao remover essa chamada, o Angular aplica sua sanitização padrão, prevenindo XSS. Como o conteúdo é exibido dentro de elementos HTML, a interpolação segura do Angular impede a execução de código malicioso.\",\"limitacoes_da_correcao\":\"Se o conteúdo de 'user.email' ou 'feedback.comment' precisar conter HTML legítimo para formatação, essa correção pode impedir sua renderização correta. Nesse caso, uma sanitização adequada e validação no backend seriam necessárias para permitir HTML seguro.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1770,
+  "tokens_saida": 502,
+  "latencia_s": 6.412,
+  "custo_usd": 0.001511,
+  "hash_prompt": "4c086ab3e9783936db6547650eb83616c8648b2d64f6bd2c62f0c7040187dc27",
+  "do_cache": false
+}

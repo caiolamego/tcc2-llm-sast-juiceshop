@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path Traversal na leitura do arquivo de legendas na função getSubsFromFile\",\"causa_da_vulnerabilidade\":\"A função getSubsFromFile concatena diretamente o valor obtido da configuração 'application.promotion.subtitles' com um caminho fixo sem validação ou sanitização adequada, permitindo que um atacante controle o nome do arquivo e potencialmente acesse arquivos arbitrários no sistema de arquivos via path traversal.\",\"estrategia_de_correcao\":\"Sanitizar o nome do arquivo obtido da configuração para garantir que contenha apenas o nome do arquivo, sem diretórios, utilizando a função utils.extractFilename para extrair somente o nome do arquivo, evitando assim path traversal.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"function getSubsFromFile () {\\n  const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\\n  return data.toString()\\n}\",\"trecho_corrigido\":\"function getSubsFromFile () {\\n  const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'\\n  const safeSubtitles = utils.extractFilename(subtitles)\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + safeSubtitles, 'utf8')\\n  return data.toString()\\n}\"}],\"justificativa_tecnica\":\"Ao aplicar utils.extractFilename ao valor da configuração, garantimos que qualquer tentativa de path traversal seja neutralizada, pois essa função extrai apenas o nome do arquivo, removendo diretórios e caracteres potencialmente maliciosos. Isso impede que um atacante especifique caminhos relativos ou absolutos para acessar arquivos fora do diretório permitido, mitigando a vulnerabilidade de path traversal.\",\"limitacoes_da_correcao\":\"A correção assume que utils.extractFilename é uma função confiável para extrair nomes de arquivos seguros. Se a configuração permitir nomes de arquivos legítimos com subdiretórios, essa abordagem pode impedir seu uso. Além disso, não há validação adicional do conteúdo do arquivo, portanto, se o arquivo de legenda contiver conteúdo malicioso, outras medidas podem ser necessárias.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1515,
+  "tokens_saida": 478,
+  "latencia_s": 4.123,
+  "custo_usd": 0.001371,
+  "hash_prompt": "d50351dbf381bc3b6798e521a7a99a4c27b36bd859f17ef16c14d9e38856949f",
+  "do_cache": true
+}

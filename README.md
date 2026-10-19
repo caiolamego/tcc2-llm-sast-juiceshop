@@ -546,3 +546,23 @@ as primeiras métricas do piloto como resultados finais.
 ## Modelo no Colab
 
 A feature 07 adiciona seleção de provedor pela configuração local, preservando OpenAI como padrão. Integração validada offline; GPU, conexão e piloto reais pendentes. Consulte [o procedimento manual](docs/modelo_colab.md) e [a entrega](features/07-modelo-colab/ENTREGA.md).
+
+### Referência Docker compartilhada
+
+A execução Docker usa o par imagem imutável + baseline registrado em
+`docker/referencia.json`. Receba a imagem exportada pelo mantenedor junto da
+mesma revisão do repositório e execute:
+
+```bash
+make docker-import ARQUIVO=/caminho/tcc2-ambiente.tar
+make docker-setup K=4
+make docker-preflight
+make docker-painel
+```
+
+O padrão Docker seleciona 52 casos preparados, P1–P4 e quatro worktrees. A
+seleção dos 78 continua bloqueada pelas lacunas funcionais existentes. Apenas
+o mantenedor constrói e valida uma nova referência com `make docker-build` e
+`make docker-baseline`; os demais importam a mesma imagem. O baseline antigo
+é preservado e nenhuma chamada à LLM é necessária para preparar a referência.
+Detalhes e recuperação de cópias incompletas em [docs/docker.md](docs/docker.md).

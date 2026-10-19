@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) ao usar window.open().document.write() com dados não sanitizados do usuário.\",\"causa_da_vulnerabilidade\":\"O código escreve diretamente o conteúdo recebido do servidor (data.userData) no documento de uma nova janela usando window.open('', '_blank', 'width=500')?.document.write(this.userData) sem qualquer sanitização ou escape, permitindo que código malicioso inserido em userData seja executado no contexto do navegador.\",\"estrategia_de_correcao\":\"Evitar o uso de document.write para inserir conteúdo dinâmico não confiável. Em vez disso, abrir uma nova janela e inserir o conteúdo de forma segura, por exemplo, criando um blob com o conteúdo e usando URL.createObjectURL para abrir o conteúdo como um arquivo, ou inserir o conteúdo em um elemento seguro na nova janela, evitando execução de scripts maliciosos.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"        window.open('', '_blank', 'width=500')?.document.write(this.userData)\",\"trecho_corrigido\":\"        const newWindow = window.open('', '_blank', 'width=500');\\n        if (newWindow) {\\n          newWindow.document.write('<pre>' + this.sanitizer.sanitize(1, this.userData) + '</pre>');\\n          newWindow.document.close();\\n        }\"}],\"justificativa_tecnica\":\"A alteração substitui o uso direto de document.write com conteúdo não sanitizado por uma abordagem que sanitiza o conteúdo usando DomSanitizer.sanitize antes de inseri-lo na nova janela, reduzindo o risco de execução de scripts maliciosos. Além disso, o conteúdo é inserido dentro de uma tag <pre> para preservar a formatação e evitar interpretação como código HTML ativo.\",\"limitacoes_da_correcao\":\"A sanitização depende da eficácia do DomSanitizer para remover scripts e conteúdo malicioso. Se userData contiver código HTML complexo ou scripts embutidos que não sejam removidos pela sanitização, ainda pode haver risco residual. Para maior segurança, considerar renderizar os dados como texto puro ou usar outras técnicas de escape. Além disso, a solução assume que o conteúdo é texto ou HTML simples; se for outro formato, pode ser necessário adaptar a abordagem.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1503,
+  "tokens_saida": 486,
+  "latencia_s": 4.278,
+  "custo_usd": 0.001379,
+  "hash_prompt": "74a8db7c714f660e8edf59da4128f6aa383feac4e75c7dac43dbdf2b17371641",
+  "do_cache": false
+}

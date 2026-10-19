@@ -1,0 +1,22 @@
+diff --git a/routes/likeProductReviews.ts b/routes/likeProductReviews.ts
+index a8d120fc1..e9ec634a7 100644
+--- a/routes/likeProductReviews.ts
++++ b/routes/likeProductReviews.ts
+@@ -33,7 +33,7 @@ export function likeProductReviews () {
+       }
+ 
+       await db.reviewsCollection.update(
+-        { _id: id },
++        { _id: id, email: user.data.email },
+         { $inc: { likesCount: 1 } }
+       )
+ 
+@@ -48,7 +48,7 @@ export function likeProductReviews () {
+         challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)
+ 
+         const result = await db.reviewsCollection.update(
+-          { _id: id },
++          { _id: id, email: user.data.email },
+           { $set: { likedBy: updatedLikedBy } }
+         )
+         res.json(result)

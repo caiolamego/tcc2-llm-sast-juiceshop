@@ -1,0 +1,14 @@
+diff --git a/routes/basketItems.ts b/routes/basketItems.ts
+index 077a0d4d2..8088d4eb9 100644
+--- a/routes/basketItems.ts
++++ b/routes/basketItems.ts
+@@ -65,7 +65,8 @@ export function quantityCheckBeforeBasketItemAddition () {
+ export function quantityCheckBeforeBasketItemUpdate () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+     try {
+-      const item = await BasketItemModel.findOne({ where: { id: req.params.id } })
++      const user = security.authenticatedUsers.from(req)
++      const item = await BasketItemModel.findOne({ where: { id: req.params.id, BasketId: user ? user.bid : null } })
+       const user = security.authenticatedUsers.from(req)
+       challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq
+       if (req.body.quantity) {

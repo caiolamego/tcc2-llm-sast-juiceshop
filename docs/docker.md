@@ -1,8 +1,14 @@
 # Rodar o projeto com Docker
 
-O Docker garante que **todos** (autores, orientadora e banca) rodem o projeto com as mesmas versões e a mesma
-configuração. As respostas da LLM continuam podendo variar entre execuções (isso é parte do objeto de estudo); o que
-não pode variar é o ambiente em que elas são geradas e validadas.
+A referência oficial é o par **imagem imutável + baseline funcional**, registrado
+em `docker/referencia.json`. Todos devem carregar a mesma imagem e usar os mesmos
+arquivos de baseline. Reconstruir o Dockerfile em cada computador pode produzir
+binários diferentes e não substitui a distribuição dessa referência.
+
+Os comandos de campanha conferem os hashes antes de abrir o painel ou executar
+o pipeline. Não recalculam o baseline automaticamente e não relaxam seus gates.
+As respostas da LLM e efeitos do hardware/runtime ainda podem variar; usar a
+mesma imagem não prova equivalência de todo comportamento em qualquer máquina.
 
 ## O que fica igual para todos
 
@@ -38,9 +44,13 @@ executar os mesmos binários. Em Macs Apple Silicon a imagem roda por emulação
 - O **`.venv` do seu computador não é usado** no container: um volume cobre `/repo/.venv` com o ambiente Python da
   imagem.
 - As **worktrees `wt-1..wt-K`** ficam num volume do Docker (`tcc2_workspace`), criadas como cópias exatas da
-  referência. Por isso os hashes de ambiente registrados pelo pipeline são os mesmos em qualquer máquina.
+  referência. O setup confere o conteúdo contra a imagem e recusa cópias divergentes ou incompletas.
 
 ## Passo 0 — Instalar o Docker
+
+Os atalhos usam Docker Compose, Make e Python 3.9 ou superior no computador.
+O Python do pipeline continua vindo da imagem; o script do host usa somente
+a biblioteca padrão.
 
 ### macOS (Apple Silicon ou Intel)
 
@@ -72,12 +82,40 @@ arquivos criados em `outputs/` podem ficar com outro dono.
 
 Docker Desktop com WSL 2. Clone o repositório **dentro** do sistema de arquivos do WSL e rode os comandos por lá.
 
-## Passo 1 — Configurar o `.env`
+## Reproduzir a referência oficial (autores e banca)
 
-O container lê o `.env` da raiz do repositório (ele nunca entra na imagem). Copie o modelo e preencha a chave:
+Receba o arquivo da imagem exportada pelo mantenedor e a mesma revisão do
+repositório, incluindo `docker/referencia.json` e
+`outputs/baselines/docker/oficial_v1/`. Depois:
 
 ```bash
-cp .env.example .env
+make docker-import ARQUIVO=/caminho/tcc2-ambiente.tar
+make docker-check
+make docker-setup K=4
+make docker-preflight
+make docker-painel
+```
+
+O Make usa o **ID da imagem registrado**, em vez de confiar na tag `:1.0`.
+O import confere que a imagem oficial está disponível; o check também confere
+baseline, evidências, comparação funcional e entradas do experimento. A chave
+LLM continua no `.env` de cada pessoa. Não é distribuída dentro da imagem.
+
+O painel padrão usa `config/execucao_docker_preparados.yaml`, com quatro workers
+e os 52 casos preparados. Os 26 casos com lacunas permanecem no catálogo, mas
+bloqueiam a seleção dos 78 na política atual.
+
+## Preparar uma nova referência (somente mantenedor)
+
+Os passos de construção abaixo produzem uma referência candidata. Uma imagem
+reconstruída não ganha status oficial só por manter a mesma tag.
+
+## Passo 1 — Configurar o `.env`
+
+O container lê o `.env` da raiz do repositório (ele nunca entra na imagem). Somente se ainda não existir, copie o modelo e preencha a chave:
+
+```bash
+cp -n .env.example .env
 ```
 
 ## Passo 2 — Lockfiles do Juice Shop (só se ainda não existirem)
@@ -106,7 +144,43 @@ Cria `wt-1..wt-4` no volume, sem rede e sem instalar nada:
 make docker-setup K=4
 ```
 
-## Passo 5 — Conferir
+## Passo 5 — Gerar e congelar o baseline uma vez
+
+```bash
+make docker-baseline
+```
+
+Este comando executa todos os grupos funcionais revisados em `wt-1`, sem LLM,
+e publica em `outputs/baselines/docker/oficial_v1/BASELINE/`. Em seguida,
+compara com `DOCKER_V2`, verifica ambiente, integridade, grupos e compilações,
+e cria `docker/referencia.json` sem sobrescrever referências existentes.
+Uma divergência funcional impede o congelamento e preserva o candidato.
+
+Se um candidato foi interrompido, investigue seus resultados; o comando não o
+apaga nem o substitui. Para congelar um candidato já concluído, após corrigir
+a causa e conferir os resultados:
+
+```bash
+python3 docker/referencia.py congelar --baseline outputs/baselines/docker/oficial_v1/BASELINE/baseline_testes.json
+```
+
+Referência já publicada e íntegra não dispara novos testes. Outra versão de
+imagem, entradas ou validação exige uma nova referência explícita; nenhuma
+campanha troca automaticamente para o novo ambiente.
+
+Para distribuir o mesmo ambiente (não faz push nem publica dados):
+
+```bash
+make docker-export ARQUIVO=/caminho/tcc2-ambiente.tar
+```
+
+Compartilhe esse arquivo, seu SHA256 exibido e a revisão do repositório que
+contém o manifesto e todas as evidências do baseline. **Não versione o arquivo
+da imagem no Git.** Na outra máquina, use `docker-import`, sem reconstruir.
+Também é possível publicar a imagem em registro e fixar seu digest; essa
+publicação é um procedimento separado e não é executada pelos comandos aqui.
+
+## Passo 6 — Conferir
 
 ```bash
 make docker-ambiente
@@ -118,38 +192,102 @@ make docker-test
 make docker-test-rules
 ```
 
-## Passo 6 — Usar
+## Passo 7 — Usar
 
 | Comando | O que faz | Chama a LLM? |
 |---|---|---|
 | `make docker-painel` | Painel em http://127.0.0.1:8765 (abra no navegador do seu computador) | Só se você iniciar em modo Real |
 | `make docker-preflight` | Prepara e confere tudo, monta os prompts | Não |
 | `make docker-dry-run` | Pipeline completo com respostas simuladas | Não |
-| `make docker-real` | Execução real configurada em `config/execucao.yaml` | **Sim** (limites do `.env`) |
+| `make docker-real` | Execução real na configuração Docker escolhida | **Sim** (limites do `.env`) |
 | `make docker-shell` | Terminal dentro do container | — |
 
-Os alvos `docker-preflight`, `docker-dry-run` e `docker-real` usam `config/execucao.yaml`. Para outro arquivo,
+Os alvos `docker-preflight`, `docker-dry-run`, `docker-real` e `docker-painel` usam `config/execucao_docker_preparados.yaml` por padrão. Para outro arquivo,
 passe `CONFIG`, por exemplo `make docker-dry-run CONFIG=config/outro.yaml`.
 
 Qualquer outro comando: `docker compose run --rm tcc <comando>`, por exemplo
 `docker compose run --rm tcc python scripts/experiment/diagnose_llm.py --modo offline`.
 
-## Baseline funcional do Docker
+## Campanha ampliada pelo painel (OpenAI, K=4)
 
-O baseline funcional (a referência do critério F) registra a identidade do ambiente em que foi gerado. Por isso, um
-baseline gerado fora do Docker não vale dentro dele, e o preflight recusa com "Ambiente funcional diverge do baseline".
-O baseline do Docker é `outputs/revalidacoes/DOCKER_V2/BASELINE/baseline_testes.json`. Ele foi gerado sem LLM e só
-precisa ser refeito se a imagem mudar:
+Use `PROVIDER=openai` para selecionar OpenAI no processo do container, mesmo
+quando o `.env` pessoal ainda contém `LLM_PROVIDER=colab`. A chave, o modelo e
+os limites OpenAI continuam vindo do `.env`; o arquivo pessoal não é alterado.
+Não copie o exemplo por cima de um `.env` já preenchido.
+
+Há duas configurações novas, ambas com P1–P4, quatro worktrees, política
+`relacionada_v2`, cache de validação desligado e baseline oficial congelado:
+
+| Configuração | Seleção | Situação |
+|---|---|---|
+| `config/execucao_docker_78.yaml` | Todos os 78 casos, incluindo falsos positivos e inconclusivos | O gate atual recusa a seleção por lacunas funcionais em 26 casos |
+| `config/execucao_docker_preparados.yaml` | 52 casos com revisão suficiente na união por arquivo | Subconjunto explícito, sujeito à validação do ambiente pelo preflight |
+
+Os 26 casos não foram excluídos do catálogo. Resolver suas lacunas e verificar
+os baselines é necessário para iniciar todos os 78 com essa política. Docker
+padroniza o ambiente, mas não cria as evidências funcionais que faltam. Não
+troque a política nem desative o gate apenas para liberar a campanha.
+
+Prepare o ambiente uma vez, sem executar a LLM:
 
 ```bash
-docker compose run --rm tcc python scripts/experiment/validate_functional_coverage.py --catalogo outputs/catalogos/ampliado_v1/catalogo_issues.json --checkout workspace/wt-1 --mapa-testes config/mapa_testes_relacionados_v2.yaml --revisao config/cobertura_funcional_v1.yaml --saida outputs/revalidacoes/<NOVA_PASTA>/BASELINE
+make docker-build
+make docker-setup K=4
+make docker-baseline
 ```
 
-Para conferir se um baseline novo se comporta como o anterior (0 = todos os grupos equivalentes, 2 = há diferença):
+Para conferir o bloqueio dos 78 sem geração:
 
 ```bash
-python3 scripts/audit/compare_functional_baselines.py --referencia outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE/baseline_testes.json --novo outputs/revalidacoes/<NOVA_PASTA>/BASELINE/baseline_testes.json --saida outputs/revalidacoes/<NOVA_PASTA>/comparacao_baseline_piloto10.json
+make docker-preflight CONFIG=config/execucao_docker_78.yaml PROVIDER=openai
 ```
+
+Se optar por iniciar primeiro o subconjunto preparado, confira-o e abra o painel:
+
+```bash
+make docker-preflight CONFIG=config/execucao_docker_preparados.yaml PROVIDER=openai
+make docker-painel CONFIG=config/execucao_docker_preparados.yaml PROVIDER=openai
+```
+
+Abra http://127.0.0.1:8765 e confira os 52 IDs, K=4 e provedor OpenAI antes de
+iniciar em modo Real. Há até 208 posições caso/estratégia nesse subconjunto
+e 312 nos 78; a parada por aceite pode reduzir as chamadas. Os limites de
+chamadas e orçamento são acumulados: revise-os no `.env` antes da campanha,
+sem presumir que o orçamento restante cobre a seleção inteira.
+
+Os resultados novos ficam em `outputs/campanha_docker/`, no computador.
+O piloto de dez casos e a configuração padrão continuam disponíveis.
+Não execute simultaneamente dois painéis/pipelines sobre o mesmo workspace.
+
+## Cópias incompletas e recuperação
+
+O setup calcula hashes de arquivos, permissões e links tanto na imagem quanto
+nas worktrees. Diretórios existentes também são verificados. Cada item novo é
+copiado para um temporário irmão, conferido e só então promovido. Uma falha de
+espaço não publica um diretório parcial como instalação válida.
+
+Para reparar conteúdo divergente, com o pipeline e o painel encerrados:
+
+```bash
+make docker-repair K=4
+```
+
+O reparo primeiro prepara uma cópia íntegra; só depois move a pasta anterior
+para `workspace/.recuperacao/<id>/`, registra sua origem e promove a nova.
+Não restaura alterações de código e não remove os backups automaticamente.
+Requer espaço para a cópia e o conteúdo preservado. Setup e reparo usam o
+mesmo lock de workspace do pipeline.
+
+## Histórico e limites
+
+`DOCKER_V2` permanece arquivado e não é alterado. Em 19/10/2026 a imagem local
+apresentou outro hash nas dependências do servidor, apesar das versões iguais;
+a `wt-4` também continha uma cópia parcial do frontend após esgotar o disco.
+Por isso, ignorar o gate ou editar hashes do baseline não seria uma solução.
+O novo fluxo confere cópias e congela explicitamente a referência validada.
+
+Não use um baseline novo para legitimar uma instalação incompleta. Uma mudança
+funcional na comparação exige investigação, não publicação automática.
 
 ## Cuidados
 
@@ -158,8 +296,13 @@ python3 scripts/audit/compare_functional_baselines.py --referencia outputs/reval
   ambiente e não devem ser misturados com execuções feitas no container.
 - **Não remova o `NODE_CONFIG` da imagem** nem o sobrescreva com `-e NODE_CONFIG=...`: o Juice Shop voltaria a desligar
   desafios. O preflight recusa um ambiente com variáveis diferentes das do baseline.
-- **Recomeçar as worktrees do zero:** `docker volume rm tcc2_workspace` e depois `make docker-setup`.
-- **Imagem como referência:** para a banca reproduzir exatamente, a imagem construída deve ser publicada num registro
-  (por exemplo, GitHub Container Registry) e citada pelo digest (`sha256:...`). Reconstruir a partir do `Dockerfile`
+- **Recomeçar o workspace:** não remova o volume sem conferir os dados; prefira `make docker-repair` para dependências divergentes.
+- **Imagem como referência:** para a banca reproduzir exatamente, distribua a imagem exportada e confira seu ID, ou publique-a num registro
+  (por exemplo, GitHub Container Registry) e cite seu digest (`sha256:...`). Reconstruir a partir do `Dockerfile`
   pode trazer pacotes do sistema (apt) ligeiramente diferentes; as versões que importam (Node, Python, Semgrep, Juice
   Shop e dependências npm) continuam travadas.
+
+Referências: [identidade e digest de imagens](https://docs.docker.com/reference/cli/docker/image/pull/)
+e [exportação com docker image save](https://docs.docker.com/reference/cli/docker/image/save/).
+
+Evidências desta versão: [validação do baseline Docker](validacao_baseline_docker.md).

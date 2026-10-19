@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de dados não autorizados via parâmetro UserId no corpo da requisição (Insecure Direct Object Reference - IDOR)\",\"causa_da_vulnerabilidade\":\"O código utiliza diretamente req.body.UserId para buscar memórias do usuário, sem verificar se o UserId corresponde ao usuário autenticado. Isso permite que um usuário malicioso forneça o UserId de outro usuário e acesse seus dados pessoais.\",\"estrategia_de_correcao\":\"Substituir o uso de req.body.UserId pelo ID do usuário autenticado (loggedInUser.data.id) para garantir que apenas os dados do próprio usuário sejam acessados, evitando acesso não autorizado a dados de terceiros.\",\"edicoes\":[{\"arquivo\":\"routes/dataExport.ts\",\"trecho_original\":\"          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })\",\"trecho_corrigido\":\"          memories = await MemoryModel.findAll({ where: { UserId: loggedInUser.data.id } })\"}],\"justificativa_tecnica\":\"Ao utilizar o ID do usuário autenticado para buscar os dados, eliminamos a possibilidade de um usuário acessar dados de outro usuário ao manipular o parâmetro UserId na requisição. Isso corrige a vulnerabilidade de IDOR, garantindo a integridade e confidencialidade dos dados pessoais.\",\"limitacoes_da_correcao\":\"A correção assume que o objeto loggedInUser.data.id está corretamente definido e representa o usuário autenticado. Se houver falhas na autenticação ou no gerenciamento de sessões, outras vulnerabilidades podem persistir. Além disso, a correção não valida se o usuário está autorizado a acessar outros recursos além das memórias associadas ao seu próprio ID.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1330,
+  "tokens_saida": 355,
+  "latencia_s": 5.817,
+  "custo_usd": 0.0011,
+  "hash_prompt": "f3a217b3835f740d227d7c0063989e98039a18055dc20248d88c473b8adbe293",
+  "do_cache": false
+}

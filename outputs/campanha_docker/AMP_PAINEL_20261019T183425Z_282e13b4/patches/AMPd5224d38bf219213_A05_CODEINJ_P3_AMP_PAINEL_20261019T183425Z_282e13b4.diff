@@ -1,0 +1,14 @@
+diff --git a/routes/userProfile.ts b/routes/userProfile.ts
+index af2c10895..c3c5862af 100644
+--- a/routes/userProfile.ts
++++ b/routes/userProfile.ts
+@@ -58,7 +58,8 @@ export function getUserProfile () {
+         if (!code) {
+           throw new Error('Username is null')
+         }
+-        username = eval(code) // eslint-disable-line no-eval
++        // Evitar execução de código com eval, retornar código como string escapada
++        username = entities.encode(code)
+       } catch (err) {
+         username = '\\' + username
+       }

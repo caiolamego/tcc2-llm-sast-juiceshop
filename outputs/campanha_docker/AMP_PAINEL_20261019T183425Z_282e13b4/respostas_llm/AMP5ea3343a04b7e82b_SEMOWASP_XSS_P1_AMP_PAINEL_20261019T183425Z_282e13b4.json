@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml que pode permitir Cross-Site Scripting (XSS)\",\"causa_da_vulnerabilidade\":\"O método bypassSecurityTrustHtml é utilizado para inserir diretamente HTML no DOM sem sanitização adequada, permitindo que dados potencialmente maliciosos sejam executados como código HTML/JavaScript.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o valor como texto simples, garantindo que qualquer conteúdo malicioso seja escapado e não interpretado como código HTML.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n\",\"trecho_corrigido\":\"      this.results.orderNo = `<code>${results.data[0].orderId}</code>`\\n\"}],\"justificativa_tecnica\":\"O uso de bypassSecurityTrustHtml desativa as proteções padrão do Angular contra XSS, o que pode permitir que um atacante injete código malicioso se o conteúdo não for confiável. Ao remover essa chamada e tratar o conteúdo como texto simples, o Angular aplicará a sanitização padrão, prevenindo a execução de scripts maliciosos.\",\"limitacoes_da_correcao\":\"Se o template espera um objeto SafeHtml para renderizar corretamente, pode ser necessário ajustar o template para renderizar o conteúdo como texto simples ou usar outras formas seguras de exibição. Esta correção assume que a exibição do código HTML não é estritamente necessária para a funcionalidade.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1181,
+  "tokens_saida": 339,
+  "latencia_s": 4.345,
+  "custo_usd": 0.001015,
+  "hash_prompt": "cfca9aa5089dec91c0a0bfa71259f980ffc67dc333af1d0f78734b2734b1528a",
+  "do_cache": false
+}

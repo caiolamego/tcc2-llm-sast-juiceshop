@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Possibilidade de poluição do protótipo do objeto ao acessar propriedades dinâmicas sem validação adequada.\",\"causa_da_vulnerabilidade\":\"O código acessa propriedades aninhadas de um objeto de configuração usando uma cadeia de propriedades derivada de entrada externa (options.replacement[1]) sem validação, o que pode permitir a modificação ou acesso a propriedades do protótipo do objeto, levando a poluição do protótipo (prototype pollution).\",\"estrategia_de_correcao\":\"Implementar uma validação rigorosa para garantir que a cadeia de propriedades não contenha '__proto__', 'constructor' ou 'prototype' antes de acessar as propriedades do objeto de configuração. Caso alguma dessas propriedades seja detectada, a substituição deve ser ignorada para evitar poluição do protótipo.\",\"edicoes\":[{\"arquivo\":\"frontend/src/hacking-instructor/helpers/helpers.ts\",\"trecho_original\":\"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        replacementValue = replacementValue[property]\\n      }\",\"trecho_corrigido\":\"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      const forbiddenProps = ['__proto__', 'constructor', 'prototype']\\n      if (propertyChain.some(prop => forbiddenProps.includes(prop))) {\\n        // Evita poluição do protótipo, ignora substituição\\n      } else {\\n        for (const property of propertyChain) {\\n          replacementValue = replacementValue[property]\\n        }\\n        value = value.replace(options.replacement[0], replacementValue)\\n      }\"}],\"justificativa_tecnica\":\"A poluição do protótipo ocorre quando propriedades perigosas como '__proto__', 'constructor' ou 'prototype' são acessadas ou modificadas dinamicamente, podendo alterar o comportamento de todos os objetos. Ao validar e bloquear essas propriedades, prevenimos a poluição do protótipo mantendo a funcionalidade original para propriedades legítimas.\",\"limitacoes_da_correcao\":\"A correção assume que a cadeia de propriedades não deve conter propriedades perigosas para evitar poluição do protótipo. Se houver necessidade legítima de acessar tais propriedades, a lógica precisaria ser revisada. Além disso, a validação é simples e pode não cobrir casos mais complexos de manipulação dinâmica de objetos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1956,
+  "tokens_saida": 508,
+  "latencia_s": 5.569,
+  "custo_usd": 0.001595,
+  "hash_prompt": "5ecb52e135f84634a2840586e5f89cf11b666a3a3c50c0f279cfe908d109a4cc",
+  "do_cache": false
+}

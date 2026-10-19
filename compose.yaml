@@ -9,7 +9,8 @@ services:
       context: .
       dockerfile: Dockerfile
       platforms: [linux/amd64]
-    image: tcc2-llm-sast-juiceshop:1.0
+    # O Make seleciona o ID imutável de docker/referencia.json após o congelamento.
+    image: ${TCC_DOCKER_IMAGE:-tcc2-llm-sast-juiceshop:1.0}
     platform: linux/amd64
     working_dir: /repo
     init: true

@@ -1,0 +1,19 @@
+diff --git a/lib/insecurity.ts b/lib/insecurity.ts
+index 4a60a901b..c3cf921ae 100644
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -39,7 +39,13 @@ interface IAuthenticatedUsers {
+ }
+ 
+ export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')
+-export const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')
++export const hmac = (data: string) => {
++  const secret = process.env.HMAC_SECRET
++  if (!secret) {
++    throw new Error('Missing HMAC secret configuration')
++  }
++  return crypto.createHmac('sha256', secret).update(data).digest('hex')
++}
+ 
+ export const cutOffPoisonNullByte = (str: string) => {
+   const nullByte = '%00'

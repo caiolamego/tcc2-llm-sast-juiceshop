@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site Scripting (XSS) na inserção direta do conteúdo do arquivo de legendas dentro de uma tag <script> no HTML sem sanitização adequada.\",\"causa_da_vulnerabilidade\":\"O conteúdo da variável 'subs', que é lido diretamente de um arquivo externo e pode conter dados não confiáveis, é inserido diretamente dentro de uma tag <script> no HTML sem qualquer sanitização ou escaping, permitindo a execução de scripts maliciosos no navegador do usuário.\",\"estrategia_de_correcao\":\"Aplicar escaping adequado para o conteúdo de 'subs' antes de inseri-lo dentro da tag <script> para neutralizar caracteres que possam ser interpretados como código JavaScript. Como o conteúdo é texto de legendas (WebVTT), deve-se escapar caracteres especiais para evitar execução de scripts, preservando o conteúdo textual.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\\\"/g, '&quot;').replace(/'/g, '&#39;') + '</script>')\"}],\"justificativa_tecnica\":\"A vulnerabilidade ocorre porque o conteúdo de 'subs' é inserido diretamente dentro de uma tag <script> sem escaping, permitindo que um atacante injete código JavaScript malicioso. Escapar os caracteres especiais (&, <, >, \\\", ') impede que o navegador interprete o conteúdo como código executável, mitigando o risco de XSS. Essa abordagem preserva o conteúdo textual das legendas e mantém a funcionalidade original.\",\"limitacoes_da_correcao\":\"A correção assume que o conteúdo de 'subs' é texto simples de legendas e não contém código JavaScript legítimo que precise ser executado. Se o conteúdo legítimo contiver marcação HTML ou scripts, essa abordagem pode quebrar a funcionalidade. Além disso, a sanitização é básica e pode não cobrir todos os casos complexos de injeção, mas é suficiente para o contexto atual.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1948,
+  "tokens_saida": 524,
+  "latencia_s": 4.513,
+  "custo_usd": 0.001618,
+  "hash_prompt": "e8789ebbb73d667d23b300cb5dbc25116ed1fa40803aaf13e0a05fcbac718864",
+  "do_cache": false
+}
