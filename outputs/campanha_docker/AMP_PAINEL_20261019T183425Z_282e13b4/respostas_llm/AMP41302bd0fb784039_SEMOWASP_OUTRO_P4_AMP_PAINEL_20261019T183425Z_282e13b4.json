@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso do algoritmo MD5 para hashing, que é considerado inseguro para armazenamento de senhas devido à sua velocidade e vulnerabilidade a ataques de colisão e força bruta.\",\"causa_da_vulnerabilidade\":\"A função 'hash' utiliza 'crypto.createHash('md5')' para gerar o hash de uma string, o que não é adequado para senhas ou dados sensíveis que requerem proteção criptográfica robusta.\",\"estrategia_de_correcao\":\"Substituir o uso do algoritmo MD5 por uma função de derivação de chave segura para senhas, como bcrypt, scrypt ou Argon2. Como o código é em Node.js, a substituição por bcrypt é prática e compatível. A função 'hash' deve ser alterada para usar bcrypt para gerar hashes seguros com salt embutido.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\",\"trecho_corrigido\":\"import bcrypt from 'bcrypt'\\n\\nexport const hash = (data: string) => bcrypt.hashSync(data, 10)\"}],\"justificativa_tecnica\":\"MD5 é um algoritmo de hash rápido e vulnerável a ataques de colisão e força bruta, tornando-o inadequado para armazenamento de senhas. Bcrypt é uma função de derivação de chave que incorpora salt e um fator de custo configurável, tornando os hashes resistentes a ataques de força bruta e rainbow tables. A substituição por bcrypt melhora significativamente a segurança do armazenamento de senhas.\",\"limitacoes_da_correcao\":\"A alteração da função 'hash' para bcrypt pode exigir migração dos hashes existentes, pois os hashes antigos em MD5 não serão compatíveis com bcrypt. Além disso, bcrypt é uma função assíncrona por padrão, mas aqui foi usada a versão síncrona para manter a compatibilidade com a assinatura original da função. Caso o uso da função 'hash' seja para outros propósitos que não senhas, pode ser necessário avaliar o impacto dessa mudança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3653,
+  "tokens_saida": 436,
+  "latencia_s": 5.361,
+  "custo_usd": 0.002159,
+  "hash_prompt": "94bbd157b993f5dee8459bcb48ddb692a040bb3335fadd088b3ab3ebbd857fc5",
+  "do_cache": false
+}
