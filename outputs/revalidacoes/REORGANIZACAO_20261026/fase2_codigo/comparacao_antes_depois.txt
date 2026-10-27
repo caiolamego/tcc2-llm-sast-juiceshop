@@ -1,0 +1,53 @@
+OK    01 componentes_prompt idêntico
+OK    01 roteiro_sha256 idêntico
+OK    01 base_rag_sha256 idêntico
+OK    01 perfis idêntico
+OK    01 catalogo idêntico
+OK    01 componentes do contrato: os mesmos 30 arquivos (mapeados) — 30 × 30
+NOTA  componentes com conteúdo idêntico: 8 de 30 (os demais mudaram só nos imports)
+OK    01 identidade de cobertura idêntica fora dos adaptadores (revisão, mapa, conjunto D, testes adicionais, execução)
+OK    01 adaptadores de cobertura: os mesmos 5 arquivos (renomeados) — cobertura.py, conjunto_d.py, execucao_cobertura.py, preparacao_api.py, preparo_api_cobertura.mjs
+OK    01 referência Docker: as mesmas 17 entradas (mapeadas)
+OK    01 referência Docker: as 10 entradas que não são código têm o mesmo hash (Dockerfile, locks, configs, testes)
+NOTA  baseline oficial: antes 52ef071b1d8f… (oficial_v1), depois 4539aad27222… (oficial_v2)
+OK    02 nenhum dado de entrada mudou (configs congeladas, base RAG, regras, testes próprios, Dockerfile, locks)
+      arquivos: 384 antes, 385 depois; 153 com conteúdo alterado; 1 novos; 0 sem correspondente
+        novo: docker/historico/referencia_oficial_v1.json
+FALHA 02b outputs/: nada removido nem alterado — 108 arquivos novos: outputs/baselines/docker/oficial_v2, outputs/revalidacoes/REORGANIZACAO_20261026/antes, outputs/revalidacoes/REORGANIZACAO_20261026/comparacao_antes_depois.txt, outputs/revalidacoes/REORGANIZACAO_20261026/config_piloto_v2.yaml, outputs/revalidacoes/REORGANIZACAO_20261026/config_preparados_v2.yaml, outputs/revalidacoes/REORGANIZACAO_20261026/depois, outputs/revalidacoes/REORGANIZACAO_20261026/ferramentas, outputs/revalidacoes/REORGANIZACAO_20261026/manifesto.json, outputs/revalidacoes/REORGANIZACAO_20261026/mapa_caminhos.json, outputs/revalidacoes/REORGANIZACAO_20261026/reescrita_links.txt
+OK    03 testes Python: mesmos testes, mesmos resultados — 358 × 358 (exit=0 / exit=0)
+OK    04 testes das regras Semgrep
+OK    05_preflight: contrato igual fora dos campos de identidade do código e do baseline
+NOTA  05_preflight: campos de identidade que mudaram como esperado: validacao, prompts_validacao_sha256, inferencia, baseline_testes_sha256
+OK    05_preflight/prompts: idênticos byte a byte
+OK    05_preflight/sast_antes: iguais após normalização (2 arquivos)
+OK    05_preflight terminou com sucesso nas duas
+OK    10_dryrun: contrato igual fora dos campos de identidade do código e do baseline
+NOTA  10_dryrun: campos de identidade que mudaram como esperado: validacao, prompts_validacao_sha256, baseline_testes_sha256
+OK    10_dryrun/prompts: idênticos byte a byte
+OK    10_dryrun/respostas_llm: idênticos byte a byte
+OK    10_dryrun/patches: idênticos byte a byte
+OK    10_dryrun/codigos_corrigidos: idênticos byte a byte
+OK    10_dryrun/comparacoes: idênticos byte a byte
+OK    10_dryrun/testes: iguais após normalização (40 arquivos)
+OK    10_dryrun/sast_depois: iguais após normalização (80 arquivos)
+OK    10_dryrun/sast_antes: iguais após normalização (2 arquivos)
+OK    10_dryrun terminou com sucesso nas duas
+OK    10 dry-run: as 40 tentativas têm os mesmos R, F, M, classificação, aplicação e hash do prompt
+OK    05_preflight_METRICAS/metricas_gerais.csv idêntico
+OK    05_preflight_METRICAS/metricas_por_estrategia.csv idêntico
+OK    05_preflight_METRICAS/metricas_por_caso.csv idêntico
+OK    05_preflight_METRICAS/casos.csv idêntico
+OK    10_dryrun_METRICAS/metricas_gerais.csv idêntico
+OK    10_dryrun_METRICAS/metricas_por_estrategia.csv idêntico
+OK    10_dryrun_METRICAS/metricas_por_caso.csv idêntico
+OK    10_dryrun_METRICAS/casos.csv idêntico
+OK    06 reconsolidação da campanha oficial idêntica ao arquivado (antes e depois)
+OK    07 comandos do executar.py iguais, a menos dos nomes novos e do baseline do config Docker
+OK    08 Makefile (make -n) igual, a menos do ID da imagem oficial
+OK    09 painel: páginas e API iguais
+OK    11 nenhum link interno quebrado na documentação — links relativos verificados: 329; quebrados: 0
+NOTA  12 conferência da referência Docker: antes = ERRO: Command '['docker', 'image', 'inspect', 'sha256:8cdd44451de11d038c61353eb88b6286c9c5 | depois = Referência Docker conferida: sha256:81fe6403f07a05ccf7a911211e54ff2ae44c6b12237768b0a84ec1c7167ff5be exit=0
+OK    12 referência Docker nova conferida nesta máquina
+OK    13 todos os módulos e scripts importam (mesmos arquivos, mapeados) — 99 × 99
+
+RESULTADO: 1 diferença(s): 02b outputs/: nada removido nem alterado
