@@ -8,13 +8,13 @@ import unittest
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'src'))
-from pipeline.sast.comparacao import chave, comparar as v1
-from pipeline.sast.comparacao_v2 import comparar, intervalo, chamada
-from pipeline.sast.semgrep_client import Finding, ScanResultado
-from pipeline.painel.controller import resumo_tentativa
-from pipeline.metrics.loader import _validar_contrato
-from pipeline.validation.components import componentes
-from pipeline.metrics.calculator import indices
+from pipeline.legado.comparacao_v1 import chave, comparar as v1
+from pipeline.etapas.e01_analise_sast.comparacao import comparar, intervalo, chamada
+from pipeline.etapas.e01_analise_sast.semgrep import Finding, ScanResultado
+from pipeline.painel.controle import resumo_tentativa
+from pipeline.etapas.e09_metricas.leitura import _validar_contrato
+from pipeline.comum.componentes import componentes
+from pipeline.etapas.e09_metricas.calculo import indices
 
 
 def finding(text, focus, occurrence=0, rule='test.rule'):
@@ -148,7 +148,7 @@ class ComparatorV2Tests(unittest.TestCase):
         measured=indices([{'R':1,'F_criterio':0,'M':1,'classificacao_criterio':'rejeitada',
                            'status_aplicacao':'aplicado','testes_falhos_d_criterio':[]}],'criterio')
         self.assertEqual((measured['TRI'],measured['TRV'],measured['aceitas']),(1,0,0))
-        self.assertIn('src/pipeline/sast/estrutura.cjs',componentes())
+        self.assertIn('src/pipeline/etapas/e01_analise_sast/estrutura.cjs',componentes())
 
 
 if __name__ == '__main__':unittest.main()

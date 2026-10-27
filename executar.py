@@ -67,7 +67,7 @@ def carregar_config(arquivo: Path) -> dict:
 
 def montar_comandos(config: dict, python: str, execucao: str) -> tuple[list[str], list[str]]:
     saida = config["saida_base"] / execucao
-    pipeline = [python, str(RAIZ / "src/pipeline/run_pipeline.py"),
+    pipeline = [python, str(RAIZ / "src/pipeline/orquestracao/campanha.py"),
                 "--execucao", execucao, "--catalogo", str(config["catalogo"]),
                 "--perfil-sast", str(config["perfil_sast"]), "--saida", str(saida),
                 "--casos", ",".join(config["casos"]),
@@ -81,7 +81,7 @@ def montar_comandos(config: dict, python: str, execucao: str) -> tuple[list[str]
         pipeline.append("--somente-preflight")
     elif config["modo"] == "dry-run":
         pipeline.append("--dry-run")
-    metricas = [python, str(RAIZ / "scripts/reports/consolidate_metrics.py"),
+    metricas = [python, str(RAIZ / "scripts/relatorios/consolidar_metricas.py"),
                 "--execucao", execucao, "--entrada", str(saida),
                 "--catalogo", str(config["catalogo"]),
                 "--saida", str(config["saida_base"] / f"{execucao}_METRICAS"),

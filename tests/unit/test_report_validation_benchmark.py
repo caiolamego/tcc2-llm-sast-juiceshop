@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from scripts.reports.report_validation_benchmark import comparar, publicar
+from scripts.relatorios.relatorio_replays import comparar, publicar
 
 
 def run(nome, tempo):

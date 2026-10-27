@@ -15,14 +15,14 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from pipeline.metrics import digest, relativo
-from pipeline.metrics.loader import carregar, Entrada
-from pipeline.metrics.normalizer import normalizar_atual
-from pipeline.metrics.calculator import calcular, metricas, custos_atual
-from pipeline.metrics.exporter import construir, publicar, json_bytes, csv_bytes
-from pipeline.metrics.rris import carregar_pesos, calcular_rris
-from scripts.audit.build_sast_profile import construir as build_profile
-from scripts.reports import metricas_execucao as legacy
+from pipeline.etapas.e09_metricas import digest, relativo
+from pipeline.etapas.e09_metricas.leitura import carregar, Entrada
+from pipeline.etapas.e09_metricas.normalizacao import normalizar_atual
+from pipeline.etapas.e09_metricas.calculo import calcular, metricas, custos_atual
+from pipeline.etapas.e09_metricas.publicacao import construir, publicar, json_bytes, csv_bytes
+from pipeline.etapas.e09_metricas.rris import carregar_pesos, calcular_rris
+from scripts.auditoria.congelar_perfil_sast import construir as build_profile
+from scripts.relatorios import metricas_historicas as legacy
 
 
 def save(path,data):
@@ -69,7 +69,7 @@ def historic(root, rows=None):
 
 
 def expanded(root, mode='real'):
-    from pipeline.catalogo import carregar as load_catalog
+    from pipeline.etapas.e02_catalogo.catalogo import carregar as load_catalog
     inp=root/'input';prof=inp/'perfil_sast';source=root/'rules';source.mkdir(parents=True)
     remote=root/'remote.yaml';remote.write_text('rules:\n- id: r.remote\n  languages: [javascript]\n  pattern: x\n  message: m\n  severity: INFO\n')
     (source/'local.yaml').write_text(remote.read_text().replace('r.remote','tcc.local'))
@@ -204,12 +204,12 @@ class NumerosTests(unittest.TestCase):
             with self.assertRaises(ValueError):carregar_pesos(path,ent)
 
     def test_historical_incomplete_and_immutable(self):
-        from pipeline.validation.conjunto_d import _lista
+        from pipeline.etapas.e07_validacao.conjunto_d import _lista
         # Falha conhecida em D, antes de T4, não prova sucesso de camadas ausentes.
         name='test/api/a.test.ts :: suite > fixture'
         a=row();a={k:v for k,v in a.items() if not k.startswith('F_') and not k.startswith('classificacao_')};a['classificacao_final']='rejeitada';a['F']=0;a['tier_falha']='T3';a['testes_falhos_novos']=[name]
         old=copy.deepcopy(a)
-        with patch('pipeline.metrics.normalizer.classificar',return_value={'d_marcador':[name],'d_criterio':[name],'f_marcador':[],'f_criterio':[]}):
+        with patch('pipeline.etapas.e09_metricas.normalizacao.classificar',return_value={'d_marcador':[name],'d_criterio':[name],'f_marcador':[],'f_criterio':[]}):
             got=normalizar_atual(a,case(),'P1')
         self.assertEqual(a,old);self.assertTrue(got['incompleto_criterio']);self.assertIsNone(got['F_criterio'])
 
@@ -259,7 +259,7 @@ class LoaderTests(unittest.TestCase):
 
     def test_preflight_zero_prompts_verified_and_no_experiment(self):
         inp,cat,_,_=expanded(self.root,'preflight')
-        with patch('pipeline.run_pipeline.aplicar',side_effect=AssertionError('patch')),patch('pipeline.run_pipeline.validar',side_effect=AssertionError('F')),patch('pipeline.sast.semgrep_client.scan_perfil',side_effect=AssertionError('scan')),patch('pipeline.llm.openai_client.ConfigLLM.do_env',side_effect=AssertionError('API')):
+        with patch('pipeline.orquestracao.campanha.aplicar',side_effect=AssertionError('patch')),patch('pipeline.orquestracao.campanha.validar',side_effect=AssertionError('F')),patch('pipeline.etapas.e01_analise_sast.semgrep.scan_perfil',side_effect=AssertionError('scan')),patch('pipeline.etapas.e05_geracao_llm.cliente_openai.ConfigLLM.do_env',side_effect=AssertionError('API')):
             ent=carregar(inp,'TEST',cat);report=calcular(ent)
         self.assertEqual(report['preparacao'],{'casos':1,'prompts':1,'tentativas':0})
         self.assertIsNone(report['populacoes']['real_desenho']['definicoes']['criterio']['metricas']['TRV']['valor'])
@@ -338,13 +338,13 @@ class ExportTests(unittest.TestCase):
         self.assertFalse(lock.exists());self.assertFalse(dest.exists())
 
     def test_destination_created_at_promotion_never_overwritten(self):
-        from pipeline.metrics import exporter
+        from pipeline.etapas.e09_metricas import publicacao
         inp,cat,_=historic(self.root);ent=carregar(inp,'TEST',cat);arts=construir(calcular(ent),ent);dest=self.root/'late'
-        original=exporter._promover_exclusivo
+        original=publicacao._promover_exclusivo
         def competing(src,dst):
             dst.mkdir()
             return original(src,dst)
-        with patch.object(exporter,'_promover_exclusivo',side_effect=competing):
+        with patch.object(publicacao,'_promover_exclusivo',side_effect=competing):
             with self.assertRaises(FileExistsError):publicar(dest,arts,ent)
         self.assertTrue(dest.is_dir());self.assertFalse(list(dest.iterdir()))
         self.assertFalse((self.root/'late.lock').exists());self.assertFalse(list(self.root.glob('.late-*')))
@@ -368,7 +368,7 @@ class ExportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'sobreposta'):publicar(inp/'new',{},ent)
 
     def test_cli_help_invalid_and_from_other_cwd(self):
-        inp,cat,_=historic(self.root);script=ROOT/'scripts/reports/consolidate_metrics.py'
+        inp,cat,_=historic(self.root);script=ROOT/'scripts/relatorios/consolidar_metricas.py'
         base=[sys.executable,str(script)]
         self.assertEqual(subprocess.run(base+['--help'],cwd=self.root,capture_output=True).returncode,0)
         self.assertEqual(subprocess.run(base,cwd=self.root,capture_output=True).returncode,2)
@@ -477,7 +477,7 @@ class RegressionTests(unittest.TestCase):
 
 class SanitizacaoSnapshotTests(unittest.TestCase):
     def test_snapshot_historico_e_adulteracao(self):
-        from pipeline.sast.perfil import carregar as perfil, digest_regras
+        from pipeline.etapas.e01_analise_sast.perfil import carregar as perfil, digest_regras
         source = ROOT/'outputs/feature04/preparacao/perfil_sast'
         with tempfile.TemporaryDirectory() as tmp:
             dest = Path(tmp)/'perfil'
@@ -492,7 +492,7 @@ class SanitizacaoSnapshotTests(unittest.TestCase):
                 loaded.conferir()
 
     def test_sidecar_nao_pode_redefinir_transformacao(self):
-        from pipeline.sast.perfil import digest_regras
+        from pipeline.etapas.e01_analise_sast.perfil import digest_regras
         source = ROOT/'outputs/feature04/preparacao/perfil_sast'
         with tempfile.TemporaryDirectory() as tmp:
             dest = Path(tmp)/'perfil'

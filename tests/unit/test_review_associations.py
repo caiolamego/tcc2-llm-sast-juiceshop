@@ -4,12 +4,12 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[1].parent / "scripts"))
 import _bootstrap  # noqa: F401,E402
-from pipeline.caminhos import RAIZ_REPO  # noqa: E402
+from pipeline.comum.caminhos import RAIZ_REPO  # noqa: E402
 
 import copy
 import unittest
 
-from scripts.audit.review_associations import aplicar_revisoes
+from scripts.auditoria.revisar_associacoes import aplicar_revisoes
 
 
 class ReviewTests(unittest.TestCase):

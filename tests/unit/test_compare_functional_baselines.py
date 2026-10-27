@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from scripts.audit.compare_functional_baselines import comparar, main
+from scripts.auditoria.comparar_baselines_funcionais import comparar, main
 
 
 def baseline():

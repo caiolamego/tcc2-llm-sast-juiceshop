@@ -10,14 +10,14 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from pipeline.catalogo import carregar, Catalogo, digest
-from pipeline.sast.perfil import carregar as carregar_perfil
-from pipeline.sast.semgrep_client import Finding, ScanResultado
-from pipeline.sast.comparacao import comparar, gate, chave
-from pipeline import execucao_ampliada as amp
-from pipeline.llm.falso import resposta_falsa_ampliada
-from pipeline.run_pipeline import nome_tentativa, _aceita_estrita
-from scripts.audit.build_sast_profile import construir
+from pipeline.etapas.e02_catalogo.catalogo import carregar, Catalogo, digest
+from pipeline.etapas.e01_analise_sast.perfil import carregar as carregar_perfil
+from pipeline.etapas.e01_analise_sast.semgrep import Finding, ScanResultado
+from pipeline.legado.comparacao_v1 import comparar, gate, chave
+from pipeline.orquestracao import preflight as amp
+from pipeline.etapas.e05_geracao_llm.resposta_simulada import resposta_falsa_ampliada
+from pipeline.orquestracao.campanha import nome_tentativa, _aceita_estrita
+from scripts.auditoria.congelar_perfil_sast import construir
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -150,7 +150,7 @@ class PreflightTests(unittest.TestCase):
     def test_preflight_without_dependencies_and_contract_resume(self):
         with tempfile.TemporaryDirectory() as tmp:
             r=Path(tmp);wt=r/'workspace/wt-1';wt.mkdir(parents=True);(wt/'a.ts').write_text('let a=1\n')
-            runner=r/'src/pipeline/validation/runner.py';runner.parent.mkdir(parents=True);runner.write_text('#fixture')
+            runner=r/'src/pipeline/etapas/e07_validacao/camadas.py';runner.parent.mkdir(parents=True);runner.write_text('#fixture')
             case={'caso_id':'AMPtest','check_id':'tcc.example','arquivo':'a.ts','linha_inicio':1,'linha_fim':1,
                   'coluna_inicio':1,'coluna_fim':2,'mensagem':'x','cwe':[]}
             catalog=Catalogo(r/'catalogo.json',[case],'ampliado','a'*40,{'catalogo':'hash'},
@@ -164,7 +164,7 @@ class PreflightTests(unittest.TestCase):
             with patch.object(amp,'RAIZ_REPO',r),patch.object(amp,'head',return_value='a'*40),patch.object(amp,'limpo',return_value=True),\
                  patch.object(amp,'carregar_perfil',return_value=profile),patch.object(amp,'conferir_versao',return_value='fake'),patch.object(amp,'scan_perfil',side_effect=scanner),\
                  patch.object(amp,'carregar_scan_perfil',return_value=scan([finding()])),\
-                 patch('pipeline.llm.openai_client.ConfigLLM.do_env',side_effect=AssertionError('API não pode ser criada')):
+                 patch('pipeline.etapas.e05_geracao_llm.cliente_openai.ConfigLLM.do_env',side_effect=AssertionError('API não pode ser criada')):
                 self.assertIsNone(amp.preparar(args,catalog,[case]))
                 self.assertFalse((wt/'node_modules').exists())
                 self.assertEqual((wt/'a.ts').read_text(),'let a=1\n')
@@ -195,7 +195,7 @@ class ProvenienciaMetricasTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'corrompido'):amp.conferir_linhas(rows,'hash')
 
     def test_metrics_keep_unknowns_out_of_measured_rates(self):
-        from scripts.reports.metricas_execucao import indices, normalizar
+        from scripts.relatorios.metricas_historicas import indices, normalizar
         row={'assinatura_ocorrencia':'x','R':None,'M':None,'F':1,'F_sem_separacao':1,
              'F_marcador':1,'F_criterio':1,'status_aplicacao':'aplicado',
              **{f'classificacao_{d}':'indeterminada_sast' for d in ('sem_separacao','marcador','criterio')},
@@ -208,7 +208,7 @@ class ProvenienciaMetricasTests(unittest.TestCase):
         self.assertEqual(result['denominadores_medidos'],{'R':0,'F_criterio':1,'M':0})
 
     def test_simulations_are_not_counted_as_api_calls(self):
-        from scripts.reports.metricas_execucao import custos
+        from scripts.relatorios.metricas_historicas import custos
         result=custos([{'dry_run':True,'modelo':'dry-run','do_cache':False,'custo_usd':0,'tokens_entrada':0,'tokens_saida':0}])
         self.assertEqual(result['chamadas_reais'],0)
         self.assertEqual(result['do_cache'],0)
@@ -216,7 +216,7 @@ class ProvenienciaMetricasTests(unittest.TestCase):
         self.assertEqual(result['usd'],0)
 
     def test_diagnostics_are_portable_and_ids_strict(self):
-        from pipeline.sast.semgrep_client import carregar_scan_perfil
+        from pipeline.etapas.e01_analise_sast.semgrep import carregar_scan_perfil
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);profile=SimpleNamespace(dados={'id_regras':['tcc.example']},no_escopo=lambda p:True)
             raw={'version':'1.177.0','results':[{'check_id':'tcc.example','path':str(root/'a.ts'),

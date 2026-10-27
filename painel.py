@@ -15,7 +15,7 @@ def main():
         except KeyboardInterrupt:
             return 130
     sys.path.insert(0, str(RAIZ / 'src'))
-    from pipeline.painel.server import main as servir
+    from pipeline.painel.servidor import main as servir
     return servir()
 
 

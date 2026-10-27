@@ -15,12 +15,12 @@ sys.path[:0]=[str(ROOT/'src'),str(ROOT),str(Path(__file__).parent)]
 from test_colab_llm import manifesto, correcao
 from test_validation_contract import entrada
 from test_metrics import context, row, case
-from pipeline.llm.provider import ConfigColab, identidade_offline
-from pipeline.llm.colab_client import RespostaColab
-from pipeline.execucao_ampliada import contrato_com_inferencia
-from pipeline.metrics.loader import _validar_contrato
-from pipeline.metrics.calculator import calcular
-from pipeline.metrics.exporter import construir
+from pipeline.etapas.e05_geracao_llm.provedor import ConfigColab, identidade_offline
+from pipeline.etapas.e05_geracao_llm.cliente_colab import RespostaColab
+from pipeline.orquestracao.preflight import contrato_com_inferencia
+from pipeline.etapas.e09_metricas.leitura import _validar_contrato
+from pipeline.etapas.e09_metricas.calculo import calcular
+from pipeline.etapas.e09_metricas.publicacao import construir
 
 
 class ColabContractTests(unittest.TestCase):
@@ -34,7 +34,7 @@ class ColabContractTests(unittest.TestCase):
         entry.contrato=contrato_com_inferencia(entry.contrato,self.identity)
         self.assertEqual(entry.contrato['schema_versao'],'5.0')
         self.assertEqual(entry.contrato['contrato_validacao_versao'],'3.0')
-        with patch('pipeline.metrics.loader._perfil'):_validar_contrato(entry)
+        with patch('pipeline.etapas.e09_metricas.leitura._perfil'):_validar_contrato(entry)
         self.assertEqual(old['schema_versao'],'3.0')
 
     def test_antigos_openai_sem_migracao_colab_recusado(self):
@@ -58,13 +58,13 @@ class ColabContractTests(unittest.TestCase):
         entry=entrada();entry.contrato=contrato_com_inferencia(entry.contrato,self.identity)
         for inf in (None, {'provedor':'invalido','modelo':'x'}, {**self.identity,'modelo_identidade_sha256':'0'*64}):
             broken=copy.deepcopy(entry);broken.contrato['inferencia']=inf
-            with patch('pipeline.metrics.loader._perfil'),self.assertRaises(ValueError):_validar_contrato(broken)
+            with patch('pipeline.etapas.e09_metricas.leitura._perfil'),self.assertRaises(ValueError):_validar_contrato(broken)
 
     def test_v5_herda_cobertura_v4(self):
         # Exercita a validação do contexto sem executar baseline ou serviços.
         entry=entrada();entry.contrato=contrato_com_inferencia(entry.contrato,self.identity)
         entry.contrato['contrato_validacao_versao']='4.0'
-        with patch('pipeline.metrics.loader._perfil'),self.assertRaises(ValueError):_validar_contrato(entry)
+        with patch('pipeline.etapas.e09_metricas.leitura._perfil'),self.assertRaises(ValueError):_validar_contrato(entry)
 
     def test_metricas_nulos_identidade_e_csv_deterministico(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -84,24 +84,24 @@ class ColabContractTests(unittest.TestCase):
             self.assertEqual(artifacts,construir(calcular(entry),entry))
 
     def test_contexto_pipeline_cria_provedor_e_confere_identidade(self):
-        from pipeline.run_pipeline import Contexto
+        from pipeline.orquestracao.campanha import Contexto
         cfg=SimpleNamespace(dry_run=False,llm_identidade=self.identity,arquivo_parada=None)
-        with patch('pipeline.llm.provider.identidade_offline',return_value=self.identity),patch('pipeline.llm.provider.criar_cliente') as factory:
+        with patch('pipeline.etapas.e05_geracao_llm.provedor.identidade_offline',return_value=self.identity),patch('pipeline.etapas.e05_geracao_llm.provedor.criar_cliente') as factory:
             ctx=Contexto(cfg,None,[],None)
             factory.assert_called_once();ctx.cliente.conferir_conexao.assert_called_once()
-        with patch('pipeline.llm.provider.identidade_offline',return_value={'provedor':'outro'}),patch('pipeline.llm.provider.criar_cliente') as factory:
+        with patch('pipeline.etapas.e05_geracao_llm.provedor.identidade_offline',return_value={'provedor':'outro'}),patch('pipeline.etapas.e05_geracao_llm.provedor.criar_cliente') as factory:
             with self.assertRaises(ValueError):Contexto(cfg,None,[],None)
             factory.assert_not_called()
 
     def test_contexto_dry_run_nao_cria_cliente_nem_conecta(self):
-        from pipeline.run_pipeline import Contexto
-        with patch('pipeline.llm.provider.criar_cliente',side_effect=AssertionError('rede')):
+        from pipeline.orquestracao.campanha import Contexto
+        with patch('pipeline.etapas.e05_geracao_llm.provedor.criar_cliente',side_effect=AssertionError('rede')):
             ctx=Contexto(SimpleNamespace(dry_run=True),None,[],None)
         self.assertIsNone(ctx.cliente)
 
     def test_resposta_truncada_nao_altera_arquivo_nem_roda_validacao(self):
-        from pipeline.run_pipeline import tentativa, Saidas
-        from pipeline.prompts import builder
+        from pipeline.orquestracao.campanha import tentativa, Saidas
+        from pipeline.etapas.e04_prompt import montagem
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);file=root/'a.ts';file.write_text('original')
             args=SimpleNamespace(execucao='TEST',dry_run=False,llm_identidade=self.identity,estrategias=['P1'],diagnosticos=[])
@@ -112,7 +112,7 @@ class ColabContractTests(unittest.TestCase):
                 'owasp_2025':None,'sigla_vuln':'X'}
             from unittest.mock import Mock
             ctx=SimpleNamespace(versao_semgrep=None,args=args,saidas=Saidas(root/'out'),cliente=Mock(gerar=Mock(return_value=result)),ampliado=None)
-            with patch('pipeline.run_pipeline.PoolWorktrees.restaurar'),patch.object(builder,'montar',return_value=prompt),patch('pipeline.run_pipeline.aplicar',side_effect=AssertionError('patch')),patch('pipeline.run_pipeline.validar',side_effect=AssertionError('testes')):
+            with patch('pipeline.orquestracao.campanha.PoolWorktrees.restaurar'),patch.object(montagem,'montar',return_value=prompt),patch('pipeline.orquestracao.campanha.aplicar',side_effect=AssertionError('patch')),patch('pipeline.orquestracao.campanha.validar',side_effect=AssertionError('testes')):
                 line=tentativa(ctx,issue,'P1',root,'AMP1_P1')
             self.assertTrue(line['classificacao_final'].startswith('nao_aplicada'))
             self.assertEqual(file.read_text(),'original');self.assertIsNone(line['F']);self.assertIsNone(line['R'])
@@ -122,15 +122,15 @@ class ColabContractTests(unittest.TestCase):
     def test_falha_operacional_interrompe_fila_sem_tentativa_concluida(self):
         from contextlib import nullcontext
         import threading
-        from pipeline.run_pipeline import processar_caso
-        from pipeline.llm.provider import ErroOperacionalLLM
+        from pipeline.orquestracao.campanha import processar_caso
+        from pipeline.etapas.e05_geracao_llm.provedor import ErroOperacionalLLM
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)
             args=SimpleNamespace(execucao='TEST',estrategias=['P1','P2'],diagnosticos=[],arquivo_parada=None)
             ctx=SimpleNamespace(args=args,parar=threading.Event(),erros=[],eventos_llm=[],
                 lock_custo=threading.Lock(),saidas=SimpleNamespace(raiz=root))
             pool=SimpleNamespace(alugar=lambda:nullcontext(root))
-            with patch('pipeline.run_pipeline.tentativa',side_effect=ErroOperacionalLLM('Colab indisponível')) as call,patch('pipeline.run_pipeline.registrar_execucao') as record:
+            with patch('pipeline.orquestracao.campanha.tentativa',side_effect=ErroOperacionalLLM('Colab indisponível')) as call,patch('pipeline.orquestracao.campanha.registrar_execucao') as record:
                 processar_caso(ctx,pool,{'caso_id':'AMP1','owasp_2025':None,'sigla_vuln':'X'}, {})
             self.assertTrue(ctx.parar.is_set());self.assertEqual(call.call_count,1)
             record.assert_not_called();self.assertEqual(len(ctx.eventos_llm),1)
@@ -141,8 +141,8 @@ class ColabContractTests(unittest.TestCase):
             code="""from pathlib import Path
 import sys
 sys.path.insert(0,sys.argv[1])
-from pipeline.llm.colab_client import Reservas
-from pipeline.llm.openai_client import OrcamentoEsgotado
+from pipeline.etapas.e05_geracao_llm.cliente_colab import Reservas
+from pipeline.etapas.e05_geracao_llm.cliente_openai import OrcamentoEsgotado
 try: Reservas(Path(sys.argv[2]),1).reservar('identity','endpoint')
 except OrcamentoEsgotado: sys.exit(4)
 """
@@ -159,7 +159,7 @@ except OrcamentoEsgotado: sys.exit(4)
         base['validacao'].update(politica_validacao='relacionada_v2',mapa_testes_sha256='b'*64,
             baseline_sha256='d'*64,cobertura={'mapa_sha256':'b'*64,'revisao_sha256':'c'*64,'conjunto_d_sha256':'e'*64})
         entry.contrato=contrato_com_inferencia(base,self.identity)
-        with patch('pipeline.metrics.loader._perfil'),patch('pipeline.metrics.loader._cobertura') as cov:
+        with patch('pipeline.etapas.e09_metricas.leitura._perfil'),patch('pipeline.etapas.e09_metricas.leitura._cobertura') as cov:
             _validar_contrato(entry);cov.assert_called_once()
         with tempfile.TemporaryDirectory() as tmp:
             record=row();record.update(provedor='colab',identidade_inferencia=self.identity,custo_usd=None,
@@ -170,9 +170,9 @@ except OrcamentoEsgotado: sys.exit(4)
             self.assertIn('metricas_por_inferencia.csv',artifacts)
 
     def test_alteracao_manifesto_durante_uso_e_recusada(self):
-        from pipeline.llm.colab_client import atomic_json, ClienteColab
-        from pipeline.llm.provider import ErroOperacionalLLM
-        from pipeline.llm.colab_protocol import sha
+        from pipeline.etapas.e05_geracao_llm.cliente_colab import atomic_json, ClienteColab
+        from pipeline.etapas.e05_geracao_llm.provedor import ErroOperacionalLLM
+        from pipeline.etapas.e05_geracao_llm.protocolo_colab import sha
         import httpx
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);path=root/'manifest.json';atomic_json(path,self.manifest)

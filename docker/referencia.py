@@ -13,15 +13,15 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 REFERENCE = ROOT/'docker/referencia.json'
-BASELINE = 'outputs/baselines/docker/oficial_v1/BASELINE/baseline_testes.json'
+BASELINE = 'outputs/baselines/docker/oficial_v2/BASELINE/baseline_testes.json'
 TAG = 'tcc2-llm-sast-juiceshop:1.0'
 INPUTS = ('Dockerfile','requirements.lock.txt','docker/juice-shop/package-lock.json',
           'docker/juice-shop/frontend/package-lock.json','config/cobertura_funcional_v1.yaml',
           'config/mapa_testes_relacionados_v2.yaml','config/conjunto_d_cobertura_v1.json',
-          'src/pipeline/validation/coverage.py','src/pipeline/validation/coverage_runner.py',
-          'src/pipeline/validation/runner.py','src/pipeline/validation/conjunto_d.py',
-          'src/pipeline/validation/preparacao_api.py','src/pipeline/validation/coverage_api_setup.mjs',
-          'src/pipeline/validation/identity.py','tests/functional/juice_shop/review_likes.test.ts',
+          'src/pipeline/etapas/e07_validacao/cobertura.py','src/pipeline/etapas/e07_validacao/execucao_cobertura.py',
+          'src/pipeline/etapas/e07_validacao/camadas.py','src/pipeline/etapas/e07_validacao/conjunto_d.py',
+          'src/pipeline/etapas/e07_validacao/preparacao_api.py','src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs',
+          'src/pipeline/comum/identidade.py','tests/functional/juice_shop/review_likes.test.ts',
           'tests/functional/juice_shop/helpers.spec.ts','tests/functional/juice_shop/insecurity.unit.test.ts')
 
 
@@ -84,7 +84,12 @@ def validate(ref, root=ROOT):
 
 
 def equivalent(report):
-    return (report.get('commit_alvo_igual') is True and report.get('cobertura_igual') is True
+    # A identidade de cobertura inclui o nome e o conteúdo dos módulos de validação ("adaptadores").
+    # Uma reorganização do código muda só esse campo; revisão, mapa, conjunto D e testes adicionais
+    # continuam exigidos iguais, assim como todos os grupos e compilações.
+    cobertura_ok = (report.get('cobertura_igual') is True or
+                    report.get('cobertura_campos_diferentes') == ['adaptadores_sha256'])
+    return (report.get('commit_alvo_igual') is True and cobertura_ok
             and report.get('grupos_total',0)>0
             and report.get('grupos_equivalentes')==report.get('grupos_total')
             and all(v==[True,True] for v in report.get('compilacoes',{}).values()))
@@ -125,7 +130,7 @@ def generate(reference):
     baseline=ROOT/BASELINE
     # Somente o mantenedor gera uma versão nova; não é ação automática de execução.
     if baseline.parent.exists():raise ValueError('Candidato já existe; investigue-o, não será sobrescrito')
-    run_container(image,['python','scripts/experiment/validate_functional_coverage.py',
+    run_container(image,['python','scripts/experimento/gerar_baseline_funcional.py',
         '--catalogo','outputs/catalogos/ampliado_v1/catalogo_issues.json','--checkout','workspace/wt-1',
         '--mapa-testes','config/mapa_testes_relacionados_v2.yaml','--revisao','config/cobertura_funcional_v1.yaml',
         '--saida',str(baseline.parent.relative_to(ROOT))])
@@ -139,7 +144,7 @@ def freeze(reference,image,baseline):
     if not baseline.is_relative_to(ROOT):raise ValueError('Baseline fora do projeto')
     report=baseline.parent.parent/'comparacao_DOCKER_V2.json'
     if not report.exists():
-        run_container(image,['python','scripts/audit/compare_functional_baselines.py',
+        run_container(image,['python','scripts/auditoria/comparar_baselines_funcionais.py',
             '--referencia','outputs/revalidacoes/DOCKER_V2/BASELINE/baseline_testes.json',
             '--novo',baseline.relative_to(ROOT).as_posix(),'--saida',report.relative_to(ROOT).as_posix()])
     if not equivalent(read(report)):raise ValueError('Resultados diferentes do baseline anterior; referência não publicada')
@@ -176,9 +181,9 @@ def main(argv=None):
         if args.acao=='verificar-alvo':
             if args.baseline is None:parser.error('--baseline obrigatório')
             sys.path.insert(0,str(ROOT/'src'))
-            from pipeline.validation import coverage as c
-            from pipeline.catalogo import carregar
-            from pipeline.target.workspace import reservar_execucao
+            from pipeline.etapas.e07_validacao import cobertura as c
+            from pipeline.etapas.e02_catalogo.catalogo import carregar
+            from pipeline.etapas.e06_aplicacao.worktrees import reservar_execucao
             reservar_execucao(ROOT)
             cat=carregar(ROOT/'outputs/catalogos/ampliado_v1/catalogo_issues.json')
             rev=ROOT/'config/cobertura_funcional_v1.yaml';mapa=ROOT/'config/mapa_testes_relacionados_v2.yaml'

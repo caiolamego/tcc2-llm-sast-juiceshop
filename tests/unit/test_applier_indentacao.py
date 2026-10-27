@@ -7,8 +7,8 @@ from unittest.mock import patch
 import sys
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
-from pipeline.patching import applier as a, indentacao as i
-from pipeline.llm.schema import Correcao
+from pipeline.etapas.e06_aplicacao import aplicador as a, indentacao as i
+from pipeline.etapas.e05_geracao_llm.esquema import Correcao
 
 
 def correction(*edits):

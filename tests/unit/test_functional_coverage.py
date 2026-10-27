@@ -12,14 +12,14 @@ from unittest.mock import patch,Mock
 ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT),str(ROOT/'src')]
 import yaml
-from pipeline.validation import coverage as c,coverage_runner as run
-from pipeline.validation.coverage_audit import publicar,auditar
-from pipeline.validation.identity import digest
-from pipeline.validation.runner import ResultadoTier,ConfigValidacao,validar
-from pipeline.validation.policy import opcoes
-from pipeline.validation.conjunto_d import classificar
-from pipeline.metrics.exporter import json_bytes
-from pipeline.metrics.loader import _validar_contrato
+from pipeline.etapas.e07_validacao import cobertura as c, execucao_cobertura as run
+from pipeline.etapas.e07_validacao.auditoria_cobertura import publicar,auditar
+from pipeline.comum.identidade import digest
+from pipeline.etapas.e07_validacao.camadas import ResultadoTier,ConfigValidacao,validar
+from pipeline.etapas.e07_validacao.politicas import opcoes
+from pipeline.etapas.e07_validacao.conjunto_d import classificar
+from pipeline.etapas.e09_metricas.publicacao import json_bytes
+from pipeline.etapas.e09_metricas.leitura import _validar_contrato
 
 
 class CoverageTests(unittest.TestCase):
@@ -127,7 +127,7 @@ class CoverageTests(unittest.TestCase):
 
     def test_f_positive_and_independent_sast_without_wide_suites(self):
         callback=Mock()
-        with patch.object(run,'compilar',return_value=ResultadoTier('T0',[],True,0.1)),patch.object(run,'executar_grupo',return_value=self.group_result),patch('pipeline.validation.runner.rodar_suite',side_effect=AssertionError('ampla')):
+        with patch.object(run,'compilar',return_value=ResultadoTier('T0',[],True,0.1)),patch.object(run,'executar_grupo',return_value=self.group_result),patch('pipeline.etapas.e07_validacao.camadas.rodar_suite',side_effect=AssertionError('ampla')):
             result=validar(self.wt,['a.ts'],self.cfg(),callback)
         self.assertTrue(result.F_criterio);callback.assert_called_once()
         self.assertIn('cobertura_detalhada',result.to_dict())
@@ -186,7 +186,7 @@ class CoverageTests(unittest.TestCase):
         self.assertEqual(new['cobertura_funcional'],self.rev)
 
     def test_cli_help_outside_repo(self):
-        for file in ('scripts/audit/audit_functional_coverage.py','scripts/experiment/validate_functional_coverage.py'):
+        for file in ('scripts/auditoria/auditar_cobertura_funcional.py','scripts/experimento/gerar_baseline_funcional.py'):
             r=subprocess.run([sys.executable,str(ROOT/file),'--help'],cwd=self.root,text=True,capture_output=True,timeout=10)
             self.assertEqual(r.returncode,0,r.stderr)
 
@@ -195,10 +195,10 @@ class CoverageTests(unittest.TestCase):
         for name in ('catalogo_meta.json','exclusoes.json'):(self.root/name).write_text('{}')
         cat=SimpleNamespace(ampliado=True,commit='commit',hashes={},casos=self.data['casos'],
                             meta={'arquivos_fonte':{'a.ts':digest(self.wt/'a.ts')}})
-        with patch('pipeline.validation.coverage_audit.carregar_catalogo',return_value=cat),\
-             patch('pipeline.validation.coverage_audit.RAIZ_REPO',self.root),\
-             patch('pipeline.validation.coverage_audit.subprocess.check_output',side_effect=['commit\n','']*2),\
-             patch('pipeline.validation.runner._rodar',side_effect=AssertionError('auditor executou teste')):
+        with patch('pipeline.etapas.e07_validacao.auditoria_cobertura.carregar_catalogo',return_value=cat),\
+             patch('pipeline.etapas.e07_validacao.auditoria_cobertura.RAIZ_REPO',self.root),\
+             patch('pipeline.etapas.e07_validacao.auditoria_cobertura.subprocess.check_output',side_effect=['commit\n','']*2),\
+             patch('pipeline.etapas.e07_validacao.camadas._rodar',side_effect=AssertionError('auditor executou teste')):
             a,inputs,summary=auditar(catalog,self.wt,self.mapa,self.rev,self.base)
             b,_,_=auditar(catalog,self.wt,self.mapa,self.rev,self.base)
         self.assertEqual(a,b);self.assertEqual(summary['preparados'],1)
@@ -212,7 +212,7 @@ class CoverageTests(unittest.TestCase):
           'validacao':{'politica_validacao':'relacionada_v2','cache_validacao':'desligado','repeticao_api':'ampla',
              'implementacao':{'runner.py':'a'*64},'ambientes':[],'mapa_testes_sha256':'b'*64,'baseline_sha256':'d'*64,
              'cobertura':{'mapa_sha256':'b'*64,'revisao_sha256':'c'*64,'conjunto_d_sha256':'e'*64}}}
-        with patch('pipeline.metrics.loader._perfil'),patch('pipeline.metrics.loader._cobertura'):
+        with patch('pipeline.etapas.e09_metricas.leitura._perfil'),patch('pipeline.etapas.e09_metricas.leitura._cobertura'):
             _validar_contrato(entry)
             entry.contrato['schema_versao']='3.0'
             with self.assertRaises(ValueError):_validar_contrato(entry)
@@ -220,13 +220,13 @@ class CoverageTests(unittest.TestCase):
             with self.assertRaises(ValueError):_validar_contrato(entry)
 
     def test_portable_snapshot_detects_tampering(self):
-        from pipeline.execucao_ampliada import snapshot_cobertura
-        from pipeline.metrics.loader import _cobertura
-        from pipeline.metrics.loader import Entrada
+        from pipeline.orquestracao.preflight import snapshot_cobertura
+        from pipeline.etapas.e09_metricas.leitura import _cobertura
+        from pipeline.etapas.e09_metricas.leitura import Entrada
         out=self.root/'run';out.mkdir()
         args=SimpleNamespace(cobertura_funcional=self.rev,mapa_testes=self.mapa,baseline_testes=self.base)
         contract={'baseline_testes_sha256':digest(self.base),'validacao':{'cobertura':c.identidade(self.data,self.rev,self.mapa)}}
-        with patch('pipeline.execucao_ampliada.RAIZ_REPO',self.root):snapshot_cobertura(args,out,self.data,contract)
+        with patch('pipeline.orquestracao.preflight.RAIZ_REPO',self.root):snapshot_cobertura(args,out,self.data,contract)
         entry=Entrada(out,'TEST',None,contract,[],[],None)
         _cobertura(entry)
         (out/'cobertura_funcional/revisao.yaml').write_text('tampered')
@@ -242,7 +242,7 @@ class CoverageTests(unittest.TestCase):
             output=Path(next(x.split('=',1)[1] for x in cmd if x.startswith('--output-file=')))
             output.write_text('<testsuites><testsuite><testcase classname="src/app/a.spec.ts" name="suite &gt; works"/></testsuite></testsuites>')
             return ResultadoTier('T_FRONTEND',cmd,True,0.1,codigo_saida=0),0
-        with patch('pipeline.validation.runner._rodar',side_effect=execute):
+        with patch('pipeline.etapas.e07_validacao.camadas._rodar',side_effect=execute):
             r=run.executar_grupo(self.wt,'front',group,self.root/'angular')
         self.assertTrue(r['comparavel']);self.assertIn('primeira.xml',r['relatorios_junit'])
 
@@ -263,7 +263,7 @@ class CoverageTests(unittest.TestCase):
 
     def test_precondition_output_cannot_supply_failed_assertions(self):
         result=ResultadoTier('T2',[],False,0.1,codigo_saida=1,saida='Exiting due to unsatisfied precondition!')
-        with patch('pipeline.validation.runner._rodar',return_value=(result,0)):
+        with patch('pipeline.etapas.e07_validacao.camadas._rodar',return_value=(result,0)):
             measured=run.executar_grupo(self.wt,'g',self.data['grupos']['g'],self.root/'precondition',self.group_result)
         self.assertEqual(measured['falha_operacional'],'precondicao_api_nao_satisfeita')
         self.assertEqual(measured['falhos_novos'],[])
@@ -275,7 +275,7 @@ class CoverageTests(unittest.TestCase):
             c.validar_baseline(self.base,self.data,self.rev,self.mapa,self.wt,selection)
 
     def test_api_disabled_and_compiler_failure_do_not_call_broad_suites(self):
-        readiness=patch('pipeline.validation.preparacao_api.conferir');readiness.start();self.addCleanup(readiness.stop)
+        readiness=patch('pipeline.etapas.e07_validacao.preparacao_api.conferir');readiness.start();self.addCleanup(readiness.stop)
         self.data['grupos']['g']['dominio']='api'
         self.data['grupos']['g']['testes'][0]['arquivo']='test/api/a.test.ts'
         p=self.wt/'test/api/a.test.ts';p.parent.mkdir();p.write_text('api fixture')

@@ -13,10 +13,10 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import yaml
 
-from pipeline.rag import retriever as r
-from pipeline.prompts import builder as b
-from pipeline import execucao_ampliada as amp
-from pipeline.catalogo import carregar, digest
+from pipeline.etapas.e03_contexto_rag import recuperacao as r
+from pipeline.etapas.e04_prompt import montagem as b
+from pipeline.orquestracao import preflight as amp
+from pipeline.etapas.e02_catalogo.catalogo import carregar, digest
 
 
 def fixture(base):
@@ -117,7 +117,7 @@ class BaseTests(unittest.TestCase):
 
     def test_cli_readonly_from_other_directory(self):
         snapshot={p.name:p.read_bytes() for p in self.base.iterdir()}
-        cmd=[sys.executable,str(ROOT/'scripts/experiment/validate_knowledge_base.py'),'--base',str(self.base)]
+        cmd=[sys.executable,str(ROOT/'scripts/experimento/validar_base_rag.py'),'--base',str(self.base)]
         result=subprocess.run(cmd,cwd=self.tmp.name,capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr)
         self.assertEqual(snapshot,{p.name:p.read_bytes() for p in self.base.iterdir()})
@@ -239,11 +239,11 @@ class ContratoTests(unittest.TestCase):
             with self.assertRaises(ValueError):amp.conferir_prompt_contrato(prep,p,self.args.estrategias)
 
     def test_full_preflight_cli_never_creates_client_applies_or_validates(self):
-        from pipeline import run_pipeline as rp
-        from pipeline.catalogo import Catalogo
-        from pipeline.sast.semgrep_client import Finding, ScanResultado
+        from pipeline.orquestracao import campanha as rp
+        from pipeline.etapas.e02_catalogo.catalogo import Catalogo
+        from pipeline.etapas.e01_analise_sast.semgrep import Finding, ScanResultado
         wt=self.root/'workspace/wt-1';wt.mkdir(parents=True);(wt/'a.ts').write_text('let x=1;\n')
-        runner=self.root/'src/pipeline/validation/runner.py';runner.parent.mkdir(parents=True);runner.write_text('#fixture')
+        runner=self.root/'src/pipeline/etapas/e07_validacao/camadas.py';runner.parent.mkdir(parents=True);runner.write_text('#fixture')
         case={**self.case,'coluna_inicio':1,'coluna_fim':2,'elegivel':True}
         catalog=Catalogo(self.root/'catalog.json',[case],'ampliado','a'*40,{'catalogo':'x'},
                         {'semgrep_versao':'1.177.0','arquivos_fonte':{'a.ts':digest(wt/'a.ts')}})
@@ -255,11 +255,11 @@ class ContratoTests(unittest.TestCase):
         argv=['pipeline','--execucao','TEST','--catalogo',str(catalog.caminho),'--perfil-sast','fake',
               '--saida',str(self.root/'out'),'--estrategias','P1,P2,P3,P4','--somente-preflight','--k','1']
         with patch.object(sys,'argv',argv),patch.object(amp,'RAIZ_REPO',self.root),patch.object(b,'DIR_KB',self.base),\
-             patch('pipeline.catalogo.carregar',return_value=catalog),patch.object(amp,'head',return_value='a'*40),\
+             patch('pipeline.etapas.e02_catalogo.catalogo.carregar',return_value=catalog),patch.object(amp,'head',return_value='a'*40),\
              patch.object(amp,'limpo',return_value=True),patch.object(amp,'carregar_perfil',return_value=profile),\
              patch.object(amp,'conferir_versao'),patch.object(amp,'scan_perfil',side_effect=scanner),\
              patch.object(amp,'carregar_scan_perfil',return_value=result),\
-             patch('pipeline.llm.openai_client.ConfigLLM.do_env',side_effect=AssertionError('LLM proibida')),\
+             patch('pipeline.etapas.e05_geracao_llm.cliente_openai.ConfigLLM.do_env',side_effect=AssertionError('LLM proibida')),\
              patch.object(rp,'aplicar',side_effect=AssertionError('Patch proibido')),\
              patch.object(rp,'validar',side_effect=AssertionError('Testes funcionais proibidos')),\
              patch.object(rp.PoolWorktrees,'restaurar',side_effect=AssertionError('Restauração proibida')):

@@ -6,7 +6,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]/"src"))
 import unittest
 from unittest.mock import patch
 
-from pipeline.validation import preparacao_api as api
+from pipeline.etapas.e07_validacao import preparacao_api as api
 
 
 class ReadinessTests(unittest.TestCase):

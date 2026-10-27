@@ -6,7 +6,7 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[1].parent / "scripts"))
 import _bootstrap  # noqa: F401,E402
-from pipeline.caminhos import RAIZ_REPO  # noqa: E402
+from pipeline.comum.caminhos import RAIZ_REPO  # noqa: E402
 
 import copy
 import json
@@ -14,7 +14,7 @@ import unittest
 
 import yaml
 
-from scripts.audit.build_repair_candidates import CONFIG, MATRIX, construir
+from scripts.auditoria.gerar_candidatos_correcao import CONFIG, MATRIX, construir
 
 
 class CandidateTests(unittest.TestCase):

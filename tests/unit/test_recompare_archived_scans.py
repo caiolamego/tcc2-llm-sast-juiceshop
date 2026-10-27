@@ -12,8 +12,8 @@ import unittest
 ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT),str(ROOT/'src')]
 import yaml
-from pipeline.sast.associacoes import carregar
-from scripts.audit.recompare_archived_scans import conferir_patch, local
+from pipeline.etapas.e02_catalogo.associacoes import carregar
+from scripts.auditoria.recomparar_scans_arquivados import conferir_patch, local
 
 
 class EvidenceTests(unittest.TestCase):
@@ -66,7 +66,7 @@ class EvidenceTests(unittest.TestCase):
 
     def test_cli_help_outside_repository(self):
         with tempfile.TemporaryDirectory() as folder:
-            proc=subprocess.run([sys.executable,str(ROOT/'scripts/audit/recompare_archived_scans.py'),'--help'],
+            proc=subprocess.run([sys.executable,str(ROOT/'scripts/auditoria/recomparar_scans_arquivados.py'),'--help'],
                                 cwd=folder,capture_output=True,text=True,timeout=10)
             self.assertEqual(proc.returncode,0,proc.stderr)
             self.assertIn('--parser-checkout',proc.stdout)

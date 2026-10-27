@@ -4,13 +4,13 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[1].parent / "scripts"))
 import _bootstrap  # noqa: F401,E402
-from pipeline.caminhos import RAIZ_REPO  # noqa: E402
+from pipeline.comum.caminhos import RAIZ_REPO  # noqa: E402
 
 import copy
 import hashlib
 import json
 import unittest
-from scripts.reports.report_rodada10 import ROOT, OLD, NEW, ALVOS, comparar
+from scripts.relatorios.relatorio_rodada10 import ROOT, OLD, NEW, ALVOS, comparar
 
 
 class Round10Tests(unittest.TestCase):

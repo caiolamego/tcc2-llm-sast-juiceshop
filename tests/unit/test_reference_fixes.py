@@ -2,7 +2,7 @@
 from pathlib import Path
 import tempfile
 import unittest
-from scripts.audit.evaluate_reference_fixes import aplicar_trecho, interno
+from scripts.auditoria.avaliar_codefixes import aplicar_trecho, interno
 
 
 class ReferenceFixTests(unittest.TestCase):

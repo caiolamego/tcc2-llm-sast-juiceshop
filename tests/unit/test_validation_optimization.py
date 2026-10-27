@@ -12,14 +12,14 @@ import unittest
 from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
-from pipeline.validation.cache import CacheEvidencias
-from pipeline.validation.identity import hash_json, estado, dependencias
-from pipeline.validation.selection import selecionar
-from pipeline.validation.runner import ResultadoTier, ConfigValidacao, validar, _avaliar
-from pipeline.validation.policy import opcoes, alterada
-from pipeline.validation.retry import repetir_seletivo
-from pipeline.validation.engine import funcional_elegivel
-from pipeline.metrics.calculator import custos_atual
+from pipeline.etapas.e07_validacao.cache import CacheEvidencias
+from pipeline.comum.identidade import hash_json, estado, dependencias
+from pipeline.etapas.e07_validacao.selecao import selecionar
+from pipeline.etapas.e07_validacao.camadas import ResultadoTier, ConfigValidacao, validar, _avaliar
+from pipeline.etapas.e07_validacao.politicas import opcoes, alterada
+from pipeline.etapas.e07_validacao.repeticao import repetir_seletivo
+from pipeline.etapas.e07_validacao.medicao import funcional_elegivel
+from pipeline.etapas.e09_metricas.calculo import custos_atual
 
 
 class OptimizationTests(unittest.TestCase):
@@ -124,7 +124,7 @@ arquivos:
 
     def test_cache_falha_de_escrita_limpa_temporario(self):
         cache=CacheEvidencias(self.root/'cache','leitura-escrita')
-        with patch('pipeline.validation.cache.os.rename',side_effect=OSError('disco')):
+        with patch('pipeline.etapas.e07_validacao.cache.os.rename',side_effect=OSError('disco')):
             with self.assertRaises(OSError):cache.obter('f',{},lambda:{'ok':True},lambda:True,lambda _:True,{})
         self.assertFalse(list((self.root/'cache/f').glob('*.tmp-*')))
 
@@ -136,9 +136,9 @@ arquivos:
     def test_triagem_reprovada_mede_sast_e_dispensa_amplas(self):
         cfg=ConfigValidacao(politica='otimizada_v1',mapa=self.mapa)
         eventos=[]
-        with patch('pipeline.validation.runner.carregar_linha_de_base',return_value={'T3':set(),'T4':set()}), \
-             patch('pipeline.validation.runner._t0',return_value=ResultadoTier('T0',[],False,1,'falha')), \
-             patch('pipeline.validation.runner.rodar_suite') as ampla:
+        with patch('pipeline.etapas.e07_validacao.camadas.carregar_linha_de_base',return_value={'T3':set(),'T4':set()}), \
+             patch('pipeline.etapas.e07_validacao.camadas._t0',return_value=ResultadoTier('T0',[],False,1,'falha')), \
+             patch('pipeline.etapas.e07_validacao.camadas.rodar_suite') as ampla:
             resultado=validar(self.root,['routes/key.ts'],cfg,entre_etapas=lambda:eventos.append('sast'))
         ampla.assert_not_called();self.assertEqual(eventos,['sast']);self.assertFalse(resultado.F_criterio)
         self.assertTrue(any(e['status']=='dispensada_por_reprovacao' for e in resultado.etapas))
@@ -147,11 +147,11 @@ arquivos:
         cfg=ConfigValidacao(politica='otimizada_v1',mapa=self.mapa)
         eventos=[]
         def ok(tier):eventos.append(tier);return ResultadoTier(tier,[],True,.1)
-        with patch('pipeline.validation.runner.carregar_linha_de_base',return_value={'T3':set(),'T4':set()}), \
-             patch('pipeline.validation.runner._t0',side_effect=lambda *_:ok('T0')), \
-             patch('pipeline.validation.runner.rodar_t2',side_effect=lambda *_:ok('T2')), \
-             patch('pipeline.validation.runner._api_relacionada',side_effect=lambda *_:ok('T2_API')), \
-             patch('pipeline.validation.runner.rodar_suite',side_effect=lambda tier,*_:ok(tier)):
+        with patch('pipeline.etapas.e07_validacao.camadas.carregar_linha_de_base',return_value={'T3':set(),'T4':set()}), \
+             patch('pipeline.etapas.e07_validacao.camadas._t0',side_effect=lambda *_:ok('T0')), \
+             patch('pipeline.etapas.e07_validacao.camadas.rodar_t2',side_effect=lambda *_:ok('T2')), \
+             patch('pipeline.etapas.e07_validacao.camadas._api_relacionada',side_effect=lambda *_:ok('T2_API')), \
+             patch('pipeline.etapas.e07_validacao.camadas.rodar_suite',side_effect=lambda tier,*_:ok(tier)):
             resultado=validar(self.root,['routes/key.ts'],cfg,entre_etapas=lambda:eventos.append('SAST'))
         self.assertEqual(eventos,['T0','T2','T2_API','SAST','T3','T4']);self.assertTrue(resultado.F_criterio)
 
@@ -161,12 +161,12 @@ arquivos:
         def ok(tier):
             eventos.append(tier)
             return ResultadoTier(tier, [], True, .1)
-        with patch('pipeline.validation.runner.carregar_linha_de_base', return_value={}), \
-             patch('pipeline.validation.runner._t0', side_effect=lambda *_: t0 or ok('T0')), \
-             patch('pipeline.validation.runner.rodar_t2', side_effect=lambda *_: ok('T2')), \
-             patch('pipeline.validation.runner._api_relacionada', side_effect=lambda *_: api or ok('T2_API')), \
-             patch('pipeline.validation.runner.rodar_suite') as ampla, \
-             patch('pipeline.validation.runner._t4_serializado') as t4:
+        with patch('pipeline.etapas.e07_validacao.camadas.carregar_linha_de_base', return_value={}), \
+             patch('pipeline.etapas.e07_validacao.camadas._t0', side_effect=lambda *_: t0 or ok('T0')), \
+             patch('pipeline.etapas.e07_validacao.camadas.rodar_t2', side_effect=lambda *_: ok('T2')), \
+             patch('pipeline.etapas.e07_validacao.camadas._api_relacionada', side_effect=lambda *_: api or ok('T2_API')), \
+             patch('pipeline.etapas.e07_validacao.camadas.rodar_suite') as ampla, \
+             patch('pipeline.etapas.e07_validacao.camadas._t4_serializado') as t4:
             res = validar(self.root, arquivos, cfg, entre_etapas=lambda: eventos.append('SAST'))
         ampla.assert_not_called()
         t4.assert_not_called()
@@ -210,7 +210,7 @@ arquivos:
     def test_relacionada_preserva_definicoes_f_d(self):
         nome = 'test/api/key.test.ts :: Suite > desafio'
         falha = ResultadoTier('T2_API', [], False, .1, 'falha', testes_falhos_novos=[nome])
-        with patch('pipeline.validation.runner.classificar', return_value={
+        with patch('pipeline.etapas.e07_validacao.camadas.classificar', return_value={
                 'd_marcador': [], 'd_criterio': [nome], 'f_marcador': [nome], 'f_criterio': []}):
             res, eventos = self.validar_relacionada(['routes/key.ts'], api=falha)
         self.assertTrue(res.F_criterio)
@@ -220,24 +220,24 @@ arquivos:
 
     def test_fallback_nao_duplica_suites(self):
         cfg=ConfigValidacao(politica='otimizada_v1',mapa=self.mapa)
-        with patch('pipeline.validation.runner.carregar_linha_de_base',return_value={}), \
-             patch('pipeline.validation.runner._t0',return_value=ResultadoTier('T0',[],True,0)), \
-             patch('pipeline.validation.runner.rodar_suite',side_effect=lambda t,*_:ResultadoTier(t,[],True,0)) as ampla:
+        with patch('pipeline.etapas.e07_validacao.camadas.carregar_linha_de_base',return_value={}), \
+             patch('pipeline.etapas.e07_validacao.camadas._t0',return_value=ResultadoTier('T0',[],True,0)), \
+             patch('pipeline.etapas.e07_validacao.camadas.rodar_suite',side_effect=lambda t,*_:ResultadoTier(t,[],True,0)) as ampla:
             result=validar(self.root,['lib/shared.ts'],cfg)
         self.assertEqual(ampla.call_count,2);self.assertTrue(result.selecao['fallback'])
 
     def test_repeticao_seletiva_incompleta_faz_fallback(self):
         falha=ResultadoTier('T4',[],False,1,'falha',testes_falhos_novos=['test/api/key.test.ts :: Suite > teste'])
-        with patch('pipeline.validation.runner._uma_rodada',return_value=ResultadoTier('T4',[],True,1)), \
-             patch('pipeline.validation.retry.executados',return_value=[]):
+        with patch('pipeline.etapas.e07_validacao.camadas._uma_rodada',return_value=ResultadoTier('T4',[],True,1)), \
+             patch('pipeline.etapas.e07_validacao.repeticao.executados',return_value=[]):
             resultado,meta=repetir_seletivo(falha,self.root,10,{},set())
         self.assertIsNone(resultado);self.assertIn('incompleta',meta['fallback'])
 
     def test_repeticao_seletiva_confere_identidades_e_hooks(self):
         ident='test/api/key.test.ts :: Suite > teste [especial]'
         falha=ResultadoTier('T4',[],False,1,'falha',testes_falhos_novos=[ident])
-        with patch('pipeline.validation.runner._uma_rodada',return_value=ResultadoTier('T4',[],True,1)) as rodada, \
-             patch('pipeline.validation.retry.executados',return_value=[ident]):
+        with patch('pipeline.etapas.e07_validacao.camadas._uma_rodada',return_value=ResultadoTier('T4',[],True,1)) as rodada, \
+             patch('pipeline.etapas.e07_validacao.repeticao.executados',return_value=[ident]):
             resultado,meta=repetir_seletivo(falha,self.root,10,{},set())
         self.assertIsNotNone(resultado);cmd=rodada.call_args.args[1]
         self.assertIn('--import',cmd);self.assertTrue(any('\\[especial\\]' in arg for arg in cmd))
@@ -246,10 +246,10 @@ arquivos:
         ident='test/api/key.test.ts :: Suite > depende da ordem'
         primeira=ResultadoTier('T4',[],False,1,'falha',testes_falhos_novos=[ident])
         ampla=deepcopy(primeira)
-        with patch('pipeline.validation.runner._uma_rodada',side_effect=[deepcopy(primeira),ampla]):
+        with patch('pipeline.etapas.e07_validacao.camadas._uma_rodada',side_effect=[deepcopy(primeira),ampla]):
             referencia=_avaliar('T4',[],self.root,10,{},self.root/'xml',set())
-        with patch('pipeline.validation.runner._uma_rodada',return_value=deepcopy(primeira)), \
-             patch('pipeline.validation.retry.repetir_seletivo',return_value=(ResultadoTier('T4',[],True,1),{})):
+        with patch('pipeline.etapas.e07_validacao.camadas._uma_rodada',return_value=deepcopy(primeira)), \
+             patch('pipeline.etapas.e07_validacao.repeticao.repetir_seletivo',return_value=(ResultadoTier('T4',[],True,1),{})):
             experimental=_avaliar('T4',[],self.root,10,{},self.root/'xml',set(),seletiva=True)
         self.assertFalse(referencia.passou);self.assertTrue(experimental.passou)
         self.assertEqual(opcoes(SimpleNamespace())['repeticao_api'],'ampla')
@@ -269,9 +269,9 @@ arquivos:
         self.assertEqual(r['tempos_acumulados']['duracao_sast_s']['total_conhecido'],.1)
 
     def test_mesmo_scan_reutilizado_recalcula_r_por_ocorrencia(self):
-        from pipeline.validation.engine import medir
-        from pipeline.validation.runner import ResultadoValidacao
-        from pipeline.sast.semgrep_client import carregar_scan_perfil
+        from pipeline.etapas.e07_validacao.medicao import medir
+        from pipeline.etapas.e07_validacao.camadas import ResultadoValidacao
+        from pipeline.etapas.e01_analise_sast.semgrep import carregar_scan_perfil
         raw={'version':'fixture','results':[
             {'check_id':'rule','path':'routes/key.ts','start':{'line':2,'col':1},
              'end':{'line':2,'col':2},'extra':{}}]}
@@ -288,11 +288,11 @@ arquivos:
                                tiers=[ResultadoTier('T0',[],True,3)])
         def issue(line):return {'check_id':'rule','arquivo':'routes/key.ts','linha_inicio':line,
                                 'linha_fim':line,'coluna_inicio':1,'coluna_fim':2}
-        with patch('pipeline.validation.engine.estado',return_value='estado'), \
-             patch('pipeline.validation.engine.versao',return_value='commit'), \
-             patch('pipeline.validation.engine.ambiente',return_value={}), \
-             patch('pipeline.validation.engine.scan_perfil',side_effect=scan) as scan_mock, \
-             patch('pipeline.validation.engine.validar',return_value=val) as validar_mock:
+        with patch('pipeline.etapas.e07_validacao.medicao.estado',return_value='estado'), \
+             patch('pipeline.etapas.e07_validacao.medicao.versao',return_value='commit'), \
+             patch('pipeline.etapas.e07_validacao.medicao.ambiente',return_value={}), \
+             patch('pipeline.etapas.e07_validacao.medicao.scan_perfil',side_effect=scan) as scan_mock, \
+             patch('pipeline.etapas.e07_validacao.medicao.validar',return_value=val) as validar_mock:
             a=medir(self.root,issue(1),{},baseline,perfil,baseline_file,self.root/'a/raw.json',args,
                     cache_dir=self.root/'cache')
             b=medir(self.root,issue(2),{},baseline,perfil,baseline_file,self.root/'b/raw.json',args,
@@ -302,8 +302,8 @@ arquivos:
         self.assertTrue(b[3]['cache_validacao']['sast']['hit'])
 
     def test_benchmark_recusa_destino_existente_sem_altera_lo(self):
-        from scripts.experiment.benchmark_validation import replay
-        from pipeline.caminhos import RAIZ_REPO
+        from scripts.experimento.replay_patches import replay
+        from pipeline.comum.caminhos import RAIZ_REPO
         # Caminho sintético sob a raiz esperada, sem criar artefatos no repositório.
         destino=RAIZ_REPO/'outputs/feature05/JA_EXISTE'
         args=SimpleNamespace(origem=RAIZ_REPO/'outputs/origem',saida=destino)

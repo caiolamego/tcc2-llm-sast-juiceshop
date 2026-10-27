@@ -2,7 +2,7 @@
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from scripts.experiment import build_expanded_catalog as c
+from scripts.experimento import gerar_catalogo_ampliado as c
 
 import copy
 import json

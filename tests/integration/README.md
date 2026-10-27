@@ -7,11 +7,11 @@ As rodadas 7–12 possuem `test.mjs`. As rodadas 1–6 não possuem integração
 Há uma entrada comum para todas as rodadas:
 
 ```bash
-python scripts/audit/test_rodada.py --rodada 7
-python scripts/audit/test_rodada.py --rodada 7 --tipo regras
-python scripts/audit/test_rodada.py --rodada 7 --tipo relatorio
-python scripts/audit/test_rodada.py --rodada 7 --tipo integracao --worktree /caminho/juice-shop
-python scripts/audit/test_rodada.py --rodada 8 --tipo integracao --worktree /caminho/juice-shop --deps /caminho/dependencias
+python scripts/auditoria/testar_rodada.py --rodada 7
+python scripts/auditoria/testar_rodada.py --rodada 7 --tipo regras
+python scripts/auditoria/testar_rodada.py --rodada 7 --tipo relatorio
+python scripts/auditoria/testar_rodada.py --rodada 7 --tipo integracao --worktree /caminho/juice-shop
+python scripts/auditoria/testar_rodada.py --rodada 8 --tipo integracao --worktree /caminho/juice-shop --deps /caminho/dependencias
 ```
 
 As variáveis, versões e limites dos testes continuam nos relatórios de `docs/auditoria/`. As rodadas exigem verificações distintas porque investigam mecanismos diferentes. A interface é uniforme, mas a validação de cada mecanismo não pode ser substituída por um teste genérico.

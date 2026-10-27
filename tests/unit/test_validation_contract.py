@@ -9,9 +9,9 @@ import unittest
 from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
-from pipeline.metrics.loader import _validar_contrato
-from pipeline.target.workspace import reservar_execucao, _RESERVAS
-from pipeline.validation.components import componentes
+from pipeline.etapas.e09_metricas.leitura import _validar_contrato
+from pipeline.etapas.e06_aplicacao.worktrees import reservar_execucao, _RESERVAS
+from pipeline.comum.componentes import componentes
 
 
 def entrada():
@@ -27,13 +27,13 @@ class ValidationContractTests(unittest.TestCase):
     def test_comparadores_versionados_e_versao_desconhecida(self):
         for comparador in ('blocos_unicos_v1','ocorrencias_contexto_v2'):
             e=entrada();e.contrato['comparador']=comparador
-            with self.subTest(comparador=comparador),patch('pipeline.metrics.loader._perfil'):
+            with self.subTest(comparador=comparador),patch('pipeline.etapas.e09_metricas.leitura._perfil'):
                 _validar_contrato(e)
         e=entrada();e.contrato['comparador']='sem_identidade'
-        with patch('pipeline.metrics.loader._perfil'),self.assertRaises(ValueError):_validar_contrato(e)
+        with patch('pipeline.etapas.e09_metricas.leitura._perfil'),self.assertRaises(ValueError):_validar_contrato(e)
 
     def test_troca_de_comparador_recusa_retomada_antiga(self):
-        from pipeline.execucao_ampliada import validar_compatibilidade_antiga
+        from pipeline.orquestracao.preflight import validar_compatibilidade_antiga
         old={'schema_versao':'1.0','comparador':'blocos_unicos_v1','estrategias':['P1'],
              'diagnosticos':[],'prompts_validacao_sha256':{}}
         current=dict(old,schema_versao='3.0',comparador='ocorrencias_contexto_v2',validacao={})
@@ -42,9 +42,9 @@ class ValidationContractTests(unittest.TestCase):
 
     def test_fingerprint_inclui_sast_comparador_e_restauracao(self):
         fontes=componentes()
-        for nome in ('src/pipeline/sast/semgrep_client.py','src/pipeline/sast/comparacao.py',
-                     'src/pipeline/target/workspace.py','src/pipeline/run_pipeline.py',
-                     'src/pipeline/execucao_ampliada.py','config/conjunto_d.json'):
+        for nome in ('src/pipeline/etapas/e01_analise_sast/semgrep.py','src/pipeline/legado/comparacao_v1.py',
+                     'src/pipeline/etapas/e06_aplicacao/worktrees.py','src/pipeline/orquestracao/campanha.py',
+                     'src/pipeline/orquestracao/preflight.py','config/conjunto_d.json'):
             self.assertIn(nome,fontes)
             self.assertEqual(len(fontes[nome]),64)
 
@@ -52,24 +52,24 @@ class ValidationContractTests(unittest.TestCase):
         for versao in ('1.0','2.0','3.0'):
             e=entrada();e.contrato['schema_versao']=versao
             if versao!='3.0':e.contrato.pop('validacao')
-            with self.subTest(versao=versao),patch('pipeline.metrics.loader._perfil'):
+            with self.subTest(versao=versao),patch('pipeline.etapas.e09_metricas.leitura._perfil'):
                 _validar_contrato(e)
 
     def test_politica_nova_exige_mapa_e_hashes_validos(self):
         for campo,valor in (('implementacao',{}),('politica_validacao','otimizada_v1'),('cache_validacao','inventado')):
             e=entrada();e.contrato['validacao'][campo]=valor
-            with self.subTest(campo=campo),patch('pipeline.metrics.loader._perfil'),self.assertRaises(ValueError):
+            with self.subTest(campo=campo),patch('pipeline.etapas.e09_metricas.leitura._perfil'),self.assertRaises(ValueError):
                 _validar_contrato(e)
 
     def test_contrato_relacionado_requer_hash_e_preserva_f_nulo(self):
-        from pipeline.metrics.normalizer import normalizar
-        from pipeline.metrics.calculator import metricas
+        from pipeline.etapas.e09_metricas.normalizacao import normalizar
+        from pipeline.etapas.e09_metricas.calculo import metricas
         e = entrada()
         e.contrato['validacao']['politica_validacao'] = 'relacionada_v1'
-        with patch('pipeline.metrics.loader._perfil'), self.assertRaises(ValueError):
+        with patch('pipeline.etapas.e09_metricas.leitura._perfil'), self.assertRaises(ValueError):
             _validar_contrato(e)
         e.contrato['validacao']['mapa_testes_sha256'] = 'b'*64
-        with patch('pipeline.metrics.loader._perfil'):
+        with patch('pipeline.etapas.e09_metricas.leitura._perfil'):
             _validar_contrato(e)
         row = {'R': 1, 'M': 1, 'F': None, 'status_aplicacao': 'aplicado'}
         for d in ('criterio', 'marcador', 'sem_separacao'):
@@ -88,7 +88,7 @@ class ValidationContractTests(unittest.TestCase):
             reservar_execucao(raiz);reservar_execucao(raiz)
             try:
                 fonte=Path(__file__).resolve().parents[2]/'src'
-                codigo='import sys;from pathlib import Path;sys.path.insert(0,sys.argv[1]);from pipeline.target.workspace import reservar_execucao;reservar_execucao(Path(sys.argv[2]))'
+                codigo='import sys;from pathlib import Path;sys.path.insert(0,sys.argv[1]);from pipeline.etapas.e06_aplicacao.worktrees import reservar_execucao;reservar_execucao(Path(sys.argv[2]))'
                 resultado=subprocess.run([sys.executable,'-c',codigo,str(fonte),tmp],capture_output=True,text=True,timeout=10)
                 self.assertNotEqual(resultado.returncode,0)
                 self.assertIn('Outra execução',resultado.stderr)

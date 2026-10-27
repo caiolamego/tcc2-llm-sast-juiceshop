@@ -10,8 +10,8 @@ from unittest.mock import Mock,patch
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT),str(ROOT/'src')]
-from scripts.experiment.diagnose_llm import main,ler_prompt
-from pipeline.llm.provider import ErroOperacionalLLM
+from scripts.experimento.diagnosticar_llm import main,ler_prompt
+from pipeline.etapas.e05_geracao_llm.provedor import ErroOperacionalLLM
 
 
 class ArchivedPromptTests(unittest.TestCase):
@@ -27,8 +27,8 @@ class ArchivedPromptTests(unittest.TestCase):
         result={'conteudo':json.dumps(reply),'chamadas_enviadas':1,'do_cache':False,'latencia_s':1.5,'finish_reason':'stop'}
         self.response=SimpleNamespace(**result,to_dict=lambda:result)
         self.client=Mock();self.client.gerar.return_value=self.response;self.client.conferir_conexao.return_value={'estado':'identidade_verificada'}
-        self.patches=[patch('scripts.experiment.diagnose_llm.identidade_offline',return_value={'provedor':'colab','modelo':'fixture'}),
-            patch('scripts.experiment.diagnose_llm.criar_cliente',return_value=self.client),patch('builtins.print')]
+        self.patches=[patch('scripts.experimento.diagnosticar_llm.identidade_offline',return_value={'provedor':'colab','modelo':'fixture'}),
+            patch('scripts.experimento.diagnosticar_llm.criar_cliente',return_value=self.client),patch('builtins.print')]
         for p in self.patches:p.start();self.addCleanup(p.stop)
 
     def args(self):return ['--modo','prompt','--prompt-arquivo',str(self.path),'--saida',str(self.out)]

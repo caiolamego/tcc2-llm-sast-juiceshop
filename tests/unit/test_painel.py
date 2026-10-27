@@ -13,9 +13,9 @@ import unittest
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
-from pipeline.painel.controller import Controle, resumo_tentativa
-from pipeline.painel.server import handler
-from pipeline.run_pipeline import parada_solicitada, processar_caso
+from pipeline.painel.controle import Controle, resumo_tentativa
+from pipeline.painel.servidor import handler
+from pipeline.orquestracao.campanha import parada_solicitada, processar_caso
 
 
 class PainelTests(unittest.TestCase):
@@ -88,7 +88,7 @@ class PainelTests(unittest.TestCase):
                   f'pathlib.Path({str(restaurada)!r}).touch()')
         comandos = ([sys.executable, '-c', script],
                     [sys.executable, '-c', f'open({str(metricas)!r}, "w").close()'])
-        with patch('pipeline.painel.controller.montar_comandos', return_value=comandos):
+        with patch('pipeline.painel.controle.montar_comandos', return_value=comandos):
             self.controle.iniciar('dry-run')
             self.aguardar(pronta.exists)
             with self.assertRaises(ValueError):
@@ -105,7 +105,7 @@ class PainelTests(unittest.TestCase):
                 metricas = self.raiz / f'metricas{codigo}'
                 comandos = ([sys.executable, '-c', f'raise SystemExit({codigo})'],
                             [sys.executable, '-c', f'open({str(metricas)!r}, "w").close()'])
-                with patch('pipeline.painel.controller.montar_comandos', return_value=comandos):
+                with patch('pipeline.painel.controle.montar_comandos', return_value=comandos):
                     self.controle.iniciar('preflight')
                     self.aguardar(lambda: not self.controle.worker.is_alive())
                 self.assertEqual(metricas.exists(), codigo == 0)
@@ -125,7 +125,7 @@ class PainelTests(unittest.TestCase):
                     yield Path('/tmp')
                 finally:
                     eventos.append('restaurada')
-        with patch('pipeline.run_pipeline.nome_tentativa', return_value='T'), patch('pipeline.run_pipeline.tentativa') as tentativa:
+        with patch('pipeline.orquestracao.campanha.nome_tentativa', return_value='T'), patch('pipeline.orquestracao.campanha.tentativa') as tentativa:
             processar_caso(ctx, Pool(), {'caso_id': 'AMP1'}, {})
         tentativa.assert_not_called()
         self.assertEqual(eventos, ['restaurada'])
@@ -144,10 +144,10 @@ class PainelTests(unittest.TestCase):
             @contextmanager
             def alugar(self):
                 yield Path('/tmp')
-        with patch('pipeline.run_pipeline.nome_tentativa', return_value='T'), \
-                patch('pipeline.run_pipeline.tentativa', return_value=linha), \
-                patch('pipeline.run_pipeline.registrar_execucao') as registrar, \
-                patch('pipeline.run_pipeline.console'):
+        with patch('pipeline.orquestracao.campanha.nome_tentativa', return_value='T'), \
+                patch('pipeline.orquestracao.campanha.tentativa', return_value=linha), \
+                patch('pipeline.orquestracao.campanha.registrar_execucao') as registrar, \
+                patch('pipeline.orquestracao.campanha.console'):
             processar_caso(ctx, Pool(), {'caso_id': 'AMP1'}, {})
         registro = registrar.call_args.args[0]
         self.assertGreaterEqual(registro['duracao_total_s'], 0)

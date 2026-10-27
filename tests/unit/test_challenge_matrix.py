@@ -6,11 +6,11 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[1].parent / "scripts"))
 import _bootstrap  # noqa: F401,E402
-from pipeline.caminhos import RAIZ_REPO  # noqa: E402
+from pipeline.comum.caminhos import RAIZ_REPO  # noqa: E402
 
 import unittest
 
-from scripts.audit.build_challenge_matrix import aplicar_triagem, relacao
+from scripts.auditoria.gerar_matriz_desafios import aplicar_triagem, relacao
 
 
 class RelacaoTests(unittest.TestCase):

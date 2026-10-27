@@ -16,12 +16,12 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT/'src'),str(ROOT),str(Path(__file__).parent)]
 import httpx
-from pipeline.llm.colab_protocol import sha, validar_manifesto, read_json
-from pipeline.llm.provider import (ConfigColab, ErroOperacionalLLM, GeracaoCancelada, provedor,
+from pipeline.etapas.e05_geracao_llm.protocolo_colab import sha, validar_manifesto, read_json
+from pipeline.etapas.e05_geracao_llm.provedor import (ConfigColab, ErroOperacionalLLM, GeracaoCancelada, provedor,
     identidade_offline, criar_cliente, texto_aplicavel, ambiente_alvo, resumo_publico)
-from pipeline.llm.colab_client import ClienteColab, Reservas, atomic_json, exclusive
-from pipeline.llm.openai_client import OrcamentoEsgotado
-from pipeline.llm.schema import Correcao, response_format
+from pipeline.etapas.e05_geracao_llm.cliente_colab import ClienteColab, Reservas, atomic_json, exclusive
+from pipeline.etapas.e05_geracao_llm.cliente_openai import OrcamentoEsgotado
+from pipeline.etapas.e05_geracao_llm.esquema import Correcao, response_format
 
 
 def manifesto():
@@ -89,7 +89,7 @@ class ColabTests(unittest.TestCase):
     def test_openai_padrao_e_fabrica_compatibilidade(self):
         self.env.write_text('OPENAI_API_KEY=test-key\nOPENAI_MODEL=gpt-4.1-mini\n')
         self.assertEqual(provedor(self.env),'openai')
-        with patch('pipeline.llm.openai_client.ClienteLLM') as cls:
+        with patch('pipeline.etapas.e05_geracao_llm.cliente_openai.ClienteLLM') as cls:
             criar_cliente(self.env);self.assertEqual(cls.call_args.args[0].modelo,'gpt-4.1-mini')
         self.assertEqual(identidade_offline(self.env)['provedor'],'openai')
 
@@ -140,7 +140,7 @@ class ColabTests(unittest.TestCase):
         self.assertNotIn('test-private-token',alltext);self.assertNotIn('fixture.invalid',alltext)
 
     def test_detalhe_http_so_expoe_causas_conhecidas(self):
-        from pipeline.llm.colab_client import detalhe_http_seguro
+        from pipeline.etapas.e05_geracao_llm.cliente_colab import detalhe_http_seguro
         r=httpx.Response(503,json={'detail':'VRAM insuficiente para esta configuração'})
         self.assertIn('CUDA out of memory',detalhe_http_seguro(r))
         r=httpx.Response(503,text='<html>ERR_NGROK_3004 secret-token</html>')
@@ -209,7 +209,7 @@ class ColabTests(unittest.TestCase):
         original=self.cfg.identidade()
         self.assertNotEqual(original,replace(self.cfg,seed=43).identidade())
         self.assertNotEqual(original,replace(self.cfg,timeout=700).identidade())
-        with patch('pipeline.llm.provider.response_format',return_value={'test':'schema'}):
+        with patch('pipeline.etapas.e05_geracao_llm.provedor.response_format',return_value={'test':'schema'}):
             self.assertNotEqual(original,self.cfg.identidade())
         self.assertEqual(original,replace(self.cfg,api_key='new-token',base_url='https://new.invalid/v1').identidade())
 
@@ -237,21 +237,21 @@ class ColabTests(unittest.TestCase):
             self.assertEqual(env,{'PATH':'public','TZ':'UTC'})
 
     def test_cli_help_fora_da_raiz_e_offline_sem_rede(self):
-        cmd=[sys.executable,str(ROOT/'scripts/experiment/diagnose_llm.py')]
+        cmd=[sys.executable,str(ROOT/'scripts/experimento/diagnosticar_llm.py')]
         result=subprocess.run(cmd+['--help'],cwd=self.root,capture_output=True,text=True,timeout=15)
         self.assertEqual(result.returncode,0);self.assertIn('offline',result.stdout)
-        from scripts.experiment.diagnose_llm import main
+        from scripts.experimento.diagnosticar_llm import main
         with patch('httpx.Client',side_effect=AssertionError('rede proibida')),patch('builtins.print'):
             self.assertEqual(main(['--modo','offline','--env',str(self.env)]),0)
 
     def test_diagnostico_openai_sem_chave_falha_offline(self):
-        from scripts.experiment.diagnose_llm import main
+        from scripts.experimento.diagnosticar_llm import main
         self.env.write_text('LLM_PROVIDER=openai\nOPENAI_API_KEY=<preencher>\n')
         with patch('httpx.Client',side_effect=AssertionError('rede proibida')),patch('builtins.print'):
             self.assertEqual(main(['--modo','offline','--env',str(self.env)]),1)
 
     def test_painel_sem_segredos_e_custo_desconhecido(self):
-        from pipeline.painel.controller import resumo_tentativa
+        from pipeline.painel.controle import resumo_tentativa
         info=resumo_publico(self.env);self.assertEqual(info['provedor'],'colab')
         self.assertNotIn('test-private-token',str(info));self.assertNotIn('fixture.invalid',str(info))
         r=resumo_tentativa({'provedor':'colab','modelo':'qwen','custo_usd':None,'espera_inferencia_s':2,'requisicao_s':4})
