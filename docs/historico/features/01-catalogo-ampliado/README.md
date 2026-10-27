@@ -3,7 +3,7 @@
 **Status:** implementada e validada; ver [relatório de entrega](ENTREGA.md).  
 **Data:** 12/10/2026.  
 **Objetivo:** transformar os achados da auditoria em uma lista determinística e rastreável de casos de correção.  
-**Origem:** [guia de continuidade](../../docs/GUIA_CONTINUIDADE_TCC2.md), entrega B.  
+**Origem:** [guia de continuidade](../../../planejamento/GUIA_CONTINUIDADE_TCC2.md), entrega B.  
 **Entrega seguinte:** integrar este catálogo ao orquestrador e adaptar R/M e o perfil de regras.
 
 ## 1. Problema e resultado esperado

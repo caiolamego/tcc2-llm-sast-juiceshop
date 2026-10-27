@@ -361,4 +361,4 @@ Após o aceite, realizar um piloto com chamadas reais em poucos casos, com orça
 
 ## 15. Evidência medida
 
-115 testes passaram. O preflight gerou 312 prompts e 156 recuperações, todas por CWE. Os 21 falsos positivos e 49 casos sem OWASP permaneceram incluídos. Não há múltiplas CWEs no catálogo oficial; ordem e fallback foram validados com fixtures sintéticas. A limitação do documento amplo para CWE-915 está registrada na [cobertura](../../outputs/feature03/cobertura_rag.json).
+115 testes passaram. O preflight gerou 312 prompts e 156 recuperações, todas por CWE. Os 21 falsos positivos e 49 casos sem OWASP permaneceram incluídos. Não há múltiplas CWEs no catálogo oficial; ordem e fallback foram validados com fixtures sintéticas. A limitação do documento amplo para CWE-915 está registrada na [cobertura](../../../../outputs/feature03/cobertura_rag.json).

@@ -18,7 +18,7 @@
 
 Python 3.12.3, Node v24.14.0, npm 11.9.0 e Semgrep 1.177.0.
 Foi criado um ambiente completo em `.venv`; a lista efetiva de dependências está em
-[python-freeze.txt](../../outputs/feature02/preparacao/python-freeze.txt).
+[python-freeze.txt](../../../../outputs/feature02/preparacao/python-freeze.txt).
 
 `workspace/wt-1` é uma worktree detached no commit
 `f915bddd82790d0f3018902d36ae9b4241a5f51f`, preparada a partir do repositório local
@@ -29,7 +29,7 @@ e contém `package-lock=false` em `.npmrc`. Por isso, a tentativa inicial de `np
 não pôde instalar. Foi gerado um lock de preparação com
 `npm install --package-lock-only --package-lock=true --ignore-scripts`, seguido de
 `CYPRESS_INSTALL_BINARY=0 npm ci --package-lock=true --no-audit --no-fund`.
-O [lock utilizado](../../outputs/feature02/preparacao/package-lock-gerado.json) foi arquivado.
+O [lock utilizado](../../../../outputs/feature02/preparacao/package-lock-gerado.json) foi arquivado.
 Esse lock representa resolução atual das dependências, não um lock oficial histórico.
 O postinstall também instalou e compilou o frontend; suas dependências não constituem
 um snapshot oficial antigo. A comparação funcional usa a referência medida neste ambiente.
@@ -37,13 +37,13 @@ um snapshot oficial antigo. A comparação funcional usa a referência medida ne
 ## Regras congeladas
 
 A exportação foi obtida por `ConfigLoader("p/default").load_config()` do Semgrep 1.177.0,
-e arquivada em [p-default-exportado.yaml](../../outputs/feature02/preparacao/p-default-exportado.yaml).
+e arquivada em [p-default-exportado.yaml](../../../../outputs/feature02/preparacao/p-default-exportado.yaml).
 O builder reuniu as regras locais e preservou IDs, flags, hashes e exclusões.
 
-- [Manifesto do perfil](../../config/perfis/ampliado_v1/perfil.json).
-- [Regras remotas](../../config/perfis/ampliado_v1/regras_remotas.yaml).
-- [Regras locais](../../config/perfis/ampliado_v1/regras_locais.yaml).
-- [Relatório de reprodução](../../outputs/feature02/AMP_PREFLIGHT_01/sast_antes/reproducao.json).
+- [Manifesto do perfil](../../../../config/perfis/ampliado_v1/perfil.json).
+- [Regras remotas](../../../../config/perfis/ampliado_v1/regras_remotas.yaml).
+- [Regras locais](../../../../config/perfis/ampliado_v1/regras_locais.yaml).
+- [Relatório de reprodução](../../../../outputs/feature02/AMP_PREFLIGHT_01/sast_antes/reproducao.json).
 
 A exportação foi obtida depois da auditoria. A igualdade de findings confirma reprodução
 dos 78 casos, mas não prova identidade integral das regras com o conteúdo remoto anterior
@@ -85,7 +85,7 @@ Métricas foram calculadas com `scripts/reports/metricas_execucao.py AMP_DRY_01
 
 ## Evidências e interpretação do dry-run
 
-[Referência funcional](../../outputs/feature02/validacao/baseline_testes.json):
+[Referência funcional](../../../../outputs/feature02/validacao/baseline_testes.json):
 T3 sem falhas e T4 com falha preexistente do recurso StackOverflow (HTTP 403).
 O checker sem patch aprovou o ambiente usando essa referência.
 
@@ -105,9 +105,9 @@ Esse resultado confirma que o pipeline aplica a escada de validação e rejeita 
 que quebram as asserções existentes. Não confirma que todo comentário seja funcionalmente
 inofensivo. A worktree foi restaurada ao final.
 
-[Registros](../../outputs/feature02/AMP_DRY_01/resultados_consolidados/execucoes.jsonl),
-[métricas](../../outputs/feature02/AMP_DRY_01/resultados_consolidados/AMP_DRY_01_metricas.json)
-e [histórico de sessões](../../outputs/feature02/AMP_DRY_01/resultados_consolidados/AMP_DRY_01_sessoes.json)
+[Registros](../../../../outputs/feature02/AMP_DRY_01/resultados_consolidados/execucoes.jsonl),
+[métricas](../../../../outputs/feature02/AMP_DRY_01/resultados_consolidados/AMP_DRY_01_metricas.json)
+e [histórico de sessões](../../../../outputs/feature02/AMP_DRY_01/resultados_consolidados/AMP_DRY_01_sessoes.json)
 contêm os caminhos das comparações, testes, diffs e respostas simuladas.
 
 ### Tempos observados

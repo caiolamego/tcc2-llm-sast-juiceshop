@@ -35,7 +35,7 @@ registros de futuras tentativas (`aplicador_versao`, `correspondencias_aplicacao
 Sempre use saída nova:
 
 ```bash
-docker compose run --rm tcc python scripts/experiment/replay_anchor_application.py \
+docker compose run --rm tcc python scripts/experimento/replay_ancoras.py \
   --execucao outputs/campanha_docker/AMP_PAINEL_20261019T181245Z_1aca0df2 \
   --checkout-parser workspace/wt-1 \
   --saida outputs/revalidacoes/ANCORAS_INDENTACAO_V2

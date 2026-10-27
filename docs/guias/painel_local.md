@@ -13,7 +13,7 @@ biblioteca padrão do Python e atende somente em `127.0.0.1`.
 ## Iniciar e acompanhar
 
 1. Confira os casos, as estratégias e K apresentados. São lidos de
-   [`config/execucao.yaml`](../config/execucao.yaml), também usado por `executar.py`.
+   [`config/execucao.yaml`](../../config/execucao.yaml), também usado por `executar.py`.
 2. Escolha **Real**, **Preflight** ou **Dry-run** e clique em **Iniciar pipeline**.
    Real usa o cliente LLM existente, seu cache e os limites acumulados do `.env`.
    O painel não altera esses limites e não envia a chave ao navegador.
@@ -59,7 +59,7 @@ gasto agora, não o custo histórico da evidência. Etapas dispensadas não são
 aprovados. O exemplo `config/execucao_otimizada.exemplo.yaml` mantém K=1 e inicia em
 preflight. O YAML de entrada atual seleciona dez issues com `relacionada_v2` e K=4; veja
 [o piloto e as respostas](piloto_10_issues.md) e
-[os testes executados e as lacunas](cobertura_funcional.md).
+[os testes executados e as lacunas](../cobertura_funcional.md).
 
 | Coluna | Medição |
 |---|---|
@@ -92,7 +92,7 @@ gera prompts e não corresponde a tentativas de correção.
 
 - `painel.py`: inicialização e seleção da `.venv`.
 - `src/pipeline/painel/`: servidor HTTP, controle de execução e leitura dos registros.
-- `frontend/painel/`: interface sem dependências externas.
+- `src/pipeline/painel/web/`: interface sem dependências externas.
 - `outputs/painel/`: logs completos e estado final das sessões iniciadas pelo painel.
 - `.cache/painel/`: pedidos de parada e lock de instância; dados locais ignorados pelo Git.
 - A pasta configurada em `saida_base`: artefatos do pipeline e diretório irmão `_METRICAS`.

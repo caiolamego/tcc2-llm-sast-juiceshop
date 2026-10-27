@@ -112,7 +112,7 @@ A execução real inicial revelou falta de builds nas worktrees novas. A políti
 atual inclui esses artefatos no gate e aguarda a inicialização antes dos testes.
 Falhas operacionais não são mais convertidas em testes funcionais reprovados.
 O baseline corrente é `outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE/`.
-A [revalidação sem LLM](auditoria/correcao_validacao_piloto10.md) preserva a
+A [revalidação sem LLM](../auditoria/correcao_validacao_piloto10.md) preserva a
 execução inicial e permite comparar as mesmas correções em ambiente preparado.
 
 ## Worktrees adicionais preparadas

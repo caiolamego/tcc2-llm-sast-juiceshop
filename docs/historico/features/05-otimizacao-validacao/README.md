@@ -25,11 +25,11 @@ de API relacionada terá custo equivalente ao unitário de keyServer.
 
 Fontes locais de autoridade:
 
-- [Runner atual](../../src/pipeline/validation/runner.py).
-- [Orquestrador](../../src/pipeline/run_pipeline.py).
-- [Contrato ampliado](../../src/pipeline/execucao_ampliada.py).
-- [Resumo do piloto](../../outputs/piloto_2_issues/RESUMO_EXECUCAO.json).
-- [Protocolo experimental](../../docs/protocolo_experimental.md).
+- [Runner atual](../../../../src/pipeline/etapas/e07_validacao/camadas.py).
+- [Orquestrador](../../../../src/pipeline/orquestracao/campanha.py).
+- [Contrato ampliado](../../../../src/pipeline/orquestracao/preflight.py).
+- [Resumo do piloto](../../../../outputs/piloto_2_issues/RESUMO_EXECUCAO.json).
+- [Protocolo experimental](../../../protocolo_experimental.md).
 - [Plano de validação desta feature](VALIDACAO.md).
 
 ## 2. Entregas e limites

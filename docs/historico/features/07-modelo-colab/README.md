@@ -1,6 +1,6 @@
 # Feature 07 — Modelo hospedado no Colab
 
-Status: implementada com validação offline. Conectividade Colab, schema na GPU e piloto real permanecem pendentes. Consulte a [entrega](ENTREGA.md) e o [procedimento manual](../../docs/modelo_colab.md).
+Status: implementada com validação offline. Conectividade Colab, schema na GPU e piloto real permanecem pendentes. Consulte a [entrega](ENTREGA.md) e o [procedimento manual](../../../guias/modelo_colab.md).
 
 ## Objetivo
 
@@ -27,7 +27,7 @@ Fluxo: painel/lançador → cliente LLM → endpoint HTTPS autenticado → servi
 
 ## Configuração prevista
 
-Os campos de [`.env.example`](../../.env.example) são lidos pelo runtime. OpenAI continua selecionado por padrão; `.env` pessoal e configuração K=4 não foram alterados. A nova integração não fez chamadas reais durante a entrega.
+Os campos de [`.env.example`](../../../../.env.example) são lidos pelo runtime. OpenAI continua selecionado por padrão; `.env` pessoal e configuração K=4 não foram alterados. A nova integração não fez chamadas reais durante a entrega.
 
 | Campo | Preenchimento e regra |
 |---|---|

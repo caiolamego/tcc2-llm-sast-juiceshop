@@ -12,9 +12,9 @@
 - 49 casos sem OWASP 2025 mapeado e 32 com categoria RAG `generico`; permanecem incluídos.
 - 50 avisos de parsing do scan arquivado registrados nos metadados.
 
-Arquivos: [catálogo](../../outputs/catalogos/ampliado_v1/catalogo_issues.json),
-[exclusões](../../outputs/catalogos/ampliado_v1/exclusoes.json) e
-[metadados](../../outputs/catalogos/ampliado_v1/catalogo_meta.json).
+Arquivos: [catálogo](../../../../outputs/catalogos/ampliado_v1/catalogo_issues.json),
+[exclusões](../../../../outputs/catalogos/ampliado_v1/exclusoes.json) e
+[metadados](../../../../outputs/catalogos/ampliado_v1/catalogo_meta.json).
 
 ## Ambiente e preparação
 

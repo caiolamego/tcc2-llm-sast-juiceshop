@@ -4,7 +4,7 @@ A feature 07 permite escolher OpenAI ou o servidor Qwen do notebook. A implement
 
 ## Preparar o notebook
 
-1. Abra [qwen_colab_api.ipynb](../notebooks/qwen_colab_api.ipynb) no Colab com GPU. Ele usa Qwen2.5-Coder-14B-Instruct em NF4; não troca automaticamente para 7B.
+1. Abra [qwen_colab_api.ipynb](../../notebooks/qwen_colab_api.ipynb) no Colab com GPU. Ele usa Qwen2.5-Coder-14B-Instruct em NF4; não troca automaticamente para 7B.
 2. Confira a disponibilidade de memória e execute as células em ordem. Forneça `COLAB_LLM_API_KEY` e `NGROK_AUTHTOKEN` pela entrada oculta ou secrets. O primeiro é uma senha escolhida para a API; o segundo pertence à sua conta ngrok. Nenhum deles é uma chave OpenAI.
 3. Após definir o servidor, baixe `manifesto_colab.json` e copie para `config/modelos/manifesto_colab.json` nesta máquina. O manifesto contém revisões, tokenizer, template, versões e identidade; não contém credenciais. Não use um manifesto fictício.
 4. Anote a URL HTTPS terminada em `/v1`. Em reproduções, fixe `MODEL_REVISION` no SHA exportado e confira a identidade novamente. A GPU e o runtime podem variar; seed não garante reprodução bit a bit.
@@ -13,7 +13,7 @@ A sessão precisa permanecer disponível. A integração não contorna limites d
 
 ## Configurar localmente
 
-Na raiz do projeto, edite seu `.env` com os campos de [`.env.example`](../.env.example):
+Na raiz do projeto, edite seu `.env` com os campos de [`.env.example`](../../.env.example):
 
 ```dotenv
 LLM_PROVIDER=colab
@@ -38,16 +38,16 @@ OpenAI mantém `.cache/orcamento_llm.json` e seu cache original. `MAX_USD` prote
 Ative a `.venv`, ou use seu Python diretamente:
 
 ```bash
-.venv/bin/python scripts/experiment/diagnose_llm.py --modo offline
-.venv/bin/python scripts/experiment/diagnose_llm.py --modo conexao
-.venv/bin/python scripts/experiment/diagnose_llm.py --modo smoke
+.venv/bin/python scripts/experimento/diagnosticar_llm.py --modo offline
+.venv/bin/python scripts/experimento/diagnosticar_llm.py --modo conexao
+.venv/bin/python scripts/experimento/diagnosticar_llm.py --modo smoke
 ```
 
 - `offline`: valida configuração e manifesto, sem rede.
 - `conexao`: autentica em `/health` e `/v1/models`, confere modelo/identidade, sem geração.
 - `smoke`: gera um objeto sintético com o schema real `Correcao`; consome chamada quando não há cache. Não altera o Juice Shop nem é tentativa do experimento. A saída indica quantos envios ocorreram e se houve cache.
 
-Também há um [notebook de diagnóstico local](../notebooks/teste-local.ipynb), usando esses mesmos comandos. Nenhum comando de diagnóstico chama OpenAI automaticamente. Um diagnóstico mal sucedido retorna código 1, argumentos inválidos retornam 2 e sucesso retorna 0.
+Também há um [notebook de diagnóstico local](../../notebooks/teste-local.ipynb), usando esses mesmos comandos. Nenhum comando de diagnóstico chama OpenAI automaticamente. Um diagnóstico mal sucedido retorna código 1, argumentos inválidos retornam 2 e sucesso retorna 0.
 
 O preflight científico continua sem consulta ao Colab ou geração LLM. Antes das tentativas reais, a identidade remota será verificada. Essa separação permite preparar tudo offline sem declarar conectividade comprovada.
 
@@ -56,7 +56,7 @@ O preflight científico continua sem consulta ao Colab ou geração LLM. Antes d
 Para enviar somente `teste` do computador para a API Colab configurada no `.env`, usando o mesmo cliente de geração do pipeline:
 
 ```bash
-.venv/bin/python scripts/experiment/diagnose_llm.py --modo mensagem --mensagem "teste"
+.venv/bin/python scripts/experimento/diagnosticar_llm.py --modo mensagem --mensagem "teste"
 ```
 
 A resposta aparece no terminal e é arquivada numa pasta nova em `outputs/diagnosticos_llm/`. O cliente mantém autenticação, modelo, parâmetros e schema JSON `Correcao` do pipeline; somente a mensagem enviada é `teste`. Portanto a resposta continua estruturada em JSON. Não usa worktrees, não aplica patches, não executa SAST ou testes. Conta como chamada Colab quando não houver cache e atravessa a URL configurada (incluindo ngrok, se for o endpoint atual). Este teste não equivale ao teste HTTP local dentro do Colab.
@@ -66,7 +66,7 @@ A resposta aparece no terminal e é arquivada numa pasta nova em `outputs/diagno
 Para isolar a LLM do restante do pipeline, envie o P1 original da issue `keyServer.ts` que falhou:
 
 ```bash
-.venv/bin/python scripts/experiment/diagnose_llm.py --modo prompt \
+.venv/bin/python scripts/experimento/diagnosticar_llm.py --modo prompt \
   --prompt-arquivo outputs/piloto_colab_1_issue/AMP_REAL_20261017T222912Z_abd18103/prompts/*.json
 ```
 

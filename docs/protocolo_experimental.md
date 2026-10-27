@@ -139,7 +139,7 @@ Condições fixas de execução:
 
 A suíte do Juice Shop **não passa integralmente** no commit fixado, sem nenhuma alteração: `test/api/internet-resources.test.ts` faz uma requisição real ao StackOverflow, que responde `403` de forma consistente no ambiente utilizado. Um critério F definido como "nenhum teste falhou" tornaria `F = 0` para toda e qualquer correção, zerando a TRV por motivo alheio ao experimento.
 
-**Decisão.** `F = 1` quando o conjunto de testes que falham após a correção está **contido** no conjunto que já falhava sem alteração alguma. A linha de base é gerada uma vez por `scripts/experiment/baseline_testes.py`, versionada em `outputs/baseline_testes.json` com commit do alvo, data e nome de cada teste falho, e reconferida a cada mudança de ambiente.
+**Decisão.** `F = 1` quando o conjunto de testes que falham após a correção está **contido** no conjunto que já falhava sem alteração alguma. A linha de base é gerada uma vez por `scripts/experimento/gerar_linha_de_base_historica.py`, versionada em `outputs/baseline_testes.json` com commit do alvo, data e nome de cada teste falho, e reconferida a cada mudança de ambiente.
 
 Vantagens sobre pular o teste pelo nome: cobre qualquer teste instável ou dependente de rede sem precisar enumerá-los, e deixa registrado no repositório o estado exato do alvo. Custo: uma execução de referência (~12 s).
 
@@ -195,7 +195,7 @@ A observação em si é resultado: a correção removeria o alerta do SAST (`R =
 Implementado em 12/10/2026 na feature 01. Esta seção registra a política do conjunto ampliado;
 as seções anteriores descrevem o catálogo histórico e as execuções E01/E02.
 
-O gerador `scripts/experiment/build_expanded_catalog.py` lê as quatro fontes da auditoria
+O gerador `scripts/experimento/gerar_catalogo_ampliado.py` lê as quatro fontes da auditoria
 combinada arquivada, verifica hashes, commit, versão do Semgrep e associação por número,
 regra, arquivo e intervalo. A decisão de escopo é a classificação arquivada validada.
 O filtro histórico de severidade/categoria/CWE não é reaplicado ao conjunto ampliado.
@@ -216,8 +216,8 @@ CWE desconhecida resulta em `OUTRO`, e RAG sem mapeamento em `generico`.
 Saídas oficiais: [catálogo](../outputs/catalogos/ampliado_v1/catalogo_issues.json),
 [exclusões](../outputs/catalogos/ampliado_v1/exclusoes.json) e
 [metadados](../outputs/catalogos/ampliado_v1/catalogo_meta.json).
-A [especificação](../features/01-catalogo-ampliado/README.md) e o
-[relatório de entrega](../features/01-catalogo-ampliado/ENTREGA.md) detalham o contrato e a reprodução.
+A [especificação](historico/features/01-catalogo-ampliado/README.md) e o
+[relatório de entrega](historico/features/01-catalogo-ampliado/ENTREGA.md) detalham o contrato e a reprodução.
 
 Esta geração não altera as entradas do orquestrador. O catálogo histórico, seus resultados e
 os scripts anteriores foram preservados. Congelamento do perfil ampliado, comparação posterior
@@ -276,7 +276,7 @@ O preflight `AMP_RAG_PREFLIGHT_01` produziu 312 prompts e 156 recuperações P3/
 
 Recuperação por categoria não confirma vulnerabilidade nem especificidade da recomendação: CWE-915 seleciona documento amplo que não detalha poluição de protótipo. P3/P4 adicionam SAST e documentação juntos; eventual efeito não deve ser atribuído exclusivamente a RAG. Correções reais, custos, R/F/M e validação específica de frontend pertencem às próximas entregas.
 
-Comandos e hashes estão na [entrega](../features/03-rag-prompts/ENTREGA.md); a [cobertura](../outputs/feature03/cobertura_rag.json) preserva categoria original/recuperada, motivo, CWE e tamanhos por caso.
+Comandos e hashes estão na [entrega](historico/features/03-rag-prompts/ENTREGA.md); a [cobertura](../outputs/feature03/cobertura_rag.json) preserva categoria original/recuperada, motivo, CWE e tamanhos por caso.
 
 
 ## 14. Consolidação verificável — feature 04
@@ -295,7 +295,7 @@ Publicação ocorre em saída nova, com lock, revalidação de fontes e promoç�
 
 A validação encontrou divergência preexistente no YAML remoto do perfil atual. Um snapshot exato do Git, com os hashes do manifesto original, foi arquivado na preparação da feature 04; a divergência permanece registrada. Isso não altera a metodologia nem o detector histórico. Novos scans precisam selecionar um perfil íntegro.
 
-Veja [especificação](../features/04-metricas-consolidacao/README.md) e [entrega](../features/04-metricas-consolidacao/ENTREGA.md).
+Veja [especificação](historico/features/04-metricas-consolidacao/README.md) e [entrega](historico/features/04-metricas-consolidacao/ENTREGA.md).
 
 ## Otimização experimental da validação — feature 05
 
@@ -347,7 +347,7 @@ repetição seletiva têm observação única e permanecem exploratórios.
 A política vigente não foi alterada. Recomenda-se avaliar otimizado/K=2/repetição
 ampla em novo piloto controlado antes de congelar a campanha. A cobertura continua
 sendo a suíte de servidor/API já existente, sem Angular/Cypress. Veja os hashes,
-preparações descartadas e limites na [entrega](../features/05-otimizacao-validacao/ENTREGA.md).
+preparações descartadas e limites na [entrega](historico/features/05-otimizacao-validacao/ENTREGA.md).
 
 
 ### Política relacionada, decisão posterior à feature 05 — 16/10/2026
@@ -440,7 +440,7 @@ preparados e 26 bloqueados pela união por arquivo. A campanha dos 78 permanece
 pendente. Baselines compartilhados não são 78 medições independentes. Métricas
 acrescentam agrupamento por alcance funcional, sem mudar denominadores; registros
 antigos não recebem alcance inventado. Consulte a
-[entrega, controles e evidências](../features/06-cobertura-funcional/ENTREGA.md).
+[entrega, controles e evidências](historico/features/06-cobertura-funcional/ENTREGA.md).
 
 
 ### Correção da medição funcional do piloto K=4 — 17/10/2026
@@ -464,7 +464,7 @@ referenciam a nova evidência. Veja o
 
 ## Provedor Colab e identidade de inferência
 
-Novas execuções ampliadas podem selecionar Qwen no Colab e usam contrato 5.0. Modelo/revisão/tokenizer/template/quantização/geração são identificados separadamente do endpoint. Preservam-se prompts, critérios R/F/M, denominadores e parada da cadeia. O contador Colab é independente do histórico OpenAI; custos não informados permanecem nulos. Erro operacional interrompe a fila e não é reprovação funcional; resposta truncada não é aplicada. A entrega 07 foi testada offline, sem demonstrar desempenho ou eficácia na GPU. [Preparação e limites](modelo_colab.md).
+Novas execuções ampliadas podem selecionar Qwen no Colab e usam contrato 5.0. Modelo/revisão/tokenizer/template/quantização/geração são identificados separadamente do endpoint. Preservam-se prompts, critérios R/F/M, denominadores e parada da cadeia. O contador Colab é independente do histórico OpenAI; custos não informados permanecem nulos. Erro operacional interrompe a fila e não é reprovação funcional; resposta truncada não é aplicada. A entrega 07 foi testada offline, sem demonstrar desempenho ou eficácia na GPU. [Preparação e limites](guias/modelo_colab.md).
 
 ## Ambiente único em Docker — 18/10/2026
 
@@ -533,3 +533,24 @@ sem LLM, SAST ou testes funcionais. Artefatos em
 `outputs/revalidacoes/ANCORAS_INDENTACAO_V1/`. Esse resultado mede aplicabilidade,
 não remoção da vulnerabilidade nem aceite funcional. Detalhes em
 [aplicacao_ancoras.md](aplicacao_ancoras.md).
+
+## Reorganização do código e referência oficial v2 — 26/10/2026
+
+O código foi reorganizado em pastas por etapa do pipeline (`src/pipeline/etapas/e01_analise_sast` …
+`e09_metricas`, além de `orquestracao/`, `comum/` e `legado/`), com nomes em português; os scripts também. A
+lógica não mudou: só nomes de arquivos, pastas e imports. Como a identidade científica inclui o nome e o
+conteúdo dos módulos de validação, o baseline funcional e a referência Docker foram gerados de novo:
+`outputs/baselines/docker/oficial_v2/`, com a imagem local construída do mesmo `Dockerfile` e dos mesmos
+lockfiles.
+
+Critério para aceitar a referência nova: os 39 grupos de testes com o mesmo resultado do baseline anterior da
+mesma imagem (`DOCKER_V2`), as duas compilações aprovadas, o mesmo ambiente e a mesma identidade de cobertura,
+exceto os hashes dos módulos de código. Antes de aceitar, a bateria de verificação mostrou ainda prompts,
+respostas, patches e comparações idênticos byte a byte num preflight de 52 casos e num dry-run de 10 casos, e a
+reconsolidação da campanha de 19/10 idêntica ao arquivado
+(`outputs/revalidacoes/REORGANIZACAO_20261026/`).
+
+A campanha de 19/10 continua ligada à referência v1 (`docker/historico/referencia_oficial_v1.json` e
+`outputs/baselines/docker/oficial_v1/`). Execuções novas usam a v2. Resultados das duas não devem ser somados
+sem registrar a troca de referência; a troca não altera prompts, respostas armazenadas em cache nem critérios.
+

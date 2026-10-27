@@ -29,11 +29,11 @@ contagens e a seleção atual, sem atribuir adequação funcional aos testes.
 
 Fontes locais de autoridade:
 
-- [Catálogo ampliado](../../outputs/catalogos/ampliado_v1/catalogo_issues.json).
-- [Mapa atual](../../config/mapa_testes_relacionados.yaml).
-- [Seletor](../../src/pipeline/validation/selection.py) e [runner](../../src/pipeline/validation/runner.py).
-- [Política relacionada](../../docs/validacao_relacionada.md).
-- [Protocolo](../../docs/protocolo_experimental.md) e [comparador v2](../../docs/auditoria/comparador_v2.md).
+- [Catálogo ampliado](../../../../outputs/catalogos/ampliado_v1/catalogo_issues.json).
+- [Mapa atual](../../../../config/mapa_testes_relacionados.yaml).
+- [Seletor](../../../../src/pipeline/etapas/e07_validacao/selecao.py) e [runner](../../../../src/pipeline/etapas/e07_validacao/camadas.py).
+- [Política relacionada](../../../validacao_relacionada.md).
+- [Protocolo](../../../protocolo_experimental.md) e [comparador v2](../../../auditoria/comparador_v2.md).
 
 ## 2. Escopo e limites
 
@@ -285,4 +285,4 @@ anterior e conferência de identidades contra baseline.
 O novo conjunto D conserva 75 entradas e não acrescenta mocks Angular a D sem
 evidência que satisfaça os critérios vigentes. Lacunas de CAPTCHA aritmético, ZIP,
 campanha e legendas permanecem explícitas mesmo com testes próximos passando.
-Veja os [comandos operacionais](../../docs/cobertura_funcional.md).
+Veja os [comandos operacionais](../../../cobertura_funcional.md).

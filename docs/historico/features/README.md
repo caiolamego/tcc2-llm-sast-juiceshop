@@ -12,4 +12,4 @@ Especificações de entregas técnicas, com escopo, contratos e critérios de ac
 | 06 | [Cobertura funcional dos 78 casos](06-cobertura-funcional/README.md) | Implementada e auditada — 52 casos preparados, 26 bloqueados; campanha pendente — [entrega](06-cobertura-funcional/ENTREGA.md) |
 | 07 | [Modelo hospedado no Colab](07-modelo-colab/README.md) | Implementada e testada offline — conexão Colab e piloto pendentes — [entrega](07-modelo-colab/ENTREGA.md) |
 
-Contexto geral: [guia de continuidade do TCC2](../docs/GUIA_CONTINUIDADE_TCC2.md).
+Contexto geral: [guia de continuidade do TCC2](../../planejamento/GUIA_CONTINUIDADE_TCC2.md).

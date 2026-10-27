@@ -1,5 +1,8 @@
 # Estrutura do projeto
 
+> Documento histórico (até 26/10/2026). A estrutura atual está no [README da raiz](../../README.md)
+> e no [índice da documentação](../README.md).
+
 ## Código e comandos
 
 `src/pipeline/` contém os componentes de SAST, LLM, prompts, patches, worktrees, validação e o orquestrador. Esta reorganização não altera a lógica experimental nem extrai novos módulos.

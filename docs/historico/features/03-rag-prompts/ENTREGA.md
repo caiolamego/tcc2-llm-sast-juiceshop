@@ -96,15 +96,15 @@ O documento genérico foi inspecionado pela fixture sem CWE/categoria, e a ordem
 | integrity_failures | `36e31934b593726242fdae50053a811dab86b935fdff1a46b3959b9fe9ef1ae6` | `82f7f96acfdca4fba8138d2df4c412307be785bcb933489c0bc2927e46c79594` |
 | security_misconfiguration | `5ed2f0943efd00af57954da47c9535b817b2fd1c99438e2d6beb15806229600a` | `024d0de3e4e6b244881c185d73ff286f57dcad436a6104dfbc639d9e85fa8dd9` |
 
-- [Manifesto publicado](../../knowledge_base/manifesto.json).
-- [Preflight e metadados](../../outputs/feature03/AMP_RAG_PREFLIGHT_01/preflight.json).
-- [Gate de reprodução](../../outputs/feature03/AMP_RAG_PREFLIGHT_01/sast_antes/reproducao.json): 78/78, sem ausentes/adicionais; oito diagnósticos preexistentes.
-- [Cobertura e amostras](../../outputs/feature03/cobertura_rag.json).
-- [Fallback sintético](../../outputs/feature03/fallback_sintetico.json) e [múltiplas CWEs](../../outputs/feature03/multiplas_cwes_sintetico.json).
-- [Compatibilidade antiga](../../outputs/feature03/compatibilidade_antiga.json), exercitada sem alterar a feature 02.
-- [Validação final e retomada 2.0](../../outputs/feature03/validacao_final.json).
-- [Verificação da entrega](../../outputs/feature03/verificacao_entrega.json) e [hashes históricos capturados](../../outputs/feature03/preparacao/artefatos_historicos_sha256.json).
-- [Referências textuais anteriores](../../outputs/feature03/preparacao/referencia_prompts_semrag.json) e [builder antes da alteração](../../outputs/feature03/preparacao/builder_anterior.py.txt).
+- [Manifesto publicado](../../../../knowledge_base/manifesto.json).
+- [Preflight e metadados](../../../../outputs/feature03/AMP_RAG_PREFLIGHT_01/preflight.json).
+- [Gate de reprodução](../../../../outputs/feature03/AMP_RAG_PREFLIGHT_01/sast_antes/reproducao.json): 78/78, sem ausentes/adicionais; oito diagnósticos preexistentes.
+- [Cobertura e amostras](../../../../outputs/feature03/cobertura_rag.json).
+- [Fallback sintético](../../../../outputs/feature03/fallback_sintetico.json) e [múltiplas CWEs](../../../../outputs/feature03/multiplas_cwes_sintetico.json).
+- [Compatibilidade antiga](../../../../outputs/feature03/compatibilidade_antiga.json), exercitada sem alterar a feature 02.
+- [Validação final e retomada 2.0](../../../../outputs/feature03/validacao_final.json).
+- [Verificação da entrega](../../../../outputs/feature03/verificacao_entrega.json) e [hashes históricos capturados](../../../../outputs/feature03/preparacao/artefatos_historicos_sha256.json).
+- [Referências textuais anteriores](../../../../outputs/feature03/preparacao/referencia_prompts_semrag.json) e [builder antes da alteração](../../../../outputs/feature03/preparacao/builder_anterior.py.txt).
 
 ## Fontes consultadas
 

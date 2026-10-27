@@ -17,8 +17,8 @@
 
 | Entrada | Referência final | Resultado |
 |---|---|---|
-| AMP_DRY_01 | [JSON final](../../outputs/feature04/AMP_DRY_01_METRICAS_V2/metricas.json) | 2 tentativas simuladas; nenhuma real |
-| AMP_RAG_PREFLIGHT_01 | [JSON final](../../outputs/feature04/AMP_RAG_PREFLIGHT_01_METRICAS_V2/metricas.json) | 78 casos, 312 prompts, zero tentativas |
+| AMP_DRY_01 | [JSON final](../../../../outputs/feature04/AMP_DRY_01_METRICAS_V2/metricas.json) | 2 tentativas simuladas; nenhuma real |
+| AMP_RAG_PREFLIGHT_01 | [JSON final](../../../../outputs/feature04/AMP_RAG_PREFLIGHT_01_METRICAS_V2/metricas.json) | 78 casos, 312 prompts, zero tentativas |
 
 No dry-run: TRV=0, TRI=0, TPF=0,5, TFF=0,5, TNINI=1 e TAP=1, somente na população simulada. As taxas reais são nulas. No preflight, todas as taxas de remediação são nulas; prompts não são tentativas de correção.
 
@@ -54,7 +54,7 @@ Antes da implementação, `config/perfis/ampliado_v1/regras_remotas.yaml` já n�
 - Hash atual, preservado: `794380f23fad9ad82563fb95e74e0a579f7a9ff8f46d3730238d86e2b836d360`.
 - Commit local com os bytes exatos recuperados: `6d90f347bacd8ef571dcec5c2b03cbe1ea6d9148`.
 
-O [snapshot recuperado](../../outputs/feature04/preparacao/perfil_sast/perfil.json) conserva os IDs, conteúdo e hashes do perfil original. As regras locais também conferiram. A [evidência de recuperação](../../outputs/feature04/preparacao/recuperacao_perfil.json) registra os hashes e a origem no Git. Não houve alteração das regras atuais, do manifesto original ou das fontes arquivadas.
+O [snapshot recuperado](../../../../outputs/feature04/preparacao/perfil_sast/perfil.json) conserva os IDs, conteúdo e hashes do perfil original. As regras locais também conferiram. A [evidência de recuperação](../../../../outputs/feature04/preparacao/recuperacao_perfil.json) registra os hashes e a origem no Git. Não houve alteração das regras atuais, do manifesto original ou das fontes arquivadas.
 
 O leitor utiliza somente snapshot inteiramente verificável e registra o candidato atual divergente nos avisos e na proveniência. A publicação revalida ambos. Para próximos experimentos, selecionar o snapshot íntegro explicitamente em `--perfil-sast` ou tratar a divergência em tarefa separada; não usar o YAML atual como se ainda estivesse congelado.
 
@@ -68,10 +68,10 @@ A validação de hashes de prompts respeita a ordem `role, content` usada pelo b
 
 ## Evidências e hashes
 
-- [Validação consolidada](../../outputs/feature04/validacao_entrega.json).
-- [Hashes históricos capturados](../../outputs/feature04/preparacao/artefatos_historicos_sha256.json).
-- [Manifesto dry-run](../../outputs/feature04/AMP_DRY_01_METRICAS_V2/manifesto.json).
-- [Manifesto preflight](../../outputs/feature04/AMP_RAG_PREFLIGHT_01_METRICAS_V2/manifesto.json).
+- [Validação consolidada](../../../../outputs/feature04/validacao_entrega.json).
+- [Hashes históricos capturados](../../../../outputs/feature04/preparacao/artefatos_historicos_sha256.json).
+- [Manifesto dry-run](../../../../outputs/feature04/AMP_DRY_01_METRICAS_V2/manifesto.json).
+- [Manifesto preflight](../../../../outputs/feature04/AMP_RAG_PREFLIGHT_01_METRICAS_V2/manifesto.json).
 
 | Arquivo final | SHA-256 |
 |---|---|

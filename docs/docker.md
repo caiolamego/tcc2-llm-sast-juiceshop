@@ -86,7 +86,7 @@ Docker Desktop com WSL 2. Clone o repositório **dentro** do sistema de arquivos
 
 Receba o arquivo da imagem exportada pelo mantenedor e a mesma revisão do
 repositório, incluindo `docker/referencia.json` e
-`outputs/baselines/docker/oficial_v1/`. Depois:
+`outputs/baselines/docker/oficial_v2/`. Depois:
 
 ```bash
 make docker-import ARQUIVO=/caminho/tcc2-ambiente.tar
@@ -151,17 +151,23 @@ make docker-baseline
 ```
 
 Este comando executa todos os grupos funcionais revisados em `wt-1`, sem LLM,
-e publica em `outputs/baselines/docker/oficial_v1/BASELINE/`. Em seguida,
+e publica em `outputs/baselines/docker/oficial_v2/BASELINE/`. Em seguida,
 compara com `DOCKER_V2`, verifica ambiente, integridade, grupos e compilações,
 e cria `docker/referencia.json` sem sobrescrever referências existentes.
-Uma divergência funcional impede o congelamento e preserva o candidato.
+Uma divergência funcional impede o congelamento e preserva o candidato. A
+identidade de cobertura pode diferir só nos hashes dos módulos de validação
+(`adaptadores_sha256`), o que acontece quando o código é reorganizado; todos os
+grupos, compilações, revisão, mapa, conjunto D e testes adicionais precisam bater.
+
+Para uma versão nova da referência, arquive antes a atual (por exemplo, em
+`docker/historico/`) e ajuste o destino `BASELINE` em `docker/referencia.py`.
 
 Se um candidato foi interrompido, investigue seus resultados; o comando não o
 apaga nem o substitui. Para congelar um candidato já concluído, após corrigir
 a causa e conferir os resultados:
 
 ```bash
-python3 docker/referencia.py congelar --baseline outputs/baselines/docker/oficial_v1/BASELINE/baseline_testes.json
+python3 docker/referencia.py congelar --baseline outputs/baselines/docker/oficial_v2/BASELINE/baseline_testes.json
 ```
 
 Referência já publicada e íntegra não dispara novos testes. Outra versão de
@@ -206,7 +212,7 @@ Os alvos `docker-preflight`, `docker-dry-run`, `docker-real` e `docker-painel` u
 passe `CONFIG`, por exemplo `make docker-dry-run CONFIG=config/outro.yaml`.
 
 Qualquer outro comando: `docker compose run --rm tcc <comando>`, por exemplo
-`docker compose run --rm tcc python scripts/experiment/diagnose_llm.py --modo offline`.
+`docker compose run --rm tcc python scripts/experimento/diagnosticar_llm.py --modo offline`.
 
 ## Campanha ampliada pelo painel (OpenAI, K=4)
 
@@ -289,6 +295,15 @@ O novo fluxo confere cópias e congela explicitamente a referência validada.
 Não use um baseline novo para legitimar uma instalação incompleta. Uma mudança
 funcional na comparação exige investigação, não publicação automática.
 
+Em 26/10/2026 o código foi reorganizado (etapas em `src/pipeline/etapas/`, nomes
+em português), o que muda a identidade do código. A referência foi refeita:
+`outputs/baselines/docker/oficial_v2/`, com a imagem local
+`sha256:81fe6403…` (mesmo `Dockerfile` e mesmos lockfiles). Os 39 grupos deram
+o mesmo resultado do `DOCKER_V2`. A referência anterior, usada pela campanha de
+19/10, está em `docker/historico/referencia_oficial_v1.json`, com o baseline em
+`outputs/baselines/docker/oficial_v1/`. Quem for reproduzir a referência atual
+precisa da imagem nova, exportada com `make docker-export`.
+
 ## Cuidados
 
 - **Execuções longas no Mac:** ligue na tomada e deixe a tampa aberta. O Docker Desktop não impede o Mac de dormir.
@@ -305,4 +320,4 @@ funcional na comparação exige investigação, não publicação automática.
 Referências: [identidade e digest de imagens](https://docs.docker.com/reference/cli/docker/image/pull/)
 e [exportação com docker image save](https://docs.docker.com/reference/cli/docker/image/save/).
 
-Evidências desta versão: [validação do baseline Docker](validacao_baseline_docker.md).
+Evidências desta versão: [validação do baseline Docker](guias/validacao_baseline_docker.md).

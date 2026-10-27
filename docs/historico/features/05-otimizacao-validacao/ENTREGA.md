@@ -38,10 +38,10 @@ As observações únicas de cache quente/seletiva são exploratórias; não demo
 um ganho reproduzível de três repetições. Em particular, K=2 com cache quente
 foi mais lento que K=1 com cache quente nesta observação.
 
-Evidências: [resumo](../../outputs/feature05/COMPARACAO_V2/RESUMO.md),
-[JSON com tempos, diferenças e recursos](../../outputs/feature05/COMPARACAO_V2/comparacao.json),
-[CSV](../../outputs/feature05/COMPARACAO_V2/tempos.csv) e
-[manifesto de hashes das entradas](../../outputs/feature05/COMPARACAO_V2/manifesto.json).
+Evidências: [resumo](../../../../outputs/feature05/COMPARACAO_V2/RESUMO.md),
+[JSON com tempos, diferenças e recursos](../../../../outputs/feature05/COMPARACAO_V2/comparacao.json),
+[CSV](../../../../outputs/feature05/COMPARACAO_V2/tempos.csv) e
+[manifesto de hashes das entradas](../../../../outputs/feature05/COMPARACAO_V2/manifesto.json).
 A consolidação foi repetida em destino novo e seus quatro arquivos são idênticos
 byte a byte.
 
@@ -96,13 +96,13 @@ a segunda foi interrompida com restauração segura. Os quatro cenários K=2 for
 refeitos em diretórios/cache V3 novos, sem sobrescrever V2. Os smoke tests iniciais
 e `R1_REF_K1` também são preliminares, fora da população comparativa.
 
-O snapshot medido está em [PREPARACAO_V2](../../outputs/feature05/PREPARACAO_V2/ambiente.json).
+O snapshot medido está em [PREPARACAO_V2](../../../../outputs/feature05/PREPARACAO_V2/ambiente.json).
 Após a matriz, adicionaram-se duas proteções: recusa de cache para JUnit com falha
 de carregamento de arquivo/precondição e recusa antecipada do benchmark quando
 faltam builds. A decisão de elegibilidade antes/depois foi conferida nas 96
 validações válidas e não mudou. Os tempos acima pertencem ao snapshot medido;
 o smoke final valida o código com essas proteções, sem entrar nas estatísticas.
-As identidades novas invalidam caches/retomadas do snapshot anterior. O [snapshot final](../../outputs/feature05/VERIFICACAO_FINAL/fontes_sha256.json) e o [smoke](../../outputs/feature05/SMOKE_FINAL_K2/manifesto.json) preservam essa distinção.
+As identidades novas invalidam caches/retomadas do snapshot anterior. O [snapshot final](../../../../outputs/feature05/VERIFICACAO_FINAL/fontes_sha256.json) e o [smoke](../../../../outputs/feature05/SMOKE_FINAL_K2/manifesto.json) preservam essa distinção.
 
 ## Integração e verificações
 
@@ -115,15 +115,15 @@ As identidades novas invalidam caches/retomadas do snapshot anterior. O [snapsho
 - [x] 1.025 arquivos históricos tiveram SHA-256 preservado.
 - [x] Smoke final K=2 com as proteções adicionais: R/M e três F compatíveis, worktrees restauradas; sintaxe JS, links locais e `git diff --check` aprovados.
 
-Saídas de integração: [preflight final](../../outputs/feature05/AMP_PREFLIGHT_FINAL/preflight.json),
-[métricas dry-run](../../outputs/feature05/AMP_DRY_METRICAS_V2/metricas.json) e
-[métricas preflight finais](../../outputs/feature05/AMP_PREFLIGHT_FINAL_METRICAS/metricas.json).
+Saídas de integração: [preflight final](../../../../outputs/feature05/AMP_PREFLIGHT_FINAL/preflight.json),
+[métricas dry-run](../../../../outputs/feature05/AMP_DRY_METRICAS_V2/metricas.json) e
+[métricas preflight finais](../../../../outputs/feature05/AMP_PREFLIGHT_FINAL_METRICAS/metricas.json).
 Preflight não é tentativa de remediação. Os replays não entram na população de
 novas gerações e não são réplicas independentes de LLM. O orçamento permaneceu
 com oito chamadas históricas e US$ 0,010012 acumulados, sem cobrança nova.
 
 Hashes históricos e logs de testes/preparação estão em
-[VERIFICACAO_FINAL](../../outputs/feature05/VERIFICACAO_FINAL/verificacoes.json).
+[VERIFICACAO_FINAL](../../../../outputs/feature05/VERIFICACAO_FINAL/verificacoes.json).
 
 ## Reproduzir e continuar
 

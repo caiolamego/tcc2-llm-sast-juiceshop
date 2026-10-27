@@ -2,7 +2,7 @@
 
 Data: 17/10/2026. Implementação e auditoria concluídas; **a campanha completa
 permanece pendente**. Não houve chamadas à LLM, commit, push ou campanha dos 78.
-A configuração padrão foi preservada. Uso: [guia operacional](../../docs/cobertura_funcional.md).
+A configuração padrão foi preservada. Uso: [guia operacional](../../../cobertura_funcional.md).
 
 ## Resultado da revisão e da execução
 
@@ -24,9 +24,9 @@ baseline verificável no alcance declarado; não representam correções realiza
 Os testes compartilhados foram executados uma vez por grupo, sem simular 78
 avaliações independentes.
 
-A [matriz completa](../../outputs/cobertura_funcional/COBERTURA_V1/cobertura_por_caso.csv),
-a [matriz por arquivo](../../outputs/cobertura_funcional/COBERTURA_V1/cobertura_por_arquivo.csv)
-e o [plano de lacunas](../../outputs/cobertura_funcional/COBERTURA_V1/plano_testes_adicionais.md)
+A [matriz completa](../../../../outputs/cobertura_funcional/COBERTURA_V1/cobertura_por_caso.csv),
+a [matriz por arquivo](../../../../outputs/cobertura_funcional/COBERTURA_V1/cobertura_por_arquivo.csv)
+e o [plano de lacunas](../../../../outputs/cobertura_funcional/COBERTURA_V1/plano_testes_adicionais.md)
 registram as associações e seus limites.
 
 ## Componentes entregues
@@ -62,7 +62,7 @@ Angular CLI/build 21.2.26, Vitest 4.1.11, jsdom 29.1.1, Semgrep 1.177.0.
 As dependências existentes foram identificadas por conteúdo; não foram instaladas
 dependências frontend em `wt-2`. `catalogo-alvo` permaneceu intacto.
 
-[Baseline final](../../outputs/feature06/BASELINE_06/baseline_testes.json):
+[Baseline final](../../../../outputs/feature06/BASELINE_06/baseline_testes.json):
 **143,442754 s**, incluindo compilações e seleções, excluindo a preparação inicial
 das identidades de ambiente. Não é tempo por issue/prompt.
 
@@ -82,12 +82,12 @@ Durante a investigação, o mesmo arquivo unitário de 35 testes publicou 23, 32
 35/35/35. Desabilitar cache TSX sozinho não resolveu a enumeração. A nova política
 remove o force-exit somente dos unitários de servidor, preservando timeout e
 conferência de identidades. APIs mantêm seu isolamento anterior. Veja o
-[experimento controlado](../../outputs/feature06/INVESTIGACAO_NODE_01/resultados.json).
+[experimento controlado](../../../../outputs/feature06/INVESTIGACAO_NODE_01/resultados.json).
 Isso é uma observação deste ambiente, sem reclassificar execuções antigas.
 
 ## Três grupos adicionais e controles
 
-Os testes ficam em [tests/functional/juice_shop](../../tests/functional/juice_shop/).
+Os testes ficam em [tests/functional/juice_shop](../../../../tests/functional/juice_shop/).
 Não são testes unitários Python e não entram nos prompts ou na base RAG.
 
 | Grupo | Lacuna atendida | Controle deliberado |
@@ -100,11 +100,11 @@ Foi reservado o grupo frontend; os demais foram escolhidos pelo número de casos
 que a lacuna compartilhada desbloqueia. A revisão de `server.ts` exige vários
 comportamentos e não fica suficiente com uma única correção isolada. Os grupos
 existentes não foram duplicados. Os três testes detectaram os mutantes e os
-arquivos originais foram restaurados: [evidência dos controles](../../outputs/feature06/CONTROLES_04/resultado_controles.json).
+arquivos originais foram restaurados: [evidência dos controles](../../../../outputs/feature06/CONTROLES_04/resultado_controles.json).
 
 ## Conjunto D e limitações restantes
 
-O [D versionado](../../config/conjunto_d_cobertura_v1.json) preserva integralmente
+O [D versionado](../../../../config/conjunto_d_cobertura_v1.json) preserva integralmente
 as 75 entradas anteriores. Foram revisadas 33 asserções Angular candidatas:
 observam mocks ou estado de UI e não satisfazem os critérios atuais para D.
 Portanto, **zero adições Angular**, com razões e hashes registrados. Não se
@@ -145,7 +145,7 @@ make test-unit PYTHON=.venv/bin/python
 ```
 
 O mesmo comando com `--controles` e outra saída executa os controles.
-A auditoria e o exemplo preflight estão no [guia de comandos](../../docs/cobertura_funcional.md).
+A auditoria e o exemplo preflight estão no [guia de comandos](../../../cobertura_funcional.md).
 Uma mudança da revisão, avaliadores ou adaptadores exige regenerar baseline/mapa
 e usar saída de execução compatível. Não sobrescrever os artefatos entregues.
 
@@ -156,14 +156,14 @@ dependências no Python global.
 
 ## Preflight e métricas sem LLM
 
-O [AMP_COV_PREFLIGHT_03](../../outputs/feature06/AMP_COV_PREFLIGHT_03/preflight.json)
+O [AMP_COV_PREFLIGHT_03](../../../../outputs/feature06/AMP_COV_PREFLIGHT_03/preflight.json)
 validou login, keyServer, um caso de `lib/insecurity.ts` e o helper frontend:
 quatro casos, oito prompts P1/P2, K=1, contrato 4.0, custo de API zero.
 O gate SAST reproduziu os 78 alertas sem ocorrências ausentes/adicionais;
 conservou oito diagnósticos preexistentes de parsing. A compilação Angular real
 não elimina essas limitações do parser SAST.
 
-A [consolidação](../../outputs/feature06/AMP_COV_PREFLIGHT_03_METRICAS/metricas.json)
+A [consolidação](../../../../outputs/feature06/AMP_COV_PREFLIGHT_03_METRICAS/metricas.json)
 verificou o snapshot portátil de cobertura/baseline e registrou zero tentativas,
 métricas de remediação nulas e CSV de cobertura com cabeçalho. Isso valida
 preparação e leitura de evidências, sem constituir piloto de correções.
@@ -196,7 +196,7 @@ exemplo do lançador que cria identificações novas automaticamente.
 ## Integridade e verificações finais
 
 Os hashes e resultados consolidados estão em
-[verificacao.json](../../outputs/feature06/verificacao.json), incluindo regressão
+[verificacao.json](../../../../outputs/feature06/verificacao.json), incluindo regressão
 unitária, prontidão, controles, comparação determinística e limpeza dos checkouts.
 O manifesto da auditoria contém os hashes completos das entradas e das oito saídas.
 

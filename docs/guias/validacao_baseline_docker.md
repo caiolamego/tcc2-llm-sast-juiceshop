@@ -1,9 +1,12 @@
 # Entrega — referência Docker padronizada
 
+> Este relatório descreve a referência **v1** (19/10/2026), usada pela campanha dos 52 casos. A referência atual
+> é a v2 (26/10/2026); veja [docker.md](../docker.md) e o [histórico](../historico/README.md).
+
 Data local: 19/10/2026. Sem chamadas à LLM, commit ou push.
 
 O baseline oficial fica vinculado à imagem imutável em
-[`docker/referencia.json`](../docker/referencia.json). Pessoas que reproduzem
+[`docker/referencia.json`](../../docker/referencia.json). Pessoas que reproduzem
 esta versão devem importar a mesma imagem, junto da mesma revisão do repositório
 e das evidências em `outputs/baselines/docker/oficial_v1/`.
 Reconstruir a imagem por conta própria não garante o mesmo conteúdo instalado.
@@ -49,7 +52,7 @@ git diff --check
 ```
 
 A evidência estruturada desta verificação está em
-[`validacao.json`](../outputs/baselines/docker/oficial_v1/validacao.json).
+[`validacao.json`](../../outputs/baselines/docker/oficial_v1/validacao.json).
 
 ## Distribuição e limites
 

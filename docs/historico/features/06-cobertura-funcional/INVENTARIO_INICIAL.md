@@ -3,8 +3,8 @@
 **Data:** 17/10/2026.  
 **Natureza:** conferência por leitura; não é revisão da adequação nem execução de testes.
 
-Fonte: [catálogo ampliado](../../outputs/catalogos/ampliado_v1/catalogo_issues.json) e
-[mapa atual](../../config/mapa_testes_relacionados.yaml).
+Fonte: [catálogo ampliado](../../../../outputs/catalogos/ampliado_v1/catalogo_issues.json) e
+[mapa atual](../../../../config/mapa_testes_relacionados.yaml).
 
 - 78 casos em 46 arquivos; o mapa contém os mesmos 46 caminhos.
 - Dois arquivos e dois casos têm seleção relacionada; 44 arquivos e 76 casos usam fallback amplo.

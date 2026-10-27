@@ -16,7 +16,7 @@ Data: 17/10/2026. **Implementação e aceite offline concluídos. Conexão Colab
 
 ## Evidências
 
-Arquivadas em [VALIDACAO_OFFLINE_V1](../../outputs/feature07/VALIDACAO_OFFLINE_V1/):
+Arquivadas em [VALIDACAO_OFFLINE_V1](../../../../outputs/feature07/VALIDACAO_OFFLINE_V1/):
 
 | Verificação | Resultado |
 |---|---|
@@ -36,7 +36,7 @@ Commit do alvo: `f915bddd82790d0f3018902d36ae9b4241a5f51f`.
 
 Ambiente local: Python 3.12.3, OpenAI SDK 3.29.0, httpx 0.28.1, Pydantic 2.14.1 e python-dotenv 1.2.4. As versões fixadas do notebook foram preservadas; o ambiente GPU ainda não foi exercitado nesta entrega. Não há alegação de equivalência entre o SDK local e uma execução efetiva no Colab.
 
-O relatório [verificacao.json](../../outputs/feature07/VALIDACAO_OFFLINE_V1/verificacao.json) contém hashes e resultados. [manifesto.json](../../outputs/feature07/VALIDACAO_OFFLINE_V1/manifesto.json) identifica os artefatos e fontes desta entrega. O inventário público de entradas protegidas omite o hash do `.env` pessoal; sua preservação foi conferida no snapshot privado local.
+O relatório [verificacao.json](../../../../outputs/feature07/VALIDACAO_OFFLINE_V1/verificacao.json) contém hashes e resultados. [manifesto.json](../../../../outputs/feature07/VALIDACAO_OFFLINE_V1/manifesto.json) identifica os artefatos e fontes desta entrega. O inventário público de entradas protegidas omite o hash do `.env` pessoal; sua preservação foi conferida no snapshot privado local.
 
 ## Comandos
 
@@ -46,7 +46,7 @@ node --check frontend/painel/app.js
 git diff --check
 ```
 
-Para usar o Colab manualmente, siga [docs/modelo_colab.md](../../docs/modelo_colab.md). Depois de iniciar o notebook e preencher `.env`/manifesto:
+Para usar o Colab manualmente, siga [docs/modelo_colab.md](../../../guias/modelo_colab.md). Depois de iniciar o notebook e preencher `.env`/manifesto:
 
 ```bash
 .venv/bin/python scripts/experiment/diagnose_llm.py --modo offline

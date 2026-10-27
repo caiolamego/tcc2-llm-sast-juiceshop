@@ -30,7 +30,7 @@ Na raiz, com a `.venv` e o alvo preparados:
 
 O exemplo é **preflight**, K=1, quatro casos e P1/P2: valida revisão, baseline,
 ambiente, SAST e prompts, sem criar cliente LLM nem executar testes funcionais.
-A configuração padrão `config/execucao.yaml` seleciona o [piloto real de dez issues](piloto_10_issues.md),
+A configuração padrão `config/execucao.yaml` seleciona o [piloto real de dez issues](guias/piloto_10_issues.md),
 com K=4 e somente casos de servidor/API. Este exemplo separado continua sem LLM e com K=1.
 
 O painel também aceita esse arquivo:
@@ -56,7 +56,7 @@ reutiliza cobertura insuficiente. O cache SAST permanece separado.
 O auditor só lê entradas e publica relatórios determinísticos em destino novo:
 
 ```bash
-.venv/bin/python scripts/audit/audit_functional_coverage.py \
+.venv/bin/python scripts/auditoria/auditar_cobertura_funcional.py \
   --catalogo outputs/catalogos/ampliado_v1/catalogo_issues.json \
   --checkout workspace/wt-1 \
   --mapa-testes config/mapa_testes_relacionados_v2.yaml \
@@ -70,7 +70,7 @@ dependências, inicia serviços ou executa testes/Semgrep/LLM. Códigos 0/2/1 in
 sucesso, argumentos inválidos e falhas de dados/execução. Locks remanescentes
 exigem investigar o processo proprietário; destinos existentes são recusados.
 
-O comando separado `scripts/experiment/validate_functional_coverage.py` recebe os
+O comando separado `scripts/experimento/gerar_baseline_funcional.py` recebe os
 mesmos cinco argumentos obrigatórios; `--grupos` restringe os IDs separados por
 vírgula e `--controles` executa as três regressões deliberadas. Ele reserva a
 execução, exige checkout limpo no commit fixado e preserva resultados parciais.
@@ -95,7 +95,7 @@ evidência suficiente para acrescentar testes ao conjunto D: chamadas a mocks co
 payload malicioso continuam F conforme o critério vigente. Isso pode limitar a
 aceitação de correções e está documentado, sem reclassificação retrospectiva.
 
-Consulte as [contagens, evidências e pendências da entrega](../features/06-cobertura-funcional/ENTREGA.md).
+Consulte as [contagens, evidências e pendências da entrega](historico/features/06-cobertura-funcional/ENTREGA.md).
 
 
 ## Correção da preparação e de falhas operacionais
@@ -109,7 +109,7 @@ O preflight continua somente por leitura; não gera esses arquivos implicitament
 Para preparar árvores ausentes a partir de uma worktree validada:
 
 ```bash
-.venv/bin/python scripts/setup/prepare_api_worktrees.py --origem workspace/wt-1 --k 4
+.venv/bin/python scripts/preparacao/preparar_worktrees_api.py --origem workspace/wt-1 --k 4
 ```
 
 O comando exige mesmo commit e fontes limpas, copia diretórios ausentes de forma

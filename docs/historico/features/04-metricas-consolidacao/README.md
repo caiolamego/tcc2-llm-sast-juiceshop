@@ -17,10 +17,10 @@ A entrega deve produzir JSON e CSV rastreáveis, declarar os denominadores, sepa
 
 Fontes locais de autoridade:
 
-- [TCC1](../../../TCC1___Caio_Lamego_e_Matheus_Brant-11.pdf), §3.9, pp. 43–44: TRV, TRI, TPF, TNINI, TFF e RRIS; `m` representa tentativas realizadas.
-- [Protocolo experimental](../../docs/protocolo_experimental.md), seção de integração ampliada: resultados indeterminados e denominadores medidos.
-- [Guia de continuidade](../../docs/GUIA_CONTINUIDADE_TCC2.md), entrega G: consolidação, agregações e aplicação conjunta para RRIS.
-- [Calculador existente](../../scripts/reports/metricas_execucao.py): comportamento histórico a preservar.
+- [TCC1](../../../../../TCC1___Caio_Lamego_e_Matheus_Brant-11.pdf), §3.9, pp. 43–44: TRV, TRI, TPF, TNINI, TFF e RRIS; `m` representa tentativas realizadas.
+- [Protocolo experimental](../../../protocolo_experimental.md), seção de integração ampliada: resultados indeterminados e denominadores medidos.
+- [Guia de continuidade](../../../planejamento/GUIA_CONTINUIDADE_TCC2.md), entrega G: consolidação, agregações e aplicação conjunta para RRIS.
+- [Calculador existente](../../../../scripts/relatorios/metricas_historicas.py): comportamento histórico a preservar.
 
 | Componente | Situação verificada antes desta feature |
 |---|---|
