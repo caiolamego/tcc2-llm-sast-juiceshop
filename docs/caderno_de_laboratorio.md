@@ -327,6 +327,105 @@ O runner repassa as variáveis do processo aos testes (`llm/provider.py::ambient
 
 ---
 
+### 2026-10-26 — Reorganização do repositório sem mudança de funcionamento (F1)
+
+**Sintoma:** os autores não conseguiam mais se localizar no repositório:
+- 7.049 dos ~7.400 arquivos versionados estavam em `outputs/`, misturando a campanha oficial, pilotos, testes de desenvolvimento e o histórico E01–E03;
+- 30 documentos, mais `features/` e um README de 31 KB, se sobrepunham;
+- `frontend/` na raiz era o painel, não o frontend do Juice Shop;
+- nenhum lugar ligava o código às etapas do §3.8 do TCC.
+
+**Causa:** o repositório cresceu por acúmulo durante as features 01–07, sem uma regra de onde cada tipo de arquivo deveria ficar.
+
+**Correção:** o Caio escolheu duas opções combinadas: arquitetura "dutos e filtros" para o código e organização do repositório pelo papel de cada coisa (compêndio de pesquisa). A exigência era não alterar nada no funcionamento.
+
+O levantamento mostrou que boa parte do repositório faz parte da identidade científica e não pode mudar de nome, pasta ou conteúdo:
+- **baseline oficial:** guarda o nome e o conteúdo de 5 arquivos de `validation/`;
+- **referência Docker:** confere 17 arquivos por caminho;
+- **contrato da execução:** registra os caminhos de `validation/`, `sast/`, `target/`, `patching/` e de 4 módulos da raiz de `src/pipeline/`;
+- **caminhos fixos no código:** `config/conjunto_d.json` e `outputs/baseline_testes.json`;
+- **arquivos congelados que citam documentos:** `docs/docker.md`, `docs/criterios_conjunto_d.md` e `docs/conjunto_d.md`.
+
+Por isso, ficaram onde estavam `src/pipeline/` (módulos), `config/`, `tests/`, `rules/`, `scripts/` (seus nomes aparecem em centenas de registros de `outputs/` como comando gerador) e `outputs/`.
+
+Feito:
+- **Arquitetura documentada por etapa.** `src/pipeline/README.md`: etapa do TCC → filtros (módulos) → artefatos de entrada e saída, com a explicação dos nomes fixos.
+- **Índices novos:** `README.md` (curto), `docs/README.md`, `config/README.md`, `scripts/README.md`, `outputs/README.md` e `docs/historico/README.md`, com a tabela caminho antigo → novo.
+- **Arquivos movidos:**
+  - `features/` → `docs/historico/features/`;
+  - 4 guias de uso → `docs/guias/`;
+  - `GUIA_CONTINUIDADE_TCC2.md` → `docs/planejamento/`;
+  - `estrutura_projeto.md` → `docs/historico/`;
+  - README anterior → `docs/guias/referencia_detalhada.md`;
+  - `frontend/painel/` → `src/pipeline/painel/web/`.
+- **Código alterado:** só uma linha, o caminho da interface em `src/pipeline/painel/server.py`.
+- **Links:** corrigidos em 24 documentos. Nos documentos históricos só os links mudaram; os comandos registrados ficaram como foram executados.
+- **Modo histórico** (E01–E03): ficou no lugar, marcado como legado nos índices.
+
+Achado durante o levantamento: `config/perfis/ampliado_v1/` não carrega com o código atual ("Hash de regra inválido"). Nenhuma configuração o usa; a campanha usa `ampliado_piloto_v1`.
+
+Verificação antes × depois (imagem local e baseline `DOCKER_V2`, sem LLM), com evidência em `outputs/revalidacoes/REORGANIZACAO_20261026/`. Ficou idêntico:
+- a identidade científica: componentes, cobertura, prompts, RAG, perfis, catálogo e as 17 entradas da referência Docker;
+- os 358 testes Python e os 28 testes de regras;
+- o preflight dos 52 casos, com 208 prompts idênticos byte a byte;
+- a reconsolidação das métricas da campanha oficial, idêntica ao arquivado;
+- o dry-run de 10 casos: 40 tentativas com os mesmos R, F, M e classificação, e prompts, respostas, patches, códigos corrigidos e comparações idênticos byte a byte;
+- o painel, o `make -n` de todos os alvos e os comandos do `executar.py`;
+- os links: 0 internos quebrados, e os 3 externos com o mesmo destino.
+
+As únicas diferenças entre execuções foram tempos, a pasta temporária, o ID do container e a worktree sorteada para cada tentativa. Elas aparecem também entre duas execuções seguidas sem mudança nenhuma.
+
+**Impacto na reprodutibilidade:** nenhum na execução. Registros antigos em `outputs/` e relatórios de auditoria continuam citando caminhos antigos de documentação; a correspondência está em `docs/historico/README.md`. A conferência da imagem oficial (`make docker-check`) não pôde rodar nesta máquina, porque a imagem está só com o Matheus. Mas as 17 entradas que ela confere ficaram com o mesmo caminho e o mesmo hash.
+
+**Fase do guia:** F1 (repositório).
+
+---
+
+### 2026-10-26 — Reorganização do código por etapas e referência oficial v2 (F1/F2)
+
+**Sintoma:** na reorganização anterior (mesmo dia), os módulos de código não puderam ser movidos nem renomeados, porque o nome e o conteúdo de parte deles entram na identidade científica (baseline oficial, referência Docker, contrato). A arquitetura de dutos e filtros ficou só documentada, e os nomes continuaram misturando português e inglês.
+
+**Causa:** a identidade científica amarra o código ao baseline. Qualquer mudança em `validation/coverage.py`, `coverage_runner.py`, `conjunto_d.py`, `preparacao_api.py`, `coverage_api_setup.mjs`, `runner.py` ou `identity.py` invalida o baseline e a referência oficiais, cuja imagem estava só na máquina do Matheus.
+
+**Correção:** com autorização do Caio para gerar um baseline novo:
+
+1. **Código** (`src/pipeline/`), movido para uma pasta por etapa:
+   - `etapas/e01_analise_sast` … `e09_metricas`;
+   - `orquestracao/` (`campanha.py`, `preflight.py`), `comum/` e `legado/`;
+   - nomes em português (tabela completa em `docs/historico/README.md`);
+   - nenhuma função, classe ou lógica mudou: só arquivos, pastas, imports, alvos de `mock.patch` e os nomes de arquivo usados nas identidades (`provedor.py` do Colab, adaptadores de `cobertura.py`, `componentes.py`, `docker/referencia.py`);
+   - quatro módulos recalculam a raiz do projeto a partir de `__file__` e tiveram a profundidade ajustada.
+2. **Scripts:** pastas `preparacao/`, `experimento/`, `relatorios/`, `auditoria/` e nomes em português.
+3. **O que ficou no lugar:** `config/`, `knowledge_base/`, `rules/`, `tests/` e `outputs/`. O catálogo arquivado e o leitor de métricas conferem esses caminhos, e mudá-los impediria reconsolidar a campanha de 19/10.
+4. **Referência Docker:**
+   - a anterior foi arquivada em `docker/historico/referencia_oficial_v1.json`;
+   - `make docker-baseline` gerou `outputs/baselines/docker/oficial_v2/`, com a imagem local (`sha256:81fe6403…`, mesmo `Dockerfile` e mesmos lockfiles);
+   - a trava de equivalência de `docker/referencia.py` passou a aceitar diferença **só** em `adaptadores_sha256`, os hashes do código; para isso, `comparar_baselines_funcionais.py` passou a informar quais campos da cobertura diferem;
+   - continua exigindo os 39 grupos equivalentes, as compilações aprovadas e a revisão, o mapa, o conjunto D e os testes adicionais iguais.
+   - Resultado: 39/39 grupos equivalentes ao `DOCKER_V2`, ambiente idêntico, ambiente e grupos conferidos, referência congelada.
+5. **Configurações:** `config/execucao_docker_preparados.yaml` e `execucao_docker_78.yaml` passaram a apontar para `oficial_v2`.
+
+Verificação antes × depois (sem LLM; evidência em `outputs/revalidacoes/REORGANIZACAO_20261026/fase2_codigo/`). Ficou idêntico:
+- os textos e a política de contexto dos prompts, o roteiro, a base RAG, os perfis SAST e o catálogo;
+- a identidade de cobertura, fora os hashes dos 5 adaptadores renomeados;
+- as 10 entradas não-código da referência;
+- os 358 testes Python, com os mesmos resultados, e os 28 testes de regras;
+- o preflight dos 52 casos, com 208 prompts idênticos byte a byte;
+- o dry-run de 10 casos: 40 tentativas com os mesmos R, F, M, classificação e hash do prompt, e prompts, respostas, patches, códigos corrigidos e comparações idênticos byte a byte;
+- os CSVs de métricas;
+- a reconsolidação da campanha oficial, idêntica ao arquivado;
+- o painel, o `make -n` (fora o ID da imagem) e os comandos do `executar.py` (fora os nomes novos);
+- os 99 módulos e scripts, que importam um a um;
+- os links: 0 internos quebrados.
+
+Mudaram só as identidades esperadas: `validacao`, `prompts_validacao_sha256`, `inferencia` e `baseline_testes_sha256` no contrato. `make docker-check` passou a funcionar nesta máquina.
+
+**Impacto na reprodutibilidade:** a campanha de 19/10 continua ligada à referência v1 (imagem do Matheus, baseline `oficial_v1`) e foi reconsolidada sem diferença. Execuções novas usam a v2, e o Matheus e a banca precisam da imagem nova (`make docker-export` / `make docker-import`). Execuções antigas não podem ser retomadas com o código novo, o que é esperado, porque estão concluídas. As respostas da OpenAI em cache continuam válidas, porque a chave é só prompt, modelo e seed. O cache do Colab inclui a identidade da implementação e deixa de ser reaproveitado; ele não foi usado na campanha. Registros antigos em `outputs/` e relatórios de auditoria citam nomes antigos; a correspondência está em `docs/historico/README.md`.
+
+**Fase do guia:** F1 (repositório) e F2 (ambiente).
+
+---
+
 <!--
 Próxima entrada:
 
