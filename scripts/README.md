@@ -29,6 +29,7 @@ Em 01/11/2026 saíram os scripts que só serviam ao modo histórico: `gerar_cata
 |---|---|---|
 | `gerar_catalogo_ampliado.py` | Gera o catálogo de 78 casos por ocorrência a partir das evidências arquivadas. | núcleo |
 | `gerar_baseline_funcional.py` | Gera o baseline funcional (régua do critério F) e roda os controles de regressão. Chamado por `make docker-baseline`. | núcleo |
+| `validar_controles_cobertura.py` | Executa controles declarados em JSON, exige aprovação do código original e falha do teste esperado no mutante, restaura os bytes e publica evidências sem LLM. | apoio |
 | `gerar_conjunto_d.py` | Gera `config/conjunto_d.json` e `docs/conjunto_d.md` a partir dos critérios. | núcleo |
 | `replay_patches.py` | Replay de patches arquivados com SAST e testes reais, sem LLM (`--revalidacao`). | apoio |
 | `replay_ancoras.py` | Reaplica respostas com âncora ausente em cópias temporárias. | apoio |

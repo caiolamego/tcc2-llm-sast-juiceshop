@@ -28,13 +28,40 @@ preflight recusar o baseline oficial.
 | Arquivo | O que roda |
 |---|---|
 | `execucao_docker_preparados.yaml` | Os 52 casos preparados, P1–P4, baseline oficial do Docker. **Padrão do `Makefile`.** |
-| `execucao_docker_78.yaml` | Os 78 casos. O preflight recusa enquanto houver lacunas de cobertura. |
+| `execucao_docker_78.yaml` | Os 78 casos, revisão funcional v6 e baseline próprio de 02/11/2026. Preserva modo real/K=4; use `--modo preflight` para conferir sem geração. Imagem e comandos em `docs/cobertura_funcional_v6.md`. |
 | `execucao.yaml` | Piloto de 10 casos com o baseline anterior ao Docker. Padrão do `executar.py` e do `painel.py` fora do `make`. |
 | `execucao_colab_1_issue.yaml` | Teste do Qwen no Colab com 1 caso. |
 | `execucao_cobertura.exemplo.yaml`, `execucao_otimizada.exemplo.yaml` | Exemplos das políticas `relacionada_v2` e `otimizada_v1`. |
 
 Para outra combinação, copie um destes arquivos e passe `CONFIG=<arquivo>` ao `make` ou `--config <arquivo>`
 ao `executar.py`.
+
+### Ampliação funcional iniciada em 02/11/2026
+
+`cobertura_funcional_v2.yaml` e `mapa_testes_relacionados_v3.yaml` acrescentam avaliações independentes
+de aritmética/persistência de CAPTCHA, extração ZIP e descontos de campanha. Os controles de regressão
+estão em `controles_cobertura_v2.json`. A versão anterior continua congelada e ligada à campanha de 19/10.
+`execucao_cobertura_v2_preflight.yaml` seleciona os casos com revisão suficiente e usa o baseline novo,
+em modo preflight, sem chamadas à LLM.
+As evidências desta ampliação ficam em `outputs/cobertura_funcional/AMPLIACAO_20261102/`.
+Consulte [cobertura funcional v2](../docs/cobertura_funcional_v2.md) para o estado verificado, comandos e
+lacunas restantes. A referência Docker oficial e os padrões de execução não são trocados por essa revisão.
+
+O segundo incremento usa `cobertura_funcional_v3.yaml`, `mapa_testes_relacionados_v4.yaml` e
+`controles_cobertura_v3.json` para o bloco de `server.ts`. Sua configuração optativa é
+`execucao_cobertura_v3_preflight.yaml`; veja [a revisão e as evidências](../docs/cobertura_funcional_v3.md).
+
+O terceiro incremento usa `cobertura_funcional_v4.yaml`, `mapa_testes_relacionados_v5.yaml`,
+`controles_cobertura_v4.json` e `execucao_cobertura_v4_preflight.yaml` para os dois casos de
+`lib/codingChallenges.ts`. Veja [contratos e evidências](../docs/cobertura_funcional_v4.md).
+
+O quarto incremento usa `cobertura_funcional_v5.yaml`, `mapa_testes_relacionados_v6.yaml`,
+`controles_cobertura_v5.json` e `execucao_cobertura_v5_preflight.yaml` para o seed TOTP.
+Veja [os contratos e o controle positivo de rotação](../docs/cobertura_funcional_v5.md).
+
+O fechamento dos seis casos restantes usa `cobertura_funcional_v6.yaml`, `mapa_testes_relacionados_v7.yaml`,
+`controles_cobertura_v6.json` e `execucao_cobertura_v6_preflight.yaml`, com todos os 78 casos.
+Veja [independência dos avaliadores e limitações](../docs/cobertura_funcional_v6.md).
 
 ## 3. Auditoria exploratória das regras do Semgrep
 

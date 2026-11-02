@@ -1,0 +1,157 @@
+{
+  "artefatos_sha256": {
+    "campaign_discount_sadio/primeira.xml": "33265bb4ec7c24c5d792b4b2e5f1893b7646cf39350a15d17260889e03811826",
+    "campaign_discount_sadio/resultado.json": "14a77a0afc206739e3ad2051c97e520e45fd07e006d113ef15752b1e6fee9aa1",
+    "campanha_data/primeira.xml": "07954b1d33f75db337760ea5f2b1d7991fce8354adaf2854f478eb8f94eae79d",
+    "campanha_data/resultado.json": "53345be5ec2a47e6c0cf67d55512b303c3679fc303439f56c57fc57b0a3147fb",
+    "campanha_desconto/primeira.xml": "e7a79f36ab5c7601d1c908da3ef2d1ef138176acbd545a44227c45d312da3b49",
+    "campanha_desconto/resultado.json": "6d34d36cd73e75ee1c46892cc1900dc4a9324f921c9f76c6267c29d8445dcdaf",
+    "captcha_arithmetic_sadio/primeira.xml": "12d7c0f4028b01ab320ebcbc86ae84535c59add3c6f7a5a389a2ead7c3e04584",
+    "captcha_arithmetic_sadio/resultado.json": "0a07ae63be8f62266db464394154931b82408d3df70c341d753be72ba1ab0b93",
+    "captcha_calculo/primeira.xml": "61a396fe8045e57cca5b989cab8227c98689bdd291740f0ea76b8a6733ea9e10",
+    "captcha_calculo/resultado.json": "c1e0bdb0a7768a9d0b38e4159b5d0e65b80b746887ca33adbd99dceece8be757",
+    "captcha_persistencia/primeira.xml": "5aa719419e4fd37cc95bd4b3817526a20c0dad61afddfdf851e86d3c8fdd79d5",
+    "captcha_persistencia/resultado.json": "dff869ac742680a39afb938cf459f7577db971118276942d21b271f79adaf2f4",
+    "zip_contents_sadio/primeira.xml": "a1f3f8a28a9e94b172c9508626061cfbac4aa1b21529746df48ee6c427c922d3",
+    "zip_contents_sadio/resultado.json": "14c7f8a509a82aa594b32633aef10e85ee912fb2971f070cbc3bdf7f724d117b",
+    "zip_extracao/primeira.xml": "64beb1d8561126e036b5e0ffbf7396b6cbf900c6949882271c0d6b58d95af5c8",
+    "zip_extracao/resultado.json": "c3a70c003c0a586669a2f65616b48e125a83e9015b2e8dc6ffd8fe8bad24932b"
+  },
+  "chamadas_llm": 0,
+  "cobertura": {
+    "adaptadores_sha256": {
+      "cobertura.py": "4e9cf6f87de46bb3245412d7cddcf3a125a6904e087ec11c6e119bb3c4b8f10e",
+      "conjunto_d.py": "c2a2176334edd4bb1d7456047a4c3f97bbc3eae64f06f6d09c4b3d0b20f5c5f4",
+      "execucao_cobertura.py": "81469e10ef4fed8691999b5f4135291602a5b328712a6dc5804e0bcbb2ec460b",
+      "preparacao_api.py": "fe30122d7e7c4f4ce385238263392babd065e77afef2ee06b101f70233e4f958",
+      "preparo_api_cobertura.mjs": "6935fe4656e722584d5affe1c49db1a3f586bf787a5e459a5ce662dd6683863c"
+    },
+    "conjunto_d_sha256": "a9da519bb2e02d6c92179f4cc71ab642e7ce44b0dab09f2c7b5022bfd9b042fd",
+    "execucao": {
+      "TSX_DISABLE_CACHE": "1",
+      "frontend_CI": "true",
+      "frontend_watch": false
+    },
+    "falhas_operacionais": "grupo_invalido_nao_mede_f_v1",
+    "mapa_sha256": "8bfaa923b7445a251958708ee9277a251b3ea9c3f93741ba2c41d53a3df9d4c0",
+    "revisao_sha256": "c514c2533851182d94bf0bcd686f3cb8bc2431fdb1a0c14e6c1b405f21766a9a",
+    "selecao": "uniao_por_arquivo_v2",
+    "testes_adicionais": {
+      "tests/functional/juice_shop/campaign_discount.test.ts": "9e398d6fa0af65e16806e7c0231bd55eab1b74571aa4019342f126ecdd18c1aa",
+      "tests/functional/juice_shop/captcha_arithmetic.test.ts": "886bb5a484f6251d8ca91b0869db49e61253c8e200b2ac7b657bdd737ef77d83",
+      "tests/functional/juice_shop/helpers.spec.ts": "5153c2d097c3aba934ef7616d2b3b5e6b684c9a92cd48e6b0f097ba4c4f85b30",
+      "tests/functional/juice_shop/insecurity.unit.test.ts": "b7eeaedbaf83aae0bca85d81f94544274bd2e0fe272bf176cf5dac42a985c8dd",
+      "tests/functional/juice_shop/review_likes.test.ts": "afb5c58238cc370b368288c868c9f88edfaff275a1b016a7ea4504f755327edc",
+      "tests/functional/juice_shop/zip_contents.test.ts": "7fd924c67c57f3f19f2d5deb30f9dcbaa15665097860254763863d99cc6a51e1"
+    }
+  },
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "controles": [
+    {
+      "antes": "const answer = eval(expression).toString()",
+      "arquivo": "routes/captcha.ts",
+      "depois": "const answer = '0'",
+      "detectado": true,
+      "falha_operacional": null,
+      "falhos_mutante": [
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5"
+      ],
+      "grupo": "captcha_arithmetic",
+      "id": "captcha_calculo",
+      "mutante_sha256": "44b1b4b39e3b1a79a2ea5ba6219a875ff77580971c8ed4d892384500027c46c3",
+      "original_sha256": "b48ecb634f38f033ce1331148a2a0c1dc24aecd3a01e72c773fd74b716cf17e1",
+      "restaurado": true,
+      "sadio_aprovado": true,
+      "teste_esperado": "calculates and persists 2+3*4 = 14"
+    },
+    {
+      "antes": "await captchaInstance.save()",
+      "arquivo": "routes/captcha.ts",
+      "depois": "void captchaInstance",
+      "detectado": true,
+      "falha_operacional": null,
+      "falhos_mutante": [
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5"
+      ],
+      "grupo": "captcha_arithmetic",
+      "id": "captcha_persistencia",
+      "mutante_sha256": "0ccfe4ee6eade7be8fb82fb58f2b88ab29ebf5856f10fbf6812707935063860a",
+      "original_sha256": "b48ecb634f38f033ce1331148a2a0c1dc24aecd3a01e72c773fd74b716cf17e1",
+      "restaurado": true,
+      "sadio_aprovado": true,
+      "teste_esperado": "calculates and persists 2+3*4 = 14"
+    },
+    {
+      "antes": "await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))",
+      "arquivo": "routes/fileUpload.ts",
+      "depois": "await Promise.resolve()",
+      "detectado": true,
+      "falha_operacional": null,
+      "falhos_mutante": [
+        "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > extracts both normal ZIP entries preserving filenames and exact bytes"
+      ],
+      "grupo": "zip_contents",
+      "id": "zip_extracao",
+      "mutante_sha256": "10028422c6e45f57f454ce68ec1a8e1e475a582bacbee92ab40a142d0f83b73f",
+      "original_sha256": "ff090294829c25ac2fc854656b033cae9613890e6314a048837881e231098b73",
+      "restaurado": true,
+      "sadio_aprovado": true,
+      "teste_esperado": "extracts both normal ZIP entries preserving filenames and exact bytes"
+    },
+    {
+      "antes": "return campaign.discount",
+      "arquivo": "routes/order.ts",
+      "depois": "return 0",
+      "detectado": true,
+      "falha_operacional": null,
+      "falhos_mutante": [
+        "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total"
+      ],
+      "grupo": "campaign_discount",
+      "id": "campanha_desconto",
+      "mutante_sha256": "f924313e0100f46179a149f86e194189079e9e22f474e035ba72e95e1389783c",
+      "original_sha256": "747a80d5fcd79d88f906ad396adb00c1c68a376fd47a6c80628ca91c70e02300",
+      "restaurado": true,
+      "sadio_aprovado": true,
+      "teste_esperado": "applies the campaign discount to the persisted order total"
+    },
+    {
+      "antes": "if (campaign && couponDate == campaign.validOn) {",
+      "arquivo": "routes/order.ts",
+      "depois": "if (campaign) {",
+      "detectado": true,
+      "falha_operacional": null,
+      "falhos_mutante": [
+        "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date"
+      ],
+      "grupo": "campaign_discount",
+      "id": "campanha_data",
+      "mutante_sha256": "e2e68e9e34425c679c21f331f68e1436db102b178eeb71d13033441929bf2e46",
+      "original_sha256": "747a80d5fcd79d88f906ad396adb00c1c68a376fd47a6c80628ca91c70e02300",
+      "restaurado": true,
+      "sadio_aprovado": true,
+      "teste_esperado": "does not discount a campaign with a mismatched date"
+    }
+  ],
+  "controles_sha256": "50483e22e71cf8edbd7ac03b1ac478c72ef820fddb7d453553598e8e68dcc856",
+  "implementacao_sha256": "3e110131c19795ebd8537addf170d207330f89cb434e66805c263368f3e2f008",
+  "schema_versao": "1.0",
+  "status": "concluido",
+  "tipo": "controles_regressao_sem_llm"
+}

@@ -1,0 +1,45 @@
+{
+  "schema_versao": "1.0",
+  "controles": [
+    {
+      "id": "captcha_calculo",
+      "grupo": "captcha_arithmetic",
+      "arquivo": "routes/captcha.ts",
+      "antes": "const answer = eval(expression).toString()",
+      "depois": "const answer = '0'",
+      "teste_esperado": "calculates and persists 2+3*4 = 14"
+    },
+    {
+      "id": "captcha_persistencia",
+      "grupo": "captcha_arithmetic",
+      "arquivo": "routes/captcha.ts",
+      "antes": "await captchaInstance.save()",
+      "depois": "void captchaInstance",
+      "teste_esperado": "calculates and persists 2+3*4 = 14"
+    },
+    {
+      "id": "zip_extracao",
+      "grupo": "zip_contents",
+      "arquivo": "routes/fileUpload.ts",
+      "antes": "await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))",
+      "depois": "await Promise.resolve()",
+      "teste_esperado": "extracts both normal ZIP entries preserving filenames and exact bytes"
+    },
+    {
+      "id": "campanha_desconto",
+      "grupo": "campaign_discount",
+      "arquivo": "routes/order.ts",
+      "antes": "return campaign.discount",
+      "depois": "return 0",
+      "teste_esperado": "applies the campaign discount to the persisted order total"
+    },
+    {
+      "id": "campanha_data",
+      "grupo": "campaign_discount",
+      "arquivo": "routes/order.ts",
+      "antes": "if (campaign && couponDate == campaign.validOn) {",
+      "depois": "if (campaign) {",
+      "teste_esperado": "does not discount a campaign with a mismatched date"
+    }
+  ]
+}

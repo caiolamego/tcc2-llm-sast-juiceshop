@@ -13,6 +13,11 @@ planejamento, auditorias e histórico ficam em subpastas.
 | [criterios_conjunto_d.md](criterios_conjunto_d.md) (fixo) | Critérios, escritos antes da classificação, para separar testes F e D. Citado por `config/conjunto_d.json`. |
 | [conjunto_d.md](conjunto_d.md) (fixo) | Lista dos testes D, gerada por `scripts/experimento/gerar_conjunto_d.py`. |
 | [cobertura_funcional.md](cobertura_funcional.md) | Revisão da cobertura funcional por caso (política `relacionada_v2`). |
+| [cobertura_funcional_v2.md](cobertura_funcional_v2.md) | Ampliação de 02/11/2026: testes independentes de CAPTCHA, ZIP e descontos; controles e baseline separados. |
+| [cobertura_funcional_v3.md](cobertura_funcional_v3.md) | Segundo incremento: recursos dos 14 modelos de `server.ts` e medidor de inicialização, controles e revisão separados. |
+| [cobertura_funcional_v4.md](cobertura_funcional_v4.md) | Terceiro incremento: descoberta e extração dos marcadores de `lib/codingChallenges.ts`, controles e revisão próprios. |
+| [cobertura_funcional_v5.md](cobertura_funcional_v5.md) | Quarto incremento: seed e login TOTP, controles negativos e aceitação de rotação válida. |
+| [cobertura_funcional_v6.md](cobertura_funcional_v6.md) | Fechamento do catálogo de 78: chat, legendas, pacote e integridade independente dos specs frontend. |
 | [validacao_relacionada.md](validacao_relacionada.md) | Por que só os testes da funcionalidade alterada são executados. |
 | [aplicacao_ancoras.md](aplicacao_ancoras.md) | Aplicação de patches com recuo diferente (19/10). |
 | [docker.md](docker.md) (fixo) | Ambiente único em Docker: imagem oficial, baseline, comandos. Citado pelo `Dockerfile`, `Makefile` e `compose.yaml`. |

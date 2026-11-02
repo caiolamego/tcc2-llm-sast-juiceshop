@@ -1,0 +1,117 @@
+{
+  "schema_versao": "1.0",
+  "controles": [
+    {
+      "id": "resource_hint",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "  for (const { name, exclude, model, include } of autoModels) {",
+      "depois": "  for (const { name, exclude, model, include } of autoModels) {\n    if (name === 'Hint') continue",
+      "teste_esperado": "lists hints and persists an allowed hint update"
+    },
+    {
+      "id": "resource_securityanswer",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "  for (const { name, exclude, model, include } of autoModels) {",
+      "depois": "  for (const { name, exclude, model, include } of autoModels) {\n    if (name === 'SecurityAnswer') continue",
+      "teste_esperado": "lists all security questions and persists a security answer for the new user"
+    },
+    {
+      "id": "resource_privacyrequest",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "  for (const { name, exclude, model, include } of autoModels) {",
+      "depois": "  for (const { name, exclude, model, include } of autoModels) {\n    if (name === 'PrivacyRequest') continue",
+      "teste_esperado": "persists a privacy request and keeps its list endpoint restricted"
+    },
+    {
+      "id": "registration_wallet",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "WalletModel.create({ UserId: context.instance.id })",
+      "depois": "Promise.resolve()",
+      "teste_esperado": "creates exactly one wallet for a normally registered user"
+    },
+    {
+      "id": "user_excluded_attributes",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "excludeAttributes: exclude,",
+      "depois": "excludeAttributes: [],",
+      "teste_esperado": "returns users without password or TOTP secrets and without default pagination"
+    },
+    {
+      "id": "resource_pagination",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "pagination: false,",
+      "depois": "pagination: true,",
+      "teste_esperado": "lists hints and persists an allowed hint update"
+    },
+    {
+      "id": "challenge_dependencies",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "      pagination: false,\n      include",
+      "depois": "      pagination: false,\n      include: undefined",
+      "teste_esperado": "lists challenges with their actual dependency association"
+    },
+    {
+      "id": "product_translation",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "context.instance.name = req.__(context.instance.name)",
+      "depois": "context.instance.name = context.instance.name",
+      "teste_esperado": "translates the Product response through its generated hook"
+    },
+    {
+      "id": "startup_timer",
+      "grupo": "server_startup",
+      "arquivo": "server.ts",
+      "antes": "      end()\n      return res",
+      "depois": "      return res",
+      "teste_esperado": "forwards task arguments and result and finishes the success timer exactly once"
+    },
+    {
+      "id": "startup_logging",
+      "grupo": "server_startup",
+      "arquivo": "server.ts",
+      "antes": "console.error('Error in timed startup function: ' + name, err)",
+      "depois": "void name",
+      "teste_esperado": "logs the failing task name and rethrows the identical asynchronous error"
+    },
+    {
+      "id": "startup_propagation",
+      "grupo": "server_startup",
+      "arquivo": "server.ts",
+      "antes": "      console.error('Error in timed startup function: ' + name, err)\n      throw err",
+      "depois": "      console.error('Error in timed startup function: ' + name, err)\n      return undefined",
+      "teste_esperado": "logs the failing task name and rethrows the identical asynchronous error"
+    },
+    {
+      "id": "wallet_failure_log",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "console.log(err)",
+      "depois": "void err",
+      "teste_esperado": "logs a wallet creation failure while completing normal registration"
+    },
+    {
+      "id": "challenge_warning",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "utils.contains(description, '<em>(This challenge is <strong>')",
+      "depois": "false",
+      "teste_esperado": "translates challenge descriptions separately from their warning suffix"
+    },
+    {
+      "id": "product_description",
+      "grupo": "server_resources",
+      "arquivo": "server.ts",
+      "antes": "context.instance.name = req.__(context.instance.name)\n        context.instance.description = req.__(context.instance.description)",
+      "depois": "context.instance.name = req.__(context.instance.name)\n        context.instance.description = context.instance.description",
+      "teste_esperado": "translates the ProductDescription response through its generated hook"
+    }
+  ]
+}

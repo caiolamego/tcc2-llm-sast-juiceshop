@@ -1,0 +1,117 @@
+{
+  "schema_versao": "1.0",
+  "controles": [
+    {
+      "id": "chat_unfiltered",
+      "grupo": "chat_reviews",
+      "arquivo": "routes/chat.ts",
+      "antes": "return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]",
+      "depois": "return await db.reviewsCollection.find({}) as Review[]",
+      "teste_esperado": "returns exactly the matching persisted reviews through the tool round trip"
+    },
+    {
+      "id": "chat_empty",
+      "grupo": "chat_reviews",
+      "arquivo": "routes/chat.ts",
+      "antes": "return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]",
+      "depois": "return [] as Review[]",
+      "teste_esperado": "returns exactly the matching persisted reviews through the tool round trip"
+    },
+    {
+      "id": "chat_wrong_product",
+      "grupo": "chat_reviews",
+      "arquivo": "routes/chat.ts",
+      "antes": "const productId = Number(id)",
+      "depois": "const productId = Number(id) + 1",
+      "teste_esperado": "returns exactly the matching persisted reviews through the tool round trip"
+    },
+    {
+      "id": "chat_missing_error",
+      "grupo": "chat_reviews",
+      "arquivo": "routes/chat.ts",
+      "antes": "res.write(`data: ${JSON.stringify({ error: `LLM error: ${event.error as string}` })}\\n\\n`)",
+      "depois": "void event",
+      "teste_esperado": "finishes an SSE error response when the simulated provider fails"
+    },
+    {
+      "id": "subtitle_split",
+      "grupo": "video_parser",
+      "arquivo": "views/promotionVideo.pug",
+      "antes": "var splitted = lines[i].split(/[ \\\\t]+-->[ \\t]+/);",
+      "depois": "var splitted = [];",
+      "teste_esperado": "renders the real template and adds two timed cues to the visible subtitle track"
+    },
+    {
+      "id": "subtitle_track",
+      "grupo": "video_parser",
+      "arquivo": "views/promotionVideo.pug",
+      "antes": "track.addCue(cue);",
+      "depois": "void cue;",
+      "teste_esperado": "renders the real template and adds two timed cues to the visible subtitle track"
+    },
+    {
+      "id": "subtitle_hours",
+      "grupo": "video_parser",
+      "arquivo": "views/promotionVideo.pug",
+      "antes": "return seconds + 60 * minutes + 60 * 60 * hours;",
+      "depois": "return seconds + 60 * minutes;",
+      "teste_esperado": "converts hours and minutes when parsing timestamps"
+    },
+    {
+      "id": "checksum_bytes",
+      "grupo": "grunt_artifacts",
+      "arquivo": "Gruntfile.js",
+      "antes": "md5.update(buffer)",
+      "depois": "md5.update(Buffer.from('wrong fixture bytes'))",
+      "teste_esperado": "writes a correctly labelled checksum for every exact artifact byte sequence"
+    },
+    {
+      "id": "checksum_missing",
+      "grupo": "grunt_artifacts",
+      "arquivo": "Gruntfile.js",
+      "antes": "grunt.file.write(md5FileName, md5Hash)",
+      "depois": "void md5Hash",
+      "teste_esperado": "writes a correctly labelled checksum for every exact artifact byte sequence"
+    },
+    {
+      "id": "package_exclusion",
+      "grupo": "grunt_artifacts",
+      "arquivo": "Gruntfile.js",
+      "antes": "'!build/reports/**'",
+      "depois": "'build/reports/**'",
+      "teste_esperado": "packages the fixture with the real Grunt tasks and preserves its manifest and files"
+    },
+    {
+      "id": "package_checksum",
+      "grupo": "grunt_artifacts",
+      "arquivo": "Gruntfile.js",
+      "antes": "['replace_json:manifest', 'compress:pckg', 'checksum']",
+      "depois": "['replace_json:manifest', 'compress:pckg']",
+      "teste_esperado": "packages the fixture with the real Grunt tasks and preserves its manifest and files"
+    },
+    {
+      "id": "guard_assertion_removed",
+      "grupo": "frontend_spec_integrity",
+      "arquivo": "frontend/src/app/app.guard.spec.ts",
+      "antes": "expect(guard.tokenDecode()).toEqual({\n            sub: '1234567890',\n            name: 'John Doe',\n            iat: 1516239022\n        })",
+      "depois": "void guard",
+      "teste_esperado": "keeps every guard scenario and detects a broken real token decoder"
+    },
+    {
+      "id": "ip_assertion_removed",
+      "grupo": "frontend_spec_integrity",
+      "arquivo": "frontend/src/app/last-login-ip/last-login-ip.component.spec.ts",
+      "antes": "expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')",
+      "depois": "expect(true).toBe(true)",
+      "teste_esperado": "keeps every last IP scenario and detects missing and fabricated addresses"
+    },
+    {
+      "id": "ip_empty_assertion_removed",
+      "grupo": "frontend_spec_integrity",
+      "arquivo": "frontend/src/app/last-login-ip/last-login-ip.component.spec.ts",
+      "antes": "expect(sanitizer.bypassSecurityTrustHtml).not.toHaveBeenCalled()",
+      "depois": "expect(true).toBe(true)",
+      "teste_esperado": "keeps every last IP scenario and detects missing and fabricated addresses"
+    }
+  ]
+}

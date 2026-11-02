@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="TCC ZIP extraction contracts" time="1.054052" disabled="0" errors="0" tests="2" failures="1" skipped="0" hostname="a9bcfdba769d">
+		<testcase name="extracts both normal ZIP entries preserving filenames and exact bytes" time="0.077013" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_zip_contents.test.ts" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;+ []&#10;- [&#10;-   'tcc-coverage-bytes.bin',&#10;-   'tcc-coverage-text.txt'&#10;- ]&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;+ []&#10;- [&#10;-   'tcc-coverage-bytes.bin',&#10;-   'tcc-coverage-text.txt'&#10;- ]">
+Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ []
+- [
+-   'tcc-coverage-bytes.bin',
+-   'tcc-coverage-text.txt'
+- ]
+
+    at async Promise.all (index 0) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'tcc-coverage-bytes.bin',
+  -   'tcc-coverage-text.txt'
+  - ]
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_zip_contents.test.ts:31:14)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1533:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'tcc-coverage-bytes.bin', 'tcc-coverage-text.txt' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="reports a corrupt ZIP instead of claiming successful extraction" time="0.037421" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_zip_contents.test.ts"/>
+	</testsuite>
+	<!-- tests 2 -->
+	<!-- suites 1 -->
+	<!-- pass 1 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 4984.116967 -->
+</testsuites>

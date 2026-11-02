@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="TCC static seed TOTP contracts" time="0.443169" disabled="0" errors="0" tests="9" failures="5" skipped="0" hostname="d5ba681200ee">
+		<testcase name="matches the independent client oracle to published SHA1 TOTP vectors" time="0.001587" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts"/>
+		<testcase name="preserves the declared identities and passwords of all static seed users" time="0.017339" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts"/>
+		<testcase name="persists the configured second factor for the target seed account" time="0.001210" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Seed must supply a usable Base32 key">
+			<failure type="testCodeFailure" message="Seed must supply a usable Base32 key">
+[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key
+      at totp (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:42:10)
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:117:18)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects an incorrect seed password without issuing a temporary login proof" time="0.033530" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts"/>
+		<testcase name="requires the second factor after a correct seed password" time="0.053388" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts"/>
+		<testcase name="completes real seed login using an independently calculated current TOTP" time="0.011176" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Seed must supply a usable Base32 key">
+			<failure type="testCodeFailure" message="Seed must supply a usable Base32 key">
+[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key
+      at totp (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:42:10)
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:151:47)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects an incorrect TOTP for the real seed login challenge" time="0.012314" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Seed must supply a usable Base32 key">
+			<failure type="testCodeFailure" message="Seed must supply a usable Base32 key">
+[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key
+      at totp (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:42:10)
+      at &lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:88:50)
+      at Array.map (&lt;anonymous>)
+      at acceptedWindow (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:88:37)
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:173:22)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects a stale TOTP outside the configured time window" time="0.015080" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Seed must supply a usable Base32 key">
+			<failure type="testCodeFailure" message="Seed must supply a usable Base32 key">
+[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key
+      at totp (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:42:10)
+      at &lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:88:50)
+      at Array.map (&lt;anonymous>)
+      at acceptedWindow (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:88:37)
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:187:22)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects a valid current TOTP without a first-factor login proof" time="0.000951" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Seed must supply a usable Base32 key">
+			<failure type="testCodeFailure" message="Seed must supply a usable Base32 key">
+[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key
+      at totp (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:42:10)
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:198:84)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+	</testsuite>
+	<!-- tests 9 -->
+	<!-- suites 1 -->
+	<!-- pass 4 -->
+	<!-- fail 5 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 1941.421912 -->
+</testsuites>

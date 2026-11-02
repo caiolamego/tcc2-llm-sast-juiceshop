@@ -1,0 +1,69 @@
+{
+  "schema_versao": "1.0",
+  "controles": [
+    {
+      "id": "seed_second_factor_missing",
+      "grupo": "seed_totp",
+      "arquivo": "data/static/users.yml",
+      "antes": "  totpSecret: IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH",
+      "depois": "",
+      "teste_esperado": "requires the second factor after a correct seed password"
+    },
+    {
+      "id": "seed_second_factor_invalid",
+      "grupo": "seed_totp",
+      "arquivo": "data/static/users.yml",
+      "antes": "  totpSecret: IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH",
+      "depois": "  totpSecret: INVALID-BASE32",
+      "teste_esperado": "persists the configured second factor for the target seed account"
+    },
+    {
+      "id": "seed_persistence",
+      "grupo": "seed_totp",
+      "arquivo": "data/datacreator.ts",
+      "antes": "          totpSecret,",
+      "depois": "          totpSecret: '',",
+      "teste_esperado": "persists the configured second factor for the target seed account"
+    },
+    {
+      "id": "first_factor_bypass",
+      "grupo": "seed_totp",
+      "arquivo": "routes/login.ts",
+      "antes": "if (user.data?.id && user.data.totpSecret !== '') {",
+      "depois": "if (false) {",
+      "teste_esperado": "requires the second factor after a correct seed password"
+    },
+    {
+      "id": "invalid_code_accepted",
+      "grupo": "seed_totp",
+      "arquivo": "routes/2fa.ts",
+      "antes": "if (!isValid) {",
+      "depois": "if (false) {",
+      "teste_esperado": "rejects an incorrect TOTP for the real seed login challenge"
+    },
+    {
+      "id": "valid_code_rejected",
+      "grupo": "seed_totp",
+      "arquivo": "routes/2fa.ts",
+      "antes": "const isValid = verifySync({ secret: user.totpSecret, token: totpToken, epochTolerance: 30 }).valid",
+      "depois": "const isValid = false",
+      "teste_esperado": "completes real seed login using an independently calculated current TOTP"
+    },
+    {
+      "id": "expired_code_accepted",
+      "grupo": "seed_totp",
+      "arquivo": "routes/2fa.ts",
+      "antes": "const isValid = verifySync({ secret: user.totpSecret, token: totpToken, epochTolerance: 30 }).valid",
+      "depois": "const isValid = verifySync({ secret: user.totpSecret, token: totpToken, epochTolerance: 300 }).valid",
+      "teste_esperado": "rejects a stale TOTP outside the configured time window"
+    },
+    {
+      "id": "seed_inventory",
+      "grupo": "seed_totp",
+      "arquivo": "data/static/users.yml",
+      "antes": "  key: timo",
+      "depois": "  key: missing-timo-fixture",
+      "teste_esperado": "preserves the declared identities and passwords of all static seed users"
+    }
+  ]
+}

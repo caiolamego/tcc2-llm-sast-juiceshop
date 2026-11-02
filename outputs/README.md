@@ -32,6 +32,11 @@ reorganização do código (`docker/referencia.json`). Os 39 grupos de testes de
 |---|---|
 | `catalogos/ampliado_v1/` | Catálogo dos 78 casos por ocorrência. |
 | `cobertura_funcional/COBERTURA_V1/` | Auditoria da cobertura funcional (52 preparados, 26 bloqueados). |
+| `cobertura_funcional/AMPLIACAO_20261102/` | Incremento de cobertura de CAPTCHA, ZIP e cupons: validação inicial, controles de regressão, baseline novo e auditoria. Não altera a campanha de 19/10. |
+| `cobertura_funcional/SERVER_20261102/` | Segundo incremento: testes de recursos gerados e falhas de inicialização de `server.ts`; validações, controles, baseline e auditoria próprios. |
+| `cobertura_funcional/CODING_CHALLENGES_20261102/` | Terceiro incremento: extração de snippets e marcadores de `lib/codingChallenges.ts`; validações, controles, baseline e auditoria próprios. |
+| `cobertura_funcional/SEED_TOTP_20261102/` | Quarto incremento: seed e login TOTP, oito controles negativos e controle positivo de rotação; versão final em `baseline_final/` e `auditoria_final/`. |
+| `cobertura_funcional/FINAIS_20261102/` | Fechamento dos seis casos restantes: chat, legendas, Grunt e integridade dos specs; inclui JUnit/logs internos em `subavaliacoes/`. |
 | `sast_antes/` | Scan e catálogo do modo histórico (JS001–JS012), usados por E01–E03. |
 
 ### Pilotos e revalidações

@@ -466,6 +466,144 @@ Mudaram só a lista de arquivos do código no contrato (de 30 para 29) e o que d
 
 ---
 
+### 2026-11-02 — Primeiro incremento para ampliar os casos com cobertura funcional
+
+**Sintoma:** 26 das 78 ocorrências permaneciam bloqueadas por lacunas de avaliação funcional.
+
+**Causa:** em CAPTCHA faltava verificar a conta independentemente da resposta retornada; em ZIP faltavam
+asserções dos arquivos e bytes extraídos; em campanhas de desconto não havia asserção do valor final
+persistido. O ambiente Docker, por si só, não resolve essas lacunas.
+
+**Correção:** três avaliações externas ao alvo, com 16 testes, em `tests/functional/juice_shop/`:
+`captcha_arithmetic.test.ts`, `zip_contents.test.ts` e `campaign_discount.test.ts`. A revisão
+`config/cobertura_funcional_v2.yaml` e o mapa `config/mapa_testes_relacionados_v3.yaml` incluem os novos
+grupos. Os testes do código original passaram; cinco mutações deliberadas foram detectadas como falhas
+dos testes esperados, sem falha operacional. O executor de controles restaura apenas os bytes que
+escreveu e recusa alterações desconhecidas. Não houve chamadas à LLM.
+
+**Impacto na reprodutibilidade:** a ampliação tem revisão, baseline, imagem e evidências próprios em
+`outputs/cobertura_funcional/AMPLIACAO_20261102/`. A revisão v1, o baseline e os resultados da campanha
+anterior são preservados. Não se somam medições de campanhas com coberturas distintas sem reconciliação.
+O estado final da auditoria e os comandos estão em `docs/cobertura_funcional_v2.md`.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
+### 2026-11-02 — Segundo incremento: recursos gerados e medidor de startup de server.ts
+
+**Sintoma:** a união por arquivo mantinha 12 casos de `server.ts` bloqueados, mesmo quando a ocorrência
+individual já tinha cobertura revisada.
+
+**Causa:** faltavam contratos de parte dos 14 modelos de `autoModels`, seus hooks e o caminho de
+erro de `collectDurationPromise`. Testes HTTP normais não comprovam propagação de erro na função de
+inicialização.
+
+**Correção:** dois grupos independentes em `server_resources.test.ts` (21 testes de API/banco) e
+`server_startup.unit.test.ts` (três testes da função real extraída por AST). Cobrem modelos gerados,
+carteira, formatos, exclusão de atributos, associações, paginação, tradução e medição/log/rethrow.
+Os 24 testes passaram no código original; os 14 controles da rodada revisada detectaram as regressões
+esperadas, sem falha operacional e com restauração dos originais. O controle inicial de paginação
+apontava ao teste de usuários, cuja população era menor que o limite de 100; o truncamento já era
+detectado pelo teste de dicas, que passou a ser o alvo nominal do controle. A rodada inicial reprovada
+foi preservada, sem ser apresentada como resultado final.
+
+**Impacto na reprodutibilidade:** revisão `cobertura_funcional_v3.yaml`, mapa
+`mapa_testes_relacionados_v4.yaml` e evidências em `outputs/cobertura_funcional/SERVER_20261102/`.
+Revisões anteriores e conjunto D preservados. A função de startup é avaliada isoladamente; não se
+alega teste de recuperação de uma inicialização completa. Baseline, auditoria e comandos da revisão
+estão em `docs/cobertura_funcional_v3.md`. Nenhuma chamada à LLM nesta ampliação.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
+### 2026-11-02 — Terceiro incremento: extração dos desafios de código
+
+**Sintoma:** dois casos de `lib/codingChallenges.ts` sem avaliação independente da extração de
+marcadores vulneráveis/neutros. Os testes de seleção de respostas não comprovavam esse contrato.
+
+**Causa:** ausência de entradas conhecidas que exercitassem as funções públicas de descoberta e
+extração do módulo, inclusive múltiplas chaves e numeração após remoção de linhas ocultas.
+
+**Correção:** grupo `coding_challenges`, com 11 testes do módulo real completo transpilado e executado
+com filesystem/logger controlados. Verifica snippets, índices por chave, ocultação, quebras de linha,
+comentários `#`, recursão, erros e cache. Os 11 testes passaram e os oito controles de regressão foram
+detectados. A primeira validação revelou somente uma comparação de arrays com protótipos distintos
+entre contextos; foi ajustada no avaliador, sem alterar o alvo. A evidência inicial foi preservada.
+
+**Impacto na reprodutibilidade:** revisão `cobertura_funcional_v4.yaml`, mapa
+`mapa_testes_relacionados_v5.yaml` e evidências em `outputs/cobertura_funcional/CODING_CHALLENGES_20261102/`.
+Baselines e conjunto D anteriores preservados. Não se demonstra I/O físico ou segurança de regex por
+esses testes F. Baseline, auditoria e comandos em `docs/cobertura_funcional_v4.md`; nenhuma chamada LLM.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
+### 2026-11-02 — Quarto incremento: seed e autenticação TOTP
+
+**Sintoma:** caso de segredo TOTP em `data/static/users.yml` sem avaliação específica da persistência
+do seed e do segundo fator da conta identificada por `timo`.
+
+**Causa:** os testes gerais de login não demonstravam preservação desse vínculo. Fixar o segredo
+antigo no avaliador impediria aceitar uma rotação válida.
+
+**Correção:** nove testes independentes de seed, banco e login HTTP em duas etapas, com gerador TOTP
+separado do verificador da aplicação e conferido com os vetores SHA1 da RFC 6238. Sete controles
+negativos foram detectados. Um controle positivo rotacionou temporariamente o segredo para outra
+fixture válida: os mesmos nove testes passaram e o original foi restaurado. Não houve chamada LLM
+nem alteração definitiva de credenciais do alvo. Na revisão final, o avaliador passou a exigir as
+23 chaves originais de conta, independentemente do YAML candidato; o oitavo controle detectou a perda
+de uma chave. A rotação válida continuou passando. As saídas finais têm sufixo `_final`/`_finais`,
+preservando a primeira verificação como desenvolvimento.
+
+**Impacto na reprodutibilidade:** revisão `cobertura_funcional_v5.yaml`, mapa
+`mapa_testes_relacionados_v6.yaml` e evidências em `outputs/cobertura_funcional/SEED_TOTP_20261102/`.
+Revisões e conjunto D anteriores preservados. O controle positivo não é tentativa de remediação;
+funcionalidade de login não comprova armazenamento seguro. Método e resultados em
+`docs/cobertura_funcional_v5.md`.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
+### 2026-11-02 — Fechamento dos seis casos restantes do catálogo
+
+**Sintoma:** restavam chat, template de legendas, Grunt e três ocorrências em specs frontend. Um spec
+alterado não pode ser a única prova da própria integridade.
+
+**Causa:** faltavam contratos específicos e um avaliador externo dos cenários dos specs candidatos.
+
+**Correção:** cinco grupos, 27 testes externos. O chat executa SDK/banco/SSE reais com transporte
+simulado. Legendas executam o JavaScript do Pug real com interfaces de vídeo controladas. Grunt gera
+um pacote real de fixture e seus sidecars. Os specs candidatos são executados no Angular, com inventário
+completo e sem skips, e precisam detectar mutações temporárias nos métodos reais de produção; um
+segundo grupo Angular independente valida guards e renderização. Nenhum adaptador do pipeline foi
+alterado nem proteção de avaliador foi desativada.
+
+Os 14 controles negativos detectaram as regressões, inclusive remoção de asserções. Os controles
+positivos aceitaram JWTs gerados nos dois specs, SHA-256 com sidecar coerente, separação literal de
+legendas e consulta estruturada de avaliações do chat. Os originais foram restaurados. A suíte de
+365 testes unitários passou. Nenhuma chamada real a LLM.
+
+**Limitação observada:** o parser original produziu cue sem texto para CRLF na validação inicial.
+O grupo final usa VTT/SRT em LF e não declara suporte comprovado a CRLF ou cues iniciados em zero.
+O alvo não foi modificado para aprovar o baseline; essa evidência inicial foi preservada. As demais
+correções iniciais foram no avaliador: comparação de arrays entre contextos, enumeração de testes e
+fixture de cupom compatível com o encoder existente.
+
+**Impacto na reprodutibilidade:** revisão `cobertura_funcional_v6.yaml`, mapa
+`mapa_testes_relacionados_v7.yaml` e evidências em `outputs/cobertura_funcional/FINAIS_20261102/`.
+JUnit/logs internos ficam em `subavaliacoes/`, com hash do spec candidato. A configuração existente
+`execucao_docker_78.yaml` aponta à nova revisão; o modo real original foi preservado e não executado.
+Método, baseline e auditoria em `docs/cobertura_funcional_v6.md`. Conjunto D e resultados anteriores
+permanecem preservados.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
 <!--
 Próxima entrada:
 

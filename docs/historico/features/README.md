@@ -11,5 +11,9 @@ Especificações de entregas técnicas, com escopo, contratos e critérios de ac
 | 05 | [Otimização da validação e do tempo de execução](05-otimizacao-validacao/README.md) | Implementada; 96 replays, resultados e limites na [entrega](05-otimizacao-validacao/ENTREGA.md) — [reproduzir](05-otimizacao-validacao/VALIDACAO.md) |
 | 06 | [Cobertura funcional dos 78 casos](06-cobertura-funcional/README.md) | Implementada e auditada — 52 casos preparados, 26 bloqueados; campanha pendente — [entrega](06-cobertura-funcional/ENTREGA.md) |
 | 07 | [Modelo hospedado no Colab](07-modelo-colab/README.md) | Implementada e testada offline — conexão Colab e piloto pendentes — [entrega](07-modelo-colab/ENTREGA.md) |
+| 08 | [Ampliação da cobertura funcional para os 78 casos](08-ampliacao-cobertura-78/README.md) | Implementada e validada — 78 preparados, zero bloqueados; campanha real pendente |
+
+A contagem da feature 06 registra a entrega de 17/10/2026. A feature 08 documenta a
+ampliação concluída em 02/11/2026, preservando os artefatos históricos.
 
 Contexto geral: [guia de continuidade do TCC2](../../planejamento/GUIA_CONTINUIDADE_TCC2.md).

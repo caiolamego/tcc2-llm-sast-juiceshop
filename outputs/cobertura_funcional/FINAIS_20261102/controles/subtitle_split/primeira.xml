@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="TCC rendered subtitle parser contracts" time="0.072748" disabled="0" errors="0" tests="6" failures="3" skipped="0" hostname="0aa8befcaf0a">
+		<testcase name="renders the real template and adds two timed cues to the visible subtitle track" time="0.031029" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts" failure="Error when splitting &amp;quot;-->&amp;quot;: 00:00:01.250 --> 00:00:03.750">
+			<failure type="testCodeFailure" message="Error when splitting &amp;quot;-->&amp;quot;: 00:00:01.250 --> 00:00:03.750">
+Error [ERR_TEST_FAILURE]: Error when splitting "-->": 00:00:01.250 --> 00:00:03.750
+    at new Promise (&lt;anonymous>)
+    at Array.map (&lt;anonymous>) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: 'Error when splitting "-->": 00:00:01.250 --> 00:00:03.750'
+}
+			</failure>
+		</testcase>
+		<testcase name="preserves multiline SRT content and comma timestamps" time="0.009239" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts" failure="Error when splitting &amp;quot;-->&amp;quot;: 00:00:01,500 --> 00:00:04,000">
+			<failure type="testCodeFailure" message="Error when splitting &amp;quot;-->&amp;quot;: 00:00:01,500 --> 00:00:04,000">
+Error [ERR_TEST_FAILURE]: Error when splitting "-->": 00:00:01,500 --> 00:00:04,000
+    at async Promise.all (index 0) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: 'Error when splitting "-->": 00:00:01,500 --> 00:00:04,000'
+}
+			</failure>
+		</testcase>
+		<testcase name="converts hours and minutes when parsing timestamps" time="0.009280" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts"/>
+		<testcase name="rejects invalid timestamps instead of constructing misleading cues" time="0.008735" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts" failure="The validation function is expected to return &amp;quot;true&amp;quot;. Received false">
+			<failure type="testCodeFailure" message="The validation function is expected to return &amp;quot;true&amp;quot;. Received false">
+[Error [ERR_TEST_FAILURE]: The validation function is expected to return "true". Received false] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts:59:12)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Error when splitting "-->": 00:99:01 --> 00:00:05',
+    operator: 'throws',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects an ambiguous cue with more than one arrow separator" time="0.006009" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts"/>
+		<testcase name="creates no cues for empty subtitle data" time="0.007498" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts"/>
+	</testsuite>
+	<!-- tests 6 -->
+	<!-- suites 1 -->
+	<!-- pass 3 -->
+	<!-- fail 3 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 325.276455 -->
+</testsuites>
