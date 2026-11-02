@@ -41,7 +41,7 @@ reorganização do código (`docker/referencia.json`). Os 39 grupos de testes de
 | `execucoes/` | Execuções de 17/10 pelo painel, fora do Docker. `AMP_PAINEL_20261017T064627Z_bf4efba0` é o piloto de 10 casos (40 tentativas). |
 | `piloto_2_issues/` | Piloto de 2 casos (14/10). |
 | `piloto_colab_1_issue/` | Teste do Qwen no Colab. |
-| `revalidacoes/` | `PILOTO10_CORRECAO_V1`: replay sem LLM do piloto de 10 casos. `DOCKER_V1`: baseline com o problema do `safetyMode` (não usar). `DOCKER_V2`: baseline corrigido de uma imagem local. `ANCORAS_INDENTACAO_V1`: replay das âncoras com recuo. `REORGANIZACAO_20261026`: verificação de que a reorganização do repositório não mudou o funcionamento (comparação antes × depois e as ferramentas usadas); `fase2_codigo/` cobre a reorganização do código e a referência v2. |
+| `revalidacoes/` | `PILOTO10_CORRECAO_V1`: replay sem LLM do piloto de 10 casos. `DOCKER_V1`: baseline com o problema do `safetyMode` (não usar). `DOCKER_V2`: baseline corrigido de uma imagem local. `ANCORAS_INDENTACAO_V1`: replay das âncoras com recuo. `REORGANIZACAO_20261026`: verificação de que a reorganização do repositório não mudou o funcionamento (comparação antes × depois e as ferramentas usadas); `fase2_codigo/` cobre a reorganização do código e a referência v2. `LIMPEZA_MODO_HISTORICO_20261101`: verificação de que a retirada do modo histórico do código não mudou o funcionamento (mesma bateria antes × depois). |
 | `diagnosticos_llm/` | Diagnósticos do Qwen no Colab. |
 | `painel/` | Logs e estado das execuções iniciadas pelo painel. |
 
