@@ -218,12 +218,12 @@ Execute os comandos a partir da raiz, com as dependências Python instaladas e o
 python scripts/auditoria/scan_semgrep_exploratorio.py --help
 python scripts/auditoria/classificar_scan_combinado.py --help
 
-# Catálogo a partir do baseline arquivado e referência de testes.
-python scripts/experimento/gerar_catalogo_historico.py --help
+# Catálogo por ocorrência a partir das evidências arquivadas e referência de testes.
+python scripts/experimento/gerar_catalogo_ampliado.py --help
 python scripts/experimento/gerar_linha_de_base_historica.py --help
 
 # Correções reais: P1/P2/P3/P4 disponíveis; requerem ambiente e orçamento configurados.
-PYTHONPATH=src python -m pipeline.orquestracao.campanha --execucao E03 --estrategias P1,P2
+python3 executar.py --config config/execucao_docker_preparados.yaml --mostrar-comando
 
 # Métricas das execuções já registradas; não chama a API.
 python scripts/relatorios/metricas_historicas.py E02

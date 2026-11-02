@@ -19,7 +19,7 @@ preflight recusar o baseline oficial.
 | `mapa_cwe_vuln.yaml` | CWE → sigla da vulnerabilidade (SQLI, XSS, ...). | catálogo |
 | `mapa_owasp.yaml` | OWASP 2021 → OWASP 2025. | catálogo |
 | `mapa_categoria_rag.yaml` | Sigla → categoria do RAG. | catálogo |
-| `semgrepignore` | Exclusões do escopo do SAST. Incorporadas ao escopo do perfil por `congelar_perfil_sast.py`; lidas diretamente pelo modo histórico. | perfil |
+| `semgrepignore` | Exclusões do escopo do SAST. Incorporadas ao escopo do perfil por `congelar_perfil_sast.py` (o modo histórico, que também as lia, saiu do código em 01/11/2026). | perfil |
 | `precos_llm.yaml` | Preço por token, para o custo registrado. | `llm/openai_client.py` |
 | `modelos/manifesto_colab.json` | Identidade do modelo Qwen servido no Colab. | cliente Colab, via `COLAB_MODEL_MANIFEST` no `.env` |
 

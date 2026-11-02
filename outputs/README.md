@@ -61,6 +61,11 @@ reorganização do código (`docker/referencia.json`). Os 39 grupos de testes de
 
 Formato "plano" do §3.10 do TCC 1: uma pasta por tipo de artefato, na raiz de `outputs/`.
 
+O código que gerou estas execuções saiu da versão atual em 01/11/2026. Para refazê-las, use o commit de cada
+uma: tags git `e01-preliminar`, `e02-oficial-catalogo-v1` e `e03-catalogo-v2` (esta última só existe na branch
+`feat/p3-p4`). A tag `modo-historico-final` marca o último commit com o modo histórico já na estrutura
+reorganizada.
+
 | Pasta | Conteúdo |
 |---|---|
 | `patches/`, `respostas_llm/`, `tentativas/` | Artefatos das tentativas JS001–JS012. |

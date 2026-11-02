@@ -41,7 +41,7 @@ src/pipeline/
   orquestracao/          campanha (orquestrador), preflight (preflight e contrato)
   comum/                 caminhos, identidade, componentes
   painel/                servidor, controle, web/ (interface)
-  legado/                filtro, comparacao_v1 (modo histórico E01–E03)
+  legado/                comparacao_v1 (comparador v1, base do comparador v2 de e01_analise_sast)
 ```
 
 ## Etapas, filtros e dutos
@@ -78,7 +78,8 @@ identificador da tentativa, `<CASO>_<OWASP>_<VULN>_<PROMPT>_<EXECUCAO>`, como na
 
 | Arquivo | Situação |
 |---|---|
-| `legado/filtro.py`, `legado/comparacao_v1.py` | Filtro e comparador v1 do modo histórico (catálogo JS001–JS012, execuções E01–E03). |
+| `legado/comparacao_v1.py` | Comparador v1 (`blocos_unicos_v1`). Ainda em uso: o comparador v2 (`e01_analise_sast/comparacao.py`), o preflight e a medição importam dele `chave`, `chave_caso`, `gate` e `ocorrencias`. |
+| modo histórico (E01–E03) | Retirado do código em 01/11/2026: rulesets do registro, assinatura por regra/arquivo, filtro de elegibilidade, varredura da sessão e os scripts que só o usavam. O código está na tag git `modo-historico-final`; os resultados continuam em `outputs/` (ver `outputs/README.md`). |
 | `e07_validacao/camadas.py` (parte T0–T4) | Validação em camadas da política `historica_v1`. As funções de execução de testes são usadas também pela política atual. |
 | `e07_validacao/cache.py` | Cache de evidências de validação. A campanha rodou com `cache_validacao: desligado`. |
 | `e07_validacao/repeticao.py` | Repetição seletiva experimental. A campanha usou `repeticao_api: ampla`. |

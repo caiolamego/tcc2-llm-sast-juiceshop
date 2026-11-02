@@ -11,6 +11,11 @@ Os nomes atuais valem desde 26/10/2026. Registros antigos em `outputs/` e relat�
 nomes anteriores (`scripts/experiment/...`, `scripts/audit/...`); a correspondência está em
 `docs/historico/README.md`.
 
+Em 01/11/2026 saíram os scripts que só serviam ao modo histórico: `gerar_catalogo_historico.py`,
+`marcar_desafios_historicos.py`, `validar_cenarios_camadas.py`, `medir_custo_validacao.py` e
+`relatorio_baseline_historico.py`. Eles continuam na tag git `modo-historico-final`
+(`git show modo-historico-final:scripts/experimento/<nome>.py`).
+
 ## `preparacao/` — preparação do alvo
 
 | Script | Para que serve | Situação |
@@ -29,13 +34,9 @@ nomes anteriores (`scripts/experiment/...`, `scripts/audit/...`); a correspondê
 | `replay_ancoras.py` | Reaplica respostas com âncora ausente em cópias temporárias. | apoio |
 | `diagnosticar_llm.py` | Diagnóstico da LLM: offline, conexão, mensagem curta ou prompt arquivado. | apoio |
 | `validar_base_rag.py` | Valida a base RAG ou publica um manifesto novo. | apoio |
-| `gerar_catalogo_historico.py` | Catálogo histórico de 12 casos (JS001–JS012). | legado |
-| `gerar_linha_de_base_historica.py` | Linha de base de testes do modo histórico. | legado |
-| `marcar_desafios_historicos.py` | Cruza o catálogo histórico com os marcadores de desafio. | legado |
-| `tentar_um_caso.py` | Uma tentativa ponta a ponta sobre um caso (fase F5). | legado |
-| `sondagem_sast.py` | Sondagem do oráculo R, sem LLM (fase F5). | legado |
-| `validar_cenarios_camadas.py` | Confere a validação em camadas em 3 cenários (fase F4.3). | legado |
-| `medir_custo_validacao.py` | Mede o custo de cada camada de validação, incluindo o único uso do Cypress (fase F2.4). | legado |
+| `tentar_um_caso.py` | Uma tentativa ponta a ponta sobre um caso: o orquestrador com um caso, uma estratégia e K=1. | apoio |
+| `sondagem_sast.py` | Sondagem do oráculo R com um patch dado, sem LLM (`preflight.sondar`). | apoio |
+| `gerar_linha_de_base_historica.py` | Linha de base de testes `outputs/baseline_testes.json`, padrão de `camadas.py` e de `--baseline-testes`. | legado |
 
 ## `relatorios/` — relatórios e métricas
 
@@ -44,8 +45,7 @@ nomes anteriores (`scripts/experiment/...`, `scripts/audit/...`); a correspondê
 | `consolidar_metricas.py` | Consolida as métricas de uma execução em JSON e CSV (chamado pelo `executar.py`). | núcleo |
 | `relatorio_revalidacao.py` | Compara uma revalidação sem LLM com os registros originais. | apoio |
 | `relatorio_replays.py` | Compara replays concluídos. | apoio |
-| `metricas_historicas.py` | Métricas do modo histórico (E01, E02) nas três definições de F. | legado |
-| `relatorio_baseline_historico.py` | Relatório do baseline SAST histórico. | legado |
+| `metricas_historicas.py` | Métricas do modo histórico (E01, E02) nas três definições de F; os testes o usam para conferir os números arquivados. | legado |
 | `relatorio_rodada2.py` … `relatorio_rodada12.py` | Um relatório por rodada da auditoria de regras. | exploratório |
 
 ## `auditoria/` — auditoria das regras e das referências
