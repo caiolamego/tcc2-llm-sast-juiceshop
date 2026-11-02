@@ -5,7 +5,8 @@ from pipeline.comum.identidade import digest
 
 def componentes():
     fontes = []
-    # Os mesmos 30 arquivos de antes da reorganização: SAST, aplicação, validação, legado e orquestração.
+    # SAST, aplicação, validação, comparador v1 (legado/) e orquestração: 29 arquivos desde a retirada
+    # do modo histórico em 2026-11-01 (eram 30, com legado/filtro.py).
     for pasta in ('etapas/e01_analise_sast','etapas/e06_aplicacao','etapas/e07_validacao','legado'):
         fontes.extend((RAIZ_REPO/'src/pipeline'/pasta).glob('*.py'))
     fontes.extend((RAIZ_REPO/'src/pipeline/etapas/e01_analise_sast').glob('*.cjs'))

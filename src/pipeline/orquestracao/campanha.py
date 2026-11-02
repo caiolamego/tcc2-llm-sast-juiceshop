@@ -6,14 +6,13 @@ rodam em sequencia e param na primeira que satisfaz R, F e M:
 
     prompt -> LLM -> patch -> SAST depois -> validacao -> R, F, M -> execucoes.jsonl
 
-Metodo do R (decisao do grupo, 2026-10-07): o "antes" e a varredura do
-worktree limpo feita no inicio da sessao (outputs/sast_antes/<EXECUCAO>_baseline_raw.json),
-e nao o baseline de setembro, porque os rulesets do registro nao sao
-versionados. O baseline de setembro continua sendo a origem do catalogo; as
-duas varreduras sao comparadas no inicio.
+So aceita o catalogo por ocorrencia (outputs/catalogos/): o "antes" do R e a
+reproducao do scan do catalogo feita pelo preflight com o perfil SAST congelado.
+O modo historico de E01-E03 (catalogo JS001-JS022, rulesets do registro) saiu
+do codigo em 2026-11-01 e continua na tag git modo-historico-final.
 
-Uso:
-    python src/pipeline/orquestracao/campanha.py --execucao E01 --estrategias P1,P2 [--casos JS001,JS003] [--k 4] [--dry-run]
+Uso (normalmente montado pelo executar.py):
+    python src/pipeline/orquestracao/campanha.py --execucao <ID> --catalogo <catalogo_issues.json> --perfil-sast <perfil.json> --saida <pasta> [--estrategias P1,P2] [--casos AMP...] [--k 4] [--dry-run]
 """
 from __future__ import annotations
 
@@ -31,23 +30,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from dotenv import dotenv_values  # noqa: E402
 from rich.console import Console  # noqa: E402
 
 from pipeline.comum.caminhos import RAIZ_REPO, rel  # noqa: E402
-from pipeline.etapas.e05_geracao_llm.resposta_simulada import resposta_falsa, resposta_falsa_ampliada  # noqa: E402
+from pipeline.etapas.e05_geracao_llm.resposta_simulada import resposta_falsa_ampliada  # noqa: E402
 from pipeline.etapas.e05_geracao_llm.cliente_openai import OrcamentoEsgotado  # noqa: E402
 from pipeline.etapas.e06_aplicacao.aplicador import VERSAO as VERSAO_APLICADOR, ResultadoAplicacao, aplicar, interpretar  # noqa: E402
 from pipeline.etapas.e04_prompt import montagem  # noqa: E402
 from pipeline.etapas.e08_registro.registro import ler_execucoes, registrar_execucao  # noqa: E402
-from pipeline.legado.filtro import filtrar  # noqa: E402
-from pipeline.etapas.e01_analise_sast.semgrep import (RULESETS, Finding, assinatura, carregar_resultados,  # noqa: E402
-                                          executar, ler_exclusoes)
 from pipeline.etapas.e06_aplicacao.worktrees import PoolWorktrees  # noqa: E402
 from pipeline.etapas.e07_validacao.camadas import ConfigValidacao, validar  # noqa: E402
 
-CATALOGO = RAIZ_REPO / "outputs" / "sast_antes" / "catalogo_issues.json"
-BASELINE_SETEMBRO = RAIZ_REPO / "outputs" / "sast_antes" / "baseline_raw.json"
 PROJETO = "OWASP Juice Shop v20.1.1"
 
 console = Console()
@@ -70,66 +63,11 @@ class Saidas:
     def execucoes(self) -> Path:
         return self.d("resultados_consolidados") / "execucoes.jsonl"
 
-    def baseline_sessao(self, execucao: str) -> Path:
-        return self.d("sast_antes") / f"{execucao}_baseline_raw.json"
-
 
 def gravar_json(arq: Path, dados) -> Path:
     arq.parent.mkdir(parents=True, exist_ok=True)
     arq.write_text(json.dumps(dados, indent=2, ensure_ascii=False), encoding="utf-8")
     return arq
-
-
-# --------------------------------------------------------------------------
-# Varredura da sessao
-# --------------------------------------------------------------------------
-
-def _elegiveis_dedup(findings: list[Finding]) -> set[str]:
-    return {assinatura(f) for f in findings if filtrar(f)[0]}
-
-
-def varredura_da_sessao(pool: PoolWorktrees, saidas: Saidas, execucao: str,
-                        catalogo: list[dict], semgrep_bin: str = "semgrep") -> tuple[list[Finding], dict]:
-    """Varre o worktree limpo (ou reaproveita a varredura desta execucao) e
-    compara com o baseline de setembro."""
-    arq = saidas.baseline_sessao(execucao)
-    reutilizada = arq.exists()
-    with pool.alugar() as wt:
-        if not reutilizada:
-            console.log(f"Varredura SAST da sessao em {wt.name} (repositorio inteiro)...")
-            inicio = time.monotonic()
-            executar(wt, RULESETS, saida_bruta=arq,
-                     exclusoes=ler_exclusoes(RAIZ_REPO / "config" / "semgrepignore"), semgrep_bin=semgrep_bin)
-            console.log(f"  concluida em {time.monotonic() - inicio:.0f}s -> {rel(arq)}")
-        sessao = carregar_resultados(arq, wt)
-        setembro = carregar_resultados(BASELINE_SETEMBRO, wt)
-
-    versao_sessao = json.loads(arq.read_text(encoding="utf-8")).get("version")
-    versao_set = json.loads(BASELINE_SETEMBRO.read_text(encoding="utf-8")).get("version")
-    sig_sessao = {assinatura(f) for f in sessao}
-    sig_set = {assinatura(f) for f in setembro}
-    elig_sessao = _elegiveis_dedup(sessao)
-    sig_catalogo = {c["assinatura"] for c in catalogo if c["elegivel"]}
-    nome = {assinatura(f): f"{f.check_id} @ {f.path}" for f in sessao + setembro}
-    comparacao = {
-        "baseline_setembro": rel(BASELINE_SETEMBRO),
-        "baseline_sessao": rel(arq),
-        "reutilizada": reutilizada,
-        "semgrep_versao": {"setembro": versao_set, "sessao": versao_sessao},
-        "achados_brutos": {"setembro": len(setembro), "sessao": len(sessao)},
-        "assinaturas_brutas_distintas": {"setembro": len(sig_set), "sessao": len(sig_sessao)},
-        "so_no_setembro": sorted(nome[s] for s in sig_set - sig_sessao),
-        "so_na_sessao": sorted(nome[s] for s in sig_sessao - sig_set),
-        "elegiveis_sessao": len(elig_sessao),
-        "casos_do_catalogo_ausentes_na_sessao": sorted(
-            c["caso_id"] for c in catalogo if c["elegivel"] and c["assinatura"] not in sig_sessao),
-        "elegiveis_novos_na_sessao_fora_do_catalogo": sorted(nome[s] for s in elig_sessao - sig_catalogo),
-    }
-    comparacao["diverge"] = bool(
-        comparacao["so_no_setembro"] or comparacao["so_na_sessao"]
-        or len(setembro) != len(sessao) or versao_set != versao_sessao)
-    gravar_json(saidas.d("sast_antes") / f"{execucao}_comparacao_baseline.json", comparacao)
-    return sessao, comparacao
 
 
 # --------------------------------------------------------------------------
@@ -145,20 +83,12 @@ def faixa_regra(issue: dict) -> str | None:
     return None
 
 
-def _finding_dict(f: Finding) -> dict:
-    d = f.to_dict()
-    d["assinatura"] = assinatura(f)
-    d["elegivel_protocolo"] = filtrar(f)[0]
-    return d
-
-
 class Contexto:
     """Estado compartilhado entre os workers."""
 
-    def __init__(self, args, saidas: Saidas, sessao: list[Finding], versao_semgrep: str | None):
+    def __init__(self, args, saidas: Saidas, versao_semgrep: str | None):
         self.args = args
         self.saidas = saidas
-        self.sessao = sessao
         self.versao_semgrep = versao_semgrep
         self.lock_t4 = threading.Lock()
         self.parar = threading.Event()
@@ -188,22 +118,20 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     s = ctx.saidas
     args = ctx.args
     PoolWorktrees.restaurar(wt)
-    amp = getattr(ctx, "ampliado", None)
-    if amp:
-        from pipeline.etapas.e02_catalogo.catalogo import carregar as validar_catalogo
-        from pipeline.orquestracao.preflight import conferir_validacao_contrato
-        conferir_validacao_contrato(amp,args,wt)
-        amp.perfil.conferir()
-        if validar_catalogo(amp.catalogo.caminho).hashes != amp.catalogo.hashes:
-            raise ValueError('Catálogo alterado após preflight')
+    amp = ctx.ampliado
+    from pipeline.etapas.e02_catalogo.catalogo import carregar as validar_catalogo
+    from pipeline.orquestracao.preflight import conferir_validacao_contrato
+    conferir_validacao_contrato(amp,args,wt)
+    amp.perfil.conferir()
+    if validar_catalogo(amp.catalogo.caminho).hashes != amp.catalogo.hashes:
+        raise ValueError('Catálogo alterado após preflight')
     prompt = montagem.montar(issue, wt, estrategia)
-    if amp:
-        from pipeline.orquestracao.preflight import conferir_prompt_contrato
-        conferir_prompt_contrato(amp,prompt,args.estrategias+args.diagnosticos)
+    from pipeline.orquestracao.preflight import conferir_prompt_contrato
+    conferir_prompt_contrato(amp,prompt,args.estrategias+args.diagnosticos)
     gravar_json(s.d("prompts") / f"{tid}.json", prompt.to_dict())
 
     if args.dry_run:
-        texto = resposta_falsa_ampliada(issue, wt) if amp else resposta_falsa(issue, wt)
+        texto = resposta_falsa_ampliada(issue, wt)
         llm = {"modelo": "dry-run", "seed": None, "system_fingerprint": None, "tokens_entrada": 0,
                "tokens_saida": 0, "latencia_s": 0.0, "custo_usd": 0.0, "do_cache": False,
                "finish_reason": None, "recusa": None, "hash_prompt": prompt.hash_prompt}
@@ -216,7 +144,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
 
     correcao = interpretar(texto)
     fontes_originais = {}
-    if amp and not isinstance(correcao, ResultadoAplicacao):
+    if not isinstance(correcao, ResultadoAplicacao):
         for ed in correcao.edicoes:
             path = (wt / ed.arquivo).resolve()
             if path.is_relative_to(wt.resolve()) and path.is_file():
@@ -231,7 +159,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
             if not args.dry_run and llm.get('provedor') != 'colab' and getattr(args,'llm_identidade',None) else {}),
         "tentativa_id": tid, "execucao": args.execucao, "dry_run": args.dry_run,
         "caso_id": issue["caso_id"], "projeto": PROJETO,
-        **({"assinatura_ocorrencia": issue["assinatura_ocorrencia"]} if amp else {"assinatura": issue["assinatura"]}),
+        "assinatura_ocorrencia": issue["assinatura_ocorrencia"],
         "arquivo": issue["arquivo"], "linha": issue["linha_inicio"], "check_id": issue["check_id"],
         "cwe": issue["cwe"], "owasp_2025": issue["owasp_2025"], "sigla_vuln": issue["sigla_vuln"],
         "modo_regra": issue.get("modo_regra"), "faixa_regra": faixa_regra(issue),
@@ -264,13 +192,12 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
                       "resposta": rel(s.d("respostas_llm") / f"{tid}.json")},
     }
 
-    if amp:
-        linha.update(contrato_execucao_sha256=amp.contrato_hash, hashes_catalogo=amp.catalogo.hashes,
-                     perfil_sha256=amp.perfil.hash, classificacao_auditoria=issue['classificacao_auditoria'],
-                     desafios=issue['desafios'], origem_caso=issue['origem'], cobertura_funcional='servidor')
-        if args.dry_run and texto is None:
-            aplic.status = 'dry_run_sem_patch_suportado'
-            linha['status_aplicacao'] = aplic.status
+    linha.update(contrato_execucao_sha256=amp.contrato_hash, hashes_catalogo=amp.catalogo.hashes,
+                 perfil_sha256=amp.perfil.hash, classificacao_auditoria=issue['classificacao_auditoria'],
+                 desafios=issue['desafios'], origem_caso=issue['origem'], cobertura_funcional='servidor')
+    if args.dry_run and texto is None:
+        aplic.status = 'dry_run_sem_patch_suportado'
+        linha['status_aplicacao'] = aplic.status
     if aplic.status != "aplicado":
         linha["classificacao_final"] = f"nao_aplicada:{aplic.status}"
         for k in ("sem_separacao", "marcador", "criterio"):
@@ -286,56 +213,31 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
         shutil.copy2(wt / a, destino)
     linha["artefatos"]["patch"] = rel(arq_diff)
 
-    # SAST depois: so os arquivos tocados (a analise do Semgrep e por arquivo).
-    alvos = sorted(set(aplic.arquivos) | {issue["arquivo"]})
+    # SAST depois, comparação e validação funcional (medicao.medir).
     arq_raw = s.d("sast_depois") / f"{tid}_raw.json"
-    inicio = time.monotonic()
-    if amp:
-        from pipeline.etapas.e07_validacao.medicao import medir
-        from pipeline.legado.comparacao_v1 import chave_caso
-        fontes = {a: (fontes_originais[a], (wt / a).read_bytes()) for a in aplic.arquivos}
-        depois_scan, comp, v, medicao = medir(
-            wt, issue, fontes, amp.scan, amp.perfil, amp.baseline_testes, arq_raw,
-            args, ctx.lock_t4, origem={'execucao':args.execucao,'tentativa_id':tid},
-            parar=lambda: parada_solicitada(args))
-        linha.update(medicao)
-        linha['artefatos']['evidencia_funcional'] = rel(arq_raw.with_name(arq_raw.stem+'_evidencia_funcional.json'))
-        comp_file = s.d('comparacoes') / f'{tid}.json'
-        gravar_json(comp_file, comp)
-        linha.update(R=comp['R'], M=comp['M'], comparacao_status=comp['comparacao_status'],
-                     comparacao_artefato=rel(comp_file), novas_issues_qtd=comp['novas_issues_qtd'],
-                     possiveis_novas_issues_qtd=comp['possiveis_novas_issues_qtd'],
-                     novas_issues_ids=comp['novos'], cobertura_sast_limitada=comp['cobertura_limitada'],
-                     motivos_indeterminacao=comp.get('motivos_indeterminacao', []),
-                     arquivos_inconclusivos_sast=comp['arquivos_inconclusivos'],
-                     falhas_contexto_sast=comp.get('falhas_contexto', {}),
-                     versao_comparador=comp['versao_comparador'])
-        linha['sast_depois'] = [f.to_dict() for f in depois_scan.findings]
-        linha['sast_depois_raw'] = rel(arq_raw) if arq_raw.exists() else None
-        linha['duracao_sast_s'] = round(medicao['tempos_medicao']['sast_s'], 3)
-        linha['artefatos']['comparacao'] = rel(comp_file)
-        if arq_raw.exists(): linha['artefatos']['sast_depois'] = rel(arq_raw)
-        cfg = ConfigValidacao(lock_t4=ctx.lock_t4, arquivo_linha_de_base=amp.baseline_testes)
-    else:
-        depois = executar(wt, RULESETS, saida_bruta=arq_raw, caminhos=alvos, semgrep_bin=args.semgrep_bin)
-        linha["duracao_sast_s"] = round(time.monotonic() - inicio, 2)
-        antes = [f for f in ctx.sessao if f.path in alvos]
-
-        sig_alvo = issue["assinatura"]
-        sig_depois = {assinatura(f) for f in depois}
-        novas = sorted(_elegiveis_dedup(depois) - _elegiveis_dedup(antes))
-        linha["R"] = int(sig_alvo not in sig_depois)
-        linha["M"] = int(not novas)
-        linha["novas_issues_qtd"] = len(novas)
-        linha["novas_issues_ids"] = novas
-        linha["ocorrencias_alvo"] = {"antes": sum(assinatura(f) == sig_alvo for f in antes),
-                                     "depois": sum(assinatura(f) == sig_alvo for f in depois)}
-        linha["sast_depois"] = [_finding_dict(f) for f in depois]
-        linha["sast_depois_raw"] = rel(arq_raw)
-
-        cfg = ConfigValidacao(lock_t4=ctx.lock_t4)
-    if not amp:
-        v = validar(wt, aplic.arquivos, cfg)
+    from pipeline.etapas.e07_validacao.medicao import medir
+    fontes = {a: (fontes_originais[a], (wt / a).read_bytes()) for a in aplic.arquivos}
+    depois_scan, comp, v, medicao = medir(
+        wt, issue, fontes, amp.scan, amp.perfil, amp.baseline_testes, arq_raw,
+        args, ctx.lock_t4, origem={'execucao':args.execucao,'tentativa_id':tid},
+        parar=lambda: parada_solicitada(args))
+    linha.update(medicao)
+    linha['artefatos']['evidencia_funcional'] = rel(arq_raw.with_name(arq_raw.stem+'_evidencia_funcional.json'))
+    comp_file = s.d('comparacoes') / f'{tid}.json'
+    gravar_json(comp_file, comp)
+    linha.update(R=comp['R'], M=comp['M'], comparacao_status=comp['comparacao_status'],
+                 comparacao_artefato=rel(comp_file), novas_issues_qtd=comp['novas_issues_qtd'],
+                 possiveis_novas_issues_qtd=comp['possiveis_novas_issues_qtd'],
+                 novas_issues_ids=comp['novos'], cobertura_sast_limitada=comp['cobertura_limitada'],
+                 motivos_indeterminacao=comp.get('motivos_indeterminacao', []),
+                 arquivos_inconclusivos_sast=comp['arquivos_inconclusivos'],
+                 falhas_contexto_sast=comp.get('falhas_contexto', {}),
+                 versao_comparador=comp['versao_comparador'])
+    linha['sast_depois'] = [f.to_dict() for f in depois_scan.findings]
+    linha['sast_depois_raw'] = rel(arq_raw) if arq_raw.exists() else None
+    linha['duracao_sast_s'] = round(medicao['tempos_medicao']['sast_s'], 3)
+    linha['artefatos']['comparacao'] = rel(comp_file)
+    if arq_raw.exists(): linha['artefatos']['sast_depois'] = rel(arq_raw)
     gravar_json(s.d("testes") / f"{tid}.json", v.to_dict())
     linha["artefatos"]["validacao"] = rel(s.d("testes") / f"{tid}.json")
     # F e tier_falha seguem d_criterio (Secao 7.1); as tres versoes vao juntas
@@ -351,15 +253,14 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
     linha["testes_falhos_novos"] = v.testes_falhos_novos
     linha["testes_falhos_intermitentes"] = v.testes_falhos_intermitentes
     linha["reexecucoes"] = v.reexecucoes
-    linha["duracao_validacao_s"] = medicao["tempos_medicao"]["validacao_s"] if amp else v.duracao_s
-    if amp:
-        linha['etapas_validacao'] = medicao['etapas_validacao']
-        linha['selecao_testes'] = v.selecao
+    linha["duracao_validacao_s"] = medicao["tempos_medicao"]["validacao_s"]
+    linha['etapas_validacao'] = medicao['etapas_validacao']
+    linha['selecao_testes'] = v.selecao
 
     for k in ("sem_separacao", "marcador", "criterio"):
         f = linha[f"F_{k}"]
         linha[f"classificacao_{k}"] = ("indeterminada_funcional" if f is None else
-                                       "indeterminada_sast" if amp and (linha["R"] is None or linha["M"] is None) else
+                                       "indeterminada_sast" if linha["R"] is None or linha["M"] is None else
                                        "aceita" if linha["R"] and f and linha["M"] else
                                        f"rejeitada:R{linha['R']}F{f}M{linha['M']}")
     linha["classificacao_final"] = linha["classificacao_criterio"]
@@ -441,13 +342,11 @@ def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
                 ctx.erros.append({"tentativa_id": tid, "erro": f"{type(ex).__name__}: {ex}"})
                 console.log(f"[red]{tid}: ERRO {type(ex).__name__}: {ex}. Caso interrompido.[/]")
                 return
-            amp = getattr(ctx, 'ampliado', None)
-            if amp:
-                from pipeline.etapas.e02_catalogo.catalogo import digest
-                linha['artefatos_sha256'] = {Path(value).relative_to(ctx.saidas.raiz.relative_to(RAIZ_REPO)).as_posix(): digest(RAIZ_REPO / value)
-                    for value in linha['artefatos'].values() if (RAIZ_REPO / value).exists()} if ctx.saidas.raiz.is_relative_to(RAIZ_REPO) else {
-                    str(Path(value).relative_to(ctx.saidas.raiz)): digest(Path(value)) for value in linha['artefatos'].values() if Path(value).is_absolute() and Path(value).exists()}
-            registrar_execucao(linha, wt, ctx.saidas.execucoes, amp.catalogo.commit if amp else None)
+            from pipeline.etapas.e02_catalogo.catalogo import digest
+            linha['artefatos_sha256'] = {Path(value).relative_to(ctx.saidas.raiz.relative_to(RAIZ_REPO)).as_posix(): digest(RAIZ_REPO / value)
+                for value in linha['artefatos'].values() if (RAIZ_REPO / value).exists()} if ctx.saidas.raiz.is_relative_to(RAIZ_REPO) else {
+                str(Path(value).relative_to(ctx.saidas.raiz)): digest(Path(value)) for value in linha['artefatos'].values() if Path(value).is_absolute() and Path(value).exists()}
+            registrar_execucao(linha, wt, ctx.saidas.execucoes, ctx.ampliado.catalogo.commit)
             # Resposta do cache nao e cobrada de novo (o custo na linha e o da chamada original).
             if linha['custo_usd'] is None and not linha['do_cache']:
                 ctx.custo_desconhecido = True
@@ -494,15 +393,15 @@ def checar_ambiente(pool: PoolWorktrees, k: int, lock_t4: threading.Lock, baseli
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--execucao", required=True, help="ex.: E01 (oficial) ou DRY01")
+    ap.add_argument("--execucao", required=True, help="ID da execucao, ex.: AMP_REAL_<data>")
     ap.add_argument("--estrategias", default="P1,P2,P3,P4")
     ap.add_argument("--diagnosticos", default="",
                     help="condicoes de diagnostico fora da cadeia, ex.: P1L (protocolo, Secao 12)")
-    ap.add_argument("--casos", default=None, help="ex.: JS001,JS003 (padrao: todo o catalogo)")
+    ap.add_argument("--casos", default=None, help="IDs AMP separados por virgula (padrao: todo o catalogo)")
     ap.add_argument("--k", type=int, default=4, help="worktrees em paralelo")
     ap.add_argument("--dry-run", action="store_true", help="resposta falsa, sem chamar a API")
     ap.add_argument("--pular-checagem-ambiente", action="store_true")
-    ap.add_argument('--catalogo', type=Path, default=CATALOGO)
+    ap.add_argument('--catalogo', type=Path, required=True)
     ap.add_argument('--perfil-sast', type=Path)
     ap.add_argument('--saida', type=Path)
     ap.add_argument('--somente-preflight', action='store_true')
@@ -510,7 +409,7 @@ def main() -> None:
     ap.add_argument('--baseline-testes', type=Path, default=RAIZ_REPO / 'outputs/baseline_testes.json')
     ap.add_argument('--arquivo-parada', type=Path,
                     help='Controle local: encerrar entre tentativas quando este arquivo existir')
-    from pipeline.etapas.e07_validacao.politicas import argumentos, alterada
+    from pipeline.etapas.e07_validacao.politicas import argumentos
     argumentos(ap)
     args = ap.parse_args()
     if parada_solicitada(args):
@@ -537,8 +436,9 @@ def main() -> None:
 
     from pipeline.etapas.e02_catalogo.catalogo import carregar as carregar_catalogo
     contexto_catalogo = carregar_catalogo(args.catalogo)
-    if not contexto_catalogo.ampliado and alterada(args):
-        raise SystemExit("Otimizações de validação requerem catálogo ampliado")
+    if not contexto_catalogo.ampliado:
+        raise SystemExit("ERRO: o catálogo histórico (JS001–JS022) não é mais executável; use o catálogo por "
+                         "ocorrência (outputs/catalogos/). O modo histórico está na tag git modo-historico-final.")
     catalogo = contexto_catalogo.casos
     casos = [c for c in catalogo if c["elegivel"]]
     if args.casos:
@@ -548,27 +448,22 @@ def main() -> None:
             raise SystemExit(f"ERRO: casos fora do catalogo elegivel: {sorted(desconhecidos)}")
         casos = [c for c in casos if c["caso_id"] in pedidos]
 
-    ampliado = None
-    if contexto_catalogo.ampliado:
-        from pipeline.orquestracao.preflight import preparar
-        ampliado = preparar(args, contexto_catalogo, casos)
-        if args.somente_preflight:
-            console.log(f'Preflight concluído: {len(casos)} casos; sem chamadas à API.')
-            return
-    elif args.somente_preflight or args.perfil_sast:
-        raise SystemExit('Preflight/perfil local requer catálogo ampliado')
+    from pipeline.orquestracao.preflight import preparar
+    ampliado = preparar(args, contexto_catalogo, casos)
+    if args.somente_preflight:
+        console.log(f'Preflight concluído: {len(casos)} casos; sem chamadas à API.')
+        return
     if parada_solicitada(args):
         console.log('Parada solicitada durante a preparação; nenhuma tentativa iniciada.')
         return
-    saidas = Saidas(Path(args.saida).resolve() if args.saida else RAIZ_REPO / "outputs" / ("dry_run" if args.dry_run else ""))
-    env = dotenv_values(RAIZ_REPO / ".env")
-    pool = PoolWorktrees(RAIZ_REPO / "workspace", k=args.k, commit_esperado=ampliado.catalogo.commit if ampliado else env.get("JUICESHOP_COMMIT"))
+    saidas = Saidas(Path(args.saida).resolve())
+    pool = PoolWorktrees(RAIZ_REPO / "workspace", k=args.k, commit_esperado=ampliado.catalogo.commit)
     sessao_info = {
         "execucao": args.execucao, "dry_run": args.dry_run, "estrategias": args.estrategias,
         "diagnosticos": args.diagnosticos,
         "casos": [c["caso_id"] for c in casos], "k": args.k,
         "inicio": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "commit_alvo": env.get("JUICESHOP_COMMIT"),
+        "commit_alvo": ampliado.catalogo.commit,
     }
     console.rule(f"Execucao {args.execucao}{' (dry-run)' if args.dry_run else ''}: "
                  f"{len(casos)} casos x {args.estrategias} + diagnosticos {args.diagnosticos}, K={args.k}")
@@ -579,7 +474,7 @@ def main() -> None:
         sessao_info['checagem_ambiente']={'politica':'relacionada_v2','status':'verificada_no_preflight','testes_executados':False}
     elif not args.pular_checagem_ambiente:
         console.log("Checagem de ambiente: validacao sem alteracao em cada worktree...")
-        amb = checar_ambiente(pool, args.k, lock_t4, ampliado.baseline_testes if ampliado else None)
+        amb = checar_ambiente(pool, args.k, lock_t4, ampliado.baseline_testes)
         sessao_info["checagem_ambiente"] = amb
         for a in amb:
             console.log(f"  {a['worktree']}: {'OK' if a['passou'] else 'FALHOU'} ({a['duracao_s']}s)"
@@ -590,38 +485,21 @@ def main() -> None:
             raise SystemExit("ERRO: worktree sem alteracao reprovado na validacao. "
                              "Problema de ambiente, nao do pipeline (F4.3).")
 
-    if ampliado:
-        sessao = ampliado.scan.findings
-        n = len(sessao)
-        comp = {'achados_brutos': {'setembro': n, 'sessao': n},
-                'semgrep_versao': {'setembro': ampliado.scan.versao, 'sessao': ampliado.scan.versao},
-                'diverge': False, 'casos_do_catalogo_ausentes_na_sessao': []}
-        sessao_info['contrato_execucao_sha256'] = ampliado.contrato_hash
-        sessao_info['commit_alvo'] = ampliado.catalogo.commit
-    else:
-        sessao, comp = varredura_da_sessao(pool, saidas, args.execucao, catalogo, args.semgrep_bin)
-    sessao_info["comparacao_baseline"] = rel(saidas.d("sast_antes") / ("reproducao.json" if ampliado else f"{args.execucao}_comparacao_baseline.json"))
-    console.log(f"{'Baseline catálogo' if ampliado else 'Baseline setembro'} x sessão: {comp['achados_brutos']['setembro']} x "
-                f"{comp['achados_brutos']['sessao']} achados brutos, "
-                f"semgrep {comp['semgrep_versao']['setembro']} x {comp['semgrep_versao']['sessao']}")
-    if comp["diverge"]:
-        console.log(f"[bold yellow]AVISO: varreduras divergem. So em setembro: {comp['so_no_setembro']}; "
-                    f"so na sessao: {comp['so_na_sessao']}[/]")
-    ausentes = set(comp["casos_do_catalogo_ausentes_na_sessao"])
-    if ausentes & {c["caso_id"] for c in casos}:
-        console.log(f"[bold yellow]Casos sem o alerta na varredura da sessao (R nao mensuravel, pulados): "
-                    f"{sorted(ausentes)}[/]")
-    sessao_info["casos_pulados_alerta_ausente"] = sorted(ausentes & {c["caso_id"] for c in casos})
-    casos = [c for c in casos if c["caso_id"] not in ausentes]
+    # O preflight já exigiu que o scan reproduza o catálogo (sast_antes/reproducao.json):
+    # nenhum caso fica sem o alerta original.
+    sessao_info['contrato_execucao_sha256'] = ampliado.contrato_hash
+    sessao_info["comparacao_baseline"] = rel(saidas.d("sast_antes") / "reproducao.json")
+    n, versao = len(ampliado.scan.findings), ampliado.scan.versao
+    console.log(f"Baseline catálogo x sessão: {n} x {n} achados brutos, semgrep {versao} x {versao}")
+    sessao_info["casos_pulados_alerta_ausente"] = []
 
     feitas = {l["tentativa_id"]: l for l in ler_execucoes(saidas.execucoes)
               if l.get("execucao") == args.execucao}
     if feitas:
         console.log(f"Retomada: {len(feitas)} tentativa(s) ja registradas para {args.execucao}")
 
-    versao = comp["semgrep_versao"]["sessao"]
     try:
-        ctx = Contexto(args, saidas, sessao, versao)
+        ctx = Contexto(args, saidas, versao)
     except Exception as ex:
         from pipeline.etapas.e05_geracao_llm.provedor import ErroOperacionalLLM
         if not isinstance(ex, ErroOperacionalLLM):raise

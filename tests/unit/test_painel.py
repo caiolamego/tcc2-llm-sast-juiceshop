@@ -136,10 +136,11 @@ class PainelTests(unittest.TestCase):
         from types import SimpleNamespace
         args = SimpleNamespace(estrategias=['P1'], diagnosticos=[], execucao='E')
         ctx = SimpleNamespace(args=args, parar=threading.Event(), erros=[],
-                              saidas=SimpleNamespace(execucoes=self.raiz / 'registro.jsonl'),
+                              saidas=SimpleNamespace(execucoes=self.raiz / 'registro.jsonl', raiz=self.raiz),
+                              ampliado=SimpleNamespace(catalogo=SimpleNamespace(commit='a' * 40)),
                               somar_custo=lambda valor: valor)
         linha = {'do_cache': False, 'custo_usd': 0, 'classificacao_final': 'rejeitada',
-                 'status_aplicacao': 'aplicado', 'tier_falha': None, 'novas_issues_qtd': 0}
+                 'status_aplicacao': 'aplicado', 'tier_falha': None, 'novas_issues_qtd': 0, 'artefatos': {}}
         class Pool:
             @contextmanager
             def alugar(self):

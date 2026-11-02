@@ -1,4 +1,4 @@
-"""Preflight, contrato e contexto do modo ampliado; sem alterar o fluxo legado."""
+"""Preflight, contrato e contexto da execução sobre o catálogo por ocorrência."""
 from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path

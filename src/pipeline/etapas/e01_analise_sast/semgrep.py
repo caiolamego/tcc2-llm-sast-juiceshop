@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from pipeline.etapas.e05_geracao_llm.provedor import ambiente_alvo
 
-import hashlib
 import json
 import subprocess
 from dataclasses import dataclass, asdict
@@ -33,79 +32,13 @@ class Finding:
         return asdict(self)
 
 
-# Rulesets do protocolo (Secao 2). Nao versionados pelo registro (D2).
-RULESETS = ["p/javascript", "p/typescript", "p/nodejs", "p/expressjs", "p/owasp-top-ten"]
-TIMEOUT_SEMGREP_S = 900
-
 # Sem login, o Semgrep devolve este texto no lugar de extra.fingerprint e de
 # extra.lines (caderno, 2026-10-07). Tratado como campo ausente.
 SENTINELA_SEM_LOGIN = "requires login"
 
 
-def assinatura(f: Finding) -> str:
-    """Chave estavel de comparacao antes/depois (D6): sha256(check_id|caminho).
-
-    Decisao do grupo (2026-10-07): nao depende do fingerprint (ausente sem
-    login) nem do codigo (que a propria correcao altera). Coerente com a
-    deduplicacao por (check_id, path) do protocolo (passo 5).
-    """
-    bruto = f"{f.check_id}|{f.path}"
-    return hashlib.sha256(bruto.encode("utf-8")).hexdigest()
-
-
 def _sem_sentinela(valor: str) -> str:
     return "" if valor.strip() == SENTINELA_SEM_LOGIN else valor
-
-
-def ler_exclusoes(caminho: Path) -> list[str]:
-    """Le config/semgrepignore, ignorando linhas em branco e comentarios (#)."""
-    if not caminho.exists():
-        return []
-    linhas = caminho.read_text(encoding="utf-8").splitlines()
-    return [l.strip() for l in linhas if l.strip() and not l.strip().startswith("#")]
-
-
-def executar(
-    alvo: Path,
-    rulesets: list[str],
-    saida_bruta: Path | None = None,
-    exclusoes: list[str] | None = None,
-    caminhos: list[str] | None = None,
-    semgrep_bin: str = "semgrep",
-) -> list[Finding]:
-    """exclusoes: padroes tipo .gitignore, normalmente lidos de config/semgrepignore
-    via ler_exclusoes(). NAO existe flag '--exclude-rule-file' no Semgrep -- cada
-    padrao vira uma flag '--exclude' separada (confirmado em F3.2).
-    caminhos: arquivos relativos a 'alvo' para varrer so eles (padrao: tudo)."""
-    executable = str(Path(semgrep_bin).resolve()) if "/" in semgrep_bin else semgrep_bin
-    cmd = [executable, "--json", "--metrics=off", "--no-git-ignore"]
-    for r in rulesets:
-        cmd += ["--config", r]
-    for padrao in (exclusoes or []):
-        cmd += ["--exclude", padrao]
-    cmd += caminhos if caminhos else ["."]
-
-    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=alvo,
-                          timeout=TIMEOUT_SEMGREP_S, env=ambiente_alvo())
-    # Semgrep usa codigo 1 quando encontra findings; so >1 e erro real.
-    if proc.returncode > 1:
-        raise RuntimeError(f"Semgrep falhou ({proc.returncode}): {proc.stderr[:800]}")
-
-    dados = json.loads(proc.stdout)
-    if saida_bruta:
-        saida_bruta.parent.mkdir(parents=True, exist_ok=True)
-        saida_bruta.write_text(json.dumps(dados, indent=2))
-
-    return [_parse(r, alvo) for r in dados.get("results", [])]
-
-
-def carregar_resultados(caminho_json: Path, raiz: Path) -> list[Finding]:
-    """Carrega findings de um JSON bruto JA GERADO (ex.: outputs/sast_antes/
-    baseline_raw.json de F3.2) -- NAO executa o semgrep de novo. Usado por
-    scripts/build_issue_catalog.py (F3.4), que trabalha em cima do baseline
-    ja rodado, e nao precisa (nem deve) re-escanear."""
-    dados = json.loads(caminho_json.read_text(encoding="utf-8"))
-    return [_parse(r, raiz) for r in dados.get("results", [])]
 
 
 def _parse(r: dict, raiz: Path) -> Finding:

@@ -6,22 +6,6 @@ from pathlib import Path
 from pipeline.etapas.e05_geracao_llm.esquema import Correcao, Edicao
 
 
-def resposta_falsa(issue: dict, wt: Path) -> str:
-    """Edicao inofensiva: acrescenta um comentario no fim da linha do finding."""
-    linhas = (Path(wt) / issue["arquivo"]).read_text(encoding="utf-8").splitlines()
-    linha = linhas[issue["linha_inicio"] - 1]
-    c = Correcao(
-        vulnerabilidade_identificada="[dry-run]",
-        causa_da_vulnerabilidade="[dry-run]",
-        estrategia_de_correcao="[dry-run] comentario inofensivo",
-        edicoes=[Edicao(arquivo=issue["arquivo"], trecho_original=linha,
-                        trecho_corrigido=linha + " // dry-run")],
-        justificativa_tecnica="[dry-run]",
-        limitacoes_da_correcao="[dry-run]",
-    )
-    return c.model_dump_json()
-
-
 def resposta_falsa_ampliada(issue: dict, wt: Path) -> str | None:
     """Âncora única; apenas JS/TS. Templates são explicitamente não suportados."""
     arquivo = Path(issue['arquivo'])

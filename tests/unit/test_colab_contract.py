@@ -87,16 +87,16 @@ class ColabContractTests(unittest.TestCase):
         from pipeline.orquestracao.campanha import Contexto
         cfg=SimpleNamespace(dry_run=False,llm_identidade=self.identity,arquivo_parada=None)
         with patch('pipeline.etapas.e05_geracao_llm.provedor.identidade_offline',return_value=self.identity),patch('pipeline.etapas.e05_geracao_llm.provedor.criar_cliente') as factory:
-            ctx=Contexto(cfg,None,[],None)
+            ctx=Contexto(cfg,None,None)
             factory.assert_called_once();ctx.cliente.conferir_conexao.assert_called_once()
         with patch('pipeline.etapas.e05_geracao_llm.provedor.identidade_offline',return_value={'provedor':'outro'}),patch('pipeline.etapas.e05_geracao_llm.provedor.criar_cliente') as factory:
-            with self.assertRaises(ValueError):Contexto(cfg,None,[],None)
+            with self.assertRaises(ValueError):Contexto(cfg,None,None)
             factory.assert_not_called()
 
     def test_contexto_dry_run_nao_cria_cliente_nem_conecta(self):
         from pipeline.orquestracao.campanha import Contexto
         with patch('pipeline.etapas.e05_geracao_llm.provedor.criar_cliente',side_effect=AssertionError('rede')):
-            ctx=Contexto(SimpleNamespace(dry_run=True),None,[],None)
+            ctx=Contexto(SimpleNamespace(dry_run=True),None,None)
         self.assertIsNone(ctx.cliente)
 
     def test_resposta_truncada_nao_altera_arquivo_nem_roda_validacao(self):
@@ -108,11 +108,15 @@ class ColabContractTests(unittest.TestCase):
             result=RespostaColab(json.dumps(correcao()),None,'length',self.cfg.modelo,None,42,1,1,1,'h',self.identity,0,1,1,{'gpu':'fake'},'endpoint','truncada_ou_incompleta')
             prompt=SimpleNamespace(mensagens=[],hash_prompt='h',estrategia='P1_simples',roteiro_status=None,roteiro_sha256=None,
                 modo_contexto='arquivo_completo',to_dict=lambda:{},metadados_rag=lambda:{})
-            issue={'caso_id':'AMP1','assinatura':'s','arquivo':'a.ts','linha_inicio':1,'check_id':'r','cwe':[],
-                'owasp_2025':None,'sigla_vuln':'X'}
+            issue={'caso_id':'AMP1','assinatura_ocorrencia':'s','arquivo':'a.ts','linha_inicio':1,'check_id':'r','cwe':[],
+                'owasp_2025':None,'sigla_vuln':'X','classificacao_auditoria':'confirmado','desafios':[],'origem':'catalogo'}
             from unittest.mock import Mock
-            ctx=SimpleNamespace(versao_semgrep=None,args=args,saidas=Saidas(root/'out'),cliente=Mock(gerar=Mock(return_value=result)),ampliado=None)
-            with patch('pipeline.orquestracao.campanha.PoolWorktrees.restaurar'),patch.object(montagem,'montar',return_value=prompt),patch('pipeline.orquestracao.campanha.aplicar',side_effect=AssertionError('patch')),patch('pipeline.orquestracao.campanha.validar',side_effect=AssertionError('testes')):
+            amp=SimpleNamespace(contrato_hash='c',perfil=Mock(hash='p'),catalogo=SimpleNamespace(caminho=root/'catalogo.json',hashes={'catalogo':'x'}))
+            ctx=SimpleNamespace(versao_semgrep=None,args=args,saidas=Saidas(root/'out'),cliente=Mock(gerar=Mock(return_value=result)),ampliado=amp)
+            with patch('pipeline.orquestracao.campanha.PoolWorktrees.restaurar'),patch.object(montagem,'montar',return_value=prompt),patch('pipeline.orquestracao.campanha.aplicar',side_effect=AssertionError('patch')),patch('pipeline.orquestracao.campanha.validar',side_effect=AssertionError('testes')),\
+                 patch('pipeline.etapas.e07_validacao.medicao.medir',side_effect=AssertionError('testes')),\
+                 patch('pipeline.orquestracao.preflight.conferir_validacao_contrato'),patch('pipeline.orquestracao.preflight.conferir_prompt_contrato'),\
+                 patch('pipeline.etapas.e02_catalogo.catalogo.carregar',return_value=SimpleNamespace(hashes={'catalogo':'x'})):
                 line=tentativa(ctx,issue,'P1',root,'AMP1_P1')
             self.assertTrue(line['classificacao_final'].startswith('nao_aplicada'))
             self.assertEqual(file.read_text(),'original');self.assertIsNone(line['F']);self.assertIsNone(line['R'])
