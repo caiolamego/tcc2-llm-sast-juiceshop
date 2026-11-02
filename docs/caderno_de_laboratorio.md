@@ -426,6 +426,46 @@ Mudaram só as identidades esperadas: `validacao`, `prompts_validacao_sha256`, `
 
 ---
 
+### 2026-11-01 — Retirada do modo histórico (E01–E03) do código (F1)
+
+**Sintoma:** `src/pipeline/etapas/e01_analise_sast/semgrep.py` tinha duas gerações de código: rulesets do registro com assinatura `sha256(check_id|caminho)` (D6) e a varredura por perfil congelado. O orquestrador mantinha os dois modos, e o histórico ainda era o padrão de `--catalogo`. Só a campanha atual (catálogo por ocorrência) é executada.
+
+**Causa:** na reorganização de 26/10, o modo histórico ficou no lugar, só marcado como legado. Depois disso, ele só servia para refazer E01–E03. Para isso, de todo modo, é preciso voltar ao commit de cada execução, porque o código já tinha mudado de caminho.
+
+**Correção:** decisão do Caio, retirar o que o modo atual não usa.
+- **Tags git** nos commits de cada execução: `e01-preliminar` (`3b7ef48`), `e02-oficial-catalogo-v1` (`da10b26`), `e03-catalogo-v2` (`fa7b644`, só na `feat/p3-p4`), e `modo-historico-final` (`b52356e`), o último commit com o modo histórico na estrutura reorganizada.
+- **Código retirado:**
+  - de `semgrep.py`: `RULESETS`, `assinatura`, `ler_exclusoes`, `executar` e `carregar_resultados`;
+  - `legado/filtro.py`;
+  - `resposta_falsa`;
+  - do orquestrador: a varredura da sessão e o ramo não ampliado. `--catalogo` passou a ser obrigatório, e o catálogo histórico é recusado com mensagem que indica a tag.
+- **Scripts retirados:** `gerar_catalogo_historico.py`, `marcar_desafios_historicos.py`, `validar_cenarios_camadas.py`, `medir_custo_validacao.py` e `relatorio_baseline_historico.py`.
+- **`tentar_um_caso.py` e `sondagem_sast.py`:** perderam só o ramo histórico; já funcionavam com o catálogo atual.
+- **Mantidos, apesar do rótulo "legado":**
+  - `legado/comparacao_v1.py`, que o comparador v2, o preflight e a medição importam;
+  - `camadas.py`, conferido pela referência Docker;
+  - `gerar_linha_de_base_historica.py`, citado por `camadas.py`;
+  - `metricas_historicas.py` e a leitura de E01/E02 em `e09_metricas`, que os testes usam para conferir os números arquivados;
+  - `preparar_alvo.sh`, porque `config/execucao.yaml` ainda roda fora do Docker.
+- **Testes:** dois testes montavam o orquestrador no modo histórico (`test_colab_contract`, `test_painel`). Mudou só a preparação; as asserções são as mesmas.
+
+Verificação antes × depois (Docker, sem LLM; evidência em `outputs/revalidacoes/LIMPEZA_MODO_HISTORICO_20261101/`). Ficou idêntico:
+- os 358 testes Python e os 28 testes de regras;
+- o preflight dos 52 casos, com 208 prompts idênticos byte a byte;
+- o dry-run de 10 casos: as 40 tentativas têm registros iguais campo a campo, fora tempos e hashes derivados. Prompts, respostas, patches, códigos corrigidos e comparações são idênticos byte a byte;
+- a reconsolidação da campanha oficial, idêntica ao arquivado;
+- o painel, o `make -n` e os comandos do `executar.py`;
+- a referência Docker e o baseline oficial;
+- os links: 0 internos quebrados.
+
+Mudaram só a lista de arquivos do código no contrato (de 30 para 29) e o que deriva dela: `contrato_execucao_sha256` e as chaves do cache de validação.
+
+**Impacto na reprodutibilidade:** nenhum nas execuções atuais. Uma execução iniciada com o código anterior não pode ser retomada com o atual, porque o contrato mudou. E01–E03 se refazem a partir das tags; os resultados arquivados em `outputs/` não mudaram.
+
+**Fase do guia:** F1 (repositório).
+
+---
+
 <!--
 Próxima entrada:
 
