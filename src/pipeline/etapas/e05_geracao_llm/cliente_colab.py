@@ -157,14 +157,16 @@ class ClienteColab:
             auth = {'Authorization': 'Bearer '+self.cfg.api_key}
             health = self.http.get(self.cfg.base_url[:-3]+'/health', headers=auth, timeout=min(15, self.cfg.timeout))
             if health.status_code != 200:
-                raise ErroOperacionalLLM(f'Diagnóstico Colab recusado (HTTP {health.status_code})')
+                raise ErroOperacionalLLM(f'Diagnóstico Colab recusado (HTTP {health.status_code})',
+                    categoria='diagnostico_http', fatal=health.status_code not in (408,409,429) and health.status_code < 500, status_http=health.status_code)
             body = health.json()
             manifest = validar_manifesto(body['manifest'])
             if body.get('status')!='ok' or manifest['cientifica']!=self.cfg.manifesto['cientifica']:
                 raise ErroOperacionalLLM('Identidade do servidor Colab diverge do manifesto local')
             models = self.http.get(self.cfg.base_url+'/models', headers=auth, timeout=min(15, self.cfg.timeout))
             if models.status_code != 200:
-                raise ErroOperacionalLLM(f'Listagem Colab recusada (HTTP {models.status_code})')
+                raise ErroOperacionalLLM(f'Listagem Colab recusada (HTTP {models.status_code})',
+                    categoria='diagnostico_http', fatal=models.status_code not in (408,409,429) and models.status_code < 500, status_http=models.status_code)
             if self.cfg.modelo not in [m['id'] for m in models.json()['data']]:
                 raise ErroOperacionalLLM('Modelo configurado não está disponível no servidor Colab')
             self.ambiente = manifest['ambiente']
@@ -172,6 +174,10 @@ class ClienteColab:
             return {'provedor':'colab', 'modelo':self.cfg.modelo, 'estado':self.estado_conexao,
                     'identidade_sha256':manifest['identidade_sha256'], 'ambiente':self.ambiente,
                     'endpoint_sha256':self.endpoint}
+        except httpx.TransportError:
+            self.estado_conexao="falhou"
+            raise ErroOperacionalLLM("Diagnóstico Colab indisponível: conexão/timeout",
+                categoria="diagnostico_conexao", fatal=False) from None
         except ErroOperacionalLLM:
             self.estado_conexao='falhou'; raise
         except Exception:
@@ -179,7 +185,7 @@ class ClienteColab:
             raise ErroOperacionalLLM('Falha no diagnóstico Colab: conexão, manifesto ou resposta inválida') from None
 
     def _cache(self, path, key):
-        if not path.exists():
+        if self.cfg.cache_llm == "desligado" or not path.exists():
             return None
         try:
             data = read_json(path)
@@ -218,7 +224,11 @@ class ClienteColab:
             for envio in range(1,4):
                 if self.parar():
                     raise GeracaoCancelada('Geração cancelada antes do envio')
-                reservation = self.reservas.reservar(sha(self.identidade),self.endpoint)
+                try:
+                    reservation = self.reservas.reservar(sha(self.identidade),self.endpoint)
+                except OrcamentoEsgotado as exc:
+                    exc.envios = envio-1
+                    raise
                 try:
                     call_start=time.monotonic()
                     try:
@@ -232,7 +242,7 @@ class ClienteColab:
                 except openai.RateLimitError as exc:
                     self.reservas.concluir(reservation,'http_429_sem_geracao')
                     if envio==3:
-                        raise ErroOperacionalLLM('GPU Colab ocupada após três envios') from None
+                        raise ErroOperacionalLLM('GPU Colab ocupada após três envios', categoria='rate_limit', fatal=False, envios=envio, status_http=429) from None
                     try:
                         delay=float(exc.response.headers.get('Retry-After','5'))
                         delay=max(0,min(30,delay)) if math.isfinite(delay) else 5
@@ -248,10 +258,16 @@ class ClienteColab:
                     continue
                 except openai.APIStatusError as exc:
                     self.reservas.concluir(reservation,'http_'+str(exc.status_code))
-                    raise ErroOperacionalLLM(f'Colab recusou a geração (HTTP {exc.status_code}): {detalhe_http_seguro(exc.response)}; sem reenvio automático') from None
-                except Exception:
+                    from pipeline.etapas.e05_geracao_llm.erros import classificar
+                    categoria, _, fatal, status = classificar(exc)
+                    raise ErroOperacionalLLM(f'Colab recusou a geração (HTTP {status}): {detalhe_http_seguro(exc.response)}; sem reenvio automático',
+                        categoria=categoria, fatal=fatal, status_http=status, envios=envio) from None
+                except Exception as exc:
                     self.reservas.concluir(reservation,'falha_operacional_consumo_desconhecido')
-                    raise ErroOperacionalLLM('Conexão Colab interrompida/timeout ou resposta inválida; consumo desconhecido, sem reenvio') from None
+                    from pipeline.etapas.e05_geracao_llm.erros import classificar
+                    categoria, _, _, status = classificar(exc)
+                    raise ErroOperacionalLLM('Conexão Colab interrompida/timeout ou resposta inválida; consumo desconhecido, sem reenvio',
+                        categoria=categoria, fatal=False, status_http=status, envios=envio) from None
                 self.reservas.concluir(reservation,'resposta_recebida')
                 break
             try:
@@ -274,7 +290,8 @@ class ClienteColab:
                     key,self.identidade,round(waited,3),round(request_seconds,3),envio,
                     self.ambiente,self.endpoint,estado)
             except Exception:
-                raise ErroOperacionalLLM('Resposta Colab incompatível com o protocolo; geração não aplicada') from None
-            if estado=='completa':
+                raise ErroOperacionalLLM('Resposta Colab incompatível com o protocolo; geração não aplicada',
+                    categoria='resposta_invalida', fatal=False, envios=envio) from None
+            if estado=='completa' and self.cfg.cache_llm != 'desligado':
                 atomic_json(path,{'chave':key,'resposta':r.to_dict(),'resposta_sha256':sha(r.to_dict())})
             return r

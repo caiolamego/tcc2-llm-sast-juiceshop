@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 import shlex
@@ -12,6 +13,27 @@ from uuid import uuid4
 
 RAIZ = Path(__file__).resolve().parent
 MODOS = ("real", "preflight", "dry-run")
+
+
+def tem_dados_consolidaveis(saida, modo, execucao):
+    saida = Path(saida)
+    if not (saida/'contrato_execucao.json').is_file():
+        return False
+    if modo == 'preflight':
+        return (saida/'preflight.json').is_file()
+    return (saida/'resultados_consolidados/execucoes.jsonl').is_file() or (
+        (saida/f'resultados_consolidados/{execucao}_sessoes.json').is_file() and
+        (saida/'llm_operacional.jsonl').is_file())
+
+
+def registrar_finalizacao(saida, execucao, codigo_pipeline, codigo_metricas):
+    saida = Path(saida)
+    if saida.is_dir():
+        (saida/'finalizacao.json').write_text(json.dumps({
+            'execucao': execucao, 'pipeline_returncode': codigo_pipeline,
+            'metricas_returncode': codigo_metricas,
+            'status': 'concluida' if codigo_pipeline == codigo_metricas == 0 else 'com_pendencias',
+        }, indent=2) + '\n', encoding='utf-8')
 
 
 def carregar_config(arquivo: Path) -> dict:
@@ -126,14 +148,25 @@ def main(argv=None) -> int:
         print(f"Resultados: {config['saida_base'] / execucao}", flush=True)
         if config["modo"] == "real":
             print("Execução real: chamadas à LLM sujeitas aos limites acumulados do .env.", flush=True)
-        # Herda o terminal para exibir o progresso do orquestrador original.
-        for comando in (pipeline, metricas):
-            resultado = subprocess.run(comando, cwd=RAIZ)
-            if resultado.returncode:
-                print("Etapa interrompida; consulte os artefatos preservados acima.", file=sys.stderr)
-                return resultado.returncode if resultado.returncode > 0 else 1
-        print(f"Métricas: {config['saida_base'] / (execucao + '_METRICAS')}")
-        return 0
+        # A consolidação é independente do código de saída da campanha.
+        try:
+            codigo_pipeline = subprocess.run(pipeline, cwd=RAIZ).returncode
+        except KeyboardInterrupt:
+            codigo_pipeline = 130
+        saida = config['saida_base'] / execucao
+        consolidavel = tem_dados_consolidaveis(saida, config['modo'], execucao)
+        codigo_metricas = None
+        if codigo_pipeline == 0 or consolidavel:
+            if codigo_pipeline:
+                print('Campanha interrompida/com pendências; consolidando os dados disponíveis.', flush=True)
+            codigo_metricas = subprocess.run(metricas, cwd=RAIZ).returncode
+            if codigo_metricas == 0:
+                print(f"Métricas: {config['saida_base'] / (execucao + '_METRICAS')}")
+        registrar_finalizacao(saida, execucao, codigo_pipeline, codigo_metricas)
+        if codigo_pipeline or codigo_metricas != 0:
+            print('Execução com pendências; consulte os artefatos e a finalização.', file=sys.stderr)
+        codigo = codigo_pipeline or codigo_metricas or 0
+        return codigo if codigo >= 0 else 1
     except (ValueError, OSError, ImportError) as exc:
         print(f"ERRO: {exc}", file=sys.stderr)
         return 1

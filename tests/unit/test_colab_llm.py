@@ -128,7 +128,7 @@ class ColabTests(unittest.TestCase):
         self.assertEqual(self.posts,0)
 
     def test_geracao_schema_tokens_custo_e_cache(self):
-        c=self.client();r=c.gerar([{'role':'user','content':'fixture'}])
+        c=self.client(replace(self.cfg,cache_llm='leitura-escrita'));r=c.gerar([{'role':'user','content':'fixture'}])
         self.assertEqual(r.estado_geracao,'completa');self.assertIsNone(r.custo_usd)
         self.assertEqual(r.tokens_entrada,20);self.assertEqual(r.tokens_saida,10)
         self.assertEqual(Correcao.model_validate_json(texto_aplicavel(r)).edicoes,[])
@@ -138,6 +138,31 @@ class ColabTests(unittest.TestCase):
         data=read_json(self.root/'cache/orcamento.json');self.assertEqual(data['chamadas'],1)
         alltext=''.join(p.read_text() for p in (self.root/'cache').rglob('*.json'))
         self.assertNotIn('test-private-token',alltext);self.assertNotIn('fixture.invalid',alltext)
+
+    def test_cache_desligado_padrao_ignora_entrada_antiga_e_nao_escreve(self):
+        self.assertEqual(self.cfg.cache_llm, 'desligado')
+        cfg_cache = replace(self.cfg, cache_llm='leitura-escrita')
+        old = self.client(cfg_cache)
+        old.gerar([])
+        for path in (self.root/'cache/respostas').glob('*.json'):
+            path.write_text('cache inválido deliberado')
+        client = self.client()
+        self.assertFalse(client.gerar([]).do_cache)
+        self.assertFalse(client.gerar([]).do_cache)
+        self.assertEqual(self.posts, 3)
+        self.assertEqual(next((self.root/'cache/respostas').glob('*.json')).read_text(), 'cache inválido deliberado')
+
+    def test_503_e_timeout_nao_sao_fatais_para_outros_pares(self):
+        for status in (503, 'timeout', 'connection'):
+            with self.subTest(status=status):
+                self.sequence = [status]
+                with self.assertRaises(ErroOperacionalLLM) as caught: self.client().gerar([])
+                self.assertFalse(caught.exception.fatal)
+                self.assertEqual(caught.exception.envios, 1)
+        self.health_status = 503
+        with self.assertRaises(ErroOperacionalLLM) as caught: self.client().gerar([])
+        self.assertFalse(caught.exception.fatal)
+        self.assertEqual(caught.exception.envios, 0)
 
     def test_detalhe_http_so_expoe_causas_conhecidas(self):
         from pipeline.etapas.e05_geracao_llm.cliente_colab import detalhe_http_seguro
@@ -191,7 +216,7 @@ class ColabTests(unittest.TestCase):
         with self.assertRaises(OrcamentoEsgotado):Reservas(self.root/'limits',3).reservar('id','e')
 
     def test_cache_integridade_e_mudanca_cientifica(self):
-        c=self.client();c.gerar([])
+        c=self.client(replace(self.cfg,cache_llm='leitura-escrita'));c.gerar([])
         p=next((self.root/'cache/respostas').glob('*.json'));data=read_json(p)
         data['resposta']['conteudo']='alterado';atomic_json(p,data)
         with self.assertRaisesRegex(ErroOperacionalLLM,'Cache'):c.gerar([])
@@ -200,8 +225,8 @@ class ColabTests(unittest.TestCase):
         with self.assertRaises(ErroOperacionalLLM):c.gerar([])
 
     def test_reconexao_troca_url_preserva_identidade_e_cache(self):
-        c=self.client();c.gerar([])
-        new=self.client(replace(self.cfg,base_url='https://novo.invalid/v1'))
+        c=self.client(replace(self.cfg,cache_llm='leitura-escrita'));c.gerar([])
+        new=self.client(replace(self.cfg,base_url='https://novo.invalid/v1',cache_llm='leitura-escrita'))
         self.assertEqual(c.identidade,new.identidade)
         self.assertTrue(new.gerar([]).do_cache);self.assertNotEqual(c.endpoint,new.endpoint)
 
@@ -227,7 +252,7 @@ class ColabTests(unittest.TestCase):
                 with self.assertRaises(GeracaoCancelada):f.result(timeout=3)
 
     def test_dois_workers_patch_identico_geram_uma_vez(self):
-        c=self.client()
+        c=self.client(replace(self.cfg,cache_llm='leitura-escrita'))
         with ThreadPoolExecutor(2) as ex:rs=list(ex.map(lambda _:c.gerar([]),range(2)))
         self.assertEqual(self.posts,1);self.assertEqual(sum(r.do_cache for r in rs),1)
 

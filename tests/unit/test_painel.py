@@ -111,6 +111,28 @@ class PainelTests(unittest.TestCase):
                 self.assertEqual(metricas.exists(), codigo == 0)
                 self.assertEqual(self.controle.atual['status'], 'finalizada' if codigo == 0 else 'falhou')
 
+    def test_pipeline_falha_mas_painel_consolida_registros_parciais(self):
+        from types import SimpleNamespace
+        def popen(cmd, **kwargs):
+            etapa = self.controle.atual['etapa']
+            saida = Path(self.controle.atual['saida'])
+            if etapa == 'pipeline':
+                saida.mkdir(parents=True)
+                (saida/'contrato_execucao.json').write_text('{}')
+                (saida/'resultados_consolidados').mkdir()
+                (saida/'resultados_consolidados/execucoes.jsonl').touch()
+            return SimpleNamespace(wait=lambda: 1 if etapa == 'pipeline' else 0)
+        with patch('pipeline.painel.controle.montar_comandos', return_value=(['pipeline'], ['metricas'])), \
+                patch('pipeline.painel.controle.subprocess.Popen', side_effect=popen) as proc:
+            self.controle.iniciar('real')
+            self.aguardar(lambda: not self.controle.worker.is_alive())
+        self.assertEqual(proc.call_count, 2)
+        self.assertEqual(self.controle.atual['pipeline_returncode'],1)
+        self.assertEqual(self.controle.atual['metricas_returncode'],0)
+        self.assertEqual(self.controle.atual['status'],'falhou')
+        data = json.loads((Path(self.controle.atual['saida'])/'finalizacao.json').read_text())
+        self.assertEqual(data['status'],'com_pendencias')
+
     def test_parada_do_orquestrador_devolve_worktree_sem_tentar_patch(self):
         from types import SimpleNamespace
         stop = self.raiz / 'parar'

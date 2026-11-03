@@ -1,28 +1,19 @@
-"""Cliente OpenAI deterministico, com cache e guard-rail de orcamento (F5.2, D8, D9).
-
-- temperature=0, seed do .env, response_format json_schema strict.
-- Retentativa com backoff exponencial (tenacity) so para 429 e 5xx.
-- Cache em disco: .cache/<sha256(prompt+modelo+seed)>.json. Acerto de cache
-  nao conta no orcamento.
-- Orcamento global persistido em .cache/orcamento_llm.json, para valer entre
-  execucoes do script. Aborta antes de chamar se MAX_LLM_CALLS ou MAX_USD
-  ja foram atingidos.
-"""
+"""Cliente OpenAI: cache optativo, retentativas limitadas e orçamento por envio."""
 from __future__ import annotations
 
 import hashlib
 import json
 import os
+import math
 import threading
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 import openai
 import yaml
 from dotenv import dotenv_values
-from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
-                      wait_exponential)
+from pipeline.etapas.e05_geracao_llm.erros import (ErroOperacionalLLM, GeracaoCancelada, classificar, atraso)
 
 from pipeline.etapas.e05_geracao_llm.esquema import response_format
 
@@ -31,7 +22,7 @@ DIR_CACHE = RAIZ_REPO / ".cache"
 ARQ_ORCAMENTO = DIR_CACHE / "orcamento_llm.json"
 ARQ_PRECOS = RAIZ_REPO / "config" / "precos_llm.yaml"
 
-MAX_TENTATIVAS = 6
+MAX_TENTATIVAS = 3
 TIMEOUT_REQUISICAO_S = 120
 MAX_TOKENS_SAIDA = 4096
 
@@ -41,33 +32,43 @@ MAX_TOKENS_SAIDA = 4096
 _LOCK_ORCAMENTO = threading.Lock()
 
 
-class OrcamentoEsgotado(RuntimeError):
-    pass
+class OrcamentoEsgotado(ErroOperacionalLLM):
+    def __init__(self, mensagem, **kwargs):
+        super().__init__(mensagem, categoria="orcamento", fatal=True, **kwargs)
 
 
 @dataclass
 class ConfigLLM:
-    api_key: str
+    api_key: str = field(repr=False)
     modelo: str
     seed: int
     max_chamadas: int
     max_usd: float
+    cache_llm: str = "desligado"
+
+    def __post_init__(self):
+        if self.cache_llm not in ('desligado', 'leitura-escrita'):
+            raise ValueError('Cache LLM inválido')
+        if type(self.max_chamadas) is not int or self.max_chamadas <= 0 or not math.isfinite(self.max_usd) or self.max_usd <= 0:
+            raise ValueError('Limites OpenAI devem ser positivos e finitos')
 
     @classmethod
     def do_env(cls, arquivo: Path = RAIZ_REPO / ".env") -> "ConfigLLM":
         # dotenv_values nao injeta nada em os.environ: a chave nao vaza para os
         # subprocessos do Juice Shop. Variavel exportada no shell tem prioridade.
         valores = {**dotenv_values(arquivo), **{k: v for k, v in os.environ.items()
-                                                 if k.startswith(("OPENAI_", "MAX_"))}}
+                                                 if k.startswith(("OPENAI_", "LLM_", "MAX_"))}}
         chave = valores.get("OPENAI_API_KEY") or ""
         if not chave or chave.startswith("<"):
             raise RuntimeError("OPENAI_API_KEY ausente no .env (veja .env.example)")
+        from pipeline.etapas.e05_geracao_llm.provedor import politica_cache
         return cls(
             api_key=chave,
             modelo=valores.get("OPENAI_MODEL") or "gpt-4.1-mini",
             seed=int(valores.get("OPENAI_SEED") or 42),
             max_chamadas=int(valores.get("MAX_LLM_CALLS") or 400),
             max_usd=float(valores.get("MAX_USD") or 25),
+            cache_llm=politica_cache(valores),
         )
 
 
@@ -79,12 +80,15 @@ class RespostaLLM:
     modelo: str                # modelo efetivo devolvido pela API
     system_fingerprint: str | None
     seed: int
-    tokens_entrada: int
-    tokens_saida: int
+    tokens_entrada: int | None
+    tokens_saida: int | None
     latencia_s: float
-    custo_usd: float
+    custo_usd: float | None
     hash_prompt: str
     do_cache: bool = False
+    chamadas_enviadas: int = 1
+    historico_transporte: list = field(default_factory=list)
+    consumo_incerto: bool = False
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -136,12 +140,24 @@ class Orcamento:
         self.arquivo.write_text(json.dumps(e, indent=2), encoding="utf-8")
         return e
 
+    def finalizar(self, custo):
+        e = self._ler()
+        if custo is None:
+            e['envios_consumo_desconhecido'] = e.get('envios_consumo_desconhecido', 0) + 1
+        else:
+            e['usd'] = round(e['usd'] + custo, 6)
+        self.arquivo.write_text(json.dumps(e, indent=2), encoding='utf-8')
+
+    def marcar_incerto(self):
+        self.finalizar(None)
+
 
 class ClienteLLM:
-    def __init__(self, cfg: ConfigLLM):
+    def __init__(self, cfg: ConfigLLM, parar=None):
         self.cfg = cfg
+        self.parar = parar or (lambda: False)
         _precos(cfg.modelo)  # falha cedo se nao houver preco
-        # max_retries=0: quem controla retentativa e o tenacity, abaixo.
+        # max_retries=0: somente o laço explícito controla as retentativas.
         self._api = openai.OpenAI(api_key=cfg.api_key, max_retries=0,
                                   timeout=TIMEOUT_REQUISICAO_S)
         self.orcamento = Orcamento(cfg.max_chamadas, cfg.max_usd)
@@ -149,24 +165,26 @@ class ClienteLLM:
     def gerar(self, mensagens: list[dict]) -> RespostaLLM:
         h = hash_prompt(mensagens, self.cfg.modelo, self.cfg.seed)
         arq_cache = DIR_CACHE / f"{h}.json"
-        if arq_cache.exists():
+        if self.cfg.cache_llm != "desligado" and arq_cache.exists():
             dados = json.loads(arq_cache.read_text(encoding="utf-8"))
-            return RespostaLLM(**{**dados, "do_cache": True})
+            return RespostaLLM(**{**dados, "do_cache": True, "chamadas_enviadas": 0})
 
         with _LOCK_ORCAMENTO:
-            self.orcamento.conferir()
             inicio = time.monotonic()
-            resp = self._chamar(mensagens)
+            resp, historico, envios = self._chamar_com_recuperacao(mensagens)
             latencia = time.monotonic() - inicio
 
             uso = resp.usage
-            entrada = uso.prompt_tokens if uso else 0
-            saida = uso.completion_tokens if uso else 0
+            entrada = uso.prompt_tokens if uso else None
+            saida = uso.completion_tokens if uso else None
             detalhes = getattr(uso, "prompt_tokens_details", None) if uso else None
             entrada_cache = (getattr(detalhes, "cached_tokens", 0) or 0) if detalhes else 0
-            custo = _custo(resp.model, entrada, entrada_cache, saida)
-            self.orcamento.registrar(custo)
+            custo = _custo(resp.model, entrada, entrada_cache, saida) if entrada is not None and saida is not None else None
+            self.orcamento.finalizar(custo)
 
+        if len(resp.choices) != 1:
+            raise ErroOperacionalLLM("Resposta OpenAI sem escolha única; geração não aplicada",
+                categoria="resposta_invalida", fatal=False, envios=envios, historico=historico)
         escolha = resp.choices[0]
         r = RespostaLLM(
             conteudo=escolha.message.content,
@@ -178,21 +196,48 @@ class ClienteLLM:
             tokens_entrada=entrada,
             tokens_saida=saida,
             latencia_s=round(latencia, 3),
-            custo_usd=round(custo, 6),
+            custo_usd=round(custo, 6) if custo is not None else None,
+            chamadas_enviadas=envios, historico_transporte=historico,
+            consumo_incerto=bool(historico),
             hash_prompt=h,
         )
-        DIR_CACHE.mkdir(parents=True, exist_ok=True)
-        dados = r.to_dict()
-        dados.pop("do_cache")
-        arq_cache.write_text(json.dumps(dados, indent=2, ensure_ascii=False), encoding="utf-8")
+        if self.cfg.cache_llm != "desligado":
+            DIR_CACHE.mkdir(parents=True, exist_ok=True)
+            dados = r.to_dict()
+            dados.pop("do_cache")
+            arq_cache.write_text(json.dumps(dados, indent=2, ensure_ascii=False), encoding="utf-8")
         return r
 
-    @retry(
-        retry=retry_if_exception_type((openai.RateLimitError, openai.InternalServerError)),
-        wait=wait_exponential(multiplier=2, min=2, max=60),
-        stop=stop_after_attempt(MAX_TENTATIVAS),
-        reraise=True,
-    )
+    def _chamar_com_recuperacao(self, mensagens):
+        historico = []
+        for envio in range(1, MAX_TENTATIVAS + 1):
+            if self.parar():
+                raise GeracaoCancelada("Geração cancelada antes do envio", envios=envio-1, historico=historico)
+            try:
+                self.orcamento.conferir()
+            except OrcamentoEsgotado as exc:
+                exc.envios, exc.historico = envio-1, historico
+                raise
+            # Todo envio consome o limite, inclusive timeout/429. O custo é reconciliado depois.
+            self.orcamento.registrar(0.)
+            try:
+                return self._chamar(mensagens), historico, envio
+            except openai.OpenAIError as exc:
+                categoria, repetivel, fatal, status = classificar(exc)
+                self.orcamento.marcar_incerto()
+                delay = atraso(exc, envio) if repetivel and envio < MAX_TENTATIVAS else 0.
+                historico.append({'envio': envio, 'categoria': categoria, 'status_http': status,
+                                  'repetivel': repetivel, 'espera_s': delay})
+                if not repetivel or envio == MAX_TENTATIVAS:
+                    raise ErroOperacionalLLM("Falha OpenAI: " + categoria,
+                        categoria=categoria, fatal=fatal, status_http=status,
+                        envios=envio, historico=historico) from None
+                limite = time.monotonic() + delay
+                while time.monotonic() < limite:
+                    if self.parar():
+                        raise GeracaoCancelada("Geração cancelada durante retentativa", envios=envio, historico=historico)
+                    time.sleep(min(.1, max(0., limite-time.monotonic())))
+
     def _chamar(self, mensagens: list[dict]):
         return self._api.chat.completions.create(
             model=self.cfg.modelo,

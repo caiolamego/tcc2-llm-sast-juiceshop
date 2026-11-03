@@ -105,6 +105,69 @@ def expanded(root, mode='real'):
 
 
 class NumerosTests(unittest.TestCase):
+    def test_recuperacao_historica_sem_jsonl_nao_modifica_origem(self):
+        with tempfile.TemporaryDirectory() as folder:
+            inp, cat, c, _ = expanded(Path(folder))
+            (inp/'resultados_consolidados/execucoes.jsonl').unlink()
+            save(inp/'resultados_consolidados/TEST_sessoes.json', [{'execucao':'TEST','erros':[{'erro':'operacional'}]}])
+            events = [{'tipo':'conexao_verificada'}, {'tipo':'ErroOperacionalLLM',
+                'tentativa_id':c['caso_id']+'_SEMOWASP_X_P1_TEST',
+                'descricao':'Colab recusou a geração (HTTP 503): private-response-not-for-metrics'}]
+            (inp/'llm_operacional.jsonl').write_text(''.join(json.dumps(e)+'\n' for e in events))
+            before = {p.relative_to(inp).as_posix():digest(p) for p in inp.rglob('*') if p.is_file()}
+            entrada = carregar(inp, 'TEST', cat); report = calcular(entrada)
+            self.assertEqual(report['operacional_llm']['por_categoria'], {'servidor':1})
+            self.assertEqual(report['operacional_llm']['eventos_sem_contagem_envios'],1)
+            self.assertIsNone(report['operacional_llm']['eventos'][0]['chamadas_enviadas'])
+            self.assertNotIn('private-response',json.dumps(report))
+            self.assertEqual(report['populacoes']['real_desenho']['tentativas'],0)
+            self.assertEqual(report['status'],'consolidado_parcial')
+            self.assertEqual(before,{p.relative_to(inp).as_posix():digest(p) for p in inp.rglob('*') if p.is_file()})
+            self.assertFalse((inp/'resultados_consolidados/execucoes.jsonl').exists())
+
+    def test_ausencia_jsonl_sem_evento_de_falha_continua_recusada(self):
+        with tempfile.TemporaryDirectory() as folder:
+            inp, cat, c, _ = expanded(Path(folder))
+            (inp/'resultados_consolidados/execucoes.jsonl').unlink()
+            save(inp/'resultados_consolidados/TEST_sessoes.json',[{'execucao':'TEST'}])
+            (inp/'llm_operacional.jsonl').write_text(json.dumps({'tipo':'conexao_verificada'})+'\n')
+            with self.assertRaises(ValueError): carregar(inp,'TEST',cat)
+
+    def test_sessao_sem_respostas_consolida_eventos_sem_inventar_falhas_cientificas(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            inp, cat, c, _ = expanded(root)
+            (inp/'resultados_consolidados/execucoes.jsonl').write_text('')
+            event = {'schema_versao':'1.0','execucao':'TEST','tentativa_id':'T',
+                     'caso_id':c['caso_id'],'estrategia':'P1','categoria':'timeout',
+                     'fatal':False,'chamadas_enviadas':3,'custo_usd':None,
+                     'tokens_entrada':None,'tokens_saida':None}
+            (inp/'llm_operacional.jsonl').write_text(json.dumps(event)+'\n')
+            entrada = carregar(inp,'TEST',cat); report = calcular(entrada)
+            self.assertEqual(report['status'],'consolidado_parcial')
+            self.assertEqual(report['operacional_llm']['total_eventos'],1)
+            self.assertEqual(report['operacional_llm']['envios_sem_resposta_registrada'],3)
+            self.assertEqual(report['populacoes']['real_desenho']['tentativas'],0)
+            self.assertIsNone(report['populacoes']['real_desenho']['definicoes']['criterio']['metricas']['TRV']['valor'])
+            self.assertEqual(report['metricas_por_caso']['real_desenho']['criterio']['CR']['denominador'],1)
+            self.assertEqual(report['casos'][0]['status'],'pendente')
+            artifacts = construir(report,entrada)
+            self.assertIn('eventos_llm.csv',artifacts)
+            self.assertIn('llm_operacional.jsonl',entrada.fontes)
+            publicar(root/'publicado',artifacts,entrada)
+            self.assertTrue((root/'publicado/metricas.json').exists())
+
+    def test_evento_de_outro_caso_ou_execucao_nao_e_aceito(self):
+        with tempfile.TemporaryDirectory() as folder:
+            inp, cat, c, _ = expanded(Path(folder))
+            original = {'schema_versao':'1.0','execucao':'TEST','caso_id':c['caso_id'],
+                        'estrategia':'P1','categoria':'timeout','fatal':False,'chamadas_enviadas':1}
+            for key,value in [('execucao','OUTRA'),('caso_id','AMP_DESCONHECIDO'),
+                              ('estrategia','P4'),('chamadas_enviadas',-1)]:
+                event = {**original,key:value}
+                (inp/'llm_operacional.jsonl').write_text(json.dumps(event)+'\n')
+                with self.subTest(key=key), self.assertRaises(ValueError): carregar(inp,'TEST',cat)
+
     def test_v4_keeps_different_functional_scopes_separate(self):
         with tempfile.TemporaryDirectory() as folder:
             a,b=case('AMP_A'),case('AMP_B')

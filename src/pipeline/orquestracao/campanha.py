@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -106,7 +107,7 @@ class Contexto:
             self.cliente = criar_cliente(parar=lambda: self.parar.is_set() or parada_solicitada(args))
             if hasattr(self.cliente, 'conferir_conexao'):
                 self.custo_desconhecido = True
-                self.cliente.conferir_conexao()
+                # Cada geração confere a conexão; indisponibilidade inicial não derruba a fila.
 
     def somar_custo(self, usd: float) -> float:
         with self.lock_custo:
@@ -157,6 +158,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
             if llm.get('provedor') == 'colab' else {}),
         **({'provedor':'openai','identidade_inferencia':getattr(args,'llm_identidade',None)}
             if not args.dry_run and llm.get('provedor') != 'colab' and getattr(args,'llm_identidade',None) else {}),
+        **{k: llm[k] for k in ("chamadas_enviadas", "historico_transporte", "consumo_incerto") if k in llm},
         "tentativa_id": tid, "execucao": args.execucao, "dry_run": args.dry_run,
         "caso_id": issue["caso_id"], "projeto": PROJETO,
         "assinatura_ocorrencia": issue["assinatura_ocorrencia"],
@@ -284,6 +286,23 @@ def parada_solicitada(args) -> bool:
     return bool(arquivo and Path(arquivo).is_file())
 
 
+
+def registrar_falha_llm(ctx, issue, estrategia, tid, ex, inicio, cronometro):
+    evento = {'schema_versao': '1.0', 'execucao': ctx.args.execucao,
+        'tentativa_id': tid, 'caso_id': issue['caso_id'], 'estrategia': estrategia,
+        'tipo': type(ex).__name__, 'descricao': str(ex),
+        'inicio': inicio, 'fim': datetime.now(timezone.utc).isoformat(),
+        'duracao_s': round(time.monotonic()-cronometro, 3),
+        **ex.metadados()}
+    if ex.envios:
+        ctx.custo_desconhecido = True
+    with ctx.lock_custo:
+        ctx.eventos_llm.append(evento)
+        with (ctx.saidas.raiz / 'llm_operacional.jsonl').open('a', encoding='utf-8') as stream:
+            stream.write(json.dumps(evento, ensure_ascii=False)+'\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+
 def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
                    feitas: dict[str, dict]) -> None:
     """Estrategias do desenho em sequencia, parando na primeira aceita; depois
@@ -326,21 +345,27 @@ def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
                 linha['fim_tentativa'] = datetime.now(timezone.utc).isoformat()
                 linha['duracao_total_s'] = round(time.monotonic() - cronometro, 3)
             except OrcamentoEsgotado as ex:
+                registrar_falha_llm(ctx, issue, e, tid, ex, inicio_tentativa, cronometro)
                 ctx.orcamento_esgotado = True
                 ctx.parar.set()
                 console.log(f"[bold red]Orcamento esgotado: {ex}. Parando a sessao.[/]")
                 return
-            except Exception as ex:  # interrompe so este caso; a retomada refaz
+            except Exception as ex:
                 from pipeline.etapas.e05_geracao_llm.provedor import ErroOperacionalLLM, GeracaoCancelada
                 if isinstance(ex, ErroOperacionalLLM):
-                    ctx.parar.set()
-                    evento={'tentativa_id':tid, 'tipo':type(ex).__name__, 'descricao':str(ex)}
-                    ctx.eventos_llm.append(evento)
-                    with ctx.lock_custo, (ctx.saidas.raiz / 'llm_operacional.jsonl').open('a',encoding='utf-8') as stream:
-                        stream.write(json.dumps(evento,ensure_ascii=False)+'\n')
-                    if isinstance(ex, GeracaoCancelada):return
-                ctx.erros.append({"tentativa_id": tid, "erro": f"{type(ex).__name__}: {ex}"})
-                console.log(f"[red]{tid}: ERRO {type(ex).__name__}: {ex}. Caso interrompido.[/]")
+                    if ex.fatal:
+                        ctx.parar.set()
+                    registrar_falha_llm(ctx, issue, e, tid, ex, inicio_tentativa, cronometro)
+                    if isinstance(ex, GeracaoCancelada): return
+                    ctx.erros.append({'tentativa_id': tid, 'erro': 'Falha operacional LLM',
+                                      'categoria': ex.categoria})
+                    console.log(f'[yellow]{tid}: falha operacional LLM ({ex.categoria}); '
+                                + ('novas chamadas interrompidas.' if ex.fatal else 'seguindo para a próxima estratégia/caso.'))
+                    if ex.fatal: return
+                    # Não cria uma tentativa científica fictícia; retomada refaz somente o par ausente.
+                    continue
+                ctx.erros.append({"tentativa_id": tid, "erro": type(ex).__name__})
+                console.log(f"[red]{tid}: ERRO {type(ex).__name__}. Caso interrompido; artefatos preservados.[/]")
                 return
             from pipeline.etapas.e02_catalogo.catalogo import digest
             linha['artefatos_sha256'] = {Path(value).relative_to(ctx.saidas.raiz.relative_to(RAIZ_REPO)).as_posix(): digest(RAIZ_REPO / value)
@@ -348,7 +373,7 @@ def processar_caso(ctx: Contexto, pool: PoolWorktrees, issue: dict,
                 str(Path(value).relative_to(ctx.saidas.raiz)): digest(Path(value)) for value in linha['artefatos'].values() if Path(value).is_absolute() and Path(value).exists()}
             registrar_execucao(linha, wt, ctx.saidas.execucoes, ctx.ampliado.catalogo.commit)
             # Resposta do cache nao e cobrada de novo (o custo na linha e o da chamada original).
-            if linha['custo_usd'] is None and not linha['do_cache']:
+            if (linha['custo_usd'] is None or linha.get('consumo_incerto')) and not linha['do_cache']:
                 ctx.custo_desconhecido = True
             total = ctx.somar_custo(0.0 if linha["do_cache"] else (linha["custo_usd"] or 0.0))
             cor = "green" if linha["classificacao_final"] == "aceita" else "yellow"
@@ -493,6 +518,8 @@ def main() -> None:
     console.log(f"Baseline catálogo x sessão: {n} x {n} achados brutos, semgrep {versao} x {versao}")
     sessao_info["casos_pulados_alerta_ausente"] = []
 
+    # Até uma sessão sem respostas pode ser consolidada sem inventar tentativas.
+    saidas.execucoes.touch(exist_ok=True)
     feitas = {l["tentativa_id"]: l for l in ler_execucoes(saidas.execucoes)
               if l.get("execucao") == args.execucao}
     if feitas:
@@ -503,7 +530,8 @@ def main() -> None:
     except Exception as ex:
         from pipeline.etapas.e05_geracao_llm.provedor import ErroOperacionalLLM
         if not isinstance(ex, ErroOperacionalLLM):raise
-        evento={'tipo':type(ex).__name__, 'descricao':str(ex), 'etapa':'conexao_antes_das_tentativas'}
+        evento={'schema_versao':'1.0', 'execucao':args.execucao, 'tipo':type(ex).__name__,
+                'descricao':str(ex), 'etapa':'conexao_antes_das_tentativas', **ex.metadados()}
         with (saidas.raiz/'llm_operacional.jsonl').open('a',encoding='utf-8') as stream:
             stream.write(json.dumps(evento,ensure_ascii=False)+'\n')
         sessao_info.update(fim=datetime.now(timezone.utc).isoformat(timespec='seconds'),
@@ -513,7 +541,7 @@ def main() -> None:
         sys.exit(1)
     ctx.lock_t4 = lock_t4
     ctx.ampliado = ampliado
-    if hasattr(ctx.cliente, 'estado_conexao'):
+    if getattr(ctx.cliente, 'estado_conexao', None) == 'identidade_verificada':
         evento={'tipo':'conexao_verificada','estado':ctx.cliente.estado_conexao,
                 'endpoint_sha256':ctx.cliente.endpoint,'modelo_identidade_sha256':ctx.cliente.cfg.manifesto['identidade_sha256'],
                 'ambiente':ctx.cliente.ambiente,'inicio':sessao_info['inicio']}
@@ -521,8 +549,20 @@ def main() -> None:
         with (saidas.raiz/'llm_operacional.jsonl').open('a',encoding='utf-8') as stream:
             stream.write(json.dumps(evento,ensure_ascii=False)+'\n')
     inicio = time.monotonic()
-    with ThreadPoolExecutor(max_workers=args.k) as ex:
-        list(ex.map(lambda c: processar_caso(ctx, pool, c, feitas), casos))
+    interrompida = False
+    try:
+        with ThreadPoolExecutor(max_workers=args.k) as ex:
+            try:
+                list(ex.map(lambda c: processar_caso(ctx, pool, c, feitas), casos))
+            except BaseException:
+                ctx.parar.set()
+                raise
+    except KeyboardInterrupt:
+        interrompida = True
+        ctx.parar.set()
+    except Exception as exc:
+        ctx.parar.set()
+        ctx.erros.append({'etapa':'workers', 'erro':type(exc).__name__})
 
     sessao_info.update({
         "fim": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -530,7 +570,7 @@ def main() -> None:
         "custo_usd_sessao": None if ctx.custo_desconhecido else round(ctx.custo_sessao, 6),
         "inferencia":getattr(args,'llm_identidade',None), 'eventos_llm':ctx.eventos_llm,
         "erros": ctx.erros, "interrompida_por_orcamento": ctx.orcamento_esgotado,
-        "interrompida_pelo_usuario": parada_solicitada(args),
+        "interrompida_pelo_usuario": interrompida or parada_solicitada(args),
     })
     arq_sessoes = registrar_sessao(saidas, args.execucao, sessao_info)
 
@@ -541,7 +581,9 @@ def main() -> None:
     console.log(f"{len(linhas)} tentativas registradas, {len(aceitas)} caso(s) com correcao aceita, "
                 f"{len(ctx.erros)} erro(s), " + ('custo Colab não informado' if ctx.custo_desconhecido else f'US$ {ctx.custo_sessao:.5f} nesta sessao'))
     console.log(f"Registro: {rel(saidas.execucoes)} | sessao: {rel(arq_sessoes)}")
-    if ctx.erros:
+    if interrompida:
+        sys.exit(130)
+    if ctx.erros or ctx.orcamento_esgotado or parada_solicitada(args):
         sys.exit(1)
 
 

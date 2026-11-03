@@ -24,6 +24,7 @@ class Entrada:
     arquivos: dict = field(default_factory=dict)
     avisos: list = field(default_factory=list)
     perfil: object | None = None
+    eventos_llm: list = field(default_factory=list)
 
     def registrar(self, path, role):
         path = path.resolve()
@@ -187,6 +188,11 @@ def carregar(raiz, execucao, catalogo_path):
         entrada.registrar(d_path,'normalizacao/conjunto_d.json')
         from pipeline.etapas.e07_validacao.conjunto_d import _lista
         _lista.cache_clear()  # Não atribuir um mapa novo a inferências de um cache antigo.
+    sess_name=f'resultados_consolidados/{execucao}_sessoes.json'
+    if (raiz/sess_name).exists():
+        p=relativo(raiz,sess_name);sessions=ler_json(p)
+        exigir(isinstance(sessions,list) and all(isinstance(s,dict) and s.get('execucao')==execucao for s in sessions),'Sessões incompatíveis')
+        entrada.sessoes=sessions;entrada.registrar(p,sess_name)
     rows_path = raiz/'resultados_consolidados/execucoes.jsonl'
     preflight_mode = entrada.contrato and entrada.contrato['modo'] == 'preflight'
     if preflight_mode:
@@ -209,7 +215,8 @@ def carregar(raiz, execucao, catalogo_path):
             exigir(estrategia(data) == p['estrategia'], 'Estratégia do prompt preflight divergente')
             entrada.registrar(file,f'prompts/{p["caso"]}_{p["estrategia"]}.json')
         entrada.preflight = pre;entrada.registrar(pre_path,'preflight.json')
-    exigir(rows_path.exists() or preflight_mode, 'JSONL ausente numa execução de correções')
+    somente_operacional = bool(entrada.sessoes and (raiz/'llm_operacional.jsonl').is_file())
+    exigir(rows_path.exists() or preflight_mode or somente_operacional, 'JSONL ausente numa execução de correções')
     rows = []
     if rows_path.exists():
         rows_path = relativo(raiz,'resultados_consolidados/execucoes.jsonl')
@@ -281,11 +288,45 @@ def carregar(raiz, execucao, catalogo_path):
                 else:entrada.avisos.append({'tipo':'artefato_historico_ausente','tentativa_id':tid,'papel':role,'arquivo':value})
         normalized=normalizar_atual(row,case,e)
         entrada.linhas.append(normalized)
-    sess_name=f'resultados_consolidados/{execucao}_sessoes.json'
-    if (raiz/sess_name).exists():
-        p=relativo(raiz,sess_name);sessions=ler_json(p)
-        exigir(isinstance(sessions,list) and all(isinstance(s,dict) and s.get('execucao')==execucao for s in sessions),'Sessões incompatíveis')
-        entrada.sessoes=sessions;entrada.registrar(p,sess_name)
+    eventos_path = raiz / 'llm_operacional.jsonl'
+    if eventos_path.exists():
+        eventos_path = relativo(raiz, 'llm_operacional.jsonl')
+        entrada.registrar(eventos_path, 'llm_operacional.jsonl')
+        for number, line in enumerate(eventos_path.read_text(encoding='utf-8').splitlines(), 1):
+            if not line.strip(): continue
+            try:
+                event = json.loads(line, object_pairs_hook=_pares)
+            except ValueError as exc:
+                raise ValueError(f'Evento LLM corrompido na linha {number}') from exc
+            exigir(isinstance(event, dict), 'Evento LLM inválido')
+            if event.get('schema_versao') == '1.0':
+                exigir(event.get('execucao') == execucao, 'Evento LLM de outra execução')
+                exigir(type(event.get('fatal')) is bool and isinstance(event.get('categoria'), str), 'Categoria/fatalidade LLM inválida')
+                exigir(type(event.get('chamadas_enviadas')) is int and event['chamadas_enviadas'] >= 0, 'Envios LLM inválidos')
+                if event.get('caso_id') is not None:
+                    exigir(event['caso_id'] in catalog and (not entrada.contrato or event['caso_id'] in entrada.contrato['casos']), 'Evento LLM fora do catálogo/contrato')
+                    exigir(event.get('estrategia') in ESTRATEGIAS or event.get('estrategia') in DIAGNOSTICOS, 'Estratégia do evento LLM inválida')
+                    if entrada.contrato:
+                        exigir(event['estrategia'] in entrada.contrato['estrategias'] + entrada.contrato['diagnosticos'], 'Evento LLM fora das estratégias contratadas')
+                entrada.eventos_llm.append(event)
+            elif event.get('tipo') in ('ErroOperacionalLLM', 'GeracaoCancelada'):
+                # Compatibilidade por leitura: não inventar tokens, custo ou número de envios.
+                tid = event.get('tentativa_id', '')
+                cid = next((c for c in catalog if tid.startswith(c+'_')), None)
+                match = re.search(r'_(P1L|P[1-4])_', tid)
+                status = re.search(r'HTTP\s+(\d{3})', event.get('descricao', ''))
+                http_status = int(status.group(1)) if status else None
+                categoria = 'cancelamento' if event['tipo']=='GeracaoCancelada' else \
+                    'servidor' if http_status is not None and http_status >= 500 else 'operacional_historico'
+                entrada.eventos_llm.append({'schema_versao':'historico_normalizado_v1',
+                    'execucao': execucao, 'tentativa_id': tid or None, 'caso_id': cid,
+                    'estrategia': match.group(1) if match else None, 'categoria': categoria,
+                    'fatal': categoria != 'servidor', 'status_http': http_status,
+                    'chamadas_enviadas': None, 'custo_usd': None, 'tokens_entrada': None,
+                    'tokens_saida': None, 'limite':'Evento histórico sem contagem de envios; origem preservada.'})
+            # Eventos históricos de conexão não são falhas de geração.
+        exigir(not somente_operacional or rows_path.exists() or entrada.eventos_llm,
+               'JSONL ausente sem falha operacional verificável')
     entrada.linhas.sort(key=lambda l:(l['caso_id'],('P1','P2','P3','P4','P1L').index(l['estrategia_curta'])))
     # Baseline e gate também são parte da rastreabilidade ampliada.
     if cat.ampliado:

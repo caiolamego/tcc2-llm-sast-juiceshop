@@ -20,6 +20,7 @@ planejamento, auditorias e histórico ficam em subpastas.
 | [cobertura_funcional_v6.md](cobertura_funcional_v6.md) | Fechamento do catálogo de 78: chat, legendas, pacote e integridade independente dos specs frontend. |
 | [validacao_relacionada.md](validacao_relacionada.md) | Por que só os testes da funcionalidade alterada são executados. |
 | [aplicacao_ancoras.md](aplicacao_ancoras.md) | Aplicação de patches com recuo diferente (19/10). |
+| [historico/features/09-resiliencia-llm/README.md](historico/features/09-resiliencia-llm/README.md) | Cache local de respostas desligado por padrão, tratamento de falhas da API e métricas parciais. |
 | [docker.md](docker.md) (fixo) | Ambiente único em Docker: imagem oficial, baseline, comandos. Citado pelo `Dockerfile`, `Makefile` e `compose.yaml`. |
 
 ## Guias de uso (`guias/`)

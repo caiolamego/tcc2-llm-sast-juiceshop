@@ -121,6 +121,8 @@ def custos_atual(rows, sessoes):
             'duracoes_sessoes':[{'inicio':s.get('inicio'),'fim':s.get('fim'),'duracao_s':s.get('duracao_s'),
                                  'abortada':s.get('abortada'),'interrompida_por_orcamento':s.get('interrompida_por_orcamento')} for s in sessoes],
             'erros_sessoes':errors,'limite':'Chamadas sem registro não têm custo/tokens inferidos; durações acumuladas não são tempo de parede.'}
+    resultado['envios_consumo_incerto_respostas'] = sum(bool(r.get('consumo_incerto')) for r in calls)
+    resultado['envios_transporte_respostas'] = sum(r.get('chamadas_enviadas', 1) for r in calls)
     colab=[r for r in calls if r.get('provedor')=='colab']
     if colab:
         resultado['custos_colab']={'api_usd':known(colab,'custo_api_usd'),
@@ -140,6 +142,26 @@ def custos_atual(rows, sessoes):
 DIMENSOES={'estrategia':'estrategia_curta','caso':'caso_id','cwe':'cwe_ids','owasp':'owasp_2025',
            'severidade':'severidade','regra':'check_id','auditoria':'classificacao_auditoria',
            'rag_original':'categoria_rag','rag_recuperada':'rag_categoria_recuperada'}
+
+
+def operacional(entrada):
+    eventos = entrada.eventos_llm
+    pares_resposta = {(r['caso_id'], r['estrategia_curta']) for r in entrada.linhas}
+    falhas = [{**e, 'resposta_registrada': (e.get('caso_id'), e.get('estrategia')) in pares_resposta}
+              for e in eventos]
+    recuperadas = [{'tentativa_id': r['tentativa_id'], 'caso_id': r['caso_id'],
+                    'estrategia': r['estrategia_curta'], 'historico': r['historico_transporte']}
+                   for r in entrada.linhas if r.get('historico_transporte')]
+    return {'eventos': falhas, 'total_eventos': len(falhas),
+            'retentativas_com_resposta': recuperadas,
+            'custo_total_completo': not eventos and not any(r.get('consumo_incerto') or r.get('custo_usd') is None for r in entrada.linhas),
+            'por_categoria': dict(Counter(e['categoria'] for e in eventos)),
+            'por_estrategia': dict(Counter(e.get('estrategia', 'antes_das_tentativas') for e in eventos)),
+            'envios_sem_resposta_registrada': sum(e['chamadas_enviadas'] for e in eventos if e['chamadas_enviadas'] is not None),
+            'eventos_sem_contagem_envios': sum(e['chamadas_enviadas'] is None for e in eventos),
+            'pares_com_falha': len({(e['caso_id'], e['estrategia']) for e in eventos if e.get('caso_id')}),
+            'consumo_eventos': 'desconhecido' if any(e['chamadas_enviadas'] is None or e['chamadas_enviadas'] > 0 for e in eventos) else 'sem_envio_registrado',
+            'politica': 'Falhas de transporte não são tentativas científicas nem R/F/M=0; casos solicitados permanecem no denominador de CR.'}
 
 
 def calcular(entrada, definicao_principal='criterio', pesos=None):
@@ -217,7 +239,9 @@ def calcular(entrada, definicao_principal='criterio', pesos=None):
             case_metrics[pop][d]={'CR':metrica(len(accepted),len(requested),'casos_solicitados') if relevant else indisponivel('conjunto_solicitado_indisponivel'),
                                   'TRV_caso_observado':metrica(len(accepted),len(observed_set),'casos_observados')}
     return {'schema_versao':VERSAO,'execucao':entrada.execucao,
-            'status':'sem_tentativas' if entrada.preflight is not None else 'consolidado',
+            'status':'sem_tentativas' if entrada.preflight is not None else
+                'consolidado_parcial' if any(c['status'] in ('pendente','sem_tentativa') for c in cases) or
+                bool(entrada.sessoes and (entrada.sessoes[-1].get('interrompida_por_orcamento') or entrada.sessoes[-1].get('interrompida_pelo_usuario'))) else 'consolidado',
             'catalogo_tipo':entrada.catalogo.tipo,'definicao_f_principal':definicao_principal,
             'politicas':{'calculo':'metricas_v1','normalizacao':'historica_preservada_v1','cadeia':'aceite_original_coorte_fixa_v1',
                         'taxas_ampliadas':'somente_medidos','cwe':'conjunto_composto_sem_sobreposicao'},
@@ -225,6 +249,7 @@ def calcular(entrada, definicao_principal='criterio', pesos=None):
             'cobertura':{'solicitados':len(requested) if requested is not None else None,'iniciados':sum(c['iniciado'] for c in cases),
                          'estados':dict(Counter(c['status'] for c in cases)),'pos_aceite':sum(l['pos_aceite'] for l in rows)},
             'preparacao':{'casos':entrada.preflight['casos'],'prompts':len(entrada.preflight['prompts']),'tentativas':0} if entrada.preflight else None,
+            'operacional_llm': operacional(entrada),
             'custos_tempos':custos_atual(rows,entrada.sessoes),'RRIS':indisponivel('evidencia_conjunta_ausente'),
             'proveniencia':{'nivel':'verificada' if entrada.catalogo.ampliado else 'historica_limitada','fontes_sha256':dict(sorted(entrada.fontes.items()))},
             'avisos':entrada.avisos+['As estratégias alcançam populações diferentes; taxas não demonstram efeito causal.',

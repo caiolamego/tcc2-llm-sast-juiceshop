@@ -14,12 +14,14 @@ from pipeline.etapas.e05_geracao_llm.protocolo_colab import read_json, sha, vali
 from pipeline.etapas.e05_geracao_llm.esquema import response_format
 
 
-class ErroOperacionalLLM(RuntimeError):
-    """Mensagem pública deliberadamente sem credenciais ou endereço do servidor."""
+from pipeline.etapas.e05_geracao_llm.erros import ErroOperacionalLLM, GeracaoCancelada
 
 
-class GeracaoCancelada(ErroOperacionalLLM):
-    pass
+def politica_cache(valores):
+    modo = valores.get("LLM_CACHE") or "desligado"
+    if modo not in ("desligado", "leitura-escrita"):
+        raise ValueError("LLM_CACHE deve ser desligado ou leitura-escrita")
+    return modo
 
 
 def valores_env(arquivo=None):
@@ -46,6 +48,7 @@ class ConfigColab:
     max_chamadas: int = 400
     max_in_flight: int = 1
     manifesto_path: Path | None = field(default=None, repr=False)
+    cache_llm: str = "desligado"
 
     @classmethod
     def do_env(cls, arquivo=None):
@@ -69,7 +72,7 @@ class ConfigColab:
         cfg = cls(url, key, model, manifest,
                   int(v.get('COLAB_SEED') or 42), float(v.get('COLAB_TIMEOUT_S') or 600),
                   int(v.get('COLAB_MAX_OUTPUT_TOKENS') or 4096), int(v.get('MAX_LLM_CALLS') or 400),
-                  int(v.get('COLAB_MAX_IN_FLIGHT') or 1), manifesto_path=path.resolve())
+                  int(v.get('COLAB_MAX_IN_FLIGHT') or 1), manifesto_path=path.resolve(), cache_llm=politica_cache(v))
         if model != manifest['cientifica']['modelo']:
             raise ValueError('COLAB_MODEL diverge do manifesto')
         if not math.isfinite(cfg.timeout) or cfg.timeout <= 0 or cfg.max_tokens <= 0 or cfg.max_tokens > manifest['cientifica']['saida_maxima_tokens'] or cfg.max_chamadas <= 0 or cfg.max_in_flight != 1:
@@ -79,8 +82,8 @@ class ConfigColab:
     def identidade(self):
         manifest = validar_manifesto(read_json(self.manifesto_path) if self.manifesto_path else self.manifesto)
         impl = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(Path(__file__).parent.glob('*.py'))
-                if p.name in ('provedor.py', 'cliente_colab.py', 'protocolo_colab.py', 'esquema.py')}
-        return {'provedor': 'colab', 'modelo': self.modelo,
+                if p.name in ('provedor.py', 'cliente_colab.py', 'protocolo_colab.py', 'esquema.py', 'erros.py')}
+        return {'provedor': 'colab', 'modelo': self.modelo, 'cache_llm': self.cache_llm,
                 'modelo_identidade_sha256': manifest['identidade_sha256'],
                 'cientifica': manifest['cientifica'],
                 'geracao': {'seed': self.seed, 'temperature': 0, 'max_completion_tokens': self.max_tokens,
@@ -96,10 +99,11 @@ def identidade_offline(arquivo=None, simulada=False):
         return ConfigColab.do_env(arquivo).identidade()
     from pipeline.etapas.e05_geracao_llm.cliente_openai import MAX_TENTATIVAS, MAX_TOKENS_SAIDA, TIMEOUT_REQUISICAO_S
     v = valores_env(arquivo)
-    return {'provedor': 'openai', 'modelo': v.get('OPENAI_MODEL') or 'gpt-4.1-mini',
+    return {'provedor': 'openai', 'modelo': v.get('OPENAI_MODEL') or 'gpt-4.1-mini', 'cache_llm': politica_cache(v),
             'geracao': {'seed': int(v.get('OPENAI_SEED') or 42), 'temperature': 0,
                         'max_completion_tokens': MAX_TOKENS_SAIDA, 'schema_sha256':sha(response_format())},
-            'transporte': {'timeout_s': TIMEOUT_REQUISICAO_S, 'tentativas': MAX_TENTATIVAS},
+            'transporte': {'timeout_s': TIMEOUT_REQUISICAO_S, 'tentativas': MAX_TENTATIVAS, 'politica': 'transitorios_limitados_v2'},
+            'erros_sha256': hashlib.sha256((Path(__file__).parent/'erros.py').read_bytes()).hexdigest(),
             'implementacao_sha256': hashlib.sha256((Path(__file__).parent/'cliente_openai.py').read_bytes()).hexdigest()}
 
 
@@ -108,7 +112,7 @@ def criar_cliente(arquivo=None, parar=None):
         from pipeline.etapas.e05_geracao_llm.cliente_colab import ClienteColab
         return ClienteColab(ConfigColab.do_env(arquivo), parar=parar)
     from pipeline.etapas.e05_geracao_llm.cliente_openai import ClienteLLM, ConfigLLM
-    return ClienteLLM(ConfigLLM.do_env(arquivo or RAIZ_REPO / '.env'))
+    return ClienteLLM(ConfigLLM.do_env(arquivo or RAIZ_REPO / '.env'), parar=parar)
 
 
 def resumo_publico(arquivo=None):

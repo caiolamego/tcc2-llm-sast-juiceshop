@@ -58,12 +58,17 @@ def _metric_rows(ex, pop, d, group, values):
 
 def construir(report, entrada):
     artifacts={'metricas.json':json_bytes(report)}
+    if entrada.eventos_llm:
+        artifacts['eventos_llm.csv'] = csv_bytes(['execucao','tentativa_id','caso_id','estrategia',
+            'categoria','fatal','status_http','chamadas_enviadas','inicio','fim','duracao_s',
+            'custo_usd','tokens_entrada','tokens_saida','historico','resposta_registrada'],
+            report['operacional_llm']['eventos'])
     colunas = list(COL_ROW)
     if entrada.contrato and entrada.contrato.get('schema_versao') in ('3.0','4.0','5.0'):
         colunas += ['politica_validacao','cache_validacao','tempos_medicao','selecao_testes','etapas_validacao']
         if (entrada.contrato['schema_versao']=='4.0' or entrada.contrato['schema_versao']=='5.0' and entrada.contrato.get('contrato_validacao_versao')=='4.0'):colunas+=['cobertura_funcional','cobertura_detalhada']
     if entrada.contrato and entrada.contrato.get('schema_versao')=='5.0':
-        colunas += ['provedor','identidade_inferencia','custo_motivo','custo_api_usd','custo_infraestrutura_usd','espera_inferencia_s','requisicao_s','chamadas_enviadas','estado_geracao']
+        colunas += ['provedor','identidade_inferencia','custo_motivo','custo_api_usd','custo_infraestrutura_usd','espera_inferencia_s','requisicao_s','chamadas_enviadas','estado_geracao','historico_transporte','consumo_incerto']
     rows=[]
     for l in entrada.linhas:
         row={k:l.get(k) for k in colunas}

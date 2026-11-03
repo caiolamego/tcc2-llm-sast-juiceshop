@@ -11,7 +11,7 @@ import threading
 import time
 from uuid import uuid4
 
-from executar import carregar_config, montar_comandos
+from executar import carregar_config, montar_comandos, tem_dados_consolidaveis, registrar_finalizacao
 
 
 def segundos(valor):
@@ -97,12 +97,14 @@ class Controle:
         comandos = montar_comandos(config, sys.executable, estado['execucao'])
         comandos[0].extend(['--arquivo-parada', estado['parada']])
         ambiente = {**os.environ, 'PYTHONUNBUFFERED': '1', 'NO_COLOR': '1', 'TERM': 'dumb'}
+        codigos = {'pipeline': None, 'metricas': None}
         try:
             with Path(estado['log']).open('w', encoding='utf-8') as log:
                 for etapa, comando in zip(('pipeline', 'metricas'), comandos):
-                    # Uma execução interrompida continua disponível nos registros parciais.
-                    if Path(estado['parada']).exists() and etapa == 'metricas':
-                        break
+                    if etapa == 'metricas':
+                        consolidavel = tem_dados_consolidaveis(estado['saida'], config['modo'], estado['execucao'])
+                        if not consolidavel and (codigos['pipeline'] or Path(estado['parada']).exists()):
+                            break
                     with self.lock:
                         estado['etapa'] = etapa
                     log.write(f'\n--- {etapa} ---\n')
@@ -112,10 +114,14 @@ class Controle:
                                             start_new_session=True,
                                             pass_fds=(() if self.lock_fd is None else (self.lock_fd,)))
                     codigo = proc.wait()
-                    if codigo:
-                        raise RuntimeError(f'{etapa} terminou com código {codigo}')
+                    codigos[etapa] = codigo
+                registrar_finalizacao(estado['saida'], estado['execucao'], codigos['pipeline'], codigos['metricas'])
             with self.lock:
-                estado['status'] = 'interrompida' if Path(estado['parada']).exists() else 'finalizada'
+                estado.update(pipeline_returncode=codigos['pipeline'], metricas_returncode=codigos['metricas'])
+                estado['status'] = 'interrompida' if Path(estado['parada']).exists() else (
+                    'falhou' if codigos['pipeline'] or codigos['metricas'] != 0 else 'finalizada')
+                if estado['status'] == 'falhou':
+                    estado['erro'] = f"Execução com pendências: pipeline={codigos['pipeline']}, métricas={codigos['metricas']}"
         except Exception as exc:
             with self.lock:
                 estado['status'], estado['erro'] = 'falhou', str(exc)

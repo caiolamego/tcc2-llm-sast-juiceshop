@@ -1,6 +1,7 @@
 """A entrada curta delega a execução sem acessar API, SAST ou worktrees."""
 import contextlib
 import io
+import json
 from pathlib import Path
 import subprocess
 import tempfile
@@ -51,6 +52,42 @@ class EntradaCurtaTests(unittest.TestCase):
         with patch.object(executar.subprocess, "run", return_value=subprocess.CompletedProcess([], 7)) as run:
             self.assertEqual(self.executar_main(), 7)
         self.assertEqual(run.call_count, 1)
+
+    def test_falha_final_consolida_dados_disponiveis_e_preserva_codigo(self):
+        def rodar(cmd, **kwargs):
+            if '--entrada' not in cmd:
+                saida = Path(cmd[cmd.index('--saida')+1]); saida.mkdir(parents=True)
+                (saida/'contrato_execucao.json').write_text('{}')
+                (saida/'resultados_consolidados').mkdir()
+                (saida/'resultados_consolidados/execucoes.jsonl').touch()
+                return subprocess.CompletedProcess(cmd, 1)
+            return subprocess.CompletedProcess(cmd, 0)
+        with patch.object(executar.subprocess, 'run', side_effect=rodar) as run:
+            self.assertEqual(self.executar_main(), 1)
+        self.assertEqual(run.call_count, 2)
+        f = next((self.raiz/'outputs').glob('*/finalizacao.json'))
+        data = json.loads(f.read_text())
+        self.assertEqual(data['pipeline_returncode'], 1); self.assertEqual(data['metricas_returncode'], 0)
+        self.assertEqual(data['status'], 'com_pendencias')
+
+    def test_falha_da_consolidacao_nao_e_sucesso(self):
+        with patch.object(executar.subprocess, 'run', side_effect=[
+                subprocess.CompletedProcess([],0), subprocess.CompletedProcess([],9)]) as run:
+            self.assertEqual(self.executar_main(), 9)
+        self.assertEqual(run.call_count, 2)
+
+    def test_interrupcao_usuario_ainda_consolida_se_houver_registro(self):
+        def rodar(cmd, **kwargs):
+            if '--entrada' not in cmd:
+                saida = Path(cmd[cmd.index('--saida')+1]); saida.mkdir(parents=True)
+                (saida/'contrato_execucao.json').write_text('{}')
+                (saida/'resultados_consolidados').mkdir()
+                (saida/'resultados_consolidados/execucoes.jsonl').touch()
+                raise KeyboardInterrupt
+            return subprocess.CompletedProcess(cmd,0)
+        with patch.object(executar.subprocess, 'run', side_effect=rodar) as run:
+            self.assertEqual(self.executar_main(), 130)
+        self.assertEqual(run.call_count, 2)
 
     def test_preview_nao_executa_nem_cria_saida(self):
         with patch.object(executar.subprocess, "run", side_effect=AssertionError("subprocesso inesperado")):

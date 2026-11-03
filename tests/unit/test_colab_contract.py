@@ -88,7 +88,7 @@ class ColabContractTests(unittest.TestCase):
         cfg=SimpleNamespace(dry_run=False,llm_identidade=self.identity,arquivo_parada=None)
         with patch('pipeline.etapas.e05_geracao_llm.provedor.identidade_offline',return_value=self.identity),patch('pipeline.etapas.e05_geracao_llm.provedor.criar_cliente') as factory:
             ctx=Contexto(cfg,None,None)
-            factory.assert_called_once();ctx.cliente.conferir_conexao.assert_called_once()
+            factory.assert_called_once();ctx.cliente.conferir_conexao.assert_not_called()
         with patch('pipeline.etapas.e05_geracao_llm.provedor.identidade_offline',return_value={'provedor':'outro'}),patch('pipeline.etapas.e05_geracao_llm.provedor.criar_cliente') as factory:
             with self.assertRaises(ValueError):Contexto(cfg,None,None)
             factory.assert_not_called()

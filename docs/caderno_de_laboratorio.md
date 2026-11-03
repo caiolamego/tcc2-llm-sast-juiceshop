@@ -624,3 +624,26 @@ T2_arquivo_unico: 0.2s (passou)
 T3_suite_unitaria: 1.9s (passou)
 T4_api: 13.0s (FALHOU)
 T5_desafio_cypress: 7.3s (passou)
+# 02/11/2026 — Cache de respostas e finalização após falha da API
+
+**Sintoma:** o piloto Colab `AMP_REAL_20261017T222912Z_abd18103` registrou HTTP 503,
+sem tentativa científica concluída e sem consolidação de métricas. O código também
+reutilizava respostas locais por padrão.
+
+**Causa:** falha operacional Colab encerrava a fila; o terminal e o painel só
+iniciavam a consolidação após código zero. O cliente OpenAI não repetia timeout
+ou conexão interrompida. O piloto sem respostas não tinha `execucoes.jsonl`.
+
+**Correção:** cache local optativo com `LLM_CACHE=desligado` por padrão nos dois
+provedores; classificação segura dos erros; retentativas OpenAI limitadas a três
+envios e continuidade dos demais pares após falhas não fatais. Colab conserva
+reenvio somente para 429. Terminal e painel tentam consolidar dados verificáveis
+mesmo após falhas. Eventos operacionais são separados das tentativas científicas.
+
+**Impacto:** relatórios parciais não convertem ausência de resposta em R/F/M=0;
+CR mantém o conjunto solicitado. Envios sem uso confirmado têm consumo desconhecido.
+Orçamento, autenticação e identidade continuam interrompendo novos envios. O piloto
+foi consolidado por leitura em `outputs/resiliencia_llm/RECUPERACAO_PILOTO_20261102_METRICAS/`,
+sem modificar a origem. Não houve chamadas reais à LLM nesta validação.
+
+Detalhes, mapa de erros e testes: [feature 09](historico/features/09-resiliencia-llm/README.md).
