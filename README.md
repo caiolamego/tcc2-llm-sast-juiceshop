@@ -47,6 +47,19 @@ O painel abre em http://127.0.0.1:8765. `make docker-help` lista todos os atalho
 (`make docker-real` ou pelo painel) chama a LLM e usa a chave e os limites do `.env` (modelo em
 `.env.example`).
 
+Para selecionar um dos três modelos na configuração dos **78 casos**:
+
+```bash
+make docker-preflight CONFIG=config/execucao_docker_78.yaml MODELO=gpt-6-luna
+make docker-painel CONFIG=config/execucao_docker_78.yaml MODELO=gpt-6-luna
+```
+
+O painel permite trocar o modelo antes de iniciar cada execução. No terminal,
+`executar.py` aceita `--modelo gpt-4.1-mini`, `--modelo gpt-5.6-luna` ou
+`--modelo gpt-6-luna`. Os Luna usam raciocínio desativado. Esses atalhos Make exigem
+a imagem da referência Docker instalada; comandos diretos e validação estão na
+[entrega da feature 10](docs/historico/features/10-comparacao-modelos-openai/ENTREGA.md).
+
 ## Onde está cada coisa
 
 ```text

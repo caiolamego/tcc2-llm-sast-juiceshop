@@ -4,6 +4,9 @@ K ?= 4
 CONFIG ?= config/execucao_docker_preparados.yaml
 # Opcional: força somente o provedor do processo no container, sem editar .env.
 PROVIDER ?=
+# Seleção OpenAI para a execução; não edita .env.
+MODELO ?=
+MODELO_ARGS = $(if $(MODELO),--modelo "$(MODELO)",)
 LLM_ENV = $(if $(PROVIDER),-e LLM_PROVIDER=$(PROVIDER),)
 
 .PHONY: test-unit test-rules docker-help docker-lockfiles docker-build docker-setup \
@@ -34,6 +37,7 @@ docker-help:
 	@echo "Receber:      make docker-import ARQUIVO=/caminho/ambiente.tar"
 	@echo "Conferir:     make docker-ambiente | make docker-test | make docker-test-rules"
 	@echo "Usar:         make docker-painel | make docker-preflight | make docker-dry-run | make docker-real"
+	@echo "Modelo:       make docker-preflight CONFIG=config/execucao_docker_78.yaml MODELO=gpt-6-luna"
 	@echo "Terminal:     make docker-shell"
 
 docker-lockfiles:
@@ -73,13 +77,13 @@ docker-shell:
 	$(RUN) bash
 
 docker-painel: docker-check
-	TCC_DOCKER_IMAGE=$(DOCKER_IMAGE) $(COMPOSE) run --rm --service-ports $(LLM_ENV) tcc python painel.py --endereco 0.0.0.0 --config $(CONFIG)
+	TCC_DOCKER_IMAGE=$(DOCKER_IMAGE) $(COMPOSE) run --rm --service-ports $(LLM_ENV) tcc python painel.py --endereco 0.0.0.0 --config $(CONFIG) $(MODELO_ARGS)
 
 docker-preflight: docker-check
-	$(RUN) python executar.py --config $(CONFIG) --modo preflight
+	$(RUN) python executar.py --config $(CONFIG) $(MODELO_ARGS) --modo preflight
 
 docker-dry-run: docker-check
-	$(RUN) python executar.py --config $(CONFIG) --modo dry-run
+	$(RUN) python executar.py --config $(CONFIG) $(MODELO_ARGS) --modo dry-run
 
 docker-real: docker-check
-	$(RUN) python executar.py --config $(CONFIG) --modo real
+	$(RUN) python executar.py --config $(CONFIG) $(MODELO_ARGS) --modo real

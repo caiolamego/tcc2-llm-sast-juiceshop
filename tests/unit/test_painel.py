@@ -111,6 +111,19 @@ class PainelTests(unittest.TestCase):
                 self.assertEqual(metricas.exists(), codigo == 0)
                 self.assertEqual(self.controle.atual['status'], 'finalizada' if codigo == 0 else 'falhou')
 
+    def test_modelo_escolhido_chega_ao_processo_e_fica_no_estado(self):
+        with patch.object(self.controle,'_executar') as worker:
+            self.controle.iniciar('preflight',modelo='gpt-6-luna')
+            self.aguardar(lambda:not self.controle.worker.is_alive())
+        config,estado = worker.call_args.args
+        self.assertEqual(config['modelo'],'gpt-6-luna'); self.assertEqual(estado['modelo'],'gpt-6-luna')
+        self.assertNotIn('modelo',self.config)
+
+    def test_modelo_invalido_nao_inicia_worker(self):
+        with patch.object(self.controle,'_executar') as worker, self.assertRaises(ValueError):
+            self.controle.iniciar('real',modelo='inexistente')
+        worker.assert_not_called(); self.assertIsNone(self.controle.worker)
+
     def test_pipeline_falha_mas_painel_consolida_registros_parciais(self):
         from types import SimpleNamespace
         def popen(cmd, **kwargs):
@@ -198,6 +211,11 @@ class PainelTests(unittest.TestCase):
                 self.assertEqual(response.status, 200)
                 response.read()
                 iniciar.assert_called_once_with('preflight')
+            with patch.object(self.controle,'iniciar',return_value='TESTE_MODELO') as iniciar:
+                conn.request('POST','/api/iniciar',json.dumps({'modo':'preflight','modelo':'gpt-5.6-luna'}),
+                             {'X-Painel-Token':'segredo'})
+                response = conn.getresponse(); self.assertEqual(response.status,200); response.read()
+                iniciar.assert_called_once_with('preflight',modelo='gpt-5.6-luna')
             self.assertIsNone(self.controle.worker)
             conn.close()
         finally:

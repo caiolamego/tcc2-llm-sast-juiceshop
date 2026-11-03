@@ -12,6 +12,9 @@ import sys
 from uuid import uuid4
 
 RAIZ = Path(__file__).resolve().parent
+sys.path.insert(0, str(RAIZ / "src"))
+from pipeline.etapas.e05_geracao_llm.modelos import MODELOS_OPENAI, validar_modelo
+
 MODOS = ("real", "preflight", "dry-run")
 
 
@@ -42,7 +45,7 @@ def carregar_config(arquivo: Path) -> dict:
     config = yaml.safe_load(arquivo.read_text(encoding="utf-8"))
     campos = {"modo", "casos", "estrategias", "k", "catalogo", "perfil_sast",
               "baseline_testes", "semgrep_bin", "saida_base"}
-    opcionais = {"politica_validacao", "mapa_testes", "cache_validacao", "repeticao_api", "cobertura_funcional"}
+    opcionais = {"politica_validacao", "mapa_testes", "cache_validacao", "repeticao_api", "cobertura_funcional", "modelo"}
     if not isinstance(config, dict) or not campos <= set(config) or set(config) - campos - opcionais:
         raise ValueError(f"Campos obrigatórios da configuração: {', '.join(sorted(campos))}")
     if config["modo"] not in MODOS:
@@ -65,7 +68,7 @@ def carregar_config(arquivo: Path) -> dict:
         config[campo] = (RAIZ / caminho).resolve()
         if campo != "saida_base" and not config[campo].is_file():
             raise ValueError(f"Arquivo necessário ausente: {config[campo]}")
-    for campo in opcionais - {'mapa_testes','cobertura_funcional'}:
+    for campo in opcionais - {'mapa_testes','cobertura_funcional','modelo'}:
         if campo in config:
             permitidos = {'politica_validacao': ('historica_v1','otimizada_v1','relacionada_v1','relacionada_v2'),
                           'cache_validacao': ('desligado','leitura','leitura-escrita'),
@@ -84,6 +87,8 @@ def carregar_config(arquivo: Path) -> dict:
         if config.get('politica_validacao')!='relacionada_v2':raise ValueError('Cobertura requer relacionada_v2')
         config['cobertura_funcional']=(RAIZ/config['cobertura_funcional']).resolve()
         if not config['cobertura_funcional'].is_file():raise ValueError('Revisão de cobertura ausente')
+    if "modelo" in config:
+        validar_modelo(config["modelo"])
     return config
 
 
@@ -96,7 +101,7 @@ def montar_comandos(config: dict, python: str, execucao: str) -> tuple[list[str]
                 "--estrategias", ",".join(config["estrategias"]), "--k", str(config["k"]),
                 "--semgrep-bin", str(config["semgrep_bin"]),
                 "--baseline-testes", str(config["baseline_testes"])]
-    for campo in ("politica_validacao", "mapa_testes", "cache_validacao", "repeticao_api", "cobertura_funcional"):
+    for campo in ("politica_validacao", "mapa_testes", "cache_validacao", "repeticao_api", "cobertura_funcional", "modelo"):
         if config.get(campo) is not None:
             pipeline.extend(["--" + campo.replace("_", "-"), str(config[campo])])
     if config["modo"] == "preflight":
@@ -116,6 +121,8 @@ def main(argv=None) -> int:
     parser.add_argument("--config", type=Path, default=RAIZ / "config/execucao.yaml",
                         help="YAML alternativo; caminhos internos são relativos ao repositório")
     parser.add_argument("--modo", choices=MODOS, help="Substitui somente o modo do YAML")
+    parser.add_argument("--modelo", choices=MODELOS_OPENAI,
+                        help="Seleciona o modelo OpenAI; prioridade sobre YAML e .env")
     parser.add_argument("--mostrar-comando", action="store_true",
                         help="Mostra os comandos sem executar nem criar resultados")
     args = parser.parse_args(argv)
@@ -127,6 +134,8 @@ def main(argv=None) -> int:
         argumentos = ["--config", str(args.config.resolve())]
         if args.modo:
             argumentos.extend(["--modo", args.modo])
+        if args.modelo:
+            argumentos.extend(["--modelo", args.modelo])
         if args.mostrar_comando:
             argumentos.append("--mostrar-comando")
         try:
@@ -138,6 +147,8 @@ def main(argv=None) -> int:
         config = carregar_config(args.config)
         if args.modo:
             config["modo"] = args.modo
+        if args.modelo:
+            config["modelo"] = args.modelo
         execucao = f"AMP_{config['modo'].upper().replace('-', '_')}_{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}_{uuid4().hex[:8]}"
         pipeline, metricas = montar_comandos(config, sys.executable, execucao)
         if args.mostrar_comando:
@@ -145,6 +156,8 @@ def main(argv=None) -> int:
             print(shlex.join(metricas))
             return 0
         print(f"Modo: {config['modo']} | Casos: {', '.join(config['casos'])} | K={config['k']}", flush=True)
+        if config.get("modelo"):
+            print(f"Modelo OpenAI selecionado: {config['modelo']}", flush=True)
         print(f"Resultados: {config['saida_base'] / execucao}", flush=True)
         if config["modo"] == "real":
             print("Execução real: chamadas à LLM sujeitas aos limites acumulados do .env.", flush=True)

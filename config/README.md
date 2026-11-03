@@ -20,10 +20,21 @@ preflight recusar o baseline oficial.
 | `mapa_owasp.yaml` | OWASP 2021 → OWASP 2025. | catálogo |
 | `mapa_categoria_rag.yaml` | Sigla → categoria do RAG. | catálogo |
 | `semgrepignore` | Exclusões do escopo do SAST. Incorporadas ao escopo do perfil por `congelar_perfil_sast.py` (o modo histórico, que também as lia, saiu do código em 01/11/2026). | perfil |
-| `precos_llm.yaml` | Preço por token, para o custo registrado. | `llm/openai_client.py` |
+| `precos_llm.yaml` | Preços Standard dos três modelos OpenAI, leitura/escrita de cache do provedor e custo registrado. A tabela e seu hash entram nas novas identidades de inferência. | `src/pipeline/etapas/e05_geracao_llm/cliente_openai.py` |
 | `modelos/manifesto_colab.json` | Identidade do modelo Qwen servido no Colab. | cliente Colab, via `COLAB_MODEL_MANIFEST` no `.env` |
 
 ## 2. Configurações de execução (lidas por `executar.py`, `make` e pelo painel)
+
+O campo opcional `modelo` aceita `gpt-4.1-mini`, `gpt-5.6-luna` ou `gpt-6-luna`.
+Ele seleciona OpenAI mesmo que o `.env` ainda aponte para Colab. A opção `--modelo`
+no terminal ou a seleção no painel prevalece sobre o YAML; o YAML prevalece sobre
+`OPENAI_MODEL`. Sem seleção explícita, o provedor/configuração anterior continua
+disponível. A configuração dos 78 casos define `modelo: gpt-4.1-mini` como padrão.
+
+Os perfis de geração são definidos no código: 4.096 tokens máximos, temperatura zero,
+seed configurada somente no GPT-4.1 mini e `reasoning_effort=none` nos Luna.
+O limite de chamadas e o orçamento monetário continuam acumulados entre modelos;
+selecionar outro modelo não reinicia nem aumenta os limites do `.env`.
 
 | Arquivo | O que roda |
 |---|---|

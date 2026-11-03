@@ -92,32 +92,43 @@ class ConfigColab:
                 'implementacao': impl}
 
 
-def identidade_offline(arquivo=None, simulada=False):
+def identidade_offline(arquivo=None, simulada=False, modelo=None):
+    if modelo is not None:
+        from pipeline.etapas.e05_geracao_llm.modelos import validar_modelo
+        validar_modelo(modelo)
     if simulada:
-        return {'provedor': 'simulado', 'modelo': 'dry-run'}
-    if provedor(arquivo) == 'colab':
+        return {'provedor': 'simulado', 'modelo': 'dry-run',
+                **({'modelo_solicitado': modelo} if modelo else {})}
+    if modelo is None and provedor(arquivo) == 'colab':
         return ConfigColab.do_env(arquivo).identidade()
-    from pipeline.etapas.e05_geracao_llm.cliente_openai import MAX_TENTATIVAS, MAX_TOKENS_SAIDA, TIMEOUT_REQUISICAO_S
+    from pipeline.etapas.e05_geracao_llm.cliente_openai import MAX_TENTATIVAS, TIMEOUT_REQUISICAO_S, _precos, ARQ_PRECOS
+    from pipeline.etapas.e05_geracao_llm.modelos import parametros_geracao, PERFIL_VERSAO
+    import openai
     v = valores_env(arquivo)
-    return {'provedor': 'openai', 'modelo': v.get('OPENAI_MODEL') or 'gpt-4.1-mini', 'cache_llm': politica_cache(v),
-            'geracao': {'seed': int(v.get('OPENAI_SEED') or 42), 'temperature': 0,
-                        'max_completion_tokens': MAX_TOKENS_SAIDA, 'schema_sha256':sha(response_format())},
+    escolhido = modelo or v.get('OPENAI_MODEL') or 'gpt-4.1-mini'
+    params = parametros_geracao(escolhido, int(v.get('OPENAI_SEED') or 42))
+    return {'provedor': 'openai', 'modelo': escolhido, 'cache_llm': politica_cache(v),
+            'perfil_versao': PERFIL_VERSAO,
+            'geracao': {**params, 'schema_sha256': sha(response_format())},
+            'precos': _precos(escolhido),
+            'precos_sha256': hashlib.sha256(ARQ_PRECOS.read_bytes()).hexdigest(),
+            'sdk_openai': openai.__version__,
             'transporte': {'timeout_s': TIMEOUT_REQUISICAO_S, 'tentativas': MAX_TENTATIVAS, 'politica': 'transitorios_limitados_v2'},
-            'erros_sha256': hashlib.sha256((Path(__file__).parent/'erros.py').read_bytes()).hexdigest(),
-            'implementacao_sha256': hashlib.sha256((Path(__file__).parent/'cliente_openai.py').read_bytes()).hexdigest()}
+            'implementacao': {name: hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()
+                             for name in ('modelos.py', 'provedor.py', 'cliente_openai.py', 'erros.py', 'esquema.py')}}
 
 
-def criar_cliente(arquivo=None, parar=None):
-    if provedor(arquivo) == 'colab':
+def criar_cliente(arquivo=None, parar=None, modelo=None):
+    if modelo is None and provedor(arquivo) == 'colab':
         from pipeline.etapas.e05_geracao_llm.cliente_colab import ClienteColab
         return ClienteColab(ConfigColab.do_env(arquivo), parar=parar)
     from pipeline.etapas.e05_geracao_llm.cliente_openai import ClienteLLM, ConfigLLM
-    return ClienteLLM(ConfigLLM.do_env(arquivo or RAIZ_REPO / '.env'), parar=parar)
+    return ClienteLLM(ConfigLLM.do_env(arquivo or RAIZ_REPO / '.env', modelo=modelo), parar=parar)
 
 
-def resumo_publico(arquivo=None):
+def resumo_publico(arquivo=None, modelo=None):
     try:
-        identity = identidade_offline(arquivo)
+        identity = identidade_offline(arquivo, modelo=modelo)
         return {'provedor': identity['provedor'], 'modelo': identity['modelo'],
                 'revisao': identity.get('cientifica', {}).get('revisao', '')[:12],
                 'estado': 'configurado_offline' if identity['provedor']=='colab' else 'configurado',
@@ -127,8 +138,8 @@ def resumo_publico(arquivo=None):
 
 
 def texto_aplicavel(resposta):
-    """Preserva texto bruto no artefato; resposta Colab incompleta nunca vira edição."""
-    if getattr(resposta, 'provedor', None) == 'colab' and (resposta.finish_reason != 'stop' or resposta.recusa):
+    """Preserva texto bruto no artefato; resposta incompleta nunca vira edição."""
+    if resposta.finish_reason != 'stop' or getattr(resposta, 'recusa', None):
         return None
     return resposta.conteudo
 

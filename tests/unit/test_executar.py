@@ -94,6 +94,30 @@ class EntradaCurtaTests(unittest.TestCase):
             self.assertEqual(self.executar_main("--mostrar-comando"), 0)
         self.assertFalse((self.raiz / "outputs").exists())
 
+    def test_modelo_cli_supera_yaml_e_nao_edita_configuracao(self):
+        self.config['modelo'] = 'gpt-4.1-mini'; self.gravar()
+        original = self.arquivo.read_bytes()
+        with patch.object(executar.subprocess,'run',return_value=subprocess.CompletedProcess([],0)) as run:
+            self.assertEqual(self.executar_main('--modelo','gpt-6-luna'),0)
+        cmd = run.call_args_list[0].args[0]
+        self.assertEqual(cmd[cmd.index('--modelo')+1],'gpt-6-luna')
+        self.assertEqual(self.arquivo.read_bytes(),original)
+
+    def test_modelo_yaml_e_modelo_invalido(self):
+        self.config['modelo'] = 'gpt-5.6-luna'; self.gravar()
+        cmd,_ = executar.montar_comandos(executar.carregar_config(self.arquivo),'python','TEST')
+        self.assertEqual(cmd[cmd.index('--modelo')+1],'gpt-5.6-luna')
+        for value in ('modelo-inexistente',None,True):
+            self.config['modelo'] = value; self.gravar()
+            with self.subTest(value=value), self.assertRaises(ValueError): executar.carregar_config(self.arquivo)
+
+    def test_venv_preserva_modelo_selecionado(self):
+        python = self.raiz/'.venv/bin/python'; python.parent.mkdir(parents=True); python.touch()
+        with patch.object(executar.subprocess,'run',return_value=subprocess.CompletedProcess([],0)) as run:
+            self.assertEqual(self.executar_main('--modelo','gpt-5.6-luna','--mostrar-comando'),0)
+        cmd = run.call_args.args[0]
+        self.assertEqual(cmd[cmd.index('--modelo')+1],'gpt-5.6-luna')
+
     def test_modos_delegam_flags_corretas(self):
         for modo, flag in (("preflight", "--somente-preflight"), ("dry-run", "--dry-run")):
             with self.subTest(modo=modo), patch.object(executar.subprocess, "run", return_value=subprocess.CompletedProcess([], 0)) as run:

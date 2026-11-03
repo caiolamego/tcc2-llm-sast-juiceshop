@@ -236,7 +236,7 @@ def preparar(args, catalogo, casos):
     contract_path=saida/'contrato_execucao.json'
     current=contrato(args,catalogo,perfil,casos,worktrees)
     from pipeline.etapas.e05_geracao_llm.provedor import identidade_offline
-    args.llm_identidade=identidade_offline(simulada=args.dry_run)
+    args.llm_identidade=identidade_offline(simulada=args.dry_run, **({'modelo': args.modelo} if getattr(args, 'modelo', None) else {}))
     antigo_existente=json.loads(contract_path.read_text()) if contract_path.exists() else None
     current=contrato_com_inferencia(current,args.llm_identidade,antigo_existente)
     if saida.exists() and not contract_path.exists():

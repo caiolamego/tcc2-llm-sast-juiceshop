@@ -17,7 +17,14 @@ function render(data) {
   $('start').disabled = data.ativo || busy;
   $('stop').disabled = !data.ativo || current?.status === 'parando' || busy;
   $('mode').disabled = data.ativo || busy;
-  if (!configured) { $('mode').value = data.config.modo; configured = true; }
+  $('model').disabled = data.ativo || busy;
+  if (!configured) {
+    $('mode').value = data.config.modo;
+    $('model').replaceChildren(new Option('Usar configuração atual', ''),
+      ...(data.modelos || []).map(model => new Option(`${model}${model.includes('luna') ? ' · sem raciocínio' : ''}`, model)));
+    $('model').value = data.config.modelo || '';
+    configured = true;
+  }
   $('config').textContent = `Casos: ${data.config.casos.join(', ')} · Estratégias: ${data.config.estrategias.join(' → ')} · K=${data.config.k} · ${data.config.politica_validacao} · Cache de validação: ${data.config.cache_validacao} · Repetição API: ${data.config.repeticao_api}`;
   if (data.inferencia) $('config').textContent += ` · LLM: ${data.inferencia.provedor} / ${data.inferencia.modelo || 'configuração pendente'} ${data.inferencia.revisao || ''} · ${data.inferencia.conexao}`;
   const labels = {executando: 'Executando', parando: 'Aguardando parada', finalizada: 'Processo finalizado', interrompida: 'Interrompida', falhou: 'Falhou'};
@@ -69,7 +76,7 @@ async function refresh() {
 async function history() {
   const previous = $('history').value;
   const data = await api('/api/historico');
-  const options = [new Option('Execução atual', ''), ...data.execucoes.map(r => new Option(`${r.execucao} · ${r.modo || 'histórico'}`, r.caminho))];
+  const options = [new Option('Execução atual', ''), ...data.execucoes.map(r => new Option(`${r.execucao} · ${r.modo || 'histórico'}${r.modelo ? ' · '+r.modelo : ''}`, r.caminho))];
   $('history').replaceChildren(...options); $('history').value = previous;
 }
 async function action(path, body) {
@@ -78,7 +85,7 @@ async function action(path, body) {
   catch (error) { $('error').textContent = error.message; }
   finally { busy = false; await refresh(); }
 }
-$('start').onclick = () => action('/api/iniciar', {modo: $('mode').value});
+$('start').onclick = () => action('/api/iniciar', {modo: $('mode').value, ...($('model').value ? {modelo: $('model').value} : {})});
 $('stop').onclick = () => action('/api/parar', {});
 $('history').onchange = refresh;
 async function init() {

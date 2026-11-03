@@ -47,6 +47,7 @@ reorganização do código (`docker/referencia.json`). Os 39 grupos de testes de
 | `piloto_2_issues/` | Piloto de 2 casos (14/10). |
 | `piloto_colab_1_issue/` | Teste do Qwen no Colab. |
 | `resiliencia_llm/` | Recuperação offline das métricas do piloto Colab interrompido por HTTP 503 e validação da feature 09; não contém nova campanha com LLM. |
+| `feature10/SELECAO_MODELOS_20261102/` | Validação da seleção dos três modelos: 405 testes unitários no host e no Docker, teste DOM do seletor e hashes dos três preflights de 78 casos, sem inferência real. Resultados dos preflights em `campanha_docker/`. |
 | `revalidacoes/` | `PILOTO10_CORRECAO_V1`: replay sem LLM do piloto de 10 casos. `DOCKER_V1`: baseline com o problema do `safetyMode` (não usar). `DOCKER_V2`: baseline corrigido de uma imagem local. `ANCORAS_INDENTACAO_V1`: replay das âncoras com recuo. `REORGANIZACAO_20261026`: verificação de que a reorganização do repositório não mudou o funcionamento (comparação antes × depois e as ferramentas usadas); `fase2_codigo/` cobre a reorganização do código e a referência v2. `LIMPEZA_MODO_HISTORICO_20261101`: verificação de que a retirada do modo histórico do código não mudou o funcionamento (mesma bateria antes × depois). |
 | `diagnosticos_llm/` | Diagnósticos do Qwen no Colab. |
 | `painel/` | Logs e estado das execuções iniciadas pelo painel. |

@@ -13,6 +13,7 @@ Especificações de entregas técnicas, com escopo, contratos e critérios de ac
 | 07 | [Modelo hospedado no Colab](07-modelo-colab/README.md) | Implementada e testada offline — conexão Colab e piloto pendentes — [entrega](07-modelo-colab/ENTREGA.md) |
 | 08 | [Ampliação da cobertura funcional para os 78 casos](08-ampliacao-cobertura-78/README.md) | Implementada e validada — 78 preparados, zero bloqueados; campanha real pendente |
 | 09 | [Cache de respostas optativo e tolerância a falhas da LLM](09-resiliencia-llm/README.md) | Implementada — erros operacionais separados, continuidade da fila e consolidação parcial pelo terminal/painel |
+| 10 | [Comparação dos três modelos OpenAI](10-comparacao-modelos-openai/README.md) | Seleção por terminal/YAML/painel e perfis implementados; validação offline e limites na [entrega](10-comparacao-modelos-openai/ENTREGA.md); campanhas reais pendentes |
 
 A contagem da feature 06 registra a entrega de 17/10/2026. A feature 08 documenta a
 ampliação concluída em 02/11/2026, preservando os artefatos históricos.

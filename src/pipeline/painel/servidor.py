@@ -69,7 +69,7 @@ def handler(controle, token):
                 if not isinstance(dados, dict):
                     raise ValueError('Objeto JSON esperado')
                 if self.path == '/api/iniciar':
-                    return self.responder(200, {'execucao': controle.iniciar(dados.get('modo'))})
+                    return self.responder(200, {'execucao': controle.iniciar(dados.get('modo'), **({'modelo':dados['modelo']} if 'modelo' in dados else {}))})
                 if self.path == '/api/parar':
                     controle.parar()
                     return self.responder(200, {'status': 'parando'})
@@ -87,6 +87,8 @@ def main(argv=None):
     parser.add_argument('--endereco', choices=('127.0.0.1', '0.0.0.0'), default='127.0.0.1',
                         help='Endereço de escuta; 0.0.0.0 somente dentro do container Docker')
     parser.add_argument('--config', type=Path, default=RAIZ / 'config/execucao.yaml')
+    from pipeline.etapas.e05_geracao_llm.modelos import MODELOS_OPENAI
+    parser.add_argument("--modelo", choices=MODELOS_OPENAI, help="Modelo OpenAI inicial do seletor")
     args = parser.parse_args(argv)
     if not 1 <= args.porta <= 65535:
         parser.error('Porta fora do intervalo 1–65535')
@@ -97,7 +99,7 @@ def main(argv=None):
             fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             parser.exit(1, 'Outro painel ou processo supervisionado ainda está ativo.\n')
-        controle = Controle(RAIZ, args.config, lock.fileno())
+        controle = Controle(RAIZ, args.config, lock.fileno(), modelo=args.modelo)
         try:
             controle.configuracao()
             servidor = ThreadingHTTPServer((args.endereco, args.porta), handler(controle, secrets.token_urlsafe(32)))

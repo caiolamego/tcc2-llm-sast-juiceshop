@@ -126,6 +126,17 @@ def _validar_contrato(entrada):
         inf=c.get('inferencia')
         exigir(c.get('contrato_validacao_versao') in ('3.0','4.0'), 'Contexto de validação v5 ausente')
         exigir(isinstance(inf,dict) and inf.get('provedor') in ('openai','colab','simulado') and isinstance(inf.get('modelo'),str), 'Identidade de inferência ausente')
+        if inf['provedor']=='openai' and inf.get('perfil_versao') == 'openai_sem_raciocinio_v1':
+            from pipeline.etapas.e05_geracao_llm.modelos import parametros_geracao
+            gen = inf.get('geracao', {})
+            exigir(isinstance(gen,dict), 'Parâmetros OpenAI ausentes')
+            expected = parametros_geracao(inf['modelo'], gen.get('seed',42))
+            exigir({k:v for k,v in gen.items() if k!='schema_sha256'} == expected, 'Perfil de geração OpenAI incompatível')
+            exigir(isinstance(gen.get('schema_sha256'),str) and re.fullmatch('[0-9a-f]{64}',gen['schema_sha256']), 'Schema OpenAI sem hash')
+            precos = inf.get('precos')
+            exigir(isinstance(precos,dict) and {'entrada','entrada_cache','saida'} <= precos.keys(), 'Preços OpenAI ausentes')
+            import math
+            exigir(all(type(v) in (int,float) and math.isfinite(v) and v>=0 for v in precos.values()), 'Preços OpenAI inválidos')
         if inf['provedor']=='colab':
             from pipeline.etapas.e05_geracao_llm.protocolo_colab import sha, validar_manifesto
             validar_manifesto({'schema_versao':'1.0','cientifica':inf.get('cientifica'),
@@ -250,6 +261,16 @@ def carregar(raiz, execucao, catalogo_path):
             exigir(row.get('classificacao_final') == row.get('classificacao_criterio'), 'Classificação principal divergente')
             if contract.get('schema_versao')=='5.0' and not row.get('dry_run'):
                 exigir(row.get('identidade_inferencia')==contract['inferencia'] and row.get('provedor')==contract['inferencia']['provedor'], 'Inferência da tentativa diverge do contrato')
+            if contract.get('inferencia', {}).get('perfil_versao') == 'openai_sem_raciocinio_v1' and not row.get('dry_run'):
+                from pipeline.etapas.e05_geracao_llm.modelos import modelo_retornado_compativel
+                inf = contract['inferencia']
+                params = {k:v for k,v in inf['geracao'].items() if k!='schema_sha256'}
+                exigir(row.get('modelo_solicitado')==inf['modelo'] and row.get('parametros_geracao')==params,
+                       'Modelo/parâmetros da tentativa divergem do contrato')
+                exigir(modelo_retornado_compativel(inf['modelo'],row.get('modelo')), 'Modelo retornado incompatível')
+                exigir(row.get('seed')==params.get('seed'), 'Seed não corresponde ao parâmetro enviado')
+                for key in ('tokens_raciocinio','tokens_entrada_cache','tokens_escrita_cache'):
+                    exigir(row.get(key) is None or type(row[key]) is int and row[key]>=0, 'Tokens detalhados inválidos')
             ledger=row.get('artefatos_sha256');exigir(isinstance(ledger,dict) and bool(ledger),'Hashes de artefatos ausentes')
             for file, old in ledger.items():
                 artifact=relativo(raiz,file)

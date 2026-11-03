@@ -102,9 +102,10 @@ class Contexto:
         self.cliente = None
         if not args.dry_run:
             from pipeline.etapas.e05_geracao_llm.provedor import criar_cliente, identidade_offline
-            if getattr(args, 'llm_identidade', None) is not None and identidade_offline() != args.llm_identidade:
+            escolha = {'modelo': args.modelo} if getattr(args, 'modelo', None) else {}
+            if getattr(args, 'llm_identidade', None) is not None and identidade_offline(**escolha) != args.llm_identidade:
                 raise ValueError('Configuração LLM alterada após o preflight')
-            self.cliente = criar_cliente(parar=lambda: self.parar.is_set() or parada_solicitada(args))
+            self.cliente = criar_cliente(parar=lambda: self.parar.is_set() or parada_solicitada(args), **escolha)
             if hasattr(self.cliente, 'conferir_conexao'):
                 self.custo_desconhecido = True
                 # Cada geração confere a conexão; indisponibilidade inicial não derruba a fila.
@@ -158,7 +159,7 @@ def tentativa(ctx: Contexto, issue: dict, estrategia: str, wt: Path, tid: str) -
             if llm.get('provedor') == 'colab' else {}),
         **({'provedor':'openai','identidade_inferencia':getattr(args,'llm_identidade',None)}
             if not args.dry_run and llm.get('provedor') != 'colab' and getattr(args,'llm_identidade',None) else {}),
-        **{k: llm[k] for k in ("chamadas_enviadas", "historico_transporte", "consumo_incerto") if k in llm},
+        **{k: llm[k] for k in ("chamadas_enviadas", "historico_transporte", "consumo_incerto", "modelo_solicitado", "parametros_geracao", "tokens_raciocinio", "tokens_entrada_cache", "tokens_escrita_cache") if k in llm},
         "tentativa_id": tid, "execucao": args.execucao, "dry_run": args.dry_run,
         "caso_id": issue["caso_id"], "projeto": PROJETO,
         "assinatura_ocorrencia": issue["assinatura_ocorrencia"],
@@ -424,6 +425,8 @@ def main() -> None:
                     help="condicoes de diagnostico fora da cadeia, ex.: P1L (protocolo, Secao 12)")
     ap.add_argument("--casos", default=None, help="IDs AMP separados por virgula (padrao: todo o catalogo)")
     ap.add_argument("--k", type=int, default=4, help="worktrees em paralelo")
+    from pipeline.etapas.e05_geracao_llm.modelos import MODELOS_OPENAI
+    ap.add_argument("--modelo", choices=MODELOS_OPENAI, help="Seleciona o modelo e força o provedor OpenAI")
     ap.add_argument("--dry-run", action="store_true", help="resposta falsa, sem chamar a API")
     ap.add_argument("--pular-checagem-ambiente", action="store_true")
     ap.add_argument('--catalogo', type=Path, required=True)

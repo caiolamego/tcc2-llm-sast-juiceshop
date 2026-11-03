@@ -12,6 +12,7 @@ import time
 from uuid import uuid4
 
 from executar import carregar_config, montar_comandos, tem_dados_consolidaveis, registrar_finalizacao
+from pipeline.etapas.e05_geracao_llm.modelos import MODELOS_OPENAI, validar_modelo
 
 
 def segundos(valor):
@@ -46,9 +47,10 @@ def resumo_tentativa(linha):
 
 
 class Controle:
-    def __init__(self, raiz: Path, config: Path, lock_fd=None):
+    def __init__(self, raiz: Path, config: Path, lock_fd=None, modelo=None):
         self.raiz, self.config = raiz.resolve(), config.resolve()
         self.lock_fd = lock_fd
+        self.modelo_padrao = validar_modelo(modelo) if modelo is not None else None
         self.lock = threading.RLock()
         self.worker = None
         self.atual = None
@@ -63,16 +65,22 @@ class Controle:
     def configuracao(self):
         config = carregar_config(self.config)
         self.caminho_local(config['saida_base'])
+        if self.modelo_padrao is not None:
+            config["modelo"] = self.modelo_padrao
         return config
 
-    def iniciar(self, modo):
+    def iniciar(self, modo, modelo=None):
         if modo not in ('real', 'dry-run', 'preflight'):
             raise ValueError('Modo inválido')
+        if modelo is not None:
+            validar_modelo(modelo)
         with self.lock:
             if self.fechando or (self.worker and self.worker.is_alive()):
                 raise ValueError('Já há uma execução ativa ou o painel está encerrando')
             config = self.configuracao()
             config['modo'] = modo
+            if modelo is not None:
+                config['modelo'] = modelo
             ident = f"AMP_PAINEL_{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}_{uuid4().hex[:8]}"
             controle = self.raiz / '.cache/painel' / ident
             controle.mkdir(parents=True, exist_ok=False)
@@ -81,7 +89,7 @@ class Controle:
             self.atual = {'execucao': ident, 'modo': modo, 'status': 'executando',
                           'inicio': time.time(), 'fim': None, 'etapa': 'pipeline',
                           'casos': config['casos'], 'estrategias': config['estrategias'],
-                          'k': config['k'],
+                          'k': config['k'], 'modelo':config.get('modelo'),
                           'politica_validacao':config.get('politica_validacao','historica_v1'),
                           'cache_validacao':config.get('cache_validacao','desligado'),
                           'repeticao_api':config.get('repeticao_api','ampla'),
@@ -154,7 +162,8 @@ class Controle:
                 path = self.caminho_local(arquivo)
                 contrato = json.loads(path.read_text(encoding='utf-8'))
                 encontrados.append({'caminho': str(path.parent.relative_to(self.raiz / 'outputs')),
-                                     'execucao': contrato['execucao'], 'modo': contrato.get('modo')})
+                                     'execucao': contrato['execucao'], 'modo': contrato.get('modo'),
+                                     'modelo':contrato.get('inferencia',{}).get('modelo')})
             except (ValueError, OSError, KeyError):
                 continue
         return sorted(encontrados, key=lambda r: r['execucao'], reverse=True)
@@ -188,11 +197,11 @@ class Controle:
             logs = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', logs)
             logs = re.sub(r'\bsk-[A-Za-z0-9_-]+', '[CHAVE OCULTADA]', logs)
         publico = None if not atual else {k: atual[k] for k in (
-            'execucao', 'modo', 'status', 'inicio', 'fim', 'etapa', 'casos', 'estrategias', 'erro')}
+            'execucao', 'modo', 'status', 'inicio', 'fim', 'etapa', 'casos', 'estrategias', 'erro', 'modelo')}
         if publico:
             publico['decorrido_s'] = (atual['fim'] or time.time()) - atual['inicio']
         from pipeline.etapas.e05_geracao_llm.provedor import resumo_publico
-        llm=resumo_publico(self.raiz/'.env')
+        llm=resumo_publico(self.raiz/'.env', modelo=config.get('modelo'))
         if pasta:
             contrato_path=self.caminho_local(pasta/'contrato_execucao.json')
             if contrato_path.is_file():
@@ -207,8 +216,8 @@ class Controle:
                     ultimo=json.loads(eventos_path.read_text(encoding='utf-8').splitlines()[-1])
                     llm['conexao']='verificada na sessão; não consultada agora' if ultimo.get('tipo')=='conexao_verificada' else 'falha/parada registrada na sessão'
                 except (ValueError,IndexError):pass  # Escrita em andamento.
-        return {'inferencia':llm, 'atual': publico, 'ativo': ativo, 'tentativas': tentativas, 'avisos': avisos,
-                'log': logs, 'config': {'modo': config['modo'], 'casos': config['casos'],
+        return {'modelos':list(MODELOS_OPENAI), 'inferencia':llm, 'atual': publico, 'ativo': ativo, 'tentativas': tentativas, 'avisos': avisos,
+                'log': logs, 'config': {'modo': config['modo'], 'modelo': config.get('modelo'), 'casos': config['casos'],
                                        'estrategias': config['estrategias'], 'k': config['k'],
                                        'politica_validacao':config.get('politica_validacao','historica_v1'),
                                        'cache_validacao':config.get('cache_validacao','desligado'),

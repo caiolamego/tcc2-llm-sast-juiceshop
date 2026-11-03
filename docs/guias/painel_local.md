@@ -14,8 +14,11 @@ biblioteca padrão do Python e atende somente em `127.0.0.1`.
 
 1. Confira os casos, as estratégias e K apresentados. São lidos de
    [`config/execucao.yaml`](../../config/execucao.yaml), também usado por `executar.py`.
-2. Escolha **Real**, **Preflight** ou **Dry-run** e clique em **Iniciar pipeline**.
-   Real usa o cliente LLM existente, seu cache e os limites acumulados do `.env`.
+2. Escolha **Real**, **Preflight** ou **Dry-run**, selecione o **Modelo para a próxima
+   execução** e clique em **Iniciar pipeline**. As opções são GPT-4.1 mini, GPT-5.6 Luna
+   e GPT-6 Luna. Os Luna enviam `reasoning_effort=none`. **Usar configuração atual**
+   mantém o YAML/provedor configurado. Selecionar um dos três modelos força OpenAI.
+   Real usa os limites acumulados do `.env`; o cache de respostas é desligado por padrão.
    O painel não altera esses limites e não envia a chave ao navegador.
 3. Acompanhe o status, o tempo da sessão e o log. O polling acontece a cada 1,5 s.
 4. Cada tentativa concluída aparece na tabela com issue, arquivo, estratégia,
@@ -25,7 +28,8 @@ biblioteca padrão do Python e atende somente em `127.0.0.1`.
 O painel chama os mesmos comandos montados por `executar.montar_comandos`, mantendo
 os gates, contratos, regras, estratégias e critérios do orquestrador. A seleção de
 modo na página vale para a nova execução, sem modificar o YAML. As métricas são
-consolidadas após término normal do pipeline. “Processo finalizado” indica o término
+consolidadas também após falhas/paradas quando há dados verificáveis, com códigos
+separados do pipeline e da consolidação. “Processo finalizado” indica o término
 dos comandos, não a correção de todas as issues; confira as classificações e os logs.
 
 ## Encerrar
@@ -43,11 +47,21 @@ para acompanhar. O painel controla somente a execução iniciada por ele; não i
 encerra ou retoma execuções de outro terminal. Evite usar simultaneamente o terminal
 e o painel sobre as mesmas worktrees.
 
-Na parada pelo usuário ou em uma falha, os artefatos parciais são preservados e não
-há consolidação automática. A retomada e a consolidação parcial continuam disponíveis
-pelas interfaces completas do pipeline e de métricas. Após reiniciar o servidor,
+Na parada pelo usuário ou em uma falha, os artefatos parciais são preservados e a
+consolidação é tentada quando existem dados verificáveis. Uma falha de preparação
+anterior à produção desses dados pode impedir a consolidação. Após reiniciar o servidor,
 execuções com contrato aparecem no seletor de histórico; o acompanhamento ao vivo
 pertence à sessão atual do servidor.
+
+Para abrir o painel com os 78 casos e modelo inicial definido:
+
+```bash
+python painel.py --config config/execucao_docker_78.yaml --modelo gpt-6-luna
+```
+
+No Docker, use o mesmo comando dentro de `docker compose run --rm --service-ports tcc`.
+O seletor fica bloqueado durante a execução e não modifica o modelo do processo já
+iniciado. O histórico mostra o modelo identificado no contrato de cada execução.
 
 ## Tempos e resultados
 

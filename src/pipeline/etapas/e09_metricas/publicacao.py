@@ -68,7 +68,8 @@ def construir(report, entrada):
         colunas += ['politica_validacao','cache_validacao','tempos_medicao','selecao_testes','etapas_validacao']
         if (entrada.contrato['schema_versao']=='4.0' or entrada.contrato['schema_versao']=='5.0' and entrada.contrato.get('contrato_validacao_versao')=='4.0'):colunas+=['cobertura_funcional','cobertura_detalhada']
     if entrada.contrato and entrada.contrato.get('schema_versao')=='5.0':
-        colunas += ['provedor','identidade_inferencia','custo_motivo','custo_api_usd','custo_infraestrutura_usd','espera_inferencia_s','requisicao_s','chamadas_enviadas','estado_geracao','historico_transporte','consumo_incerto']
+        colunas += ['provedor','identidade_inferencia','custo_motivo','custo_api_usd','custo_infraestrutura_usd','espera_inferencia_s','requisicao_s','chamadas_enviadas','estado_geracao','historico_transporte','consumo_incerto','modelo_solicitado','parametros_geracao',
+                    'tokens_raciocinio','tokens_entrada_cache','tokens_escrita_cache']
     rows=[]
     for l in entrada.linhas:
         row={k:l.get(k) for k in colunas}

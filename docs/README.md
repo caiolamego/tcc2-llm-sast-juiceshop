@@ -21,6 +21,7 @@ planejamento, auditorias e histórico ficam em subpastas.
 | [validacao_relacionada.md](validacao_relacionada.md) | Por que só os testes da funcionalidade alterada são executados. |
 | [aplicacao_ancoras.md](aplicacao_ancoras.md) | Aplicação de patches com recuo diferente (19/10). |
 | [historico/features/09-resiliencia-llm/README.md](historico/features/09-resiliencia-llm/README.md) | Cache local de respostas desligado por padrão, tratamento de falhas da API e métricas parciais. |
+| [historico/features/10-comparacao-modelos-openai/ENTREGA.md](historico/features/10-comparacao-modelos-openai/ENTREGA.md) | Escolher GPT-4.1 mini, GPT-5.6 Luna ou GPT-6 Luna por terminal/YAML/painel; perfis sem raciocínio ativado, preços e validação offline. |
 | [docker.md](docker.md) (fixo) | Ambiente único em Docker: imagem oficial, baseline, comandos. Citado pelo `Dockerfile`, `Makefile` e `compose.yaml`. |
 
 ## Guias de uso (`guias/`)
