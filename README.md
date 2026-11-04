@@ -72,7 +72,7 @@ Dockerfile, compose.yaml, docker/
 src/pipeline/          código do pipeline           → mapa das etapas: src/pipeline/README.md
 scripts/               comandos avulsos             → scripts/README.md
 config/                entradas congeladas e configurações de execução → config/README.md
-knowledge_base/        base do RAG simplificado (10 documentos)
+knowledge_base/        base do RAG simplificado (14 documentos, versão 2.0)
 rules/                 regras Semgrep escritas pelo grupo (rodadas 1–12)
 tests/                 testes do projeto (unit), das regras (integration)
                        e testes próprios injetados no Juice Shop (functional)

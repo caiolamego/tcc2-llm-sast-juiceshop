@@ -125,6 +125,17 @@ class BaseTests(unittest.TestCase):
         self.assertEqual(subprocess.run(cmd[:2]+['--help'],cwd=self.tmp.name,capture_output=True).returncode,0)
 
 
+class BaseReal(unittest.TestCase):
+    def test_base_publicada_separa_controle_de_acesso_por_cwe(self):
+        base=ROOT/'knowledge_base'
+        esperado={'CWE-22':'path_traversal','CWE-73':'path_traversal','CWE-601':'open_redirect',
+                  'CWE-918':'ssrf','CWE-915':'mass_assignment','CWE-639':'broken_access_control',
+                  'CWE-862':'broken_access_control','CWE-863':'broken_access_control','CWE-807':'broken_access_control'}
+        for cwe,categoria in esperado.items():
+            got=r.recuperar({'cwe_ids':[cwe]},base)
+            self.assertEqual((got.categoria,got.motivo),(categoria,'cwe'))
+
+
 class BuilderTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
@@ -206,7 +217,7 @@ class ContratoTests(unittest.TestCase):
 
     def test_v2_rag_tracks_full_base_and_versions(self):
         self.args.estrategias=['P3','P4'];old=self.current()
-        self.assertEqual(len(old['rag']['documentos']),10)
+        self.assertEqual(len(old['rag']['documentos']),len(r.CATEGORIAS))
         path=self.base/'injection.md';path.write_text(path.read_text()+'Changed\n')
         with self.assertRaises(r.BaseInvalida):self.current()
         (self.base/'manifesto.json').unlink();r.publicar_manifesto(self.base)

@@ -13,7 +13,8 @@ from pipeline.comum.caminhos import RAIZ_REPO
 
 CATEGORIAS = ('injection','broken_access_control','cryptographic_failures','cross_site_scripting',
               'security_misconfiguration','authentication_failures','input_validation',
-              'integrity_failures','concurrency','generico')
+              'integrity_failures','concurrency','path_traversal','open_redirect','ssrf',
+              'mass_assignment','generico')
 SECOES = ('Descrição e sinais','Origem e condições','Impactos e interpretação','Mitigação por mecanismo',
           'Preservação funcional','Exemplo genérico','Limitações e verificação')
 
@@ -111,7 +112,7 @@ def inspecionar(base: Path):
     exigir(isinstance(idx,dict) and idx.get('schema_versao')=='1.0', 'Schema do índice inválido')
     exigir(isinstance(idx.get('base_versao'),str) and re.fullmatch(r'\d+\.\d+(?:\.\d+)?',idx['base_versao']), 'Versão da base inválida')
     docs=idx.get('documentos');cwes=idx.get('cwe')
-    exigir(isinstance(docs,dict) and set(docs)==set(CATEGORIAS), 'Índice deve declarar as dez categorias')
+    exigir(isinstance(docs,dict) and set(docs)==set(CATEGORIAS), 'Índice deve declarar todas as categorias')
     exigir(idx.get('fallback')=='generico', 'Fallback deve ser generico')
     exigir(all(isinstance(v,str) and v for v in docs.values()), 'Arquivos do índice inválidos')
     exigir(isinstance(cwes,dict) and all(re.fullmatch(r'CWE-\d+',k) and isinstance(v,str) and v in docs for k,v in cwes.items()), 'Mapeamento CWE inválido')
