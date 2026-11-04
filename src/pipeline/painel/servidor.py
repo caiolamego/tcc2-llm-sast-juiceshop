@@ -86,7 +86,7 @@ def main(argv=None):
     # apenas em 127.0.0.1 do host, e o cabeçalho Host continua exigindo 127.0.0.1.
     parser.add_argument('--endereco', choices=('127.0.0.1', '0.0.0.0'), default='127.0.0.1',
                         help='Endereço de escuta; 0.0.0.0 somente dentro do container Docker')
-    parser.add_argument('--config', type=Path, default=RAIZ / 'config/execucao.yaml')
+    parser.add_argument('--config', type=Path, default=RAIZ / 'config/execucao_docker_78.yaml')
     from pipeline.etapas.e05_geracao_llm.modelos import MODELOS_OPENAI
     parser.add_argument("--modelo", choices=MODELOS_OPENAI, help="Modelo OpenAI inicial do seletor")
     args = parser.parse_args(argv)

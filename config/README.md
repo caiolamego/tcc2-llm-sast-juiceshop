@@ -38,9 +38,10 @@ selecionar outro modelo não reinicia nem aumenta os limites do `.env`.
 
 | Arquivo | O que roda |
 |---|---|
-| `execucao_docker_preparados.yaml` | Os 52 casos preparados, P1–P4, baseline oficial do Docker. **Padrão do `Makefile`.** |
-| `execucao_docker_78.yaml` | Os 78 casos, revisão funcional v6 e baseline próprio de 02/11/2026. Preserva modo real/K=4; use `--modo preflight` para conferir sem geração. Imagem e comandos em `docs/cobertura_funcional_v6.md`. |
-| `execucao.yaml` | Piloto de 10 casos com o baseline anterior ao Docker. Padrão do `executar.py` e do `painel.py` fora do `make`. |
+| `execucao_docker_preparados.yaml` | Os 52 casos preparados, P1–P4, baseline da referência Docker. Use com `CONFIG=` ou `--config`. |
+| `execucao_docker_78.yaml` | **Padrão do `executar.py`, do `painel.py` e do `Makefile`.** Os 78 casos, revisão funcional v6 e baseline próprio de 02/11/2026. Preserva modo real/K=4; use `--modo preflight` para conferir sem geração. Imagem e comandos em `docs/cobertura_funcional_v6.md`. |
+| `execucao_piloto_3_casos.yaml` | Teste de ponta a ponta com 3 casos, P1–P4, K=3. Vem em `dry-run`; para chamar a LLM, use `--modo real`. |
+| `execucao.yaml` | Piloto de 10 casos com o baseline anterior ao Docker. Use com `--config`. |
 | `execucao_colab_1_issue.yaml` | Teste do Qwen no Colab com 1 caso. |
 | `execucao_cobertura.exemplo.yaml`, `execucao_otimizada.exemplo.yaml` | Exemplos das políticas `relacionada_v2` e `otimizada_v1`. |
 

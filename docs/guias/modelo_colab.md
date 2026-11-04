@@ -77,13 +77,13 @@ Cria uma pasta nova em `outputs/diagnosticos_llm/`, com `prompt.json`, `resultad
 ## Iniciar pelo painel
 
 ```bash
-.venv/bin/python painel.py
+.venv/bin/python painel.py --config config/execucao.yaml
 ```
 
 Se o painel já estiver aberto em outro processo, encerre esse processo pelo terminal que o iniciou antes de reiniciar; atualize a página após o reinício. Confira provedor e modelo na tela e use **Real → Iniciar pipeline**. Alternativa pelo terminal:
 
 ```bash
-.venv/bin/python executar.py
+.venv/bin/python executar.py --config config/execucao.yaml
 ```
 
 A configuração atual usa **10 issues e K=4**. `wt-5` e `wt-6` permanecem preparadas no disco para uso futuro. Esta entrega não a troca por outro piloto. Para começar com duas, selecione explicitamente em `config/execucao.yaml` somente `AMPfb154534099cb3ca` (login) e `AMP95adf572d3c6677f` (keyServer), mantendo P1–P4, e use uma execução nova. Não reutilize a saída de um piloto OpenAI.

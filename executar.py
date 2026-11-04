@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inicia o pipeline e consolida suas métricas usando config/execucao.yaml."""
+"""Inicia o pipeline e consolida suas métricas usando config/execucao_docker_78.yaml."""
 from __future__ import annotations
 
 import argparse
@@ -118,7 +118,7 @@ def montar_comandos(config: dict, python: str, execucao: str) -> tuple[list[str]
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", type=Path, default=RAIZ / "config/execucao.yaml",
+    parser.add_argument("--config", type=Path, default=RAIZ / "config/execucao_docker_78.yaml",
                         help="YAML alternativo; caminhos internos são relativos ao repositório")
     parser.add_argument("--modo", choices=MODOS, help="Substitui somente o modo do YAML")
     parser.add_argument("--modelo", choices=MODELOS_OPENAI,

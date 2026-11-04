@@ -13,7 +13,7 @@ biblioteca padrão do Python e atende somente em `127.0.0.1`.
 ## Iniciar e acompanhar
 
 1. Confira os casos, as estratégias e K apresentados. São lidos de
-   [`config/execucao.yaml`](../../config/execucao.yaml), também usado por `executar.py`.
+   [`config/execucao_docker_78.yaml`](../../config/execucao_docker_78.yaml), também usado por `executar.py`.
 2. Escolha **Real**, **Preflight** ou **Dry-run**, selecione o **Modelo para a próxima
    execução** e clique em **Iniciar pipeline**. As opções são GPT-4.1 mini, GPT-5.6 Luna
    e GPT-6 Luna. Os Luna enviam `reasoning_effort=none`. **Usar configuração atual**

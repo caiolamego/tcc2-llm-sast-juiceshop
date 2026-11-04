@@ -26,7 +26,7 @@ confirmam, por si só, a segurança da correção.
 Na raiz do repositório:
 
 ```bash
-python3 executar.py
+python3 executar.py --config config/execucao.yaml
 ```
 
 O lançador usa a `.venv`, cria uma saída nova em `outputs/execucoes/` e consolida

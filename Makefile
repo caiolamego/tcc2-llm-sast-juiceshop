@@ -1,7 +1,7 @@
 PYTHON ?= python3
 SEMGREP ?= semgrep
 K ?= 4
-CONFIG ?= config/execucao_docker_preparados.yaml
+CONFIG ?= config/execucao_docker_78.yaml
 # Opcional: força somente o provedor do processo no container, sem editar .env.
 PROVIDER ?=
 # Seleção OpenAI para a execução; não edita .env.

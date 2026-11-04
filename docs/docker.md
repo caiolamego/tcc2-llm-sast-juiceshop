@@ -101,9 +101,8 @@ O import confere que a imagem oficial está disponível; o check também confere
 baseline, evidências, comparação funcional e entradas do experimento. A chave
 LLM continua no `.env` de cada pessoa. Não é distribuída dentro da imagem.
 
-O painel padrão usa `config/execucao_docker_preparados.yaml`, com quatro workers
-e os 52 casos preparados. Os 26 casos com lacunas permanecem no catálogo, mas
-bloqueiam a seleção dos 78 na política atual.
+O painel padrão usa `config/execucao_docker_78.yaml`, com quatro workers e os
+78 casos do catálogo, preparados pela feature 08.
 
 ## Preparar uma nova referência (somente mantenedor)
 
@@ -208,7 +207,7 @@ make docker-test-rules
 | `make docker-real` | Execução real na configuração Docker escolhida | **Sim** (limites do `.env`) |
 | `make docker-shell` | Terminal dentro do container | — |
 
-Os alvos `docker-preflight`, `docker-dry-run`, `docker-real` e `docker-painel` usam `config/execucao_docker_preparados.yaml` por padrão. Para outro arquivo,
+Os alvos `docker-preflight`, `docker-dry-run`, `docker-real` e `docker-painel` usam `config/execucao_docker_78.yaml` por padrão. Para outro arquivo,
 passe `CONFIG`, por exemplo `make docker-dry-run CONFIG=config/outro.yaml`.
 
 Qualquer outro comando: `docker compose run --rm tcc <comando>`, por exemplo
@@ -226,13 +225,12 @@ Há duas configurações novas, ambas com P1–P4, quatro worktrees, política
 
 | Configuração | Seleção | Situação |
 |---|---|---|
-| `config/execucao_docker_78.yaml` | Todos os 78 casos, incluindo falsos positivos e inconclusivos | O gate atual recusa a seleção por lacunas funcionais em 26 casos |
-| `config/execucao_docker_preparados.yaml` | 52 casos com revisão suficiente na união por arquivo | Subconjunto explícito, sujeito à validação do ambiente pelo preflight |
+| `config/execucao_docker_78.yaml` | Todos os 78 casos, incluindo falsos positivos e inconclusivos | **Padrão.** Preparados desde a feature 08 (revisão v6, mapa v7 e baseline próprio) |
+| `config/execucao_docker_preparados.yaml` | 52 casos com revisão suficiente na união por arquivo | Subconjunto da campanha de 19/10, mantido para reprodução; use `CONFIG=` |
 
-Os 26 casos não foram excluídos do catálogo. Resolver suas lacunas e verificar
-os baselines é necessário para iniciar todos os 78 com essa política. Docker
-padroniza o ambiente, mas não cria as evidências funcionais que faltam. Não
-troque a política nem desative o gate apenas para liberar a campanha.
+Os 26 casos que faltavam foram preparados pela feature 08, sem trocar a política
+nem desativar o gate. Docker padroniza o ambiente, mas não cria evidências
+funcionais: cada revisão de cobertura precisa do seu baseline.
 
 Prepare o ambiente uma vez, sem executar a LLM:
 

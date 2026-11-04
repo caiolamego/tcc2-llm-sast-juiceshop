@@ -1,0 +1,25 @@
+# Teste de ponta a ponta com 3 casos (03/11/2026). Mesmas entradas de execucao_docker_78.yaml,
+# incluindo a imagem exigida pelo baseline: sha256:8cdd44451de1...
+# Vem em dry-run para não gastar por engano: --modo real chama a LLM, --modelo escolhe qual.
+modo: dry-run
+modelo: gpt-6-luna
+casos:
+- AMP95adf572d3c6677f  # routes/keyServer.ts: documento novo path_traversal
+- AMPad5710627036ab1a  # frontend search-result: compila o Angular
+- AMPee9d50eba0ea870a  # server.ts: um dos 26 casos preparados pela feature 08
+estrategias:
+- P1
+- P2
+- P3
+- P4
+k: 3
+politica_validacao: relacionada_v2
+mapa_testes: config/mapa_testes_relacionados_v7.yaml
+cobertura_funcional: config/cobertura_funcional_v6.yaml
+cache_validacao: desligado
+repeticao_api: ampla
+catalogo: outputs/catalogos/ampliado_v1/catalogo_issues.json
+perfil_sast: config/perfis/ampliado_piloto_v1/perfil.json
+baseline_testes: outputs/cobertura_funcional/FINAIS_20261102/baseline/baseline_testes.json
+semgrep_bin: .venv/bin/semgrep
+saida_base: outputs/piloto_3_casos
