@@ -2,7 +2,8 @@
 
 Duas definicoes (analise de sensibilidade, protocolo Secao 13):
 - d_marcador: so o criterio (a), assercao de desafio resolvido.
-- d_criterio: criterios (a), (b) e (c) de docs/criterios_conjunto_d.md.
+- d_criterio: criterios (a), (b), (c) e (d) de docs/criterios_conjunto_d.md.
+  O criterio (d) vale so para os casos ligados a cada teste (chave por_caso).
 A lista vem de config/conjunto_d.json (scripts/gerar_conjunto_d.py). Teste
 fora da lista e F. d_marcador esta contido em d_criterio.
 """
@@ -30,14 +31,18 @@ def _lista() -> tuple[list[tuple[str, re.Pattern, str]], str]:
     return itens, dados.get("gerado_em", "")
 
 
-def criterio_de(teste: str, conjunto=None) -> str | None:
-    """'a', 'b', 'c' ou None (F). teste = '<arquivo> :: <suite> > ... > <nome>'."""
+def criterio_de(teste: str, conjunto=None, caso=None) -> str | None:
+    """'a', 'b', 'c', 'd' ou None (F). teste = '<arquivo> :: <suite> > ... > <nome>'."""
     arquivo, _, caminho = teste.partition(" :: ")
     nome = caminho.split(" > ")[-1]
     itens=_lista()[0] if conjunto is None else _carregar_versionado(conjunto)
     for arq, padrao, crit in itens:
         if arq == arquivo and padrao.match(nome):
             return crit
+    if conjunto is not None and caso is not None:
+        for arq, padrao, casos in _carregar_por_caso(conjunto):
+            if arq == arquivo and caso in casos and padrao.match(nome):
+                return "d"
     return None
 
 
@@ -54,9 +59,19 @@ def _carregar_versionado(arquivo):
     return items
 
 
-def classificar(testes: list[str], arquivo=None) -> dict[str, list[str]]:
+def _carregar_por_caso(arquivo):
+    from pathlib import Path
+    data=json.loads(Path(arquivo).read_text(encoding='utf-8'))
+    items=[]
+    for row in data.get('por_caso',[]):
+        if row['criterio']!='d' or not row['casos']:raise ValueError('Entrada por caso inválida')
+        items.append((row['arquivo'],_padrao_nome(row['nome']),set(row['casos'])))
+    return items
+
+
+def classificar(testes: list[str], arquivo=None, caso=None) -> dict[str, list[str]]:
     """Separa testes falhos nas duas definicoes de D e nos F correspondentes."""
-    crit = {t: criterio_de(t,arquivo) for t in testes}
+    crit = {t: criterio_de(t,arquivo,caso) for t in testes}
     d_marcador = sorted(t for t, c in crit.items() if c == "a")
     d_criterio = sorted(t for t, c in crit.items() if c is not None)
     return {

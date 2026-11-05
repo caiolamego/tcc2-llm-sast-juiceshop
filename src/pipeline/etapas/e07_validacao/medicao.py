@@ -91,6 +91,7 @@ def medir(wt, issue, fontes, baseline, perfil, baseline_testes, saida_raw, args,
                           politica=options['politica_validacao'], mapa=options['mapa_testes'],
                           repeticao_api=options['repeticao_api'])
     cfg.cobertura=options.get('cobertura_funcional')
+    cfg.caso_id=issue.get('caso_id')
     def ambiente_funcional():
         if cfg.cobertura:
             from pipeline.etapas.e07_validacao.cobertura import ambiente as ambiente_cobertura

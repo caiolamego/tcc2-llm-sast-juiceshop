@@ -219,7 +219,7 @@ def validar(wt, arquivos, cfg, callback=None):
                 if g['falha_operacional']:
                     unknown=True;result.cobertura_detalhada['motivos'].append(g['falha_operacional'])
                     continue  # Nenhuma definição de F recebe reprovação de um grupo inválido.
-                split=classificar(g['falhos_novos'],RAIZ_REPO/data['conjunto_d']['arquivo'])
+                split=classificar(g['falhos_novos'],RAIZ_REPO/data['conjunto_d']['arquivo'],cfg.caso_id)
                 for d in values:
                     failures=g['falhos_novos'] if d=='sem_separacao' else split['f_'+d]
                     if failures:values[d]=False

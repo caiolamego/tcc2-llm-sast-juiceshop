@@ -14,6 +14,7 @@ preflight recusar o baseline oficial.
 | `cobertura_funcional_v1.yaml` | Revisão, caso a caso, de quais testes cobrem cada alerta. Define os 52 casos preparados e os 26 bloqueados. | baseline oficial, referência Docker |
 | `mapa_testes_relacionados_v2.yaml` | Arquivo alterado → grupos de testes da política `relacionada_v2`. | baseline oficial, referência Docker |
 | `conjunto_d_cobertura_v1.json` | Testes D (dependem da vulnerabilidade) usados na cobertura funcional. | baseline oficial, referência Docker |
+| `conjunto_d_cobertura_v2.json`, `cobertura_funcional_v7.yaml`, `mapa_testes_relacionados_v8.yaml` | Versão vigente: acrescenta ao conjunto D o critério (d), com testes ligados a casos. Gerados por `scripts/experimento/gerar_conjunto_d_por_caso.py`. | contrato da execução |
 | `conjunto_d.json` | Lista de testes D usada pelo runner. Caminho fixo em `src/pipeline/etapas/e07_validacao/conjunto_d.py`. | contrato da execução |
 | `prompts/roteiro_raciocinio_guiado.md` | Roteiro em etapas usado por P2 e P4. | contrato da execução |
 | `mapa_cwe_vuln.yaml` | CWE → sigla da vulnerabilidade (SQLI, XSS, ...). | catálogo |
@@ -39,7 +40,7 @@ selecionar outro modelo não reinicia nem aumenta os limites do `.env`.
 | Arquivo | O que roda |
 |---|---|
 | `execucao_docker_preparados.yaml` | Os 52 casos preparados, P1–P4, baseline da referência Docker. Use com `CONFIG=` ou `--config`. |
-| `execucao_docker_78.yaml` | **Padrão do `executar.py`, do `painel.py` e do `Makefile`.** Os 78 casos, revisão funcional v6 e baseline gerado em 05/11/2026 na imagem da referência Docker. Preserva modo real/K=4; use `--modo preflight` para conferir sem geração. Imagem e comandos em `docs/cobertura_funcional_v6.md`. |
+| `execucao_docker_78.yaml` | **Padrão do `executar.py`, do `painel.py` e do `Makefile`.** Os 78 casos, revisão funcional v7, mapa v8 e baseline gerado em 05/11/2026 na imagem `81fe`. Como `docker/referencia.json` não acompanha a v7, use `docker compose run` em vez dos atalhos `make docker-*`. Preserva modo real/K=4; use `--modo preflight` para conferir sem geração. Imagem e comandos em `docs/cobertura_funcional_v6.md`. |
 | `execucao_piloto_3_casos.yaml` | Teste de ponta a ponta com 3 casos, P1–P4, K=3. Vem em `dry-run`; para chamar a LLM, use `--modo real`. |
 | `execucao.yaml` | Piloto de 10 casos com o baseline anterior ao Docker. Use com `--config`. |
 | `execucao_colab_1_issue.yaml` | Teste do Qwen no Colab com 1 caso. |

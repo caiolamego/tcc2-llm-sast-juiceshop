@@ -437,6 +437,15 @@ O conjunto D novo preserva as 75 entradas anteriores. As 33 asserções Angular
 candidatas revisadas observam mocks/estado, sem demonstração suficiente de
 exploração: nenhuma foi acrescentada a D. Critérios anteriores permanecem iguais.
 
+Em 05/11/2026, antes da execução oficial, o critério (d) foi acrescentado: teste que só passa
+enquanto o alerta de um caso continua sem correção. São 41 testes ligados a 20 casos, e cada um é D
+somente nas tentativas desses casos. A revisão cobriu a suíte, e não apenas os testes que já tinham
+reprovado correções, com decisão pela asserção de cada teste. Os 75 testes anteriores não mudaram.
+Ficaram em F, por poderem passar com a correção: o erro 500 no ataque ao sandbox do B2B, a expansão
+de entidades internas em XML, o histórico de pedidos e as reviews por produto. Os dois alertas
+classificados como falso positivo (CAPTCHA em SVG e `server.ts:273`) também não receberam testes.
+Lista e justificativas: `config/conjunto_d_cobertura_v2.json`.
+
 A auditoria concluiu 63 revisões adequadas e 15 insuficientes, com 52 casos
 preparados e 26 bloqueados pela união por arquivo. A campanha dos 78 permanece
 pendente. Baselines compartilhados não são 78 medições independentes. Métricas

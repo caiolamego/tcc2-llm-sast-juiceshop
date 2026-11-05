@@ -79,6 +79,7 @@ class ConfigValidacao:
     mapa: Path | None = None
     repeticao_api: str = 'ampla'
     cobertura: Path | None = None
+    caso_id: str | None = None
 
 
 @dataclass

@@ -129,3 +129,7 @@ Testes que parecem de ataque mas não cumprem nenhum dos três critérios. Os ma
 | `test/server/fileServer.unit.test.ts` | 36 | should serve Markdown files from folder /ftp | mock do caminho de chamada (sendFile): F por definicao |
 | `test/server/fileServer.unit.test.ts` | 45 | should serve incident-support.kdbx files from folder /ftp | mock do caminho de chamada (sendFile): F por definicao |
 | `test/server/keyServer.unit.test.ts` | 21 | should serve requested file from folder /encryptionkeys | mock do caminho de chamada (sendFile): F por definicao |
+
+## Critério (d): testes ligados a casos
+
+Desde 05/11/2026, `config/conjunto_d_cobertura_v2.json` mantém estes 75 testes e acrescenta, na chave `por_caso`, 41 testes ligados a 20 casos, com o motivo de cada um. Eles são D somente nas tentativas desses casos e seguem F nas demais. A geração é feita por `scripts/experimento/gerar_conjunto_d_por_caso.py`, e o critério está em `docs/criterios_conjunto_d.md`.

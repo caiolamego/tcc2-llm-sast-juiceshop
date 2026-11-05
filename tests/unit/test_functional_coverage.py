@@ -158,6 +158,20 @@ class CoverageTests(unittest.TestCase):
         self.assertEqual(classificar([ident])['d_criterio'],[])
         self.assertEqual(classificar([ident],self.d)['d_marcador'],[])
 
+    def test_criterion_d_applies_only_to_the_linked_case(self):
+        entry={'arquivo':self.file,'nome':'works','criterio':'d','casos':['AMP1']}
+        self.d.write_bytes(json_bytes({'schema_versao':'2.0','d':[],'por_caso':[entry]}))
+        ident=self.file+' :: suite > works'
+        self.assertEqual(classificar([ident],self.d,'AMP1')['f_criterio'],[])
+        self.assertEqual(classificar([ident],self.d,'AMP1')['d_marcador'],[])
+        self.assertEqual(classificar([ident],self.d,'AMP2')['f_criterio'],[ident])
+        self.assertEqual(classificar([ident],self.d)['f_criterio'],[ident])
+
+    def test_invalid_case_entry_is_refused(self):
+        entry={'arquivo':self.file,'nome':'works','criterio':'d','casos':[]}
+        self.d.write_bytes(json_bytes({'schema_versao':'2.0','d':[],'por_caso':[entry]}))
+        with self.assertRaises(ValueError):classificar([self.file+' :: suite > works'],self.d,'AMP1')
+
     def test_three_f_definitions_use_the_explicit_versioned_d(self):
         ident=self.file+' :: suite > works'
         self.d.write_bytes(json_bytes({'schema_versao':'2.0','d':[{'arquivo':self.file,'nome':'works','criterio':'c'}]}))

@@ -647,3 +647,16 @@ foi consolidado por leitura em `outputs/resiliencia_llm/RECUPERACAO_PILOTO_20261
 sem modificar a origem. Não houve chamadas reais à LLM nesta validação.
 
 Detalhes, mapa de erros e testes: [feature 09](historico/features/09-resiliencia-llm/README.md).
+
+
+# 05/11/2026 — Testes que exigem a vulnerabilidade reprovavam correções
+
+**Sintoma:** no piloto de 34 tentativas com os três modelos, 19 removeram o alerta sem criar outro e ainda assim ficaram com F=0. Em 18 delas, os únicos testes reprovados exigiam o próprio comportamento vulnerável, como `bypassSecurityTrustHtml` chamado com `<script>alert("XSS")</script>` e a página de listagem de `/ftp`.
+
+**Causa:** a regra do conjunto D diz que entram os testes cujas asserções só valem com a vulnerabilidade presente, mas as formas (a), (b) e (c) não alcançavam esses testes, e a regra dos mocks os deixava em F. O mesmo ocorria com testes que usam a falha como preparação, como os de feedback que leem o `answer` do CAPTCHA.
+
+**Correção:** critério (d), ligado a casos, em `docs/criterios_conjunto_d.md`. A lista está em `config/conjunto_d_cobertura_v2.json` (41 testes, 20 casos), com a revisão de cobertura v7, o mapa v8 e novo baseline. `conjunto_d.py`, `execucao_cobertura.py`, `camadas.py` e `medicao.py` passaram a informar o caso à classificação.
+
+**Impacto na reprodutibilidade:** a definição de F usada nas execuções muda em relação às campanhas de teste de outubro. Como `camadas.py`, `conjunto_d.py` e `execucao_cobertura.py` são entradas de `docker/referencia.json`, `make docker-check` recusa essas alterações, e a execução passa a usar `docker compose run` direto até uma nova referência. Sem o teste, um patch que apague a funcionalidade inteira de um desses casos deixa de ser reprovado por ele; por isso a conferência manual das correções aceitas é obrigatória na análise.
+
+**Fase do guia:** F4 (validação).
