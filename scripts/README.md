@@ -31,7 +31,9 @@ Em 01/11/2026 saíram os scripts que só serviam ao modo histórico: `gerar_cata
 | `gerar_baseline_funcional.py` | Gera o baseline funcional (régua do critério F) e roda os controles de regressão. Chamado por `make docker-baseline`. | núcleo |
 | `validar_controles_cobertura.py` | Executa controles declarados em JSON, exige aprovação do código original e falha do teste esperado no mutante, restaura os bytes e publica evidências sem LLM. | apoio |
 | `gerar_conjunto_d.py` | Gera `config/conjunto_d.json` e `docs/conjunto_d.md` a partir dos critérios. | núcleo |
+| `gerar_conjunto_d_v3.py` | Gera a versão vigente do conjunto D (critério (e) e ampliação do (d)), a revisão de cobertura v8 e o mapa v9. Não sobrescreve arquivos. |
 | `gerar_conjunto_d_por_caso.py` | Gera a versão do conjunto D com o critério (d), ligada a casos, com a revisão de cobertura e o mapa correspondentes. Não sobrescreve arquivos. |
+| `avaliacao_conjunta_rris.py` | Aplica juntos os patches aceitos de uma execução e gera a evidência da RRIS. Roda no Docker, com a trava das worktrees, sem LLM. |
 | `replay_patches.py` | Replay de patches arquivados com SAST e testes reais, sem LLM (`--revalidacao`). | apoio |
 | `replay_ancoras.py` | Reaplica respostas com âncora ausente em cópias temporárias. | apoio |
 | `diagnosticar_llm.py` | Diagnóstico da LLM: offline, conexão, mensagem curta ou prompt arquivado. | apoio |
@@ -45,6 +47,7 @@ Em 01/11/2026 saíram os scripts que só serviam ao modo histórico: `gerar_cata
 | Script | Para que serve | Situação |
 |---|---|---|
 | `consolidar_metricas.py` | Consolida as métricas de uma execução em JSON e CSV (chamado pelo `executar.py`). | núcleo |
+| `comparar_modelos.py` | Compara execuções de modelos diferentes a partir das métricas publicadas, com pares de casos e estratégias em comum. |
 | `relatorio_revalidacao.py` | Compara uma revalidação sem LLM com os registros originais. | apoio |
 | `relatorio_replays.py` | Compara replays concluídos. | apoio |
 | `metricas_historicas.py` | Métricas do modo histórico (E01, E02) nas três definições de F; os testes o usam para conferir os números arquivados. | legado |

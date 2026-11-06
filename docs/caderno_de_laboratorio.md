@@ -660,3 +660,39 @@ Detalhes, mapa de erros e testes: [feature 09](historico/features/09-resiliencia
 **Impacto na reprodutibilidade:** a definição de F usada nas execuções muda em relação às campanhas de teste de outubro. Como `camadas.py`, `conjunto_d.py` e `execucao_cobertura.py` são entradas de `docker/referencia.json`, `make docker-check` recusa essas alterações, e a execução passa a usar `docker compose run` direto até uma nova referência. Sem o teste, um patch que apague a funcionalidade inteira de um desses casos deixa de ser reprovado por ele; por isso a conferência manual das correções aceitas é obrigatória na análise.
 
 **Fase do guia:** F4 (validação).
+
+# 06/11/2026 — Campanha completa descartada: testes ainda exigiam a vulnerabilidade
+
+**Sintoma:** a campanha de 78 casos com os três modelos terminou sem erro (41, 36 e 31 casos aceitos), mas correções certas foram reprovadas. O caso mais claro foi a proteção de `PUT /api/Products/:id` reativada pelo GPT-6 Luna e rejeitada pelo teste `PUT update existing product is possible due to Missing Function-Level Access Control vulnerability`.
+
+**Causa:** a separação de 05/11 cobriu os testes vistos no piloto de 3 casos. Dois tipos ficaram de fora: testes que nenhum patch do piloto tinha alcançado e testes mantidos em F de propósito (sandbox breakout, entidades XML). Além disso, a ligação por caso não protegia uma correção que removesse a falha de outro caso.
+
+**Correção:** revisão dos 172 pares de caso e teste reprovados. Critério (e), que vale em todos os casos, ampliação do critério (d), `conjunto_d_cobertura_v3.json`, revisão de cobertura v8, mapa v9 e baseline `IMAGEM_81FE_D3_20261106`. Foi corrigido `server_startup.unit.test.ts`, que exigia a forma concatenada do log, e criado `contratos_legitimos.test.ts`. A opção de inverter o resultado foi rejeitada: qualquer outra falha viraria aprovação. Detalhes em `docs/conjunto_d.md`, seção Versão 3.
+
+**Impacto na reprodutibilidade:** os resultados da campanha de 05 e 06/11 foram descartados pelo grupo e não entram como evidência; a execução dos três modelos foi refeita com chamadas reais. Os critérios mudaram depois de vermos resultados, por isso a mudança vale igual para os três modelos e fica declarada no protocolo. Permanecem sem conclusão as correções que exigem uma variável de ambiente nova para o módulo carregar.
+
+**Fase do guia:** F4 (validação).
+
+# 06/11/2026 — Comparador deixava sem conclusão alertas que só mudaram de linha
+
+**Sintoma:** 89 tentativas da campanha ficaram com `indeterminada_sast`, e 65 delas com F=1. Em 7 tentativas, o alerta alvo saiu e os testes passaram, mas M ficou sem conclusão.
+
+**Causa:** a v2 tratava como ambíguo qualquer alerta sem par, mesmo com a mesma regra, no mesmo arquivo e na mesma quantidade antes e depois. Em 84 das 89 tentativas o motivo foi esse; em nenhuma a contagem caiu com o alvo no grupo. As outras 5 vieram de problema de leitura do arquivo.
+
+**Correção:** `ocorrencias_contexto_v3`, que decide pela contagem da regra no arquivo. Testes em `tests/unit/test_comparacao_v2.py` atualizados; a decisão anterior era não adivinhar pela contagem, e foi revista porque o resultado da tentativa fica rejeitado nos dois sentidos quando o alvo está no grupo.
+
+**Impacto na reprodutibilidade:** o contrato registra o nome do comparador, então execuções v2 não podem ser retomadas com a v3. Um alerta removido e outro igual criado no mesmo arquivo contam como o mesmo; isso está declarado no protocolo.
+
+**Fase do guia:** F4 (validação).
+
+# 06/11/2026 — Teste nosso ainda reprovou a correção oficial de `PUT /api/Products/:id`
+
+**Sintoma:** na campanha final, o GPT-6 Luna (P4, caso `AMP095fcc0f303ff032`) trocou a rota por `security.denyAll()`, que é a correção oficial do Juice Shop, e ficou com R=1, M=1 e F=0.
+
+**Causa:** `creates reads and updates a product through its generated endpoints`, em `tests/functional/juice_shop/server_resources.test.ts`, exige `PUT` autenticado. Ele só apareceu nesta campanha, porque antes a validação parava no teste de `PUT` do Juice Shop.
+
+**Correção:** nenhuma. O grupo decidiu manter o resultado desta campanha, com 49 casos para o GPT-6 Luna. O teste foi conferido sem LLM: reaplicando o patch, só ele falha nos grupos `server_resources` e `server_startup`.
+
+**Impacto na reprodutibilidade:** o GPT-6 Luna fica com um caso a menos do que teria sem esse teste (49 em vez de 50). Foi 1 das 834 tentativas. Os outros modelos corrigiram esse caso com `isAuthorized()`, que o teste aceita.
+
+**Fase do guia:** F4 (validação).

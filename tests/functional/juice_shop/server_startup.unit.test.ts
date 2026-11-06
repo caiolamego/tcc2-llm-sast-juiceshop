@@ -1,6 +1,7 @@
 import { describe, it, mock } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { format } from 'node:util'
 import vm from 'node:vm'
 import ts from 'typescript'
 
@@ -54,9 +55,10 @@ void describe('TCC server startup contracts', () => {
     const cause = new Error('TCC asynchronous startup failure')
     await assert.rejects(wrapper('schedule-test', async () => { throw cause })(), err => err === cause)
     assert.equal(error.mock.callCount(), 1)
+    // The name may be concatenated or passed separately: only the logged text matters.
     const args = error.mock.calls[0].arguments
-    assert.match(args[0], /schedule-test/)
-    assert.equal(args[1], cause)
+    assert.match(format(...args), /schedule-test/)
+    assert.ok(args.includes(cause))
   })
 
   void it('logs and propagates a synchronous exception from a startup task', async () => {
@@ -64,7 +66,8 @@ void describe('TCC server startup contracts', () => {
     const cause = new Error('TCC synchronous startup failure')
     await assert.rejects(wrapper('sync-test', () => { throw cause })(), err => err === cause)
     assert.equal(error.mock.callCount(), 1)
-    assert.match(error.mock.calls[0].arguments[0], /sync-test/)
-    assert.equal(error.mock.calls[0].arguments[1], cause)
+    const args = error.mock.calls[0].arguments
+    assert.match(format(...args), /sync-test/)
+    assert.ok(args.includes(cause))
   })
 })

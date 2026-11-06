@@ -389,6 +389,16 @@ comparador, regra ou catálogo foi alterado. Este conjunto foi inspecionado e n�
 poderá ser apresentado como avaliação independente de um comparador ajustado a ele.
 Veja o [relatório e as mudanças recomendadas](auditoria/avaliacao_referencias_codefixes.md).
 
+### Comparador por contagem — 06/11/2026
+
+Execuções novas usam `ocorrencias_contexto_v3`. A v2 deixava sem conclusão todo alerta sem par, mesmo quando só havia
+mudado de linha. Na campanha descartada, foram 84 de 89 tentativas indeterminadas. A v3 resolve esses alertas pela
+contagem da mesma regra no mesmo arquivo: contagem igual ou maior mantém o alerta alvo (R=0), aumento líquido é
+alerta novo (M=0) e contagem igual não é alerta novo. Com contagem menor e alerta alvo sem par, R segue sem conclusão.
+Problemas de leitura do arquivo continuam sem conclusão. Limitação: um alerta removido e outro igual criado no mesmo
+arquivo contam como o mesmo; quando o alvo está no grupo, a tentativa é rejeitada de qualquer forma, e nos demais casos
+a inspeção manual das correções aceitas cobre esse risco.
+
 ### Comparação por contexto e revisão das associações — 17/10/2026
 
 Execuções ampliadas novas passam a usar `ocorrencias_contexto_v2`, mantendo a
@@ -445,6 +455,13 @@ Ficaram em F, por poderem passar com a correção: o erro 500 no ataque ao sandb
 de entidades internas em XML, o histórico de pedidos e as reviews por produto. Os dois alertas
 classificados como falso positivo (CAPTCHA em SVG e `server.ts:273`) também não receberam testes.
 Lista e justificativas: `config/conjunto_d_cobertura_v2.json`.
+
+Em 06/11/2026, depois da campanha completa de 05 e 06/11, que foi descartada, o critério (e) foi acrescentado:
+teste cuja finalidade é a própria falha deixa de contar em F em todos os casos, e o critério (d) foi ampliado.
+A mudança aconteceu depois de ver resultados, mas sem usar nenhuma nota de modelo: a mesma lista vale para os três,
+cada entrada é justificada pela asserção do teste, e os resultados daquela campanha não são usados. Lista e
+justificativas: `config/conjunto_d_cobertura_v3.json`. Inverter o resultado foi rejeitado, e os testes do Juice Shop
+não foram apagados: a falha continua registrada e entra na TCD.
 
 A auditoria concluiu 63 revisões adequadas e 15 insuficientes, com 52 casos
 preparados e 26 bloqueados pela união por arquivo. A campanha dos 78 permanece

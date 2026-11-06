@@ -133,3 +133,40 @@ Testes que parecem de ataque mas não cumprem nenhum dos três critérios. Os ma
 ## Critério (d): testes ligados a casos
 
 Desde 05/11/2026, `config/conjunto_d_cobertura_v2.json` mantém estes 75 testes e acrescenta, na chave `por_caso`, 41 testes ligados a 20 casos, com o motivo de cada um. Eles são D somente nas tentativas desses casos e seguem F nas demais. A geração é feita por `scripts/experimento/gerar_conjunto_d_por_caso.py`, e o critério está em `docs/criterios_conjunto_d.md`.
+
+## Versão 3: critério (e) e ampliação do critério (d)
+
+Desde 06/11/2026 vale `config/conjunto_d_cobertura_v3.json`, gerado por `scripts/experimento/gerar_conjunto_d_v3.py`. A revisão usou as 832 tentativas da campanha completa de 05 e 06/11/2026, descartada: 172 pares de caso e teste reprovados, lendo a asserção do teste, o patch e a mensagem de falha.
+
+**Critério (e), em todos os casos (13 testes, 5 deles vindos do critério d):**
+
+| Arquivo | Teste | Motivo |
+|---|---|---|
+| `test/api/product.test.ts` | PUT update existing product is possible due to Missing Function-Level Access Control vulnerability | Altera um produto sem credencial e espera sucesso. |
+| `test/api/user.test.ts` | GET who-am-i with fields parameter can be tricked into returning password | Exige que a resposta traga a senha. |
+| `test/api/ftp-folder.test.ts` | GET serves a directory listing | Exige a página de listagem de /ftp. |
+| `test/api/file-serving.test.ts` | GET serves a directory listing | Exige a página de listagem de /encryptionkeys. |
+| `test/api/file-serving.test.ts` | GET folder containing access log files for "Access Log" challenge | Exige baixar o log sem credencial. |
+| `test/api/logfile-server.test.ts` | GET access log file for the current day | Exige baixar o log sem credencial. |
+| `test/api/redirect.test.ts` | GET error message with information leakage... (2 testes) | Exigem a mensagem de erro interna. |
+| `test/api/api.test.ts` | GET error message with information leakage when calling unrecognized path with /rest in it | Exige a mensagem de erro interna. |
+| `test/api/erasure-request.test.ts` | POST erasure request with non-existing file path as layout parameter throws error | Exige que o layout do cliente chegue ao sistema de arquivos. |
+| `test/api/b2b-order.test.ts` | Sandbox breakout, endless loop e busy spinning (3 testes) | O erro só existe se o código do cliente for avaliado. |
+
+**Critério (d), acrescentados:** 14 testes e 1 caso em uma entrada que já existia. Agora são 50 testes ligados a 27 casos, com o motivo no arquivo.
+
+**Examinados e mantidos em F**, porque reprovam uma quebra real, não a correção:
+
+| Teste | Por que fica em F |
+|---|---|
+| `GET own previous orders` e `Export data including orders` | Os pedidos estão gravados com o e-mail mascarado; o patch que troca só a consulta devolve lista vazia. |
+| `GET product reviews by product id` | O patch compara o id em texto com um número e não acha nenhuma avaliação. |
+| `calculates and persists 2+3*4 = 14` | O patch ignora a precedência das operações. |
+| `increments the selected review once...` | Os patches devolvem 400, contam em dobro ou aceitam curtida repetida. |
+| `preserves deterministic distinct digests...` | Sal aleatório quebra o login; chave obrigatória por variável de ambiente não sobe sem configuração. |
+| `should store the captcha on getting new captcha` | Sem o `bypassSecurityTrustHtml`, o Angular remove o SVG e o CAPTCHA some da tela. |
+| `keeps every last IP scenario...` | Trocar o token do teste por texto qualquer destrói o cenário testado. |
+| `writes a correctly labelled checksum...` | O patch grava SHA-256 em arquivo com rótulo `.md5`. |
+| Testes de `/redirect` com destinos permitidos | O patch restringe demais a lista de destinos. |
+
+**Testes corrigidos ou criados:** `server_startup.unit.test.ts` exigia a concatenação do nome da tarefa e passou a olhar o texto registrado, aceitando o formato seguro. `contratos_legitimos.test.ts` cobre a edição da própria avaliação, a recusa de redirecionamento sem destino e a imagem de perfil por URL pública. Ele passa no código original e com as correções boas, e reprovou os patches que devolvem erro 500 ao editar uma avaliação. Não foi criado substituto para `PUT /api/Products/:id` porque a correção oficial do Juice Shop desliga essa rota.

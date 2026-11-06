@@ -1,7 +1,9 @@
 """Pareamento por linhas, tokens únicos e chamadas únicas no mesmo escopo.
 
 Identifica persistência de uma ocorrência sintática, não equivalência semântica
-nem eficácia de uma correção. Ambiguidades e cobertura seguem a política v1.
+nem eficácia de uma correção. A cobertura segue a política v1. Alertas da mesma
+regra e do mesmo arquivo que continuam sem par são resolvidos pela contagem:
+contagem igual ou maior mantém o alerta alvo; só o aumento conta como alerta novo.
 """
 from collections import Counter, defaultdict
 from difflib import SequenceMatcher
@@ -11,7 +13,7 @@ import subprocess
 from pipeline.legado.comparacao_v1 import comparar as comparar_v1, chave, ocorrencias
 from pipeline.etapas.e01_analise_sast.estrutura import analisar
 
-VERSAO = 'ocorrencias_contexto_v2'
+VERSAO = 'ocorrencias_contexto_v3'
 
 
 def intervalo(f, source):
@@ -193,9 +195,15 @@ def comparar(antes, depois, alvo, fontes, *, checkout=None, estrutura=None):
     confirmed = [k for k in new if not {'*', k[1]} & (affected | old_errors)]
     uncertain = [k for k in new if k not in confirmed]
     r = 0 if any(p['antes'] == list(alvo) for p in pairs) else 1 if list(alvo) in removed else None
+    # Sem par, a contagem da regra no arquivo decide: se não caiu, o alerta alvo não saiu.
+    if r is None and any(list(alvo) in g['antes'] and len(g['depois']) >= len(g['antes']) for g in ambiguous):
+        r = 0
     if {'*', alvo[1]} & affected or any(e.get('path') == alvo[1] for e in antes.diagnosticos+depois.diagnosticos):
         r = None
-    m = 0 if confirmed else None if ambiguous or affected or uncertain else 1
+    # Só um aumento líquido prova alerta novo; contagem igual é o mesmo alerta em outro lugar.
+    increased = sum(max(0, len(g['depois'])-len(g['antes'])) for g in ambiguous
+                    if not {'*', g['arquivo']} & (affected | old_errors))
+    m = 0 if confirmed or increased else None if affected or uncertain else 1
     reasons = []
     if r is None:
         reasons.append({'campo': 'R', 'codigo': 'cobertura_sast_insuficiente' if {'*', alvo[1]} & (affected | old_errors) else 'ocorrencia_nao_pareada',
@@ -206,7 +214,7 @@ def comparar(antes, depois, alvo, fontes, *, checkout=None, estrutura=None):
                         'descricao': 'Há alertas sem associação segura ou cobertura insuficiente para excluir novas ocorrências.'})
     result.update(versao_comparador=VERSAO, R=r, M=m, pares=pairs, removidos=removed,
                   novos=confirmed, possiveis_novos=uncertain, ambiguos=ambiguous,
-                  novas_issues_qtd=len(confirmed),
+                  novas_issues_qtd=len(confirmed)+increased,
                   possiveis_novas_issues_qtd=len(uncertain)+sum(len(g['depois']) for g in ambiguous),
                   comparacao_status='indeterminada' if r is None or m is None else 'conclusiva',
                   motivos_indeterminacao=reasons, falhas_contexto=failures,

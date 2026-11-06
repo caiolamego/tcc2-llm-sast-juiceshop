@@ -2,8 +2,9 @@
 
 Duas definicoes (analise de sensibilidade, protocolo Secao 13):
 - d_marcador: so o criterio (a), assercao de desafio resolvido.
-- d_criterio: criterios (a), (b), (c) e (d) de docs/criterios_conjunto_d.md.
+- d_criterio: criterios (a) a (e) de docs/criterios_conjunto_d.md.
   O criterio (d) vale so para os casos ligados a cada teste (chave por_caso).
+  O criterio (e) vale para todos os casos: a finalidade do teste e a propria falha.
 A lista vem de config/conjunto_d.json (scripts/gerar_conjunto_d.py). Teste
 fora da lista e F. d_marcador esta contido em d_criterio.
 """
@@ -32,7 +33,7 @@ def _lista() -> tuple[list[tuple[str, re.Pattern, str]], str]:
 
 
 def criterio_de(teste: str, conjunto=None, caso=None) -> str | None:
-    """'a', 'b', 'c', 'd' ou None (F). teste = '<arquivo> :: <suite> > ... > <nome>'."""
+    """'a', 'b', 'c', 'd', 'e' ou None (F). teste = '<arquivo> :: <suite> > ... > <nome>'."""
     arquivo, _, caminho = teste.partition(" :: ")
     nome = caminho.split(" > ")[-1]
     itens=_lista()[0] if conjunto is None else _carregar_versionado(conjunto)
@@ -54,7 +55,7 @@ def _carregar_versionado(arquivo):
     seen=set();items=[]
     for row in data['d']:
         key=(row['arquivo'],row['nome'])
-        if key in seen or row['criterio'] not in ('a','b','c'):raise ValueError('Classificação D inválida/duplicada')
+        if key in seen or row['criterio'] not in ('a','b','c','e'):raise ValueError('Classificação D inválida/duplicada')
         seen.add(key);items.append((row['arquivo'],_padrao_nome(row['nome']),row['criterio']))
     return items
 

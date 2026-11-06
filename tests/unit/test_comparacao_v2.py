@@ -75,19 +75,35 @@ class ComparatorV2Tests(unittest.TestCase):
         self.assertEqual((r['R'],r['M']),(0,1))
         self.assertEqual(r['pares'][0]['metodo'],'chamada_unica_no_escopo')
 
-    def test_multiple_calls_not_guessed_by_count(self):
+    def test_same_count_without_pair_keeps_target_and_adds_nothing(self):
         a='function f(){ sink(a); sink(b); }\n'
         b='function f(){ sink(c); sink(d); }\n'
         r=compare(a,b,[finding(a,'sink(a)')],[finding(b,'sink(c)')])
-        self.assertEqual((r['R'],r['M']),(None,None))
-        self.assertTrue(r['motivos_indeterminacao'])
+        self.assertEqual((r['R'],r['M']),(0,1))
+        self.assertEqual(r['comparacao_status'],'conclusiva')
+        self.assertEqual(len(r['ambiguos']),1)
+
+    def test_net_increase_without_pair_is_new_alert(self):
+        a='function f(){ sink(a); sink(b); }\n'
+        b='function f(){ sink(c); sink(d); }\n'
+        r=compare(a,b,[finding(a,'sink(a)')],[finding(b,'sink(c)'),finding(b,'sink(d)')])
+        self.assertEqual((r['R'],r['M']),(0,0))
+        self.assertEqual(r['novas_issues_qtd'],1)
+
+    def test_target_removed_and_other_rule_moved_is_not_new(self):
+        a='function f(){ sink(a); sink(b); }\n'
+        b='function f(){ sink(c); }\n'
+        alvo=finding(a,'sink(a)');outra=finding(a,'sink(b)',rule='outra.regra')
+        r=compare(a,b,[alvo,outra],[finding(b,'sink(c)',rule='outra.regra')])
+        self.assertEqual((r['R'],r['M']),(1,1))
 
     def test_other_function_does_not_match(self):
         a='function f(){ sink(before); }\n';b='function g(){ sink(after); }\n'
         def contexts(path,a,b):
             return {'antes':ast(a.decode(),'["f"]'),'depois':ast(b.decode(),'["g"]')}
         r=compare(a,b,[finding(a,'before')],[finding(b,'after')],estrutura=contexts)
-        self.assertIsNone(r['R'])
+        self.assertEqual((r['R'],r['M']),(0,1))
+        self.assertEqual(r['pares'],[])
 
     def test_new_rule_is_new_and_removed_target_is_removed(self):
         a='sink(a);\n';b='sink(b);\n'
@@ -98,14 +114,14 @@ class ComparatorV2Tests(unittest.TestCase):
         a='function f(){ sink(a); }\n';b='function f(){ sink(b); }\n'
         f=finding(a,'sink(a)');g=finding(b,'sink(b)')
         r=compare(a,b,[f,f],[g])
-        self.assertEqual((r['R'],r['M']),(None,None))
+        self.assertEqual((r['R'],r['M']),(None,1))
         self.assertEqual(len(r['ambiguos'][0]['antes']),2)
 
     def test_parser_unavailable_preserves_v1_and_explains_ambiguity(self):
         a='sink(a);\n';b='sink(b);\n'
         def fail(*args):raise OSError('parser indisponível')
         r=compare(a,b,[finding(a,'sink(a)')],[finding(b,'sink(b)')],estrutura=fail)
-        self.assertEqual((r['R'],r['M']),(None,None))
+        self.assertEqual((r['R'],r['M']),(0,1))
         self.assertIn('a.ts',r['falhas_contexto'])
 
     def test_utf8_crlf_and_conflicting_offsets(self):
