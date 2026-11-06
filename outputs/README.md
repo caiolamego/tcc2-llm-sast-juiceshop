@@ -7,7 +7,15 @@ que o geraram. Este índice diz o papel de cada pasta.
 
 ## Onde está o resultado oficial
 
-Campanha dos 52 casos preparados, P1–P4, gpt-4.1-mini, no ambiente Docker oficial (19/10/2026):
+Campanha dos 78 casos, P1–P4, três modelos, no ambiente Docker (06/11/2026):
+
+- GPT-6 Luna: `campanha_docker/AMP_REAL_20261106T105533Z_aa697342/`
+- GPT-5.6 Luna: `campanha_docker/AMP_REAL_20261106T125801Z_0eb68fe4/`
+- GPT-4.1 mini: `campanha_docker/AMP_REAL_20261106T151004Z_f49ac0d2/`
+- métricas com a RRIS: `rris/<EXECUCAO>_METRICAS/`
+- baseline funcional usado: `cobertura_funcional/IMAGEM_81FE_D3_20261106/`
+
+Antes dela, a referência era a campanha dos 52 casos preparados, P1–P4, gpt-4.1-mini, no ambiente Docker (19/10/2026):
 
 - registros: `campanha_docker/AMP_PAINEL_20261019T183425Z_282e13b4/`
 - métricas: `campanha_docker/AMP_PAINEL_20261019T183425Z_282e13b4_METRICAS/`
@@ -22,6 +30,9 @@ reorganização do código (`docker/referencia.json`). Os 39 grupos de testes de
 
 | Pasta | Conteúdo |
 |---|---|
+| `campanha_docker/AMP_REAL_20261106T*` | Campanha completa de 06/11/2026: 78 casos, três modelos, com chamadas reais à LLM. GPT-6 Luna `105533Z_aa697342`, GPT-5.6 Luna `125801Z_0eb68fe4`, GPT-4.1 mini `151004Z_f49ac0d2`. |
+| `rris/` | Evidência conjunta da RRIS dos três modelos, com as métricas consolidadas em `<EXECUCAO>_METRICAS/`. |
+| `cobertura_funcional/IMAGEM_81FE_D3_20261106/` | Baseline da revisão funcional v8, na imagem `81fe`, usado pela campanha de 06/11/2026. |
 | `campanha_docker/` | `AMP_PAINEL_20261019T183425Z_282e13b4`: campanha oficial (191 tentativas em duas sessões; a segunda completou um caso interrompido por falha de conexão). `AMP_PREFLIGHT_20261019T174514Z_fe15bc52`: preflight dos 52 casos (208 prompts). `AMP_PAINEL_20261019T175741Z_d61671f5`: preflight pelo painel, sem tentativas. `AMP_PAINEL_20261019T181245Z_1aca0df2`: execução interrompida com 13 tentativas, que revelou o problema de recuo na aplicação dos patches. |
 | `baselines/docker/oficial_v2/` | Baseline funcional oficial atual (26/10/2026), ligado à imagem de `docker/referencia.json`. |
 | `baselines/docker/oficial_v1/` | Baseline usado pela campanha de 19/10, ligado à imagem de `docker/historico/referencia_oficial_v1.json`. |

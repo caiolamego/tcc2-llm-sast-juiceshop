@@ -84,4 +84,21 @@ class ComparacaoTests(unittest.TestCase):
         self.assertEqual((r['casos_comuns'],r['ambos'],r['so_a'],r['so_b'],r['nenhum']),(2,1,1,0,0))
 
 
+
+class PatchRegistradoTests(unittest.TestCase):
+    def linha(self,hash_registrado):
+        return {'tentativa_id':'t1','original':{'artefatos_sha256':{'patches/t1.diff':hash_registrado}}}
+
+    def test_patch_e_conferido_pela_chave_do_ledger(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            caminho=Path(pasta)/'patches';caminho.mkdir();arquivo=caminho/'t1.diff';arquivo.write_text('diff\n')
+            self.assertEqual(conjunta.patch_da_tentativa(pasta,self.linha(conjunta.digest(arquivo))),arquivo)
+
+    def test_patch_alterado_e_recusado(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            caminho=Path(pasta)/'patches';caminho.mkdir();(caminho/'t1.diff').write_text('diff\n')
+            with self.assertRaises(ValueError):
+                conjunta.patch_da_tentativa(pasta,self.linha('0'*64))
+
+
 if __name__=='__main__':unittest.main()

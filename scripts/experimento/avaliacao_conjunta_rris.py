@@ -14,6 +14,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+import tempfile
 import threading
 
 from pipeline.comum.caminhos import RAIZ_REPO
@@ -39,7 +40,7 @@ def patch_da_tentativa(raiz, linha):
     path=Path(raiz)/'patches'/(linha['tentativa_id']+'.diff')
     if not path.is_file():
         raise ValueError('Patch ausente: '+linha['tentativa_id'])
-    registrado=linha['original'].get('artefatos_sha256',{}).get(path.name)
+    registrado=linha['original'].get('artefatos_sha256',{}).get('patches/'+path.name)
     if registrado!=digest(path):
         raise ValueError('Patch diverge do registrado: '+linha['tentativa_id'])
     return path
@@ -49,11 +50,12 @@ def aplicar_em_ordem(wt, itens):
     """Aplica cada patch sobre os anteriores; conflito não interrompe os demais."""
     aplicados,conflitos=[],[]
     for tentativa,patch in itens:
-        check=subprocess.run(['git','apply','--check',str(patch)],cwd=wt,capture_output=True,text=True)
+        caminho=str(Path(patch).resolve())  # O comando roda dentro da worktree.
+        check=subprocess.run(['git','apply','--check',caminho],cwd=wt,capture_output=True,text=True)
         if check.returncode:
             conflitos.append({'tentativa_id':tentativa,'motivo':check.stderr.strip()[:400]})
             continue
-        subprocess.run(['git','apply',str(patch)],cwd=wt,check=True,capture_output=True,text=True)
+        subprocess.run(['git','apply',caminho],cwd=wt,check=True,capture_output=True,text=True)
         aplicados.append(tentativa)
     return aplicados,conflitos
 
@@ -81,9 +83,37 @@ def validar_conjunto(wt, arquivos, casos, args):
         r=validar(wt,sorted(arquivos),cfg)
     finally:
         conjunto_d.classificar=original
-    return {'passou':r.F_criterio is True,'F_criterio':r.F_criterio,'F_sem_separacao':r.F_sem_separacao,
-            'arquivos':sorted(arquivos),'casos':sorted(casos),'testes_falhos_f_criterio':r.testes_falhos_f_criterio,
-            'testes_falhos_d_criterio':r.testes_falhos_d_criterio,'cobertura':r.cobertura_detalhada}
+    resultado={'passou':r.F_criterio is True,'F_criterio':r.F_criterio,'F_sem_separacao':r.F_sem_separacao,
+               'arquivos':sorted(arquivos),'casos':sorted(casos),'testes_falhos_f_criterio':r.testes_falhos_f_criterio,
+               'testes_falhos_d_criterio':r.testes_falhos_d_criterio,'cobertura':r.cobertura_detalhada}
+    resultado['grupos_apos_a_primeira_falha']=grupos_restantes(wt,r,casos,cfg)
+    return resultado
+
+
+def grupos_restantes(wt, resultado, casos, cfg):
+    """A validação para na primeira falha; aqui os demais grupos rodam só para informar o conjunto."""
+    from pipeline.etapas.e07_validacao import cobertura as c, conjunto_d
+    from pipeline.etapas.e07_validacao.execucao_cobertura import executar_grupo
+    detalhe=resultado.cobertura_detalhada
+    rodados={g['grupo'] for g in detalhe['grupos']}
+    faltam=[g for g in detalhe['grupos_selecionados'] if g not in rodados]
+    if not faltam:
+        return []
+    data=c.carregar(cfg.cobertura,cfg.mapa,wt,permitir_avaliadores_alterados=True)
+    selecao={'grupos':faltam,'dominios':sorted({data['grupos'][g]['dominio'] for g in faltam})}
+    baseline=c.validar_baseline(cfg.arquivo_linha_de_base,data,cfg.cobertura,cfg.mapa,wt,selecao,exigir_grupos=False)
+    classificar=classificador_conjunto(conjunto_d.classificar,casos)
+    linhas=[]
+    with tempfile.TemporaryDirectory(prefix='tcc_rris_') as pasta:
+        for gid in faltam:
+            if baseline.get('grupos',{}).get(gid,{}).get('comparavel') is not True:
+                linhas.append({'grupo':gid,'situacao':'baseline_insuficiente'});continue
+            g=executar_grupo(wt,gid,data['grupos'][gid],Path(pasta)/gid,baseline['grupos'][gid],cfg.lock_t4)
+            s=classificar(g['falhos_novos'],RAIZ_REPO/data['conjunto_d']['arquivo'])
+            linhas.append({'grupo':gid,'situacao':'falha_operacional' if g['falha_operacional'] else 'executado',
+                           'falha_operacional':g['falha_operacional'],'testes_falhos_f_criterio':s['f_criterio'],
+                           'testes_falhos_d_criterio':s['d_criterio']})
+    return linhas
 
 
 def main():

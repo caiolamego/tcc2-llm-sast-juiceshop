@@ -696,3 +696,15 @@ Detalhes, mapa de erros e testes: [feature 09](historico/features/09-resiliencia
 **Impacto na reprodutibilidade:** o GPT-6 Luna fica com um caso a menos do que teria sem esse teste (49 em vez de 50). Foi 1 das 834 tentativas. Os outros modelos corrigiram esse caso com `isAuthorized()`, que o teste aceita.
 
 **Fase do guia:** F4 (validação).
+
+# 06/11/2026 — RRIS: redução medida, mas conjunto sem aprovação nos testes
+
+**Sintoma:** a primeira execução real de `avaliacao_conjunta_rris.py` recusou todos os patches e, corrigido isso, marcou os 49 patches como conflito. Depois de corrigido, a RRIS saiu para os três modelos (GPT-5.6 Luna 70,5%, GPT-6 Luna 60,3%, GPT-4.1 mini 48,7%), mas nenhum conjunto passou em todos os testes.
+
+**Causa:** dois erros do script, que os testes unitários não cobriam: o hash do patch era procurado sem o prefixo `patches/`, e o caminho relativo do patch não valia dentro da worktree. Nos conjuntos, falharam três testes. `POST login newly created user` cria usuário sem `passwordRepeat` e falha só com a correção do caso `AMP8655da69167e4466`. `persists and lists normal feedback through the generated resource` usa o `answer` da resposta e falha só com a correção do caso `AMP4d38adc404310ebe`. Esses dois dependem da falha e ficaram fora do conjunto D porque, testando cada correção sozinha, seus grupos não rodam para esses casos. O terceiro, `keeps every last IP scenario...`, falha só com as correções dos casos `AMP986bde724bde5588` e `AMP417d1da8d7caa6bd` aplicadas juntas, então é uma interação entre elas.
+
+**Correção:** os dois erros do script foram corrigidos e cobertos por testes. O script passou a rodar também os grupos depois da primeira falha, para mostrar o resultado completo. Os três testes não foram alterados: a campanha fica como foi medida, e a RRIS é reportada como redução estática, sem validação funcional do conjunto.
+
+**Impacto na reprodutibilidade:** a evidência está em `outputs/rris/`, sem LLM. Patches em conflito ficam fora do conjunto (9, 8 e 4), por isso a RRIS não é a soma das correções aceitas. A ordem de aplicação é a do início das tentativas e influencia quais patches entram.
+
+**Fase do guia:** F7 (métricas).
