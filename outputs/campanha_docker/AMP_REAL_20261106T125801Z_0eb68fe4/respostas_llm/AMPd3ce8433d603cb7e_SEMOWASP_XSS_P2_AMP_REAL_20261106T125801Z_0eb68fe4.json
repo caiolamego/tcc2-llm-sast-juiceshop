@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado na exibição de comentários de feedback e, potencialmente, na exibição de endereços de e-mail.\",\"causa_da_vulnerabilidade\":\"O código usa DomSanitizer.bypassSecurityTrustHtml() para marcar como confiável conteúdo controlado por usuários. Em particular, feedback.comment é passado diretamente para esse método sem sanitização, permitindo que HTML ou JavaScript armazenado seja renderizado pelo template.\",\"estrategia_de_correcao\":\"Remover o bypass explícito de segurança e preservar os valores originais como strings. O Angular aplicará sua sanitização contextual padrão quando esses valores forem vinculados como HTML no template, impedindo a execução de scripts e de atributos perigosos.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"        for (const user of this.userDataSource) {\\n          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`)\\n        }\",\"trecho_corrigido\":\"        for (const user of this.userDataSource) {\\n          user.email = `<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`\\n        }\"},{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n        }\",\"trecho_corrigido\":\"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = feedback.comment\\n        }\"}],\"justificativa_tecnica\":\"bypassSecurityTrustHtml() desativa a proteção XSS do Angular e instrui o framework a tratar o conteúdo como HTML confiável. Ao deixar de usar esse método, o valor permanece uma string e o Angular pode aplicar a sanitização padrão no binding HTML, removendo elementos e atributos perigosos antes da inserção no DOM. A alteração mantém os identificadores, assinaturas e o fluxo funcional existentes, removendo apenas a marcação insegura de conteúdo controlado por usuário.\",\"limitacoes_da_correcao\":\"A eficácia depende de os templates vincularem esses valores por meio de bindings Angular normais, como [innerHTML], e não por APIs DOM imperativas ou por outro bypass de sanitização. A atribuição redundante de feedback.comment preserva explicitamente o fluxo existente; idealmente, o template deve usar binding textual quando HTML formatado não for necessário. A propriedade sanitizer permanece injetada porque a correção mínima não remove identificadores ou dependências não relacionadas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1875,
+  "tokens_saida": 593,
+  "latencia_s": 6.926,
+  "custo_usd": 0.00118,
+  "hash_prompt": "274301f5560115341628bb130bdbbd71cd571142a19bd3bd627357e899a80e47",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1872
+}

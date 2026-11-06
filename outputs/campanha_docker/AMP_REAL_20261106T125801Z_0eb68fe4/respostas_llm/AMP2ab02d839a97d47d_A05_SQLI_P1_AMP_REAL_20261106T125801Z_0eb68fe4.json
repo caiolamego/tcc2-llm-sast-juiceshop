@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de SQL no parâmetro de busca `q` (SQL Injection), permitindo que entrada controlada pelo usuário altere a consulta e potencialmente extraia ou modifique dados.\",\"causa_da_vulnerabilidade\":\"O valor de `criteria` é interpolado diretamente na string SQL por meio de template literal, sem parametrização ou escaping apropriado.\",\"estrategia_de_correcao\":\"Substituir a interpolação direta por um parâmetro nomeado do Sequelize e fornecer `criteria` em `replacements`, preservando a lógica, o limite de tamanho e o comportamento da busca.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"    models.sequelize.query(\\\"SELECT * FROM Products WHERE ((name LIKE '%' || :criteria || '%' OR description LIKE '%' || :criteria || '%') AND deletedAt IS NULL) ORDER BY name\\\", { replacements: { criteria } }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"O valor de `criteria` deixa de ser interpretado como parte da estrutura SQL e passa a ser enviado separadamente ao driver por meio de um parâmetro nomeado. Assim, aspas, comentários, operadores e payloads de UNION presentes na entrada são tratados como dados. A concatenação com `%` é realizada pelo próprio SQLite na expressão SQL, mantendo a busca parcial existente sem alterar o texto retornado ao usuário ou os identificadores existentes.\",\"limitacoes_da_correcao\":\"A correção trata a injeção SQL nessa consulta específica. Ela não substitui outras medidas de segurança, como validação de entrada, controle de acesso e proteção contra possíveis vulnerabilidades em outras rotas ou consultas. O comportamento de correspondência continua sujeito às regras de comparação e escape de curingas do SQLite, como já ocorria na implementação original.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1204,
+  "tokens_saida": 444,
+  "latencia_s": 6.243,
+  "custo_usd": 0.000834,
+  "hash_prompt": "733a88f273145b0a26ec1ebd8e9cf3b1d9f1be0f05f008a047addbfaad8a555b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1201
+}

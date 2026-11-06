@@ -1,0 +1,21 @@
+diff --git a/routes/dataExport.ts b/routes/dataExport.ts
+index ee3b4afcd..8329353c4 100644
+--- a/routes/dataExport.ts
++++ b/routes/dataExport.ts
+@@ -23,14 +23,14 @@ export function dataExport () {
+ 
+         let memories, orders, reviews
+         try {
+-          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })
++          memories = await MemoryModel.findAll({ where: { UserId: loggedInUser.data.id } })
+         } catch (error) {
+           next(error)
+           return
+         }
+ 
+         try {
+-          orders = await db.ordersCollection.find({ email: updatedEmail })
++          orders = await db.ordersCollection.find({ email })
+         } catch (error) {
+           next(new Error(`Error retrieving orders for ${updatedEmail}`))
+           return

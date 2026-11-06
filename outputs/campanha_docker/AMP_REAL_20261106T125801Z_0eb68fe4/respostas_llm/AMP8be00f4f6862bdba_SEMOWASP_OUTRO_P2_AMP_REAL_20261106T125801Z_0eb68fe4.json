@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição não autenticada do endpoint de métricas em /metrics.\",\"causa_da_vulnerabilidade\":\"O endpoint é registrado com app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) sem middleware de autenticação ou autorização. Além disso, ele é registrado novamente no mesmo arquivo, inclusive após a configuração das rotas, mantendo a exposição pública.\",\"estrategia_de_correcao\":\"Proteger cada registro da rota /metrics com o middleware de autorização já disponível, security.isAuthorized(), preservando o handler e o comportamento funcional para usuários autenticados.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* Serve metrics before the Angular catch-all so the route is reachable in all environments */\\n  app.get('/metrics', utils.asyncHandler(metrics.serveMetrics()))\",\"trecho_corrigido\":\"  /* Serve metrics before the Angular catch-all so the route is reachable in all environments */\\n  app.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics()))\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\",\"trecho_corrigido\":\"/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\"}],\"justificativa_tecnica\":\"Sem autenticação, qualquer cliente pode consultar métricas operacionais da aplicação. Essas métricas podem revelar nomes de rotas, volume e padrões de requisições, erros, estado de componentes e outras informações úteis para reconhecimento e exploração. O middleware security.isAuthorized() interrompe requisições não autenticadas antes da execução de metrics.serveMetrics(). As duas declarações precisam ser corrigidas porque ambas registram a mesma rota; proteger apenas a primeira não elimina a exposição causada pela segunda.\",\"limitacoes_da_correcao\":\"A correção pressupõe que security.isAuthorized() valide corretamente a identidade e a sessão/token do usuário e que as métricas possam ser acessadas por qualquer usuário autenticado. Caso o endpoint deva ser restrito a administradores ou a uma rede interna, deve-se substituir esse middleware por uma autorização mais restritiva e aplicar controles de rede adicionais.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2079,
+  "tokens_saida": 532,
+  "latencia_s": 7.621,
+  "custo_usd": 0.001158,
+  "hash_prompt": "abb1c607b5f082eaf4eb48e3d96a98769a597de827a48af8a632cdc68d58a8fd",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2076
+}

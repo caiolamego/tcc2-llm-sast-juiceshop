@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (CWE-639) na rota getDeliveryMethod: o método de entrega é consultado diretamente pelo ID controlado pelo cliente, sem escopo de autorização explícito.\",\"causa_da_vulnerabilidade\":\"A consulta `DeliveryModel.findOne({ where: { id: req.params.id } })` seleciona qualquer registro cujo ID corresponda ao parâmetro da requisição. Não há, neste trecho, verificação de que o recurso pertence ao usuário autenticado ou de que é público para ele. Assim, um atacante pode alterar o ID e acessar outro método de entrega, caso esses registros não sejam globalmente públicos.\",\"estrategia_de_correcao\":\"Restringir a consulta aos métodos de entrega permitidos para o usuário autenticado. Como o modelo e a regra de propriedade não estão disponíveis no trecho fornecido, a correção mínima e funcional é exigir que o método solicitado seja um recurso público/global, usando a condição de disponibilidade pública já representada pelo modelo. Caso o modelo não possua esse campo, a regra de autorização deve ser implementada na camada de serviço ou middleware correspondente, com a identidade obtida da sessão validada pelo servidor.\",\"edicoes\":[{\"arquivo\":\"routes/delivery.ts\",\"trecho_original\":\"    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\",\"trecho_corrigido\":\"    const method = await DeliveryModel.findOne({ where: { id: req.params.id, isPublic: true } })\"}],\"justificativa_tecnica\":\"A consulta deixa de procurar o ID em todos os registros e passa a retornar somente um método explicitamente marcado como público. Portanto, alterar `req.params.id` não permite acessar registros não públicos. A resposta existente para ausência do registro é preservada, evitando também distinguir entre um ID inexistente e um recurso não autorizado. A correção pressupõe que `isPublic` seja um atributo existente e confiável do modelo, não controlado pelo cliente.\",\"limitacoes_da_correcao\":\"O código fornecido não informa o esquema de DeliveryModel nem qual é a regra de autorização dos métodos de entrega. A edição pressupõe a existência de uma coluna booleana `isPublic`; se ela não existir, essa alteração não compilará ou não refletirá a regra de negócio. Nesse caso, deve-se substituir `isPublic: true` pelo campo real que indique disponibilidade global, ou aplicar uma consulta escopada pela identidade autenticada do servidor. Também é necessário validar com testes usando métodos públicos e não públicos e, se aplicável, usuários com diferentes permissões.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1862,
+  "tokens_saida": 540,
+  "latencia_s": 8.169,
+  "custo_usd": 0.001113,
+  "hash_prompt": "d8539d17a67cbdb6b2ad0640389b5c2b1cd3148d25089634a86293a852efe4ce",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1859
+}

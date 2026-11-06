@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de JavaScript em consulta MongoDB por uso de $where com entrada derivada de req.params.id.\",\"causa_da_vulnerabilidade\":\"A consulta é montada como uma string de código JavaScript e incorpora diretamente o valor id. O operador $where executa esse código no MongoDB, permitindo que caracteres não neutralizados alterem a lógica da consulta.\",\"estrategia_de_correcao\":\"Substituir o operador $where por um filtro declarativo tipado usando o campo conhecido orderId e o valor escalar id, preservando a consulta e o comportamento esperado.\",\"edicoes\":[{\"arquivo\":\"routes/trackOrder.ts\",\"trecho_original\":\"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\"trecho_corrigido\":\"    db.ordersCollection.find({ orderId: id }).then((order: any) => {\"}],\"justificativa_tecnica\":\"O filtro { orderId: id } usa a semântica declarativa normal do MongoDB e não interpreta id como código JavaScript. Assim, aspas, operadores e demais caracteres presentes no valor não podem modificar a estrutura da consulta. O campo consultado e o resultado retornado permanecem os mesmos para valores normais de orderId.\",\"limitacoes_da_correcao\":\"A correção assume que orderId é armazenado no MongoDB com o mesmo tipo string usado por id, como já indicado pela construção original da consulta. A validação e a sanitização existentes continuam sendo aplicadas, mas deixam de ser a barreira principal contra injeção. Não foram alterados os desafios intencionais relacionados a XSS ou NoSQL.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2228,
+  "tokens_saida": 362,
+  "latencia_s": 5.349,
+  "custo_usd": 0.000991,
+  "hash_prompt": "826fe43568b62d2dc1c07303265cad19cbbc3df943c9323c6840ebb0bd9ae362",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2225
+}

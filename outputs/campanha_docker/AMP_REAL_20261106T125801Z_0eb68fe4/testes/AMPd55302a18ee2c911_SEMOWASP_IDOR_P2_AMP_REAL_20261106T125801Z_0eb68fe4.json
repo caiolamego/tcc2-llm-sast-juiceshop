@@ -1,0 +1,249 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 18.92521121699974,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 10.03,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_v_24dck9/delivery/primeira.xml",
+        "test/api/delivery.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 5.27,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /api/Deliverys\n  ▶ for regular customer\n    ✔ GET delivery methods (18.71425ms)\n  ✔ for regular customer (122.398958ms)\n  ▶ for deluxe customer\n    ✔ GET delivery methods (8.470292ms)\n  ✔ for deluxe customer (41.278875ms)\n✔ /api/Deliverys (816.595042ms)\n▶ /api/Deliverys/:id\n  ▶ for regular customer\n    ✔ GET delivery method (7.014042ms)\n    ✔ GET non-existing delivery method returns 400 (5.149458ms)\n  ✔ for regular customer (38.047125ms)\n  ▶ for deluxe customer\n    ✔ GET delivery method (7.812875ms)\n  ✔ for deluxe customer (34.901875ms)\n✔ /api/Deliverys/:id (73.499459ms)\nℹ tests 5\nℹ suites 6\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4886.96046\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 2.4170003598555923e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/delivery.ts"
+    ],
+    "grupos": [
+      "delivery"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 10.03
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "delivery",
+      "status": "executada",
+      "duracao_s": 5.27
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "delivery"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 10.03
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "delivery",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys > for deluxe customer > GET delivery methods",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys > for regular customer > GET delivery methods",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys/:id > for deluxe customer > GET delivery method",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET delivery method",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys/:id > for regular customer > GET delivery method",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400"
+        ],
+        "esperados": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 5.27,
+        "espera_api_s": 2.4170003598555923e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_v_24dck9/delivery/primeira.xml",
+            "test/api/delivery.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 5.27,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /api/Deliverys\n  ▶ for regular customer\n    ✔ GET delivery methods (18.71425ms)\n  ✔ for regular customer (122.398958ms)\n  ▶ for deluxe customer\n    ✔ GET delivery methods (8.470292ms)\n  ✔ for deluxe customer (41.278875ms)\n✔ /api/Deliverys (816.595042ms)\n▶ /api/Deliverys/:id\n  ▶ for regular customer\n    ✔ GET delivery method (7.014042ms)\n    ✔ GET non-existing delivery method returns 400 (5.149458ms)\n  ✔ for regular customer (38.047125ms)\n  ▶ for deluxe customer\n    ✔ GET delivery method (7.812875ms)\n  ✔ for deluxe customer (34.901875ms)\n✔ /api/Deliverys/:id (73.499459ms)\nℹ tests 5\nℹ suites 6\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4886.96046\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Deliverys\" time=\"0.816595\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testsuite name=\"for regular customer\" time=\"0.122399\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t\t<testcase name=\"GET delivery methods\" time=\"0.018714\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/delivery.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"for deluxe customer\" time=\"0.041279\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t\t<testcase name=\"GET delivery methods\" time=\"0.008470\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/delivery.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<testsuite name=\"/api/Deliverys/:id\" time=\"0.073499\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testsuite name=\"for regular customer\" time=\"0.038047\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t\t<testcase name=\"GET delivery method\" time=\"0.007014\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/delivery.test.ts\"/>\n\t\t\t<testcase name=\"GET non-existing delivery method returns 400\" time=\"0.005149\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/delivery.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"for deluxe customer\" time=\"0.034902\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t\t<testcase name=\"GET delivery method\" time=\"0.007813\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/delivery.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<!-- tests 5 -->\n\t<!-- suites 6 -->\n\t<!-- pass 5 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 4886.96046 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

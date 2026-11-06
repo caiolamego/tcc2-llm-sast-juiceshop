@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Condição de corrida (TOCTOU) no processamento de curtidas, permitindo que requisições concorrentes do mesmo usuário incrementem likesCount e adicionem o e-mail repetidamente em likedBy, além de possibilitar a exploração do desafio de timing attack.\",\"causa_da_vulnerabilidade\":\"A verificação de likedBy.includes(user.data.email), o incremento de likesCount e a atualização de likedBy são operações separadas e não atômicas. Após a espera artificial, várias requisições podem ler o mesmo estado e sobrescrever ou duplicar dados.\",\"estrategia_de_correcao\":\"Substituir a sequência de leitura, verificação e atualização por uma única atualização atômica condicionada à ausência do e-mail do usuário em likedBy. O resultado da operação determina se a curtida foi aplicada, eliminando a janela de corrida sem alterar mensagens, identificadores ou assinaturas existentes.\",\"edicoes\":[{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"      const likedBy = review.likedBy\\n      if (likedBy.includes(user.data.email)) {\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\\n\\n      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\\n\\n      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n        updatedLikedBy.push(user.data.email)\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\\n        res.json(result)\\n      } catch (err) {\\n        res.status(500).json(err)\\n      }\",\"trecho_corrigido\":\"      const likedBy = review.likedBy\\n      if (likedBy.includes(user.data.email)) {\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\\n\\n      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const result = await db.reviewsCollection.update(\\n          { _id: id, likedBy: { $ne: user.data.email } },\\n          { $inc: { likesCount: 1 }, $push: { likedBy: user.data.email } }\\n        )\\n        if (result === 0) {\\n          return res.status(403).json({ error: 'Not allowed' })\\n        }\\n        res.json(result)\\n      } catch (err) {\\n        res.status(500).json(err)\\n      }\"}],\"justificativa_tecnica\":\"O filtro { _id: id, likedBy: { $ne: user.data.email } } e as operações $inc e $push executadas na mesma atualização impedem que duas requisições concorrentes satisfaçam simultaneamente a condição de ausência do usuário. Assim, somente uma requisição pode registrar a curtida. A verificação inicial é mantida para preservar o comportamento normal e a mensagem existente; a verificação do resultado cobre a corrida ocorrida após essa leitura. A alteração também remove a leitura e a mutação não atômicas de likedBy.\",\"limitacoes_da_correcao\":\"A correção depende do comportamento da implementação de update do driver utilizado: result === 0 deve representar que nenhum documento foi atualizado. Se a camada de acesso retornar um objeto de resultado em vez de um número, essa condição deverá ser adaptada à API correspondente. A espera artificial permanece, pois faz parte do comportamento funcional e do desafio existente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1010,
+  "tokens_saida": 855,
+  "latencia_s": 9.157,
+  "custo_usd": 0.001228,
+  "hash_prompt": "b4908d440938c8ba70453cbefa0419d3c51414ed251f3b9941fa7e49ca5ec9eb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

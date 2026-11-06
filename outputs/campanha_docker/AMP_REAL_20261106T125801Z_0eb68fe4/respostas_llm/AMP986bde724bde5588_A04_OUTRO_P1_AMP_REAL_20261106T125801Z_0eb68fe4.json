@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"O teste valida que um valor controlado pelo conteúdo do JWT é passado diretamente para DomSanitizer.bypassSecurityTrustHtml, permitindo que uma implementação vulnerável do componente trate dados não confiáveis como HTML seguro.\",\"causa_da_vulnerabilidade\":\"O teste usa um mock de DomSanitizer que transforma bypassSecurityTrustHtml em uma função identidade e verifica apenas o HTML gerado, sem exigir sanitização ou rejeição de conteúdo HTML injetado. Como o arquivo fornecido é exclusivamente um teste, a vulnerabilidade efetiva não pode ser corrigida nele sem alterar o teste ou o código de produção.\",\"estrategia_de_correcao\":\"Não realizar edição neste arquivo. A correção deve ser aplicada em frontend/src/app/last-login-ip/last-login-ip.component.ts, removendo o uso de bypassSecurityTrustHtml para dados derivados do JWT e renderizando o endereço IP como texto, após validação apropriada. As restrições proíbem alterar arquivos de teste e nenhum arquivo de produção foi fornecido.\",\"edicoes\":[],\"justificativa_tecnica\":\"Alterar o teste seria inadequado e violaria explicitamente a restrição de não alterar arquivos de teste. Além disso, modificar o mock para mascarar a vulnerabilidade não corrigiria o comportamento da aplicação. A correção segura precisa ocorrer no componente de produção, garantindo que o valor do JWT não seja interpretado como HTML; interpolação textual ou binding de texto evita execução de marcação e mantém o comportamento visual esperado para um IP válido.\",\"limitacoes_da_correcao\":\"Nenhuma correção efetiva pode ser aplicada com segurança ao arquivo fornecido sob as restrições estabelecidas. É necessário fornecer o arquivo frontend/src/app/last-login-ip/last-login-ip.component.ts para produzir uma edição mínima e verificável. O teste atual também não cobre payloads maliciosos, como um valor contendo tags HTML ou atributos de evento.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1313,
+  "tokens_saida": 400,
+  "latencia_s": 5.337,
+  "custo_usd": 0.000808,
+  "hash_prompt": "cb5c6c23647ee0b4895d278977de51b4bad2c1b5af3519036f51c65dbc914923",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1310
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de campos arbitrários do objeto do usuário, incluindo password e passwordHash, por meio do parâmetro de consulta fields.\",\"causa_da_vulnerabilidade\":\"Quando fields é fornecido, cada valor recebido é usado diretamente como chave para acessar user.data. Não existe uma lista de permissões de campos autorizados; portanto, um atacante autenticado pode solicitar propriedades sensíveis que deveriam permanecer fora da resposta.\",\"estrategia_de_correcao\":\"Substituir a seleção dinâmica de campos por uma lista de permissões contendo apenas os campos atualmente expostos pelo comportamento padrão: id, email, lastLoginIp e profileImage. Ignorar qualquer campo solicitado que não esteja nessa lista.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\"trecho_corrigido\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"}],\"justificativa_tecnica\":\"A lista de permissões impede que chaves arbitrárias fornecidas pelo cliente sejam usadas para ler propriedades de user.data. Assim, solicitações como fields=password ou fields=passwordHash não incluem esses valores na resposta, enquanto os campos funcionais anteriormente disponíveis continuam sendo retornados. A alteração é localizada e preserva a assinatura, o formato da resposta e o comportamento dos campos permitidos.\",\"limitacoes_da_correcao\":\"A correção protege este endpoint contra a exposição de propriedades não autorizadas, mas não substitui a necessidade de revisar outros endpoints que possam retornar os mesmos dados sensíveis. Campos adicionais legítimos precisarão ser incluídos explicitamente na lista de permissões.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1125,
+  "tokens_saida": 505,
+  "latencia_s": 5.237,
+  "custo_usd": 0.000887,
+  "hash_prompt": "a4f42e42ff9ec3d17aec3b2c8a54f0560c6d34623d0fa1507d98848a73885b94",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1122
+}

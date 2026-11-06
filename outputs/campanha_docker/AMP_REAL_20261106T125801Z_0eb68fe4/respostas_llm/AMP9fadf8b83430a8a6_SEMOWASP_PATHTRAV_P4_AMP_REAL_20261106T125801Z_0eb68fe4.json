@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-22 (Path Traversal) na extração de arquivos ZIP: o caminho controlado pelo nome da entrada do arquivo compactado alcança a criação de arquivos fora do diretório uploads/complaints.\",\"causa_da_vulnerabilidade\":\"A aplicação concatena entry.path diretamente em 'uploads/complaints/' e usa path.resolve apenas para uma verificação. A condição absolutePath.includes(path.resolve('.')) não confina o caminho ao diretório de extração: ela pode aceitar caminhos que contenham o diretório atual em qualquer posição e não impede traversal por '..', caminhos absolutos ou outros caminhos fora da raiz. O caminho não validado é então usado em fs.createWriteStream.\",\"estrategia_de_correcao\":\"Definir a raiz absoluta de extração, resolver o caminho da entrada relativo a essa raiz e verificar com path.relative se o resultado permanece dentro dela. Rejeitar entradas fora da raiz antes de criar o arquivo, preservando subdiretórios e nomes legítimos dentro de uploads/complaints.\",\"edicoes\":[{\"arquivo\":\"routes/fileUpload.ts\",\"trecho_original\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve('uploads/complaints/' + fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.includes(path.resolve('.'))) {\\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  const extractionRoot = path.resolve('uploads/complaints')\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve(extractionRoot, fileName)\\n    const relativePath = path.relative(extractionRoot, absolutePath)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (relativePath !== '' && relativePath !== '..' && !relativePath.startsWith('..' + path.sep) && !path.isAbsolute(relativePath)) {\\n      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"path.resolve(extractionRoot, fileName) normaliza separadores e segmentos '..'. A comparação por path.relative verifica semanticamente se o destino está fora da raiz: rejeita o próprio diretório, '..', descendentes de '..' e caminhos absolutos. A escrita só ocorre após essa validação e usa o caminho absoluto já validado, impedindo que nomes de entradas ZIP escapem de uploads/complaints. Subdiretórios e nomes válidos continuam funcionando.\",\"limitacoes_da_correcao\":\"A correção impede traversal lexical, mas não resolve ataques por links simbólicos já existentes dentro da raiz: um link pode redirecionar a criação para fora dela. Se o diretório puder conter links controlados por atacante, será necessário validar caminhos reais com fs.realpath ou extrair em uma área sem links, além de aplicar limites de tamanho, quantidade de entradas e permissões mínimas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3066,
+  "tokens_saida": 741,
+  "latencia_s": 9.377,
+  "custo_usd": 0.001656,
+  "hash_prompt": "640b3ae57565633efaf2ae8cd8e62f7383b54a626ae9876f8f78666163e88002",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3063
+}

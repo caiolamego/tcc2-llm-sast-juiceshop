@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Execução arbitrária de código (SSTI/RCE) por meio de `eval(code)` controlado pelo nome de usuário.\",\"causa_da_vulnerabilidade\":\"O valor persistido em `username` é interpretado como código JavaScript quando corresponde ao padrão `#{...}`. Um atacante que consiga definir esse valor pode executar código no processo Node.js, com os privilégios da aplicação.\",\"estrategia_de_correcao\":\"Remover a avaliação dinâmica e tratar o nome de usuário exclusivamente como dado textual. A substituição mantém o escape prefixado existente e impede que conteúdo controlado pelo usuário seja executado durante a renderização.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\",\"trecho_corrigido\":\"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      username = '\\\\\\\\' + username\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\"}],\"justificativa_tecnica\":\"A remoção de `eval` elimina a primitiva de execução arbitrária. O valor continua sendo inserido no fluxo existente sem alterar assinaturas, mensagens, identificadores ou arquivos adicionais. O prefixo `\\\\\\\\` é preservado em ambos os caminhos, mantendo o comportamento textual esperado fora da execução do desafio.\",\"limitacoes_da_correcao\":\"A correção impede a exploração de SSTI/RCE nesse ponto, mas não substitui uma estratégia geral de escaping contextual para todos os valores inseridos no template. Como o código compila um template Pug construído por substituições de string, outras entradas controladas pelo usuário ou configurações inseguras devem ser avaliadas separadamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1372,
+  "tokens_saida": 512,
+  "latencia_s": 6.388,
+  "custo_usd": 0.000642,
+  "hash_prompt": "e1cdc7d32616fd9a02e60ad5cf1cc0756eb378eff5d7183b44e5238a2d9dbcb1",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1369,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"A rota PUT /api/Products/:id está sem middleware de autorização, permitindo que requisições alcancem o endpoint gerado posteriormente e alterem produtos sem a proteção prevista.\",\"causa_da_vulnerabilidade\":\"A linha que deveria registrar a proteção da rota está comentada: `// app.put('/api/Products/:id', security.isAuthorized())`. Como o middleware não é registrado, a rota permanece acessível conforme a configuração dos endpoints gerados.\",\"estrategia_de_correcao\":\"Descomentar a declaração existente da rota PUT /api/Products/:id, mantendo exatamente o middleware de autorização já definido e alterando somente o necessário.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\",\"trecho_corrigido\":\"  app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\"}],\"justificativa_tecnica\":\"A autorização passa a ser aplicada antes do processamento da rota PUT, impedindo alterações por usuários não autenticados. A correção é mínima, preserva a assinatura, os identificadores, os comentários e o comportamento esperado para usuários autorizados.\",\"limitacoes_da_correcao\":\"A correção protege a rota contra acesso não autenticado, mas não valida, por si só, autorização por propriedade do produto, permissões administrativas ou controles de integridade dos dados. Esses controles devem existir nos handlers ou em middleware adicional caso sejam requisitos do sistema.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2217,
+  "tokens_saida": 333,
+  "latencia_s": 5.261,
+  "custo_usd": 0.000954,
+  "hash_prompt": "63c5344319534011095ad24d6843d9e06d0da92030c4febcf5e3b4697ecb0152",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2214
+}

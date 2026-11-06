@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-639: possível IDOR por consulta de cesta usando diretamente o ID controlado pela requisição, sem escopo explícito pelo usuário autenticado.\",\"causa_da_vulnerabilidade\":\"A consulta `BasketModel.findOne` seleciona a cesta apenas pelo parâmetro `req.params.id`. A verificação posterior em `challengeUtils.solveIf` serve ao mecanismo de desafio e não impede a devolução da cesta, pois o resultado da consulta é enviado independentemente da autorização.\",\"estrategia_de_correcao\":\"Restringir a consulta ao identificador da cesta pertencente ao usuário autenticado, usando o `bid` obtido pelo servidor por meio de `security.authenticatedUsers.from(req)`. Para usuários não autenticados ou sem cesta associada, não realizar a consulta por ID fornecido pelo cliente.\",\"edicoes\":[{\"arquivo\":\"routes/basket.ts\",\"trecho_original\":\"      const id = req.params.id\\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"      const id = req.params.id\\n      const user = security.authenticatedUsers.from(req)\\n      const basket = user?.bid && String(user.bid) === id\\n        ? await BasketModel.findOne({ where: { id: user.bid }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\\n        : null\"}],\"justificativa_tecnica\":\"A consulta deixa de procurar uma cesta arbitrária na tabela usando somente um valor controlado pelo cliente. Ela só é executada quando o ID solicitado corresponde ao `bid` associado à identidade autenticada no servidor, preservando o acesso legítimo à própria cesta e impedindo que um usuário leia a cesta de outro por alteração do parâmetro da rota. O formato da resposta permanece inalterado: uma cesta autorizada continua sendo serializada normalmente e uma cesta não autorizada resulta em `null`. A variável `user` também pode ser reutilizada pela lógica existente do desafio sem alterar sua finalidade.\",\"limitacoes_da_correcao\":\"A correção pressupõe que `security.authenticatedUsers.from(req)` retorna uma identidade validada pelo servidor e que `user.bid` representa a cesta autorizada do usuário. Ela não implementa autorização administrativa ou outros casos de negócio não evidenciados no trecho. Também não altera o comportamento de tratamento de erros ou a resposta para recursos inexistentes; testes devem confirmar o comportamento esperado para usuários autenticados, não autenticados e cestas de outros usuários.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1738,
+  "tokens_saida": 545,
+  "latencia_s": 6.241,
+  "custo_usd": 0.001088,
+  "hash_prompt": "1ba2945a7747d8b4c1e7091c9754b1b30b3145b453d274797b24751d1cf2352d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1735
+}

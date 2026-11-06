@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Normalização insegura da URL por substituição direta de req.url, permitindo alteração de um campo interno do Express usado no roteamento e potencial bypass de controles de segurança dependentes da URL original.\",\"causa_da_vulnerabilidade\":\"O middleware executa req.url = req.url.replace(/[/]+/g, '/'). req.url é uma propriedade mutável que contém o caminho e a query string usados pelo Express para roteamento. Modificá-la diretamente durante o processamento pode fazer com que middlewares posteriores avaliem uma URL diferente da recebida originalmente, além de não preservar corretamente a separação entre caminho e query string. Isso cria uma discrepância entre validações anteriores, registros e o destino efetivamente roteado.\",\"estrategia_de_correcao\":\"Remover a reescrita manual de req.url e rejeitar requisições que contenham barras duplicadas no caminho antes do roteamento posterior. A requisição é encerrada com status 400, preservando req.url e evitando que uma URL alterada seja processada por middlewares subsequentes.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* Remove duplicate slashes from URL which allowed bypassing subsequent filters */\\n  app.use((req: Request, res: Response, next: NextFunction) => {\\n    req.url = req.url.replace(/[/]+/g, '/')\\n    next()\\n  })\",\"trecho_corrigido\":\"  /* Remove duplicate slashes from URL which allowed bypassing subsequent filters */\\n  app.use((req: Request, res: Response, next: NextFunction) => {\\n    if (req.path.includes('//')) {\\n      res.sendStatus(400)\\n      return\\n    }\\n    next()\\n  })\"}],\"justificativa_tecnica\":\"A correção deixa de modificar uma propriedade interna usada pelo Express e impede que uma requisição ambígua continue para o roteamento. req.path representa somente o caminho da requisição, sem a query string, portanto a verificação não altera parâmetros válidos nem permite que barras duplicadas sejam convertidas silenciosamente em outra rota. O return após sendStatus impede a execução de next e evita processamento adicional da requisição rejeitada.\",\"limitacoes_da_correcao\":\"A correção rejeita URLs com barras duplicadas em vez de normalizá-las, o que pode afetar clientes que dependam desse formato. Ela corrige o problema neste middleware, mas não substitui validações específicas de autorização, autenticação ou normalização em outros pontos da aplicação. A eficácia também pressupõe que proxies anteriores não tenham reescrito a URL antes de ela chegar ao Express.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1831,
+  "tokens_saida": 559,
+  "latencia_s": 8.16,
+  "custo_usd": 0.001128,
+  "hash_prompt": "3bfcc0caff92a6b480ad595a338ed535477854d3834398c511b2802a2b91dad0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1828
+}

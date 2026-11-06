@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"O teste valida e incentiva o uso de HTML confiável construído a partir de dados controlados pelo token JWT, por meio de DomSanitizer.bypassSecurityTrustHtml, criando risco de XSS caso o valor lastLoginIp seja controlado por um atacante.\",\"causa_da_vulnerabilidade\":\"O teste substitui bypassSecurityTrustHtml por um mock que aceita qualquer entrada e verifica que o componente gera HTML concatenando o valor do JWT sem exigir sanitização segura. Isso pode mascarar uma implementação vulnerável e permitir que conteúdo arbitrário seja interpretado como HTML.\",\"estrategia_de_correcao\":\"Alterar o teste para validar o uso de DomSanitizer.sanitize em vez de bypassSecurityTrustHtml, mantendo o cenário funcional de exibição do endereço IP e evitando a aprovação explícita de HTML não confiável.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"    it('should set Last-Login IP from JWT as trusted HTML', () => {\\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')\\n    })\",\"trecho_corrigido\":\"    it('should set Last-Login IP from JWT as trusted HTML', () => {\\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\\n        component.ngOnInit()\\n        expect(sanitizer.sanitize).toHaveBeenCalledWith(null, '<small>1.2.3.4</small>')\\n    })\"}],\"justificativa_tecnica\":\"A chamada bypassSecurityTrustHtml desativa as proteções de sanitização do Angular e não deve ser usada com dados derivados de armazenamento local ou de tokens sem validação de integridade confiável. O teste corrigido exige que o valor seja processado pelo sanitizador padrão, reduzindo o risco de XSS baseado em HTML injetado.\",\"limitacoes_da_correcao\":\"A edição altera apenas o arquivo de teste solicitado e não corrige a implementação do componente. Além disso, a expectativa pressupõe que o componente utilize DomSanitizer.sanitize com o contexto HTML; a implementação de produção deve ser revisada para garantir que não continue chamando bypassSecurityTrustHtml.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1313,
+  "tokens_saida": 674,
+  "latencia_s": 6.992,
+  "custo_usd": 0.000836,
+  "hash_prompt": "cb5c6c23647ee0b4895d278977de51b4bad2c1b5af3519036f51c65dbc914923",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1310,
+  "tokens_escrita_cache": 0
+}

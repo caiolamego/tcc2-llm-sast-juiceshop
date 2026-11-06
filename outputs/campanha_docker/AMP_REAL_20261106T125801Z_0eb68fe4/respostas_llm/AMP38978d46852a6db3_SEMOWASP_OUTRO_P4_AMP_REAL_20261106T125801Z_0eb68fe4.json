@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-345: o desconto numérico é obtido de um valor Z85 controlado pelo cliente sem autenticação de origem ou verificação de integridade.\",\"causa_da_vulnerabilidade\":\"generateCoupon apenas codifica a data e o desconto com Z85, que é uma codificação reversível e não criptográfica. discountFromCoupon decodifica o conteúdo, valida somente um formato textual e retorna parseInt(parts[1]); portanto, um atacante pode gerar ou alterar um cupom com qualquer desconto válido no formato esperado.\",\"estrategia_de_correcao\":\"Adicionar autenticação criptográfica ao cupom usando HMAC com uma chave secreta do servidor. O cupom passa a conter o valor original e uma assinatura, e discountFromCoupon somente retorna o desconto após verificar a assinatura com comparação em tempo constante. O formato Z85 existente é preservado como transporte.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const generateCoupon = (discount: number, date = new Date()) => {\\n  const coupon = utils.toMMMYY(date) + '-' + discount\\n  return z85.encode(coupon)\\n}\\n\\nexport const discountFromCoupon = (coupon?: string) => {\\n  if (!coupon) {\\n    return undefined\\n  }\\n  const decoded = z85.decode(coupon)\\n  if (decoded && (hasValidFormat(decoded.toString()) != null)) {\\n    const parts = decoded.toString().split('-')\\n    const validity = parts[0]\\n    if (utils.toMMMYY(new Date()) === validity) {\\n      const discount = parts[1]\\n      return parseInt(discount)\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"export const generateCoupon = (discount: number, date = new Date()) => {\\n  const coupon = utils.toMMMYY(date) + '-' + discount\\n  const signature = crypto.createHmac('sha256', privateKey).update(coupon).digest('hex')\\n  return z85.encode(coupon + '-' + signature)\\n}\\n\\nexport const discountFromCoupon = (coupon?: string) => {\\n  if (!coupon) {\\n    return undefined\\n  }\\n  const decoded = z85.decode(coupon)\\n  if (decoded && (hasValidFormat(decoded.toString()) != null)) {\\n    const parts = decoded.toString().split('-')\\n    const validity = parts[0]\\n    const discount = parts[1]\\n    const signature = parts[2]\\n    const expectedSignature = crypto.createHmac('sha256', privateKey).update(validity + '-' + discount).digest('hex')\\n    if (utils.toMMMYY(new Date()) === validity && signature && signature.length === expectedSignature.length && crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {\\n      return parseInt(discount)\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"Z85 continua sendo usado somente para codificação, mas o desconto agora está vinculado a uma assinatura HMAC calculada com uma chave secreta disponível apenas no servidor. Qualquer alteração no mês, desconto ou assinatura faz a verificação falhar, impedindo que o cliente escolha arbitrariamente o valor numérico. A comparação com timingSafeEqual evita comparação ingênua da assinatura. A validação de formato e de validade mensal permanece preservada.\",\"limitacoes_da_correcao\":\"Cupons emitidos antes desta alteração deixarão de ser aceitos, pois não possuem assinatura. A chave privada embutida no código deve ser protegida e idealmente fornecida por configuração segura; se um atacante obtiver essa chave, poderá forjar cupons. A correção autentica o cupom, mas não substitui controles adicionais de autorização, limites de desconto ou prevenção contra reutilização.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3577,
+  "tokens_saida": 817,
+  "latencia_s": 7.934,
+  "custo_usd": 0.001875,
+  "hash_prompt": "fc5f4ca68086c42d808a4531b5e41c28732049e3542f61c7ac9feb26e1d65b0b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3574
+}

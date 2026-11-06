@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Prototype pollution ao resolver a cadeia de propriedades fornecida por options.replacement[1].\",\"causa_da_vulnerabilidade\":\"A cadeia de propriedades é percorrida dinamicamente sem validar os nomes dos segmentos. Assim, segmentos como __proto__, constructor ou prototype podem acessar ou modificar objetos especiais da cadeia de protótipos durante a resolução.\",\"estrategia_de_correcao\":\"Rejeitar segmentos de propriedade perigosos antes de acessá-los, preservando o fluxo existente para propriedades legítimas e alterando somente a resolução dinâmica da configuração.\",\"edicoes\":[{\"arquivo\":\"frontend/src/hacking-instructor/helpers/helpers.ts\",\"trecho_original\":\"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\",\"trecho_corrigido\":\"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        if (property === '__proto__' || property === 'constructor' || property === 'prototype') {\\n          return\\n        }\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\"}],\"justificativa_tecnica\":\"Acesso a propriedades controlado por dados externos pode alcançar propriedades herdadas e objetos especiais da linguagem JavaScript. Bloquear __proto__, constructor e prototype impede os caminhos clássicos de manipulação da cadeia de protótipos, sem modificar assinaturas, identificadores, mensagens ou o comportamento para caminhos normais de configuração.\",\"limitacoes_da_correcao\":\"A correção interrompe a função quando encontra um segmento proibido, deixando o valor original sem substituição. Ela não valida outros tipos de entrada nem altera a origem dos dados de configuração; portanto, a proteção pressupõe que o restante do fluxo continue tratando a configuração como dados não confiáveis.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1290,
+  "tokens_saida": 439,
+  "latencia_s": 5.572,
+  "custo_usd": 0.000849,
+  "hash_prompt": "0dc5aeada17d2495eaf8516516aef98352cb0b6a623c9c328802f6220b2c6f33",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1287
+}

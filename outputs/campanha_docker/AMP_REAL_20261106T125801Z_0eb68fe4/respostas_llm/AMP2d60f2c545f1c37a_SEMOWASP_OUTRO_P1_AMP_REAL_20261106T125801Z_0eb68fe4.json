@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Escalonamento de privilégios por meio do endpoint gerado automaticamente para criação de usuários. O callback executado antes da criação não restringe a criação a administradores nem impede que um usuário autenticado crie uma conta com privilégios administrativos, caso esses atributos sejam aceitos pelo recurso gerado.\",\"causa_da_vulnerabilidade\":\"O recurso CRUD de User é inicializado automaticamente por finale.resource sem uma autorização explícita para a operação de criação. O hook resource.create.send.before apenas cria uma carteira e retorna context.continue, permitindo que a requisição prossiga sem validação de privilégio.\",\"estrategia_de_correcao\":\"Adicionar uma verificação no hook de criação de User para permitir a operação somente quando o usuário autenticado tiver privilégio administrativo, interrompendo a cadeia caso contrário. A alteração é limitada ao callback existente e preserva o comportamento da criação de usuários autorizados e da criação da carteira.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge\\n        WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\\n          console.log(err)\\n        })\\n        return context.continue // vuln-code-snippet neutral-line registerAdminChallenge\\n      }) // vuln-code-snippet neutral-line registerAdminChallenge\",\"trecho_corrigido\":\"      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge\\n        if (!req.user || !req.user.isAdmin) {\\n          return res.status(403).send()\\n        }\\n        WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\\n          console.log(err)\\n        })\\n        return context.continue // vuln-code-snippet neutral-line registerAdminChallenge\\n      }) // vuln-code-snippet neutral-line registerAdminChallenge\"}],\"justificativa_tecnica\":\"A autorização é aplicada no ponto imediatamente anterior à persistência do novo User, evitando que requisições não administrativas alcancem a operação CRUD gerada. A resposta 403 encerra a requisição antes da criação da carteira e do usuário. A checagem usa a identidade já associada à requisição e não confia em campos enviados pelo cliente, impedindo que o solicitante se promova por meio do payload.\",\"limitacoes_da_correcao\":\"A correção pressupõe que req.user exista para requisições autenticadas e que a propriedade isAdmin seja o indicador confiável de privilégio administrativo no projeto. Como o restante de server.ts não foi fornecido, não é possível confirmar se o middleware de autenticação é aplicado globalmente ao endpoint gerado; se não for, ele também deve ser aplicado à rota de criação de User. A proteção impede a criação não autorizada, mas não substitui validações específicas para impedir alterações posteriores de atributos privilegiados em outros endpoints gerados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2052,
+  "tokens_saida": 658,
+  "latencia_s": 8.526,
+  "custo_usd": 0.001302,
+  "hash_prompt": "ab9a93d3361e9250d0477d7505f1ea3832d51cf13799b253c66c142c6638b7b2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2049
+}

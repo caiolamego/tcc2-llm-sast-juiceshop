@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de seletor NoSQL com atualização múltipla não autorizada (CWE-943). O valor controlado pelo cliente em req.body.id é usado diretamente no filtro de update, permitindo que um objeto com operadores NoSQL selecione múltiplos documentos e altere avaliações indevidas.\",\"causa_da_vulnerabilidade\":\"req.body.id não tem seu tipo nem valor validados antes de ser usado como _id. Além disso, a opção multi: true permite atualizar todos os documentos correspondentes ao seletor controlado pela requisição.\",\"estrategia_de_correcao\":\"Validar que o identificador recebido é um valor escalar do tipo esperado e remover a atualização múltipla, limitando a operação a um único registro identificado por _id. Rejeitar entradas inválidas com status 400 antes de consultar o banco.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\\n    ).then(\",\"trecho_corrigido\":\"    if (typeof req.body.id !== 'string' || req.body.id.length === 0) {\\n      return res.status(400).json({ error: 'Invalid review id' })\\n    }\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } }\\n    ).then(\"}],\"justificativa_tecnica\":\"A validação impede que req.body.id seja um objeto contendo operadores como $ne, $in ou outros seletores NoSQL. A remoção de multi: true garante que a atualização não seja aplicada a vários documentos, mesmo que existam dados inconsistentes ou correspondências inesperadas. O filtro continua usando o campo _id e a mensagem continua sendo atualizada com o mesmo conteúdo recebido, preservando a finalidade da rota para identificadores string válidos.\",\"limitacoes_da_correcao\":\"A correção assume que os identificadores de avaliações são strings não vazias e que a API update sem multi atualiza no máximo um documento conforme o driver utilizado. A autorização do usuário sobre a avaliação não é implementada nesta alteração; se a regra de negócio exigir que somente o autor ou proprietário possa editar a avaliação, o filtro também deverá incluir um critério de autorização derivado do usuário autenticado, e não de dados controlados pelo cliente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2293,
+  "tokens_saida": 588,
+  "latencia_s": 7.021,
+  "custo_usd": 0.001279,
+  "hash_prompt": "f7629bb058daa4e0227959067597e496781f212c7e489d791abc0c1d63bb422c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2290
+}

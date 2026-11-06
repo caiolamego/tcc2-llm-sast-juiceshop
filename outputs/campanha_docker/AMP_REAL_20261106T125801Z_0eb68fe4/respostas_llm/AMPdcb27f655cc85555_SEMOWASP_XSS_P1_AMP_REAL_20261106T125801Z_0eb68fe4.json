@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) baseado em DOM ao escrever dados retornados pelo servidor diretamente em uma nova janela com document.write().\",\"causa_da_vulnerabilidade\":\"O valor userData recebido do backend é tratado como HTML confiável e inserido diretamente no documento por meio de document.write(), permitindo a execução de scripts caso a resposta contenha conteúdo controlado por um atacante.\",\"estrategia_de_correcao\":\"Substituir a escrita direta de HTML por uma inserção de texto não interpretado como marcação, preservando a abertura da nova janela e o fluxo de exportação.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"        window.open('', '_blank', 'width=500')?.document.write(this.userData)\",\"trecho_corrigido\":\"        const exportWindow = window.open('', '_blank', 'width=500')\\n        if (exportWindow) {\\n          exportWindow.document.body.textContent = this.userData\\n        }\"}],\"justificativa_tecnica\":\"textContent insere o conteúdo como texto literal e não interpreta tags HTML nem executa scripts, eliminando o sink de XSS causado por document.write(). A alteração é localizada, mantém a abertura da janela e preserva a exibição do conteúdo exportado sem modificar mensagens, identificadores ou assinaturas existentes.\",\"limitacoes_da_correcao\":\"O conteúdo exportado deixará de ser renderizado como HTML e será exibido literalmente. Esta correção protege o sink no frontend, mas não substitui a necessidade de validação, autorização e codificação apropriadas no backend e em outros pontos de renderização.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1392,
+  "tokens_saida": 353,
+  "latencia_s": 4.804,
+  "custo_usd": 0.000771,
+  "hash_prompt": "5633f485c1eec1454d23a42dcfc2b524b429ec9ce9f6673601ef313ab58ce136",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1389
+}

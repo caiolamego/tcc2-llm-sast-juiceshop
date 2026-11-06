@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open redirect (redirecionamento aberto), permitindo que um atacante controle o destino do redirecionamento por meio do parâmetro de consulta `to`.\",\"causa_da_vulnerabilidade\":\"A validação depende de `security.isRedirectAllowed(toUrl)`, cuja implementação não foi fornecida, e o código então executa `res.redirect(toUrl)` diretamente com valor controlado pelo usuário. Além disso, `query.to as string` é apenas uma asserção de tipo em TypeScript e não valida nem restringe o conteúdo recebido.\",\"estrategia_de_correcao\":\"Validar explicitamente que o destino é uma URL absoluta com protocolo HTTPS e que seu host pertence à lista de destinos permitidos antes de chamar `res.redirect`. A validação deve rejeitar valores ausentes, múltiplos valores e URLs com hosts, portas ou protocolos não permitidos, preservando a mensagem de erro e o fluxo existentes.\",\"edicoes\":[{\"arquivo\":\"routes/redirect.ts\",\"trecho_original\":\"    const toUrl: string = query.to as string\\n    if (security.isRedirectAllowed(toUrl)) {\",\"trecho_corrigido\":\"    const toUrl: string = query.to as string\\n    let isAllowedRedirect = false\\n    try {\\n      const redirectUrl = new URL(toUrl)\\n      isAllowedRedirect = redirectUrl.protocol === 'https:' && security.redirectAllowlist.some((allowedUrl) => {\\n        const allowedRedirectUrl = new URL(allowedUrl)\\n        return redirectUrl.origin === allowedRedirectUrl.origin && redirectUrl.pathname.startsWith(allowedRedirectUrl.pathname)\\n      })\\n    } catch {}\\n    if (isAllowedRedirect) {\"}],\"justificativa_tecnica\":\"A correção deixa de confiar apenas em uma asserção de tipo e analisa o valor como URL. O protocolo é limitado a HTTPS e a origem (protocolo, host e porta) precisa corresponder a uma origem da allowlist; portanto, um atacante não pode fornecer um domínio externo arbitrário, alterar o protocolo ou explorar URLs com credenciais, portas ou formatos ambíguos para redirecionar a vítima. O `try/catch` também faz com que valores inválidos sigam o caminho existente de erro 406, sem alterar a mensagem visível. A verificação de caminho mantém o comportamento de permitir destinos sob os caminhos já autorizados.\",\"limitacoes_da_correcao\":\"A segurança depende de `security.redirectAllowlist` conter apenas URLs HTTPS confiáveis e corretamente configuradas. A comparação de caminho com `startsWith` preserva o comportamento funcional existente, mas pode permitir caminhos que apenas compartilham o mesmo prefixo; se a allowlist contiver caminhos sensíveis com prefixos ambíguos, ela deverá ser ajustada ou a comparação deverá exigir limites de segmento. Também seria recomendável validar que `query.to` é uma string única, embora a análise de URL rejeite valores não convertíveis em URL válida.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1008,
+  "tokens_saida": 624,
+  "latencia_s": 8.015,
+  "custo_usd": 0.00095,
+  "hash_prompt": "c8532b547fa09e2fe5cdec7c3ec0f186b45def7bff6e656c816905d996dae1d0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

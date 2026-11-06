@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"ReDoS (Regular Expression Denial of Service) e possível consumo excessivo de memória/CPU ao processar conteúdo de arquivos e chaves de desafios controláveis pelo conteúdo dos arquivos.\",\"causa_da_vulnerabilidade\":\"O código constrói expressões regulares dinamicamente concatenando `challengeKey` sem escape: `new RegExp(...)` e `source.match(...)`. Metacaracteres presentes na chave alteram a expressão regular. Além disso, a expressão usada para extrair o snippet contém curingas amplos e quantificadores potencialmente custosos (`.*`, `([^])*`), permitindo backtracking excessivo em entradas grandes ou especialmente construídas.\",\"estrategia_de_correcao\":\"Escapar `challengeKey` antes de inseri-lo nas expressões regulares dinâmicas, preservando a correspondência literal da chave e impedindo que seu conteúdo seja interpretado como sintaxe de regex.\",\"edicoes\":[{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${challengeKey}([^])*vuln-code-snippet end.*${challengeKey}`)\",\"trecho_corrigido\":\"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const escapedChallengeKey = challengeKey.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${escapedChallengeKey}([^])*vuln-code-snippet end.*${escapedChallengeKey}`)\"},{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\",\"trecho_corrigido\":\"    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\"}],\"justificativa_tecnica\":\"A chave do desafio passa a ser tratada como texto literal em todas as expressões regulares construídas dinamicamente. Assim, caracteres como `*`, `+`, `(`, `)`, `|`, `[` e `\\\\` não podem injetar operadores ou padrões ambíguos na regex, eliminando a principal superfície de ReDoS e evitando correspondências indevidas. O comportamento funcional para chaves normais é preservado.\",\"limitacoes_da_correcao\":\"As expressões regulares estáticas ainda usam padrões amplos, especialmente `.*` e `([^])*`, e podem apresentar custo elevado em arquivos extremamente grandes ou entradas adversariais. A correção impede a injeção de padrões pela chave, mas uma mitigação completa de complexidade exigiria substituir a extração por análise delimitada ou impor limites de tamanho, o que alteraria mais o comportamento existente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1756,
+  "tokens_saida": 724,
+  "latencia_s": 7.612,
+  "custo_usd": 0.001308,
+  "hash_prompt": "9326960dc04e4925deb199171f794ebbf4a3cc2121101e06e43ae6584bedab64",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1753
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Execução arbitrária de código (SSTI/RCE) por meio do uso de eval() com conteúdo controlável pelo usuário no nome de usuário.\",\"causa_da_vulnerabilidade\":\"Quando o username corresponde ao padrão /#{(.*)}/, o código extrai seu conteúdo e o executa diretamente com eval(code). Como o nome de usuário pode ser controlado ou influenciado por um atacante, expressões JavaScript arbitrárias podem ser executadas no processo Node.js. Além disso, o template Pug é compilado dinamicamente após substituições de valores, ampliando o risco de injeção no template.\",\"estrategia_de_correcao\":\"Remover a execução dinâmica de código e tratar o nome de usuário exclusivamente como dado literal. A alteração mantém o fluxo funcional e a lógica de escape existente, mas impede que o conteúdo do username seja interpretado como JavaScript.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\",\"trecho_corrigido\":\"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      username = '\\\\\\\\' + username\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\"}],\"justificativa_tecnica\":\"A remoção de eval() elimina o caminho que convertia dados do usuário em código executável. O username continua sendo prefixado com uma barra invertida, preservando o comportamento de renderização existente fora da execução da expressão. Como não há mais interpretação de conteúdo controlado pelo usuário como JavaScript, um atacante não consegue executar comandos arbitrários no contexto do processo Node.js por essa rota.\",\"limitacoes_da_correcao\":\"A correção elimina a execução arbitrária associada ao eval(), mas não substitui uma revisão completa da renderização dinâmica do template Pug. O código ainda compila um template construído por substituições de strings e mantém CSP com unsafe-eval; esses aspectos devem ser avaliados separadamente caso valores adicionais possam ser controlados por usuários ou fontes não confiáveis.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1480,
+  "tokens_saida": 584,
+  "latencia_s": 7.641,
+  "custo_usd": 0.001071,
+  "hash_prompt": "aa3e28cf3b25f2687954e7b9597106813590f631ddc3ef82e284981e644e3ccf",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1477
+}

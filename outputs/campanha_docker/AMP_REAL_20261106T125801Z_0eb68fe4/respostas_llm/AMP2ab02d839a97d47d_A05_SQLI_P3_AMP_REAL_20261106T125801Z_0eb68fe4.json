@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de SQL (CWE-89) na consulta de busca de produtos.\",\"causa_da_vulnerabilidade\":\"O valor controlado pelo usuário em req.query.q é interpolado diretamente na string SQL por meio de template literal, permitindo que caracteres e comandos SQL alterem a estrutura da consulta.\",\"estrategia_de_correcao\":\"Substituir a interpolação direta por um parâmetro nomeado do Sequelize, mantendo o filtro, a ordenação, o limite de 200 caracteres e o comportamento de busca existentes.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"    models.sequelize.query('SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name', { replacements: { criteria: `%${criteria}%` } }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"O valor de criteria passa a ser enviado separadamente da instrução SQL por meio de replacements, impedindo que aspas, comentários ou palavras-chave fornecidas pelo usuário sejam interpretados como sintaxe SQL. O curinga % continua sendo aplicado ao valor para preservar a busca parcial em name e description, e a consulta permanece funcionalmente equivalente para entradas normais e para valores que contenham aspas ou caracteres internacionais.\",\"limitacoes_da_correcao\":\"A correção depende do suporte normal do Sequelize ao parâmetro nomeado replacements, disponível para sequelize.query. Ela protege o valor de busca, mas não se destina a parametrizar identificadores SQL; neste trecho, tabela e ordenação são constantes e não recebem entrada do usuário.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2624,
+  "tokens_saida": 407,
+  "latencia_s": 5.64,
+  "custo_usd": 0.001144,
+  "hash_prompt": "13348e4bfb04ac466fdcf79dcb80d040aefb52c48f5da438413e3876f30cbe13",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2621
+}

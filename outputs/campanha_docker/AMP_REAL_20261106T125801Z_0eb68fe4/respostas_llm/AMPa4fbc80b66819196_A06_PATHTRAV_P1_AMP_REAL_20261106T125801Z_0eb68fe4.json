@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal (travessia de diretórios) no parâmetro de nome de arquivo servido pelo endpoint de quarentena.\",\"causa_da_vulnerabilidade\":\"A validação bloqueia apenas barras normais (`/`). Um atacante pode usar sequências como `..\\\\` em sistemas Windows, ou outras formas de resolução de caminho, fazendo `path.resolve` apontar para arquivos fora de `ftp/quarantine/`.\",\"estrategia_de_correcao\":\"Validar o caminho resolvido e garantir que ele permaneça dentro do diretório base de quarentena, preservando o fluxo existente e as mensagens de erro.\",\"edicoes\":[{\"arquivo\":\"routes/quarantineServer.ts\",\"trecho_original\":\"  return ({ params, query }: Request, res: Response, next: NextFunction) => {\\n    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\\n  }\",\"trecho_corrigido\":\"  return ({ params, query }: Request, res: Response, next: NextFunction) => {\\n    const file = params.file\\n    const quarantinePath = path.resolve('ftp/quarantine/')\\n    const filePath = path.resolve(quarantinePath, file)\\n\\n    if (!file.includes('/') && filePath.startsWith(`${quarantinePath}${path.sep}`)) {\\n      res.sendFile(filePath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\\n  }\"}],\"justificativa_tecnica\":\"`path.resolve(quarantinePath, file)` normaliza segmentos como `..` e separadores específicos do sistema operacional. A verificação com `startsWith` incluindo `path.sep` impede que um caminho escape do diretório permitido e também evita falsos positivos com diretórios cujo nome apenas compartilhe o mesmo prefixo. A validação original de `/` foi mantida para preservar o comportamento funcional e a mensagem existente.\",\"limitacoes_da_correcao\":\"A correção mantém a restrição original contra barras normais e, portanto, continua rejeitando nomes que contenham `/`. Ela não substitui controles de autorização ou validação de existência do arquivo; `sendFile` continua responsável por esses aspectos conforme sua configuração.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 666,
+  "tokens_saida": 522,
+  "latencia_s": 6.94,
+  "custo_usd": 0.00076,
+  "hash_prompt": "88daadc5cfdc49d820b8d05c9e6fe94808170e4ad54993d55a74020465de5e0f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição pública do endpoint /metrics, que pode divulgar métricas internas da aplicação a qualquer cliente sem autorização explícita.\",\"causa_da_vulnerabilidade\":\"A rota é registrada diretamente com app.get('/metrics', utils.asyncHandler(metrics.serveMetrics()))), sem middleware de autenticação ou autorização. Além disso, o trecho mostrado registra a rota novamente fora de configureApp, mantendo-a acessível publicamente.\",\"estrategia_de_correcao\":\"Adicionar um middleware de autorização existente à rota de métricas antes do handler, preservando o endpoint e seu formato de resposta. Como o trecho fornecido não identifica qual middleware do projeto realiza essa autorização, a alteração usa verify.isAuthorized(), que deve corresponder ao middleware de autorização já disponível no módulo verify.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\",\"trecho_corrigido\":\"app.get('/metrics', verify.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\"}],\"justificativa_tecnica\":\"O middleware de autorização passa a ser executado antes de metrics.serveMetrics(). Assim, requisições não autenticadas ou não autorizadas são rejeitadas antes que as métricas sejam geradas e retornadas, reduzindo a exposição de nomes de métricas, contadores, gauges, labels e informações operacionais que podem auxiliar ataques. A rota, o handler e o contrato funcional para clientes autorizados permanecem inalterados.\",\"limitacoes_da_correcao\":\"O trecho fornecido não mostra as importações nem os middlewares disponíveis no módulo verify; portanto, verify.isAuthorized() deve ser substituído pelo nome exato do middleware de autorização existente no projeto, caso esse seja diferente. A rota /metrics registrada anteriormente dentro de configureApp também deve estar protegida pelo mesmo middleware; caso permaneça pública, ela continuará permitindo acesso não autorizado. A autorização deve ser aplicada de forma consistente em todas as ocorrências da rota.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3016,
+  "tokens_saida": 431,
+  "latencia_s": 5.875,
+  "custo_usd": 0.001271,
+  "hash_prompt": "d4705ea1c64f86b6dc66fbbba0a30f34c7b7ddaa5cfbadc682dd2b80de3af7c1",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3013
+}

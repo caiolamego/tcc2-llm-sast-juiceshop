@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de código NoSQL via operador $where, permitindo que a entrada controlada pelo usuário seja interpretada como código JavaScript pelo MongoDB e potencialmente cause execução arbitrária ou negação de serviço.\",\"causa_da_vulnerabilidade\":\"O valor de id é concatenado diretamente em uma expressão JavaScript usada no operador $where: `this.product == ` + id. Embora haja truncamento, ele não impede que a entrada contenha sintaxe JavaScript válida dentro do limite de tamanho.\",\"estrategia_de_correcao\":\"Substituir a consulta baseada em $where por uma consulta MongoDB normal usando igualdade no campo product. Manter a conversão numérica no fluxo normal e, no fluxo do desafio, preservar o truncamento sem permitir que o valor seja interpretado como código.\",\"edicoes\":[{\"arquivo\":\"routes/showProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\",\"trecho_corrigido\":\"    db.reviewsCollection.find({ product: id }).then((reviews: Review[]) => {\"}],\"justificativa_tecnica\":\"Consultas por igualdade em campos não executam a entrada do usuário como JavaScript, eliminando a superfície de injeção associada ao operador $where. A alteração é mínima, preserva a assinatura, o tratamento de erros, a serialização da resposta e o comportamento esperado de busca por produto. O valor numérico continua sendo consultado normalmente; quando o desafio está habilitado, a entrada truncada deixa de ser interpretada como código e, portanto, não pode explorar a vulnerabilidade.\",\"limitacoes_da_correcao\":\"O fluxo específico do desafio noSqlCommandChallenge deixa de permitir a exploração intencional baseada em $where, o que pode alterar o comportamento esperado desse desafio. Além disso, valores não numéricos no fluxo do desafio podem não corresponder a produtos numéricos, mas não serão executados como código.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 995,
+  "tokens_saida": 423,
+  "latencia_s": 6.562,
+  "custo_usd": 0.000707,
+  "hash_prompt": "b438752078302fd21cd991669ab478f531ba1a7effad26f0e2d73a36e4303270",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

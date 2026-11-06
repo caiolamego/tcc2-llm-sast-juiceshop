@@ -1,0 +1,15 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..d66361da3 100644
+--- a/server.ts
++++ b/server.ts
+@@ -179,8 +179,8 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+   app.use(compression())
+ 
+   /* Bludgeon solution for possible CORS problems: Allow everything! */
+-  app.options('*', cors())
+-  app.use(cors())
++  app.options('*', cors({ origin: config.get<string[]>('application.cors.origins') }))
++  app.use(cors({ origin: config.get<string[]>('application.cors.origins') }))
+ 
+   /* Security middleware */
+   app.use(helmet.noSniff())

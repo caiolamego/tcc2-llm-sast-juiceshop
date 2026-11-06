@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (XSS) por inserção direta do conteúdo de legendas em um elemento <script> durante a geração da resposta HTML.\",\"causa_da_vulnerabilidade\":\"O valor subs, lido de um arquivo cujo nome é obtido da configuração, é concatenado diretamente no conteúdo de um elemento <script>. Qualquer conteúdo contendo </script> pode encerrar o elemento atual e inserir markup ou JavaScript executável no documento.\",\"estrategia_de_correcao\":\"Manter a funcionalidade de exibir as legendas como dados de WebVTT, mas codificar o conteúdo antes de inseri-lo no HTML. A codificação de entidades HTML impede que caracteres de markup sejam interpretados pelo navegador, incluindo a sequência de fechamento de script.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</script>')\"}],\"justificativa_tecnica\":\"entities.encode(subs) transforma caracteres especiais, como < e >, em entidades HTML. Assim, uma entrada como </script><script> deixa de ser reconhecida como markup pelo parser HTML e passa a ser conteúdo textual do elemento. A alteração é mínima, preserva a estrutura e os metadados do elemento de legendas e mantém o conteúdo visível sem permitir a execução de tags injetadas.\",\"limitacoes_da_correcao\":\"A solução aplica escaping HTML, portanto caracteres de markup presentes nas legendas serão exibidos como texto, em vez de serem interpretados como HTML. Isso é apropriado para legendas WebVTT, que devem ser dados, não markup executável. A correção não substitui validação de caminho ou outras medidas de segurança relacionadas à configuração dos arquivos de legenda.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2593,
+  "tokens_saida": 455,
+  "latencia_s": 6.979,
+  "custo_usd": 0.001194,
+  "hash_prompt": "3f2a1a20275fea92c363df62ee84c7fd00dad0ecb71cbd2bb6a494b53325cdc7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2590
+}

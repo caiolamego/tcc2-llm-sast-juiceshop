@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de dados sensíveis por JSONP (CWE-200). A rota retorna uma resposta executável entre origens quando o parâmetro callback é fornecido.\",\"causa_da_vulnerabilidade\":\"O uso de res.jsonp(response) permite que uma página de origem externa leia a resposta por meio de um callback JavaScript. Como a resposta pode conter dados do usuário autenticado, isso possibilita exfiltração entre origens.\",\"estrategia_de_correcao\":\"Remover o caminho JSONP e retornar sempre JSON com res.json(response), preservando a resposta e os campos existentes, mas impedindo que o conteúdo seja executado como JavaScript entre origens.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"    if (req.query.callback === undefined) {\\n      res.json(response)\\n    } else {\\n      challengeUtils.solveIf(challenges.emailLeakChallenge, () => { return true })\\n      res.jsonp(response)\\n    }\",\"trecho_corrigido\":\"    res.json(response)\"}],\"justificativa_tecnica\":\"res.jsonp() gera uma resposta JavaScript envolvida pelo callback controlado pela requisição, permitindo consumo cross-origin por scripts. res.json() retorna JSON não executável e elimina o mecanismo de exfiltração JSONP. A alteração é mínima e mantém o conteúdo da resposta para clientes que usam a rota como endpoint JSON.\",\"limitacoes_da_correcao\":\"Clientes que dependiam explicitamente do parâmetro callback e do formato JSONP deixarão de funcionar. A correção trata a exposição causada por JSONP; não substitui controles adicionais de autenticação, autorização, CORS ou proteção de outros endpoints.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2214,
+  "tokens_saida": 361,
+  "latencia_s": 5.538,
+  "custo_usd": 0.000987,
+  "hash_prompt": "a2737e6d212b7dc625689853e27c9b0a9cf29599d9b2655c24c5ba890001f89f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2211
+}

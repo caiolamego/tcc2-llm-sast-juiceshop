@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (CWE-639): a rota consulta uma cesta usando diretamente o ID fornecido na requisição, sem restringir a consulta à cesta pertencente ao usuário autenticado.\",\"causa_da_vulnerabilidade\":\"A consulta `BasketModel.findOne({ where: { id }, ... })` usa apenas `req.params.id`. Embora exista uma verificação posterior para identificar o desafio de acesso indevido, ela não impede a resposta nem aplica autorização efetiva antes da devolução do objeto.\",\"estrategia_de_correcao\":\"Restringir a consulta ao identificador da cesta associado ao usuário autenticado, usando a identidade obtida no servidor. Quando o usuário não estiver autenticado ou não possuir uma cesta associada, a consulta não deve retornar uma cesta.\",\"edicoes\":[{\"arquivo\":\"routes/basket.ts\",\"trecho_original\":\"      const id = req.params.id\\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"      const id = req.params.id\\n      const user = security.authenticatedUsers.from(req)\\n      const basket = await BasketModel.findOne({ where: { id, ...(user?.bid ? { id: user.bid } : { id: null }) }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"}],\"justificativa_tecnica\":\"A consulta passa a exigir simultaneamente que o ID solicitado corresponda ao ID da cesta associado à sessão autenticada. Assim, alterar o parâmetro da URL não permite selecionar a cesta de outro usuário. A ausência de usuário ou de `bid` resulta em uma condição impossível (`id: null`), evitando exposição acidental. A variável `user` já é reutilizada na lógica existente do desafio, preservando o restante do comportamento e o formato da resposta.\",\"limitacoes_da_correcao\":\"A correção pressupõe que `security.authenticatedUsers.from(req)` retorna uma identidade validada pelo servidor e que `user.bid` representa corretamente a cesta do usuário. Ela preserva a semântica existente de acesso por cesta e não implementa regras adicionais para administradores ou recursos públicos, pois essas permissões não estão definidas no trecho fornecido. Recomenda-se testar acesso entre dois usuários, usuário sem sessão, `bid` ausente e IDs inexistentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1846,
+  "tokens_saida": 508,
+  "latencia_s": 6.502,
+  "custo_usd": 0.001071,
+  "hash_prompt": "d070ac474d74ac30565beeca026af6fa1a5444182788634d0664c1a0672ccaef",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1843
+}

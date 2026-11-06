@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"A elegibilidade da campanha é decidida comparando a data enviada pelo cliente (`couponData`) diretamente com a data de validade armazenada, permitindo que o cliente declare uma data válida e obtenha o desconto fora do período permitido.\",\"causa_da_vulnerabilidade\":\"O código valida apenas se a data declarada pelo cliente coincide com `campaign.validOn`; não existe uma verificação baseada no relógio confiável do servidor para confirmar que a campanha está atualmente elegível.\",\"estrategia_de_correcao\":\"Manter o código da campanha e a data declarada para preservar a identificação do cupom, mas exigir também que o relógio do servidor esteja no instante da validade da campanha antes de conceder o desconto. Assim, a data fornecida pelo cliente deixa de ser suficiente para a decisão de segurança.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"    if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq\\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n      return campaign.discount\\n    }\",\"trecho_corrigido\":\"    if (campaign && couponDate == campaign.validOn && new Date().getTime() >= campaign.validOn) { // eslint-disable-line eqeqeq\\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n      return campaign.discount\\n    }\"}],\"justificativa_tecnica\":\"A comparação adicional com `new Date().getTime()` usa o relógio do servidor para impedir que um cliente obtenha o desconto apenas manipulando `couponData`. A condição exige simultaneamente que a data declarada corresponda à campanha e que a campanha já tenha atingido sua data de validade. A alteração é mínima, preserva os identificadores, mensagens, formato e fluxo existentes, e mantém a funcionalidade legítima para campanhas cuja data já chegou.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o relógio do servidor esteja sincronizado e confiável. Ela não adiciona proteção contra replay do cupom nem altera outras regras de negócio, como expiração posterior, limite de uso ou associação do cupom a um usuário.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3805,
+  "tokens_saida": 485,
+  "latencia_s": 6.547,
+  "custo_usd": 0.001533,
+  "hash_prompt": "63385e239e9d2a4f218e800e6f0e3c7116af12c26b22c505dddcdc474262aea4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3802
+}

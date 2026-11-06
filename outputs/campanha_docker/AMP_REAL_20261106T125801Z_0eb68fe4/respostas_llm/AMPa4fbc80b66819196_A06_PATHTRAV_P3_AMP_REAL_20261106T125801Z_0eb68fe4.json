@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: o parâmetro controlado pelo usuário é usado diretamente em res.sendFile, permitindo traversal de caminho e leitura arbitrária de arquivos.\",\"causa_da_vulnerabilidade\":\"A validação apenas rejeita barras normais (/). Ela não impede sequências de traversal com barras invertidas, caminhos absolutos ou outras formas de escapar do diretório ftp/quarantine/.\",\"estrategia_de_correcao\":\"Resolver o caminho absoluto a partir da raiz pretendida e verificar, usando path.relative, se o resultado permanece dentro dessa raiz antes de chamar res.sendFile. A rejeição continua usando o mesmo fluxo de erro existente.\",\"edicoes\":[{\"arquivo\":\"routes/quarantineServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const root = path.resolve('ftp/quarantine/')\\n    const target = path.resolve(root, file)\\n    const relative = path.relative(root, target)\\n\\n    if (!relative.startsWith('..' + path.sep) && relative !== '..' && !path.isAbsolute(relative)) {\\n      res.sendFile(target)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"path.resolve normaliza o caminho, enquanto path.relative permite verificar se o alvo está contido na raiz autorizada sem depender de comparação textual de prefixos. A condição rejeita alvos fora da raiz, incluindo traversal com .. e caminhos absolutos. Arquivos legítimos dentro de ftp/quarantine/, inclusive subpastas e nomes com espaços, continuam sendo servidos.\",\"limitacoes_da_correcao\":\"A verificação lexical não impede que um link simbólico dentro de ftp/quarantine/ aponte para fora da raiz. Se links simbólicos forem possíveis ou não confiáveis, deve-se resolver o caminho real com fs.realpath e comparar novamente com a raiz real. A correção também não substitui verificações de autorização.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1729,
+  "tokens_saida": 476,
+  "latencia_s": 5.698,
+  "custo_usd": 0.001003,
+  "hash_prompt": "e91b506c3e630c2e6bdfb71ba5856ce64581f6a743e3fc769e13379d9f65cc42",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1726
+}

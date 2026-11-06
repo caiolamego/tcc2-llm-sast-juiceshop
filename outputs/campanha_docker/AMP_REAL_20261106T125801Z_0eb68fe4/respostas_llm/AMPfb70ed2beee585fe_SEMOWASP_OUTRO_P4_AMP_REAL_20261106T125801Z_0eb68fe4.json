@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-863 (Incorrect Authorization): a exportação de pedidos é autorizada usando um e-mail mascarado, que não é um identificador único e pode coincidir com o valor mascarado de outro usuário.\",\"causa_da_vulnerabilidade\":\"O código substitui todas as vogais do e-mail autenticado por asteriscos e usa o resultado (`updatedEmail`) como seletor na consulta de pedidos. Usuários com e-mails diferentes podem produzir o mesmo valor mascarado, permitindo que a consulta retorne dados associados a outra identidade. Além disso, o UserId usado na consulta de memórias vem diretamente de `req.body`, um valor controlado pelo cliente, em vez da identidade autenticada no servidor.\",\"estrategia_de_correcao\":\"Usar a identidade validada no servidor para todas as consultas de dados exportados. Para memórias, substituir `req.body.UserId` pelo identificador do usuário autenticado. Para pedidos, consultar pelo e-mail real autenticado, sem aplicar mascaramento ao seletor. Manter o mascaramento apenas onde ele não participa da autorização; neste trecho, o e-mail real já é usado para reviews e deve ser usado também para pedidos.\",\"edicoes\":[{\"arquivo\":\"routes/dataExport.ts\",\"trecho_original\":\"        const username = loggedInUser.data.username\\n        const email = loggedInUser.data.email\\n        const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n\\n        let memories, orders, reviews\\n        try {\\n          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })\",\"trecho_corrigido\":\"        const username = loggedInUser.data.username\\n        const email = loggedInUser.data.email\\n        const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n\\n        let memories, orders, reviews\\n        try {\\n          memories = await MemoryModel.findAll({ where: { UserId: loggedInUser.data.id } })\"},{\"arquivo\":\"routes/dataExport.ts\",\"trecho_original\":\"        try {\\n          orders = await db.ordersCollection.find({ email: updatedEmail })\\n        } catch (error) {\\n          next(new Error(`Error retrieving orders for ${updatedEmail}`))\\n          return\\n        }\",\"trecho_corrigido\":\"        try {\\n          orders = await db.ordersCollection.find({ email })\\n        } catch (error) {\\n          next(new Error(`Error retrieving orders for ${updatedEmail}`))\\n          return\\n        }\"}],\"justificativa_tecnica\":\"A autorização passa a ser baseada exclusivamente na identidade obtida de `security.authenticatedUsers`, e não em `req.body.UserId` nem em um e-mail transformado de forma não injetiva. O identificador interno do usuário restringe as memórias ao proprietário autenticado. O e-mail real preserva a correspondência exata dos pedidos e elimina colisões causadas pelo mascaramento. A mensagem de erro foi preservada conforme solicitado; ela não participa da seleção dos dados.\",\"limitacoes_da_correcao\":\"A correção pressupõe que `loggedInUser.data.id` seja o identificador proprietário usado pela tabela de memórias e que `ordersCollection` armazene o e-mail real. Se os pedidos forem persistidos deliberadamente com e-mails mascarados, será necessário identificar o campo interno único correspondente no modelo e usá-lo no seletor. Também pressupõe que `security.authenticatedUsers` seja corretamente protegido e que a autenticação anterior valide o token.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2282,
+  "tokens_saida": 741,
+  "latencia_s": 8.593,
+  "custo_usd": 0.00146,
+  "hash_prompt": "fe4f57a8a39082d15875b8725266bb05004cea9d29c802eb22e75a1602ec0a75",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2279
+}

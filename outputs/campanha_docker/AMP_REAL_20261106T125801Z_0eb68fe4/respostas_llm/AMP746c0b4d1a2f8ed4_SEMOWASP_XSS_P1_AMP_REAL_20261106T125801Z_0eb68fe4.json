@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (XSS) armazenado no conteúdo dos comentários exibidos na galeria de feedback.\",\"causa_da_vulnerabilidade\":\"O comentário de feedback, potencialmente controlado por um usuário, é interpolado diretamente em HTML e posteriormente marcado como confiável com bypassSecurityTrustHtml, desativando a sanitização do Angular.\",\"estrategia_de_correcao\":\"Escapar o conteúdo textual do comentário antes de inseri-lo no HTML. A sanitização nativa do Angular continua sendo aplicada ao restante do conteúdo, sem alterar a estrutura visual nem o comportamento da galeria.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\"trecho_corrigido\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            this.escapeHtml(feedbacks[i].comment)\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\"},{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"  populateSlideshowFromFeedbacks () {\\n    this.feedbackService\",\"trecho_corrigido\":\"  private escapeHtml (value: string): string {\\n    return value.replace(/[&<>'\\\"]/g, (character) => ({\\n      '&': '&amp;',\\n      '<': '&lt;',\\n      '>': '&gt;',\\n      \\\"'\\\": '&#39;',\\n      '\\\"': '&quot;'\\n    })[character] as string)\\n  }\\n\\n  populateSlideshowFromFeedbacks () {\\n    this.feedbackService\"}],\"justificativa_tecnica\":\"O valor do comentário é inserido em um contexto HTML. Escapar &, <, >, aspas simples e aspas duplas impede que o conteúdo fornecido pelo usuário crie elementos, atributos ou scripts. Os ícones de estrelas permanecem funcionando porque não são derivados do comentário e continuam sendo inseridos como HTML confiável. A alteração é mínima e mantém a chamada existente a bypassSecurityTrustHtml apenas após o comentário ter sido convertido em texto seguro para HTML.\",\"limitacoes_da_correcao\":\"A correção protege o campo comment tratado neste componente. Outros pontos da aplicação que exibam o mesmo dado com bypassSecurityTrustHtml, innerHTML ou APIs equivalentes devem aplicar a mesma proteção. A implementação pressupõe que comment seja uma string, conforme o uso existente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1775,
+  "tokens_saida": 631,
+  "latencia_s": 6.175,
+  "custo_usd": 0.001201,
+  "hash_prompt": "c446899693ee9a0cd527f3b42152a10a033b11d6ed05518aa5cb2f0a2d870230",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1772
+}

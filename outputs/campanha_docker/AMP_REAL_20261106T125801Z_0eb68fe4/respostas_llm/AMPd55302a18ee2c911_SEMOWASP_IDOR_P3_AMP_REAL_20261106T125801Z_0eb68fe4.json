@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Consulta de método de entrega por ID controlado pela requisição sem escopo explícito de autorização, potencialmente permitindo acesso indevido a recursos não autorizados (CWE-639/IDOR).\",\"causa_da_vulnerabilidade\":\"A consulta usa diretamente req.params.id em DeliveryModel.findOne, sem verificar uma identidade ou escopo de proprietário no servidor. Contudo, pelo código fornecido, os métodos de entrega aparentam ser recursos globais e públicos, não havendo campo de proprietário disponível para aplicar um filtro sem alterar a regra de negócio.\",\"estrategia_de_correcao\":\"Restringir a consulta ao conjunto de métodos de entrega permitido pela aplicação, evitando retornar registros arbitrários identificados apenas pelo parâmetro da requisição. Como não há informação de proprietário ou autorização no trecho fornecido, a correção mínima e funcional é validar o identificador como um ID numérico antes da consulta e rejeitar entradas inválidas, sem alterar mensagens ou o formato da resposta.\",\"edicoes\":[{\"arquivo\":\"routes/delivery.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const method = /^\\\\d+$/.test(req.params.id) ? await DeliveryModel.findOne({ where: { id: req.params.id } }) : null\"}],\"justificativa_tecnica\":\"A validação impede que valores arbitrários sejam usados diretamente na consulta e preserva o comportamento para IDs numéricos válidos. O caminho de erro existente continua sendo usado para entradas inválidas, mantendo a resposta e as mensagens atuais. Não foi adicionado filtro por proprietário porque o modelo, a identidade autenticada e a regra de autorização não estão presentes no código fornecido; inventar esse escopo poderia bloquear métodos globais legítimos ou causar incompatibilidade de tipos.\",\"limitacoes_da_correcao\":\"A validação do formato do ID não substitui autorização por objeto. Se os métodos de entrega forem privados por usuário, administrador ou outro escopo, a correção completa exige conhecer o campo de propriedade e a identidade autenticada pelo servidor, aplicando esse escopo na cláusula where. Também é necessário confirmar, por testes, que IDs válidos são exclusivamente numéricos e testar acesso com usuários e papéis distintos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1754,
+  "tokens_saida": 522,
+  "latencia_s": 7.064,
+  "custo_usd": 0.001065,
+  "hash_prompt": "f4e4d6f2303994c24229914725c47cf1201a9ad2d82e02b56f75cc559afa07ef",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1751
+}

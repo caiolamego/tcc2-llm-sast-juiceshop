@@ -1,0 +1,35 @@
+diff --git a/routes/profileImageUrlUpload.ts b/routes/profileImageUrlUpload.ts
+index 55184083e..94653ad2f 100644
+--- a/routes/profileImageUrlUpload.ts
++++ b/routes/profileImageUrlUpload.ts
+@@ -4,6 +4,8 @@
+  */
+ 
+ import fs from 'node:fs'
++import dns from 'node:dns/promises'
++import net from 'node:net'
+ import { Readable } from 'node:stream'
+ import { finished } from 'node:stream/promises'
+ import { type Request, type Response, type NextFunction } from 'express'
+@@ -18,10 +20,20 @@ export function profileImageUrlUpload () {
+     if (req.body.imageUrl !== undefined) {
+       const url = req.body.imageUrl
+       if (url.match(/(.)*solve\/challenges\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true
++      const parsedUrl = new URL(url)
++      if (!['http:', 'https:'].includes(parsedUrl.protocol) || !parsedUrl.hostname || net.isIP(parsedUrl.hostname) && (parsedUrl.hostname === '0.0.0.0' || parsedUrl.hostname === '::' || parsedUrl.hostname.startsWith('127.') || parsedUrl.hostname.startsWith('10.') || parsedUrl.hostname.startsWith('192.168.') || parsedUrl.hostname.startsWith('169.254.') || parsedUrl.hostname.startsWith('172.') && Number(parsedUrl.hostname.split('.')[1]) >= 16 && Number(parsedUrl.hostname.split('.')[1]) <= 31 || parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '::1')) {
++        throw new Error('url returned a non-OK status code or an empty body')
++      }
++      if (!net.isIP(parsedUrl.hostname)) {
++        const addresses = await dns.lookup(parsedUrl.hostname, { all: true })
++        if (addresses.some(({ address }) => address === '0.0.0.0' || address === '::' || address === '::1' || address.startsWith('127.') || address.startsWith('10.') || address.startsWith('192.168.') || address.startsWith('169.254.') || address.startsWith('172.') && Number(address.split('.')[1]) >= 16 && Number(address.split('.')[1]) <= 31)) {
++          throw new Error('url returned a non-OK status code or an empty body')
++        }
++      }
+       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
+       if (loggedInUser) {
+         try {
+-          const response = await fetch(url)
++          const response = await fetch(parsedUrl.toString())
+           if (!response.ok || !response.body) {
+             throw new Error('url returned a non-OK status code or an empty body')
+           }

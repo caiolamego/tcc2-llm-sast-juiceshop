@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path Traversal nos caminhos de vídeo e legendas, permitindo que valores de configuração contendo segmentos como ../ escapem do diretório esperado e acessem arquivos arbitrários.\",\"causa_da_vulnerabilidade\":\"Os valores de application.promotion.video e application.promotion.subtitles são concatenados diretamente ao diretório de vídeos. Embora extractFilename seja usado apenas para o vídeo, essa função não garante, por si só, que o caminho resultante permaneça dentro do diretório permitido; as legendas nem sequer passam por essa validação.\",\"estrategia_de_correcao\":\"Normalizar e validar os nomes configurados usando apenas o nome-base do arquivo antes de concatená-los ao diretório de vídeos. Para legendas, aplicar a mesma proteção já usada para o vídeo, preservando o arquivo padrão quando a configuração não estiver definida.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"function getSubsFromFile () {\\n  const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\\n  return data.toString()\\n}\",\"trecho_corrigido\":\"function getSubsFromFile () {\\n  const subtitles = utils.extractFilename(config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt')\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\\n  return data.toString()\\n}\"}],\"justificativa_tecnica\":\"extractFilename reduz o valor configurado ao nome do arquivo, removendo componentes de diretório e impedindo que entradas com ../ ou caminhos absolutos controlem o caminho final usado por readFileSync. A alteração é mínima, mantém a assinatura, os identificadores, o arquivo padrão e o comportamento esperado para nomes de arquivos válidos. O caminho do vídeo já utiliza essa proteção em videoPath; a correção elimina a inconsistência no carregamento das legendas.\",\"limitacoes_da_correcao\":\"A proteção depende do comportamento seguro de utils.extractFilename. Ela não valida extensão, conteúdo ou existência do arquivo, nem impede que um arquivo permitido no diretório de vídeos seja substituído ou configurado maliciosamente. Também não corrige eventuais vulnerabilidades de injeção no conteúdo das legendas, que é inserido diretamente em um elemento script; essa é uma questão distinta de traversal.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1404,
+  "tokens_saida": 526,
+  "latencia_s": 7.324,
+  "custo_usd": 0.00066,
+  "hash_prompt": "cde1b41fa8dd3ba810d749c2b058410b6cd31b11e7dc8a080545aed73cfa5cdc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1401,
+  "tokens_escrita_cache": 0
+}

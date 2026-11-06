@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (CWE-79) causado pelo uso de bypassSecurityTrustHtml em descrições de produtos potencialmente não confiáveis.\",\"causa_da_vulnerabilidade\":\"A chamada a bypassSecurityTrustHtml desativa a sanitização contextual do Angular e marca diretamente o conteúdo recebido como HTML confiável. Assim, payloads HTML ou atributos de evento presentes na descrição podem ser interpretados no template.\",\"estrategia_de_correcao\":\"Remover o bypass de confiança e manter a descrição como string original. O binding Angular existente continuará aplicando sua sanitização padrão quando a descrição for renderizada como HTML, preservando markup permitido e removendo conteúdo perigoso.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/search-result/search-result.component.ts\",\"trecho_original\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\",\"trecho_corrigido\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = tableData[i].description // vuln-code-snippet neutral-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\"}],\"justificativa_tecnica\":\"Sem bypassSecurityTrustHtml, o valor permanece uma string e o Angular pode aplicar a sanitização padrão no binding [innerHTML], removendo scripts, handlers de eventos e outros conteúdos perigosos, enquanto preserva formatação HTML permitida. A alteração é mínima e mantém a assinatura, o identificador e o fluxo funcional existentes.\",\"limitacoes_da_correcao\":\"A proteção depende de a descrição ser renderizada por um binding Angular contextualizado, como [innerHTML]. Se outro código usar esse valor em um sink inseguro fora do Angular, será necessária sanitização específica nesse ponto. A atribuição de identidade permanece apenas para preservar o fluxo existente; o import e a injeção de DomSanitizer continuam presentes porque também são usados por searchValue.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3415,
+  "tokens_saida": 554,
+  "latencia_s": 6.348,
+  "custo_usd": 0.001518,
+  "hash_prompt": "a5d12494b8aa9505d9c77b7267e27716cfd06fe624d3575b9cee2c599cd38a53",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3412
+}

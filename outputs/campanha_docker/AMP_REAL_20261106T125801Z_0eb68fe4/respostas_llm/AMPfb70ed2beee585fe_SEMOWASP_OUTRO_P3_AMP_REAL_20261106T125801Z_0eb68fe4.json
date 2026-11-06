@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-863 (Incorrect Authorization): a exportação de pedidos usa um e-mail mascarado como seletor de dados, permitindo colisões entre usuários e possível exposição de pedidos de outra conta.\",\"causa_da_vulnerabilidade\":\"O código substitui vogais do e-mail autenticado por asteriscos e usa o resultado (`updatedEmail`) na consulta ao banco. Usuários distintos podem produzir o mesmo valor mascarado, portanto esse valor não identifica exclusivamente o proprietário autorizado.\",\"estrategia_de_correcao\":\"Usar o e-mail original, validado a partir da identidade autenticada no servidor, como seletor da consulta de pedidos, removendo o mascaramento antes da busca.\",\"edicoes\":[{\"arquivo\":\"routes/dataExport.ts\",\"trecho_original\":\"        const email = loggedInUser.data.email\\n        const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n\\n        let memories, orders, reviews\",\"trecho_corrigido\":\"        const email = loggedInUser.data.email\\n\\n        let memories, orders, reviews\"},{\"arquivo\":\"routes/dataExport.ts\",\"trecho_original\":\"          orders = await db.ordersCollection.find({ email: updatedEmail })\\n        } catch (error) {\\n          next(new Error(`Error retrieving orders for ${updatedEmail}`))\",\"trecho_corrigido\":\"          orders = await db.ordersCollection.find({ email })\\n        } catch (error) {\\n          next(new Error(`Error retrieving orders for ${email}`))\"}],\"justificativa_tecnica\":\"A consulta passa a usar diretamente o e-mail associado ao usuário autenticado, em vez de um valor derivado não exclusivo. Isso elimina colisões causadas pelo mascaramento e mantém a resposta, o fluxo de tratamento de erros e o formato da exportação inalterados. A alteração também evita que a autorização dependa de um identificador ambíguo.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o campo `email` da coleção de pedidos corresponde ao e-mail original armazenado em `loggedInUser.data.email`. Se a persistência de pedidos usar deliberadamente outro identificador ou formato, o modelo deverá fornecer um identificador único de proprietário para a consulta. A consulta de memórias continua usando `req.body.UserId`, que pode representar uma autorização independente e deve ser validada em outra correção caso esse campo seja controlável pelo cliente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2174,
+  "tokens_saida": 504,
+  "latencia_s": 6.287,
+  "custo_usd": 0.001148,
+  "hash_prompt": "f5a0c68de949e77baae858740c8c3ac001068572fa64d5888d36d27edb76d10a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2171
+}

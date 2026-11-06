@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-611: expansão de entidades XML externas (XXE), com possível leitura de arquivos locais e negação de serviço por expansão de entidades.\",\"causa_da_vulnerabilidade\":\"O parser é configurado com XML_PARSE_NOENT e XML_PARSE_DTDLOAD, habilitando a substituição de entidades e o carregamento de DTDs externas. Além disso, o registro de provedores de filesystem permite que entidades como file:///etc/passwd sejam resolvidas.\",\"estrategia_de_correcao\":\"Desabilitar a substituição de entidades e o carregamento de DTDs externas, removendo também o registro de provedores de filesystem, que não é necessário para o processamento seguro de XML não confiável.\",\"edicoes\":[{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"      // Grants the WASM sandbox host filesystem access so external entities\\n      // like file:///etc/passwd resolve - required for the XXE challenges.\\n      const { xmlRegisterFsInputProviders } = await dynamicImport('libxml2-wasm/lib/nodejs.mjs')\\n      xmlRegisterFsInputProviders()\\n      return libxml2\",\"trecho_corrigido\":\"      return libxml2\"},{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\"trecho_corrigido\":\"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"}],\"justificativa_tecnica\":\"XML_PARSE_NOENT habilita a expansão e substituição de entidades, enquanto XML_PARSE_DTDLOAD permite o carregamento de DTDs externas. Remover ambas as opções impede o fluxo usual de XXE e também reduz o risco de ataques de expansão de entidades. A remoção do registro de provedores de filesystem evita disponibilizar ao parser o acesso necessário para resolver entidades externas baseadas em arquivos. As alterações são mínimas e preservam a assinatura, o uso do parser, as opções de formatação e o resultado para XML sem DTD ou entidades externas.\",\"limitacoes_da_correcao\":\"XML que dependa de DTDs ou entidades externas deixará de ser processado ou terá essas entidades não expandidas; isso é esperado para entrada não confiável. A proteção depende também do comportamento da versão de libxml2-wasm utilizada. O timeout em node:vm não deve ser considerado uma fronteira de segurança nem substitui a desativação das funcionalidades XML perigosas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2412,
+  "tokens_saida": 558,
+  "latencia_s": 6.28,
+  "custo_usd": 0.001272,
+  "hash_prompt": "1167e07ca39835872c830bf9e4c9ce0219b61405f350906ca85393a6d0680611",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2409
+}

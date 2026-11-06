@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-611: XML External Entity (XXE), com expansão de entidades e carregamento de DTDs externos habilitados para entrada potencialmente não confiável.\",\"causa_da_vulnerabilidade\":\"A função parseXmlString configura XML_PARSE_NOENT e XML_PARSE_DTDLOAD. XML_PARSE_NOENT substitui entidades, enquanto XML_PARSE_DTDLOAD permite carregar DTDs externos. Além disso, xmlRegisterFsInputProviders() concede ao parser acesso ao sistema de arquivos, permitindo que entidades externas referenciem arquivos locais.\",\"estrategia_de_correcao\":\"Desabilitar a expansão de entidades e o carregamento de DTDs externos, removendo XML_PARSE_NOENT e XML_PARSE_DTDLOAD das opções do parser. Manter as demais opções para preservar o comportamento funcional não relacionado à segurança.\",\"edicoes\":[{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\"trecho_corrigido\":\"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"}],\"justificativa_tecnica\":\"Sem XML_PARSE_NOENT, entidades não são expandidas; sem XML_PARSE_DTDLOAD, DTDs externos não são carregados. Assim, uma entrada contendo DOCTYPE e uma entidade como file:///etc/passwd não consegue provocar a leitura e inclusão do arquivo no documento resultante, e a expansão recursiva de entidades deixa de ser habilitada, reduzindo também o risco de ataques de expansão de entidades. XML_PARSE_NOBLANKS e XML_PARSE_NOCDATA permanecem inalterados, preservando as demais características de parsing.\",\"limitacoes_da_correcao\":\"A correção impede o mecanismo de XXE no parser por meio dessas opções, mas não remove o registro global dos provedores de filesystem nem o carregamento do módulo correspondente. Caso outras partes da aplicação utilizem o mesmo libxml2 com opções inseguras, elas ainda poderão permitir acesso externo. Também não constitui uma proteção geral contra todos os possíveis ataques de negação de serviço relacionados a XML; limites de tamanho, tempo e recursos podem ser necessários adicionalmente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2520,
+  "tokens_saida": 492,
+  "latencia_s": 6.422,
+  "custo_usd": 0.00122,
+  "hash_prompt": "39c7deb91a2a736fb2338540df0b490298932e6e23c3f0e6fdfffa19490422dd",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2517
+}

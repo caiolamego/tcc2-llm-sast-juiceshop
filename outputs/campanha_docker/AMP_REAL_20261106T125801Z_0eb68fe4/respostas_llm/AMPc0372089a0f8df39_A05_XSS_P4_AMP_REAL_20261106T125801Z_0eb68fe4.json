@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Possível XSS no template Pug devido ao uso de conteúdo não escapado em `subtitle.innerHTML`, conforme indicado pela regra de explicit-unescape.\",\"causa_da_vulnerabilidade\":\"O conteúdo do bloco `script#subtitle.` é inserido no HTML e posteriormente lido com `subtitle.innerHTML`. Se dados externos forem incorporados nesse bloco sem escape adequado, podem ser interpretados como markup ou conteúdo ativo pelo navegador. Embora o trecho fornecido não contenha explicitamente `!=` ou `!{...}`, o uso de `innerHTML` cria um sink de HTML e a regra pode estar associada ao conteúdo gerado pelo template.\",\"estrategia_de_correcao\":\"Ler o conteúdo do elemento como texto, usando `textContent` em vez de `innerHTML`. Isso preserva o conteúdo textual necessário ao parser de legendas, mas impede que o navegador o trate como HTML.\",\"edicoes\":[{\"arquivo\":\"views/promotionVideo.pug\",\"trecho_original\":\"            quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function(cue) {\",\"trecho_corrigido\":\"            quick_and_dirty_vtt_or_srt_parser(subtitle.textContent).map(function(cue) {\"}],\"justificativa_tecnica\":\"`textContent` retorna o conteúdo textual do elemento sem interpretar tags HTML. Assim, caracteres controlados por um atacante não são reprocessados como markup pelo sink `innerHTML`, enquanto o parser continua recebendo o texto da legenda e o comportamento funcional é preservado. A alteração é mínima e não modifica mensagens, identificadores, textos visíveis ou assinaturas existentes.\",\"limitacoes_da_correcao\":\"A correção elimina o sink de leitura HTML neste arquivo, mas não substitui a necessidade de verificar como o conteúdo de `script#subtitle` é gerado no servidor. Caso exista uso de `!=` ou `!{...}` em outra etapa para inserir dados externos nesse bloco, esses pontos também devem ser alterados para interpolação escapada ou para uma serialização segura apropriada ao contexto. Além disso, o parser de legendas continua aceitando o texto fornecido; isso não deve ser confundido com sanitização de HTML, embora o conteúdo não seja mais interpretado como HTML.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2833,
+  "tokens_saida": 474,
+  "latencia_s": 7.276,
+  "custo_usd": 0.001277,
+  "hash_prompt": "501d2d822084206ecbd6cdb1605ec80ab2c0921617fac1b27f728ea6e25e52e6",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2830
+}

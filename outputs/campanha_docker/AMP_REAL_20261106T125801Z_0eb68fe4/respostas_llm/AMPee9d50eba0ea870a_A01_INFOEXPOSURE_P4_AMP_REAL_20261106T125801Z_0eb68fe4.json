@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações por listagem de diretórios (CWE-548) nas rotas /ftp, /.well-known, /encryptionkeys e /support/logs, especialmente na linha 269, onde serveIndex habilita a navegação do diretório /ftp.\",\"causa_da_vulnerabilidade\":\"O middleware serveIndex gera páginas de índice contendo nomes, caminhos e metadados dos arquivos existentes nos diretórios servidos. Essas listagens são registradas antes dos middlewares de download e permitem que qualquer cliente obtenha a estrutura dos diretórios, inclusive arquivos potencialmente sensíveis.\",\"estrategia_de_correcao\":\"Remover os middlewares serveIndex das rotas de diretórios, preservando os middlewares responsáveis pelo acesso direto aos arquivos e, portanto, o comportamento de download por URL conhecida.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  // vuln-code-snippet start directoryListingChallenge accessLogDisclosureChallenge\\n  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\\n  app.use('/.well-known', express.static('.well-known'))\\n\\n  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\\n\\n  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n\\n  /* Swagger documentation for B2B v2 endpoints */\",\"trecho_corrigido\":\"  // vuln-code-snippet start directoryListingChallenge accessLogDisclosureChallenge\\n  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', express.static('.well-known'))\\n\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\\n\\n  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n\\n  /* Swagger documentation for B2B v2 endpoints */\"}],\"justificativa_tecnica\":\"A remoção de serveIndex impede a geração de páginas de listagem e, consequentemente, evita a divulgação de nomes, estrutura e metadados dos arquivos. Os handlers de arquivos permanecem ativos: downloads diretos em /ftp, /ftp/quarantine, /encryptionkeys, /.well-known e /support/logs continuam funcionando quando o caminho do arquivo é conhecido. A proteção de acesso aos logs também permanece inalterada e é executada antes do handler de arquivos.\",\"limitacoes_da_correcao\":\"A correção elimina a enumeração por listagem, mas não impede o acesso direto a arquivos cujo caminho seja conhecido. A segurança desses arquivos continua dependendo das regras dos handlers servePublicFiles, serveQuarantineFiles, serveKeyFiles, express.static e serveLogFiles, além do controle de acesso já existente. O middleware serveIndexMiddleware permanece definido, mas não é mais utilizado nessas rotas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3330,
+  "tokens_saida": 948,
+  "latencia_s": 10.217,
+  "custo_usd": 0.00197,
+  "hash_prompt": "8f8ebb92b4f5df4f0a72bed7bf556aff68e312c8028eeb32f69784dd3a1423fb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3327
+}

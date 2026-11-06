@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (Insecure Direct Object Reference) no acesso a cestas de compras, permitindo que um usuário autenticado consulte a cesta de outro usuário alterando o parâmetro `id`.\",\"causa_da_vulnerabilidade\":\"A rota busca a cesta exclusivamente pelo identificador fornecido em `req.params.id` e não verifica se a cesta pertence ao usuário autenticado. A chamada a `challengeUtils.solveIf` apenas registra ou resolve o desafio e não impede o envio da resposta.\",\"estrategia_de_correcao\":\"Restringir a consulta da cesta ao identificador da cesta pertencente ao usuário autenticado, mantendo a busca por ID para usuários não autenticados conforme o comportamento existente. Quando houver usuário autenticado com `bid`, adicionar essa condição à consulta do banco de dados.\",\"edicoes\":[{\"arquivo\":\"routes/basket.ts\",\"trecho_original\":\"      const id = req.params.id\\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"      const id = req.params.id\\n      const user = security.authenticatedUsers.from(req)\\n      const basket = await BasketModel.findOne({ where: user?.bid ? { id, id: user.bid } : { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"}],\"justificativa_tecnica\":\"A condição `id: user.bid` faz com que, para usuários autenticados que possuem uma cesta associada, a consulta só retorne a cesta cujo ID corresponde à cesta do próprio usuário. Assim, um IDOR não consegue obter os produtos de outra cesta. A variável `user` é reutilizada na lógica existente do desafio, preservando o comportamento funcional e evitando uma segunda obtenção do usuário.\",\"limitacoes_da_correcao\":\"A correção pressupõe que `authenticatedUsers.from(req).bid` representa corretamente o ID da cesta do usuário e que os tipos de `id` usados pelo modelo são compatíveis com a comparação do ORM. Usuários não autenticados continuam podendo consultar uma cesta pelo ID, conforme o comportamento original; caso essa rota deva exigir autenticação, seria necessária uma política adicional de autenticação/autorização.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 874,
+  "tokens_saida": 482,
+  "latencia_s": 5.938,
+  "custo_usd": 0.000753,
+  "hash_prompt": "3376f76cc6ecf018bffd823b63560e83ba00407c7b49ec5904c3c9a67c3a1714",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

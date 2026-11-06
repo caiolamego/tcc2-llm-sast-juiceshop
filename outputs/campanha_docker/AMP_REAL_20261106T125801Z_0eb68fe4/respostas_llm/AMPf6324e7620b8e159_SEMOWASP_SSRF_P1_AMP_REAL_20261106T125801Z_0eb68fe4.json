@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Server-Side Request Forgery (SSRF) no download da imagem de perfil, permitindo que o servidor faça requisições para destinos arbitrários controlados pelo usuário.\",\"causa_da_vulnerabilidade\":\"O valor de req.body.imageUrl é usado diretamente em fetch(url), sem validação de esquema, hostname, resolução DNS ou bloqueio de endereços IP privados, locais e reservados.\",\"estrategia_de_correcao\":\"Validar a URL antes do fetch, permitindo apenas HTTP/HTTPS e rejeitando hosts que resolvam para endereços não públicos. A validação ocorre antes da requisição e também após a resolução DNS para reduzir bypasses por nomes apontando para redes internas.\",\"edicoes\":[{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"import fs from 'node:fs'\\nimport { Readable } from 'node:stream'\\nimport { finished } from 'node:stream/promises'\",\"trecho_corrigido\":\"import fs from 'node:fs'\\nimport dns from 'node:dns/promises'\\nimport net from 'node:net'\\nimport { Readable } from 'node:stream'\\nimport { finished } from 'node:stream/promises'\"},{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"      if (loggedInUser) {\\n        try {\\n          const response = await fetch(url)\",\"trecho_corrigido\":\"      if (loggedInUser) {\\n        try {\\n          const parsedUrl = new URL(url)\\n          if (!['http:', 'https:'].includes(parsedUrl.protocol)) throw new Error('unsupported URL protocol')\\n          const addresses = await dns.lookup(parsedUrl.hostname, { all: true })\\n          if (addresses.some(({ address }) => {\\n            const ip = net.isIP(address)\\n            return ip === 4\\n              ? /^(0|10|127|169\\\\.254|172\\\\.(1[6-9]|2[0-9]|3[0-1])|192\\\\.0\\\\.0|192\\\\.168|198\\\\.18|198\\\\.19|224|240)(\\\\.|$)/.test(address)\\n              : /^(::|::1|fc|fd|fe80:)/i.test(address)\\n          })) throw new Error('blocked non-public address')\\n          const response = await fetch(url)\"},{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"          const ext = ['jpg', 'jpeg', 'png', 'svg', 'gif'].includes(url.split('.').slice(-1)[0].toLowerCase()) ? url.split('.').slice(-1)[0].toLowerCase() : 'jpg'\",\"trecho_corrigido\":\"          const ext = ['jpg', 'jpeg', 'png', 'svg', 'gif'].includes(parsedUrl.pathname.split('.').slice(-1)[0].toLowerCase()) ? parsedUrl.pathname.split('.').slice(-1)[0].toLowerCase() : 'jpg'\"}],\"justificativa_tecnica\":\"A URL é analisada com URL para impedir esquemas perigosos, como file:, ftp: ou javascript:. A resolução DNS e a verificação dos endereços retornados bloqueiam loopback, redes privadas, link-local, multicast, reservadas e faixas IPv6 locais, impedindo que o servidor seja usado para acessar serviços internos. A extração da extensão passa a usar apenas o pathname, evitando que dados após o ponto no hostname ou na query influenciem o nome do arquivo.\",\"limitacoes_da_correcao\":\"A verificação DNS seguida de fetch ainda pode sofrer condição de corrida DNS (TOCTOU), pois o fetch pode resolver novamente o hostname para outro endereço. Redirecionamentos também não são explicitamente revalidados; para uma proteção completa, seria necessário controlar redirecionamentos manualmente e validar cada destino, além de aplicar limites de tamanho, tempo e tipo de conteúdo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1059,
+  "tokens_saida": 835,
+  "latencia_s": 9.816,
+  "custo_usd": 0.001267,
+  "hash_prompt": "503ecd7b525ecee26c32aa3bcc4055bbea98d22f3d857880b17467e8f066692f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1056
+}

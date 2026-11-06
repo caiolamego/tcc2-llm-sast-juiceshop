@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Divulgação de informações sensíveis por meio da listagem e do download não autenticado de arquivos de log em /support/logs.\",\"causa_da_vulnerabilidade\":\"O código registra explicitamente a rota /support/logs como vulnerável e monta o middleware de listagem serveIndex antes do middleware verify.accessControlChallenges(). Assim, a listagem do diretório pode ser processada e exposta antes da verificação de controle de acesso. Além disso, a rota /support/logs/:file disponibiliza arquivos por meio de serveLogFiles(), permitindo acesso a logs quando o desafio de controle de acesso é contornado, ignorado ou não aplicado conforme esperado.\",\"estrategia_de_correcao\":\"Aplicar o middleware verify.accessControlChallenges() antes de qualquer middleware que liste ou sirva arquivos em /support/logs, mantendo as mesmas rotas, identificadores e comportamento após a autorização.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"O Express executa os middlewares na ordem em que são registrados. Antes da correção, serveIndex podia gerar a listagem do diretório antes da checagem de acesso, expondo nomes e metadados dos arquivos. Após a correção, a checagem é executada primeiro para a rota /support/logs e, por ser um middleware montado nesse caminho, também intercepta as requisições subsequentes destinadas a /support/logs/:file. Somente requisições aprovadas alcançam a listagem ou o download dos logs, reduzindo a exposição de dados potencialmente sensíveis, como URLs, cabeçalhos, tokens, identificadores e detalhes operacionais.\",\"limitacoes_da_correcao\":\"A correção depende de verify.accessControlChallenges() rejeitar efetivamente requisições não autorizadas e encerrar a cadeia sem chamar next(). Ela também não altera a retenção, o conteúdo ou as permissões dos arquivos de log no sistema de arquivos. Outras rotas ou mecanismos que exponham os mesmos logs, caso existam fora do trecho fornecido, precisam ser protegidos separadamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2080,
+  "tokens_saida": 664,
+  "latencia_s": 8.072,
+  "custo_usd": 0.001317,
+  "hash_prompt": "829960a348247aebc80b7db3fbc7dc54d20fed767f66440e243c1cbdf635338f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2077
+}

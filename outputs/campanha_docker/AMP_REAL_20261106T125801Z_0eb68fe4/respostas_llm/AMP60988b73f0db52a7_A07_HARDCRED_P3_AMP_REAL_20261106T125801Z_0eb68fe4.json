@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de uma chave HMAC hardcoded em `deluxeToken`, permitindo que qualquer pessoa com acesso ao código gere tokens Deluxe válidos.\",\"causa_da_vulnerabilidade\":\"A chave usada para o HMAC é derivada diretamente da constante privada `privateKey`, que está embutida no código-fonte e, portanto, não é um segredo protegido operacionalmente.\",\"estrategia_de_correcao\":\"Obter uma chave HMAC dedicada a partir da variável de ambiente `DELUXE_TOKEN_HMAC_KEY` e falhar explicitamente durante a inicialização caso ela não esteja configurada, sem adicionar fallback hardcoded.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', privateKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\",\"trecho_corrigido\":\"export const deluxeToken = (email: string) => {\\n  const deluxeTokenHmacKey = process.env.DELUXE_TOKEN_HMAC_KEY\\n  if (!deluxeTokenHmacKey) {\\n    throw new Error('Missing deluxe token HMAC key')\\n  }\\n  const hmac = crypto.createHmac('sha256', deluxeTokenHmacKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\"}],\"justificativa_tecnica\":\"A chave deixa de estar presente no código-fonte e passa a ser fornecida por configuração externa, reduzindo o risco de falsificação de tokens caso o repositório seja exposto. A ausência da configuração causa erro explícito, evitando o uso inseguro de uma chave previsível ou embutida. A assinatura e o formato do token permanecem inalterados quando a variável de ambiente está configurada.\",\"limitacoes_da_correcao\":\"A variável de ambiente ainda precisa ser protegida, possuir entropia adequada, ter permissões restritas e ser gerenciada por um mecanismo seguro de secrets. A alteração não implementa rotação ou revogação de tokens existentes; a troca da chave invalidará tokens gerados com a chave anterior.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3544,
+  "tokens_saida": 470,
+  "latencia_s": 5.968,
+  "custo_usd": 0.00145,
+  "hash_prompt": "40f6c4a060d3b51d6c01355df7a925f25ae98ad06cde418cb3fab57421d28cc0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3541
+}

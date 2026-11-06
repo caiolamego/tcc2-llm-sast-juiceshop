@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de MD5 na função hash, potencialmente inadequado caso o resultado seja usado para armazenar ou verificar senhas.\",\"causa_da_vulnerabilidade\":\"MD5 é uma função de hash rápida e sem salt, não apropriada para derivação de credenciais porque permite ataques de força bruta e uso eficiente de tabelas pré-computadas.\",\"estrategia_de_correcao\":\"Substituir MD5 por uma derivação de chave baseada em PBKDF2-HMAC-SHA256, usando salt aleatório e custo computacional configurado. Como a assinatura existente retorna uma string síncrona, a correção mantém a assinatura e usa um salt determinístico derivado do próprio dado; isso elimina o uso de MD5, mas não substitui uma migração adequada para armazenamento de senhas com salt persistido por usuário.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\",\"trecho_corrigido\":\"export const hash = (data: string) => crypto.pbkdf2Sync(data, crypto.createHash('sha256').update(data).digest(), 100000, 32, 'sha256').toString('hex')\"}],\"justificativa_tecnica\":\"A alteração remove o algoritmo MD5 e aplica uma função deliberadamente mais custosa, PBKDF2-HMAC-SHA256, reduzindo a viabilidade de ataques de força bruta. O uso de SHA-256 para derivar o salt evita introduzir aleatoriedade não persistida e preserva a assinatura e o comportamento determinístico da função existente. Nenhum texto visível, identificador, assinatura ou arquivo de teste foi alterado.\",\"limitacoes_da_correcao\":\"O salt é determinístico e derivado do próprio dado, portanto esta alteração não constitui um esquema adequado para armazenamento de senhas em produção. Para senhas, deve-se migrar para Argon2id, scrypt ou PBKDF2 com salt aleatório persistido junto ao hash, mantendo verificação e migração compatíveis com os valores existentes. Também é necessário confirmar que esta função não é usada para senhas; se for usada apenas para identificadores, cache ou compatibilidade, a substituição pode alterar valores previamente gerados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3542,
+  "tokens_saida": 493,
+  "latencia_s": 6.177,
+  "custo_usd": 0.001477,
+  "hash_prompt": "af962fd7ad411c1b487fc37d0573a44aca83ae6a0fecaf966845f121ec3c860b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3539
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de SQL no endpoint de login, permitindo manipular a consulta de autenticação e potencialmente contornar a validação de credenciais.\",\"causa_da_vulnerabilidade\":\"Os valores controlados pelo usuário, especialmente req.body.email, são interpolados diretamente em uma string SQL sem parametrização ou escaping seguro.\",\"estrategia_de_correcao\":\"Substituir a interpolação direta por parâmetros nomeados do Sequelize, preservando a consulta, o fluxo de autenticação e todos os identificadores existentes.\",\"edicoes\":[{\"arquivo\":\"routes/login.ts\",\"trecho_original\":\"    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\",\"trecho_corrigido\":\"    models.sequelize.query('SELECT * FROM Users WHERE email = :email AND password = :password AND deletedAt IS NULL', { replacements: { email: req.body.email || '', password: security.hash(req.body.password || '') }, model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\"}],\"justificativa_tecnica\":\"Os parâmetros nomeados são enviados separadamente ao driver do banco de dados, impedindo que aspas, comentários ou outros caracteres presentes no email sejam interpretados como parte da estrutura SQL. O hash da senha continua sendo calculado exatamente como antes, e o resultado da consulta mantém o mesmo modelo e o mesmo formato esperado pelo restante do fluxo.\",\"limitacoes_da_correcao\":\"A correção elimina a injeção de SQL neste ponto, mas não substitui controles adicionais como limitação de tentativas, políticas de senha, MFA e armazenamento moderno de senhas. A solução também preserva o uso existente de security.hash, portanto eventuais limitações desse mecanismo permanecem fora do escopo desta alteração.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1744,
+  "tokens_saida": 427,
+  "latencia_s": 5.495,
+  "custo_usd": 0.000948,
+  "hash_prompt": "5951808f8e0a48350ce312bb1d0ca6f15bc265cf28dc974da46cf65f41d8297a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1741
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (Insecure Direct Object Reference) na atualização de itens da cesta, permitindo que um usuário altere um item pertencente a outra cesta.\",\"causa_da_vulnerabilidade\":\"A função quantityCheckBeforeBasketItemUpdate busca o item apenas pelo identificador fornecido em req.params.id e não valida se o BasketId do item pertence à cesta do usuário autenticado. A validação existente usa req.body.BasketId, que é controlado pelo cliente e pode estar ausente ou ser manipulado.\",\"estrategia_de_correcao\":\"Restringir a busca do item ao identificador do item e à cesta do usuário autenticado, usando o basket id associado à sessão/autenticação. Quando não houver usuário autenticado, preservar a busca existente para não alterar o comportamento de rotas que possam permitir acesso anônimo.\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"      const item = await BasketItemModel.findOne({ where: { id: req.params.id } })\\n      const user = security.authenticatedUsers.from(req)\\n      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\",\"trecho_corrigido\":\"      const user = security.authenticatedUsers.from(req)\\n      const item = await BasketItemModel.findOne({ where: user ? { id: req.params.id, BasketId: user.bid } : { id: req.params.id } })\\n      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\"}],\"justificativa_tecnica\":\"A autorização deve ser aplicada com base em um atributo confiável do servidor, não em req.body.BasketId, que é entrada controlada pelo cliente. Ao incluir BasketId: user.bid na consulta, um item de outra cesta não é localizado e a operação de atualização não prossegue. A alteração é mínima, mantém assinaturas, mensagens, identificadores e fluxo funcional existentes, e preserva a consulta original para requisições sem usuário autenticado.\",\"limitacoes_da_correcao\":\"A correção protege especificamente o caminho de atualização tratado neste middleware. Outros endpoints que leiam, alterem ou excluam BasketItemModel devem aplicar a mesma verificação de propriedade. A proteção depende de security.authenticatedUsers.from(req) identificar corretamente o usuário autenticado e de BasketId ser o campo de associação usado pelo modelo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1490,
+  "tokens_saida": 546,
+  "latencia_s": 6.646,
+  "custo_usd": 0.000686,
+  "hash_prompt": "4899d778eebb5048214fd9915af8eaa3c0507fa964f5f3ad6a654cff04bf9ce9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1487,
+  "tokens_escrita_cache": 0
+}

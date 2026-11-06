@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal (travessia de diretórios) ao servir arquivos de log.\",\"causa_da_vulnerabilidade\":\"A validação bloqueia apenas barras normais (`/`). Um valor como `..\\\\\\\\arquivo` pode atravessar diretórios em sistemas que reconhecem separadores de caminho alternativos, e `path.resolve('logs/', file)` pode resolver para fora do diretório de logs.\",\"estrategia_de_correcao\":\"Validar o caminho resolvido e garantir que ele permaneça dentro do diretório `logs`, usando o separador nativo do sistema e uma comparação com limite de diretório antes de chamar `sendFile`.\",\"edicoes\":[{\"arquivo\":\"routes/logfileServer.ts\",\"trecho_original\":\"    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('logs/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const file = params.file\\n    const logsPath = path.resolve('logs')\\n    const filePath = path.resolve(logsPath, file)\\n\\n    if (filePath.startsWith(logsPath + path.sep)) {\\n      res.sendFile(filePath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"A resolução canônica do caminho seguida de uma verificação por prefixo com `path.sep` impede que segmentos `..` escapem do diretório autorizado. O separador adicional evita aceitar caminhos cujo texto apenas começa com o caminho de logs, mas pertence a outro diretório com nome semelhante, como `logs-backup`. A alteração mantém a assinatura, a mensagem de erro e o fluxo funcional para arquivos localizados dentro de `logs`.\",\"limitacoes_da_correcao\":\"A correção restringe o acesso ao diretório `logs`, mas não impede que arquivos ou links simbólicos dentro desse diretório apontem para conteúdo externo; se esse cenário for relevante, será necessária uma validação adicional baseada em `realpath` antes do envio.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 661,
+  "tokens_saida": 475,
+  "latencia_s": 6.174,
+  "custo_usd": 0.000702,
+  "hash_prompt": "4a21eb50990f2ceb33940194bc8a26a2ef56eb4fe821fe1fe2ab2af769c1f80e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

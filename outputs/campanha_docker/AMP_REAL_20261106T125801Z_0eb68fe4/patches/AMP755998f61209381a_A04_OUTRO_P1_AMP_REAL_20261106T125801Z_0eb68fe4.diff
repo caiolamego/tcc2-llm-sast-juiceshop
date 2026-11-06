@@ -1,0 +1,13 @@
+diff --git a/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts b/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+index 7aeba4eb0..168ce3cfc 100644
+--- a/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
++++ b/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+@@ -71,7 +71,7 @@ describe('LastLoginIpComponent', () => {
+     it('should set Last-Login IP from JWT as trusted HTML', () => {
+         localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')
+         component.ngOnInit()
+-        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')
++        expect(sanitizer.sanitize).toHaveBeenCalledWith(null, '<small>1.2.3.4</small>')
+     })
+ 
+     it('should not set Last-Login IP if none is present in JWT', () => {

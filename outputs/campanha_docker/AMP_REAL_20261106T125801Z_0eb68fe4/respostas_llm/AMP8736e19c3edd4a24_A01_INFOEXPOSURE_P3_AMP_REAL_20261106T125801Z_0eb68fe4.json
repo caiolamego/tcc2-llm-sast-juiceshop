@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações por listagem de diretórios (CWE-548) nas rotas /ftp, /.well-known, /encryptionkeys e /support/logs.\",\"causa_da_vulnerabilidade\":\"O middleware serveIndex habilita a geração de índices HTML contendo nomes e estrutura de arquivos e diretórios. Em particular, a rota /ftp permite listar conteúdo potencialmente sensível, e /support/logs lista arquivos de log antes do middleware de controle de acesso.\",\"estrategia_de_correcao\":\"Remover os middlewares serveIndex das rotas, preservando os middlewares de entrega de arquivos e, portanto, o acesso direto aos recursos necessários. A rota /support/logs continuará protegida pelo middleware verify.accessControlChallenges().\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\\n  app.use('/.well-known', express.static('.well-known'))\\n\\n  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\\n\\n  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', express.static('.well-known'))\\n\\n  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\\n\\n  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"serveIndex é o componente que gera a listagem de diretórios e expõe nomes, estrutura e metadados dos arquivos. Sua remoção elimina a enumeração por requisições ao diretório, enquanto os handlers de arquivos permanecem ativos para downloads diretos. A proteção de /support/logs continua aplicada antes do handler de arquivos. A alteração também remove a listagem de /.well-known e /encryptionkeys, evitando exposição desnecessária de conteúdo potencialmente sensível.\",\"limitacoes_da_correcao\":\"Arquivos ainda podem ser acessados se seus caminhos forem conhecidos e os respectivos handlers permitirem o acesso; esta correção impede a enumeração por índice, mas não substitui controles de autorização ou validação de caminhos. O comentário sobre browsing permanece inalterado para respeitar a alteração mínima, embora a listagem tenha sido desabilitada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3240,
+  "tokens_saida": 878,
+  "latencia_s": 9.47,
+  "custo_usd": 0.001863,
+  "hash_prompt": "527b131a129b221163bd0ea8d9e3af9973f3a36557a68409610ce48866d26d1f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3237
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"XSS (CWE-79) na inserção direta do conteúdo de `subs` dentro de um elemento `<script>`.\",\"causa_da_vulnerabilidade\":\"`subs` é lido de um arquivo cujo conteúdo pode ser alterado externamente e concatenado diretamente em HTML dentro de um contexto de script. Sequências como `</script>` podem encerrar o elemento e injetar markup ou JavaScript.\",\"estrategia_de_correcao\":\"Escapar o conteúdo de `subs` antes de inseri-lo no HTML, neutralizando caracteres que possam formar markup ou encerrar o elemento `<script>`, sem alterar a estrutura funcional da página de legendas.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</script>')\"}],\"justificativa_tecnica\":\"`entities.encode(subs)` converte caracteres HTML relevantes, incluindo `<` e `>`, impedindo que o conteúdo das legendas seja interpretado como tags ou que uma sequência `</script>` termine prematuramente o elemento. O conteúdo continua disponível no elemento de legendas, preservando o fluxo funcional e eliminando a interpretação do valor controlável como HTML executável.\",\"limitacoes_da_correcao\":\"O conteúdo será tratado como texto HTML escapado; caso o cliente dependa de markup HTML dentro das legendas, esse markup deixará de ser interpretado. A correção pressupõe que o consumidor das legendas leia o conteúdo textual do elemento. Também permanecem fora deste ajuste outras possíveis fontes de conteúdo dinâmico ou riscos de configuração não relacionados ao sink identificado.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2485,
+  "tokens_saida": 432,
+  "latencia_s": 6.476,
+  "custo_usd": 0.00114,
+  "hash_prompt": "2055807bd46aeca750f9df66aba8ea35b417bcfdcef4a97c999b091e8c14e776",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2482
+}

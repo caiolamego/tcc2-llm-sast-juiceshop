@@ -1,0 +1,455 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 17.61384313301096,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 6.85,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_6swgbyr2/ftp/primeira.xml",
+        "test/api/ftp-folder.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 8.24,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /ftp\n  ✔ GET serves a directory listing (169.401041ms)\n  ✔ GET a non-existing Markdown file in /ftp will return a 404 error (49.877251ms)\n  ✔ GET a non-existing PDF file in /ftp will return a 404 error (48.446625ms)\n  ✔ GET a non-existing file in /ftp will return a 403 error for invalid file type (36.404625ms)\n  ✔ GET an existing file in /ftp will return a 403 error for invalid file type .gg (22.393667ms)\n  ✔ GET existing file /ftp/coupons_2013.md.bak will return a 403 error for invalid file type .bak (22.984416ms)\n  ✔ GET existing file /ftp/package.json.bak will return a 403 error for invalid file type .bak (15.08975ms)\n  ✔ GET existing file /ftp/suspicious_errors.yml will return a 403 error for invalid file type .yml (8.892042ms)\n  ✔ GET the confidential file in /ftp (43.182833ms)\n  ✔ GET the KeePass database in /ftp (73.005917ms)\n  ✔ GET the easter egg file by using Poison Null Byte attack with .pdf suffix (17.40525ms)\n  ✔ GET the easter egg file by using Poison Null Byte attack with .md suffix (18.306375ms)\n  ✔ GET the SIEM signature file by using Poison Null Byte attack with .pdf suffix (51.918708ms)\n  ✔ GET the SIEM signature file by using Poison Null Byte attack with .md suffix (9.204458ms)\n  ✔ GET the 2013 coupon code file by using Poison Null Byte attack with .pdf suffix (11.700292ms)\n  ✔ GET the 2013 coupon code file by using an Poison Null Byte attack with .md suffix (15.126917ms)\n  ✔ GET the package.json.bak file by using Poison Null Byte attack with .pdf suffix (20.803292ms)\n  ✔ GET the package.json.bak file by using Poison Null Byte attack with .md suffix (20.359334ms)\n  ✔ GET a restricted file directly from file system path on server by tricking route definitions fails with 403 error (8.967917ms)\n  ✔ GET a restricted file directly from file system path on server by appending URL parameter fails with 403 error (22.85825ms)\n  ✔ GET a file whose name contains a \"/\" fails with a 403 error (19.762ms)\n  ✔ GET an accessible file directly from file system path on server (19.367167ms)\n  ✔ GET a non-existing file via direct server file path /ftp will return a 404 error (8.663ms)\n  ✔ GET the package.json.bak file contains a dependency on epilogue-js for \"Typosquatting\" challenge (17.177083ms)\n  ✔ GET file /ftp/quarantine/juicy_malware_linux_amd_64.url (11.940458ms)\n  ✔ GET file /ftp/quarantine/juicy_malware_linux_arm_64.url (18.128458ms)\n  ✔ GET existing file /ftp/quarantine/juicy_malware_macos_64.url (20.332375ms)\n  ✔ GET existing file /ftp/quarantine/juicy_malware_windows_64.exe.url (10.841375ms)\n✔ /ftp (3354.26871ms)\nℹ tests 28\nℹ suites 1\nℹ pass 28\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 7797.144087\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 1.2999997125007212e-05,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/fileServer.ts"
+    ],
+    "grupos": [
+      "ftp"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 6.85
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "ftp",
+      "status": "executada",
+      "duracao_s": 8.24
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "ftp"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 6.85
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "ftp",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET a file whose name contains a \"/\" fails with a 403 error",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET a file whose name contains a \"/\" fails with a 403 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing Markdown file in /ftp will return a 404 error",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET a non-existing Markdown file in /ftp will return a 404 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing PDF file in /ftp will return a 404 error",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET a non-existing PDF file in /ftp will return a 404 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing file in /ftp will return a 403 error for invalid file type",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET a non-existing file in /ftp will return a 403 error for invalid file type",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing file via direct server file path /ftp will return a 404 error",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET a non-existing file via direct server file path /ftp will return a 404 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET a restricted file directly from file system path on server by appending URL parameter fails with 403 error",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET a restricted file directly from file system path on server by appending URL parameter fails with 403 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET a restricted file directly from file system path on server by tricking route definitions fails with 403 error",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET a restricted file directly from file system path on server by tricking route definitions fails with 403 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET an accessible file directly from file system path on server",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET an accessible file directly from file system path on server",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET an existing file in /ftp will return a 403 error for invalid file type .gg",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET an existing file in /ftp will return a 403 error for invalid file type .gg",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/coupons_2013.md.bak will return a 403 error for invalid file type .bak",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET existing file /ftp/coupons_2013.md.bak will return a 403 error for invalid file type .bak",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/package.json.bak will return a 403 error for invalid file type .bak",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET existing file /ftp/package.json.bak will return a 403 error for invalid file type .bak",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/quarantine/juicy_malware_macos_64.url",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET existing file /ftp/quarantine/juicy_malware_macos_64.url",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/quarantine/juicy_malware_windows_64.exe.url",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET existing file /ftp/quarantine/juicy_malware_windows_64.exe.url",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/suspicious_errors.yml will return a 403 error for invalid file type .yml",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET existing file /ftp/suspicious_errors.yml will return a 403 error for invalid file type .yml",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET file /ftp/quarantine/juicy_malware_linux_amd_64.url",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET file /ftp/quarantine/juicy_malware_linux_amd_64.url",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET file /ftp/quarantine/juicy_malware_linux_arm_64.url",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET file /ftp/quarantine/juicy_malware_linux_arm_64.url",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET serves a directory listing",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET serves a directory listing",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the 2013 coupon code file by using Poison Null Byte attack with .pdf suffix",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the 2013 coupon code file by using Poison Null Byte attack with .pdf suffix",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the 2013 coupon code file by using an Poison Null Byte attack with .md suffix",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the 2013 coupon code file by using an Poison Null Byte attack with .md suffix",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the KeePass database in /ftp",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the KeePass database in /ftp",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the SIEM signature file by using Poison Null Byte attack with .md suffix",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the SIEM signature file by using Poison Null Byte attack with .md suffix",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the SIEM signature file by using Poison Null Byte attack with .pdf suffix",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the SIEM signature file by using Poison Null Byte attack with .pdf suffix",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the confidential file in /ftp",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the confidential file in /ftp",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the easter egg file by using Poison Null Byte attack with .md suffix",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the easter egg file by using Poison Null Byte attack with .md suffix",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the easter egg file by using Poison Null Byte attack with .pdf suffix",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the easter egg file by using Poison Null Byte attack with .pdf suffix",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file by using Poison Null Byte attack with .md suffix",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the package.json.bak file by using Poison Null Byte attack with .md suffix",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file by using Poison Null Byte attack with .pdf suffix",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the package.json.bak file by using Poison Null Byte attack with .pdf suffix",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file contains a dependency on epilogue-js for \"Typosquatting\" challenge",
+            "arquivo": "test/api/ftp-folder.test.ts",
+            "nome": "/ftp > GET the package.json.bak file contains a dependency on epilogue-js for \"Typosquatting\" challenge",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/ftp-folder.test.ts :: /ftp > GET a file whose name contains a \"/\" fails with a 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing Markdown file in /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing PDF file in /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing file in /ftp will return a 403 error for invalid file type",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing file via direct server file path /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a restricted file directly from file system path on server by appending URL parameter fails with 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a restricted file directly from file system path on server by tricking route definitions fails with 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET an accessible file directly from file system path on server",
+          "test/api/ftp-folder.test.ts :: /ftp > GET an existing file in /ftp will return a 403 error for invalid file type .gg",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/coupons_2013.md.bak will return a 403 error for invalid file type .bak",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/package.json.bak will return a 403 error for invalid file type .bak",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/quarantine/juicy_malware_macos_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/quarantine/juicy_malware_windows_64.exe.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/suspicious_errors.yml will return a 403 error for invalid file type .yml",
+          "test/api/ftp-folder.test.ts :: /ftp > GET file /ftp/quarantine/juicy_malware_linux_amd_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET file /ftp/quarantine/juicy_malware_linux_arm_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET serves a directory listing",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the 2013 coupon code file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the 2013 coupon code file by using an Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the KeePass database in /ftp",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the SIEM signature file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the SIEM signature file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the confidential file in /ftp",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the easter egg file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the easter egg file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file contains a dependency on epilogue-js for \"Typosquatting\" challenge"
+        ],
+        "esperados": [
+          "test/api/ftp-folder.test.ts :: /ftp > GET a file whose name contains a \"/\" fails with a 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing Markdown file in /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing PDF file in /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing file in /ftp will return a 403 error for invalid file type",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing file via direct server file path /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a restricted file directly from file system path on server by appending URL parameter fails with 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a restricted file directly from file system path on server by tricking route definitions fails with 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET an accessible file directly from file system path on server",
+          "test/api/ftp-folder.test.ts :: /ftp > GET an existing file in /ftp will return a 403 error for invalid file type .gg",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/coupons_2013.md.bak will return a 403 error for invalid file type .bak",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/package.json.bak will return a 403 error for invalid file type .bak",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/quarantine/juicy_malware_macos_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/quarantine/juicy_malware_windows_64.exe.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/suspicious_errors.yml will return a 403 error for invalid file type .yml",
+          "test/api/ftp-folder.test.ts :: /ftp > GET file /ftp/quarantine/juicy_malware_linux_amd_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET file /ftp/quarantine/juicy_malware_linux_arm_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET serves a directory listing",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the 2013 coupon code file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the 2013 coupon code file by using an Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the KeePass database in /ftp",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the SIEM signature file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the SIEM signature file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the confidential file in /ftp",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the easter egg file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the easter egg file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file contains a dependency on epilogue-js for \"Typosquatting\" challenge"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/ftp-folder.test.ts :: /ftp > GET a file whose name contains a \"/\" fails with a 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing Markdown file in /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing PDF file in /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing file in /ftp will return a 403 error for invalid file type",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a non-existing file via direct server file path /ftp will return a 404 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a restricted file directly from file system path on server by appending URL parameter fails with 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET a restricted file directly from file system path on server by tricking route definitions fails with 403 error",
+          "test/api/ftp-folder.test.ts :: /ftp > GET an accessible file directly from file system path on server",
+          "test/api/ftp-folder.test.ts :: /ftp > GET an existing file in /ftp will return a 403 error for invalid file type .gg",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/coupons_2013.md.bak will return a 403 error for invalid file type .bak",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/package.json.bak will return a 403 error for invalid file type .bak",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/quarantine/juicy_malware_macos_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/quarantine/juicy_malware_windows_64.exe.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET existing file /ftp/suspicious_errors.yml will return a 403 error for invalid file type .yml",
+          "test/api/ftp-folder.test.ts :: /ftp > GET file /ftp/quarantine/juicy_malware_linux_amd_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET file /ftp/quarantine/juicy_malware_linux_arm_64.url",
+          "test/api/ftp-folder.test.ts :: /ftp > GET serves a directory listing",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the 2013 coupon code file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the 2013 coupon code file by using an Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the KeePass database in /ftp",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the SIEM signature file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the SIEM signature file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the confidential file in /ftp",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the easter egg file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the easter egg file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file by using Poison Null Byte attack with .md suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file by using Poison Null Byte attack with .pdf suffix",
+          "test/api/ftp-folder.test.ts :: /ftp > GET the package.json.bak file contains a dependency on epilogue-js for \"Typosquatting\" challenge"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/ftp-folder.test.ts :: /ftp > GET an accessible file directly from file system path on server"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 8.24,
+        "espera_api_s": 1.2999997125007212e-05,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_6swgbyr2/ftp/primeira.xml",
+            "test/api/ftp-folder.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 8.24,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /ftp\n  ✔ GET serves a directory listing (169.401041ms)\n  ✔ GET a non-existing Markdown file in /ftp will return a 404 error (49.877251ms)\n  ✔ GET a non-existing PDF file in /ftp will return a 404 error (48.446625ms)\n  ✔ GET a non-existing file in /ftp will return a 403 error for invalid file type (36.404625ms)\n  ✔ GET an existing file in /ftp will return a 403 error for invalid file type .gg (22.393667ms)\n  ✔ GET existing file /ftp/coupons_2013.md.bak will return a 403 error for invalid file type .bak (22.984416ms)\n  ✔ GET existing file /ftp/package.json.bak will return a 403 error for invalid file type .bak (15.08975ms)\n  ✔ GET existing file /ftp/suspicious_errors.yml will return a 403 error for invalid file type .yml (8.892042ms)\n  ✔ GET the confidential file in /ftp (43.182833ms)\n  ✔ GET the KeePass database in /ftp (73.005917ms)\n  ✔ GET the easter egg file by using Poison Null Byte attack with .pdf suffix (17.40525ms)\n  ✔ GET the easter egg file by using Poison Null Byte attack with .md suffix (18.306375ms)\n  ✔ GET the SIEM signature file by using Poison Null Byte attack with .pdf suffix (51.918708ms)\n  ✔ GET the SIEM signature file by using Poison Null Byte attack with .md suffix (9.204458ms)\n  ✔ GET the 2013 coupon code file by using Poison Null Byte attack with .pdf suffix (11.700292ms)\n  ✔ GET the 2013 coupon code file by using an Poison Null Byte attack with .md suffix (15.126917ms)\n  ✔ GET the package.json.bak file by using Poison Null Byte attack with .pdf suffix (20.803292ms)\n  ✔ GET the package.json.bak file by using Poison Null Byte attack with .md suffix (20.359334ms)\n  ✔ GET a restricted file directly from file system path on server by tricking route definitions fails with 403 error (8.967917ms)\n  ✔ GET a restricted file directly from file system path on server by appending URL parameter fails with 403 error (22.85825ms)\n  ✔ GET a file whose name contains a \"/\" fails with a 403 error (19.762ms)\n  ✔ GET an accessible file directly from file system path on server (19.367167ms)\n  ✔ GET a non-existing file via direct server file path /ftp will return a 404 error (8.663ms)\n  ✔ GET the package.json.bak file contains a dependency on epilogue-js for \"Typosquatting\" challenge (17.177083ms)\n  ✔ GET file /ftp/quarantine/juicy_malware_linux_amd_64.url (11.940458ms)\n  ✔ GET file /ftp/quarantine/juicy_malware_linux_arm_64.url (18.128458ms)\n  ✔ GET existing file /ftp/quarantine/juicy_malware_macos_64.url (20.332375ms)\n  ✔ GET existing file /ftp/quarantine/juicy_malware_windows_64.exe.url (10.841375ms)\n✔ /ftp (3354.26871ms)\nℹ tests 28\nℹ suites 1\nℹ pass 28\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 7797.144087\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/ftp\" time=\"3.354269\" disabled=\"0\" errors=\"0\" tests=\"28\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET serves a directory listing\" time=\"0.169401\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET a non-existing Markdown file in /ftp will return a 404 error\" time=\"0.049877\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET a non-existing PDF file in /ftp will return a 404 error\" time=\"0.048447\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET a non-existing file in /ftp will return a 403 error for invalid file type\" time=\"0.036405\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET an existing file in /ftp will return a 403 error for invalid file type .gg\" time=\"0.022394\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET existing file /ftp/coupons_2013.md.bak will return a 403 error for invalid file type .bak\" time=\"0.022984\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET existing file /ftp/package.json.bak will return a 403 error for invalid file type .bak\" time=\"0.015090\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET existing file /ftp/suspicious_errors.yml will return a 403 error for invalid file type .yml\" time=\"0.008892\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the confidential file in /ftp\" time=\"0.043183\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the KeePass database in /ftp\" time=\"0.073006\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the easter egg file by using Poison Null Byte attack with .pdf suffix\" time=\"0.017405\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the easter egg file by using Poison Null Byte attack with .md suffix\" time=\"0.018306\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the SIEM signature file by using Poison Null Byte attack with .pdf suffix\" time=\"0.051919\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the SIEM signature file by using Poison Null Byte attack with .md suffix\" time=\"0.009204\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the 2013 coupon code file by using Poison Null Byte attack with .pdf suffix\" time=\"0.011700\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the 2013 coupon code file by using an Poison Null Byte attack with .md suffix\" time=\"0.015127\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the package.json.bak file by using Poison Null Byte attack with .pdf suffix\" time=\"0.020803\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the package.json.bak file by using Poison Null Byte attack with .md suffix\" time=\"0.020359\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET a restricted file directly from file system path on server by tricking route definitions fails with 403 error\" time=\"0.008968\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET a restricted file directly from file system path on server by appending URL parameter fails with 403 error\" time=\"0.022858\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET a file whose name contains a &amp;quot;/&amp;quot; fails with a 403 error\" time=\"0.019762\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET an accessible file directly from file system path on server\" time=\"0.019367\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET a non-existing file via direct server file path /ftp will return a 404 error\" time=\"0.008663\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET the package.json.bak file contains a dependency on epilogue-js for &amp;quot;Typosquatting&amp;quot; challenge\" time=\"0.017177\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET file /ftp/quarantine/juicy_malware_linux_amd_64.url\" time=\"0.011940\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET file /ftp/quarantine/juicy_malware_linux_arm_64.url\" time=\"0.018128\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET existing file /ftp/quarantine/juicy_malware_macos_64.url\" time=\"0.020332\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t\t<testcase name=\"GET existing file /ftp/quarantine/juicy_malware_windows_64.exe.url\" time=\"0.010841\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/ftp-folder.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 28 -->\n\t<!-- suites 1 -->\n\t<!-- pass 28 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 7797.144087 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}
