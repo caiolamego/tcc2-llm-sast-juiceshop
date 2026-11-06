@@ -1,0 +1,54 @@
+diff --git a/routes/likeProductReviews.ts b/routes/likeProductReviews.ts
+index a8d120fc1..258e9e136 100644
+--- a/routes/likeProductReviews.ts
++++ b/routes/likeProductReviews.ts
+@@ -15,14 +15,21 @@ const sleep = async (ms: number) => await new Promise(resolve => setTimeout(reso
+ 
+ export function likeProductReviews () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+-    const id = req.body.id
++    const idParam = req.body.id
+     const user = security.authenticatedUsers.from(req)
+     if (!user) {
+       return res.status(401).json({ error: 'Unauthorized' })
+     }
+ 
+     try {
+-      const review = await db.reviewsCollection.findOne({ _id: id })
++      const { ObjectId } = await import('mongodb')
++      let objectId
++      try {
++        objectId = new ObjectId(idParam)
++      } catch {
++        return res.status(400).json({ error: 'Wrong Params' })
++      }
++      const review = await db.reviewsCollection.findOne({ _id: objectId })
+       if (!review) {
+         return res.status(404).json({ error: 'Not found' })
+       }
+@@ -33,14 +40,14 @@ export function likeProductReviews () {
+       }
+ 
+       await db.reviewsCollection.update(
+-        { _id: id },
++        { _id: objectId },
+         { $inc: { likesCount: 1 } }
+       )
+ 
+       // Artificial wait for timing attack challenge
+       await sleep(150)
+       try {
+-        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })
++        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: objectId })
+         const updatedLikedBy = updatedReview.likedBy
+         updatedLikedBy.push(user.data.email)
+ 
+@@ -48,7 +55,7 @@ export function likeProductReviews () {
+         challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)
+ 
+         const result = await db.reviewsCollection.update(
+-          { _id: id },
++          { _id: objectId },
+           { $set: { likedBy: updatedLikedBy } }
+         )
+         res.json(result)

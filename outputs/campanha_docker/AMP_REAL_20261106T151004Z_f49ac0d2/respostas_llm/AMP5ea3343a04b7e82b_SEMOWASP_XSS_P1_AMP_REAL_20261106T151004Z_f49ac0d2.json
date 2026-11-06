@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml que pode permitir Cross-Site Scripting (XSS)\",\"causa_da_vulnerabilidade\":\"O método bypassSecurityTrustHtml é utilizado para inserir diretamente HTML no DOM sem sanitização adequada, permitindo que dados potencialmente maliciosos sejam executados como código HTML/JavaScript.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o valor como texto simples, evitando a inserção direta de HTML no DOM.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\",\"trecho_corrigido\":\"this.results.orderNo = `<code>${results.data[0].orderId}</code>`\"}],\"justificativa_tecnica\":\"O uso de bypassSecurityTrustHtml permite que conteúdo HTML arbitrário seja inserido no DOM, o que pode ser explorado para ataques XSS se o conteúdo não for confiável. Ao remover essa chamada e tratar o conteúdo como texto simples, o Angular aplicará sua sanitização padrão, prevenindo a execução de código malicioso.\",\"limitacoes_da_correcao\":\"Se o template espera um objeto SafeHtml para renderizar corretamente, pode ser necessário ajustar o template para exibir o conteúdo como texto simples ou usar outras formas seguras de renderização. Esta correção assume que a exibição do código HTML como string é suficiente para o caso de uso.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1181,
+  "tokens_saida": 324,
+  "latencia_s": 3.799,
+  "custo_usd": 0.000991,
+  "hash_prompt": "e7d54c17514320daaa1e53264be84b99b56cdc48dfc9c8d929719205f3f54d7f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

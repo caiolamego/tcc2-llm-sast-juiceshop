@@ -1,0 +1,31 @@
+{
+  "estrategia": "P1_simples",
+  "arquivo": "routes/videoHandler.ts",
+  "modo_contexto": "arquivo_completo",
+  "linha_ini_contexto": 1,
+  "linha_fim_contexto": 92,
+  "total_linhas_arquivo": 92,
+  "mensagens": [
+    {
+      "role": "system",
+      "content": "Voce e um engenheiro de seguranca de aplicacoes especializado em TypeScript, Node.js e Express."
+    },
+    {
+      "role": "user",
+      "content": "Tarefa: identifique e corrija a vulnerabilidade de seguranca presente no codigo abaixo.\n\nArquivo: routes/videoHandler.ts (completo, 92 linhas)\n```typescript\n/*\n * Copyright (c) 2014-2026 Bjoern Kimminich & the OWASP Juice Shop contributors.\n * SPDX-License-Identifier: MIT\n */\n\nimport fs from 'node:fs'\nimport config from 'config'\nimport { type Request, type Response } from 'express'\nimport { AllHtmlEntities as Entities } from 'html-entities'\n\nimport * as challengeUtils from '../lib/challengeUtils'\nimport { themes } from '../views/themes/themes'\nimport { challenges } from '../data/datacache'\nimport * as utils from '../lib/utils'\n\nconst entities = new Entities()\n\nexport const getVideo = () => {\n  return (req: Request, res: Response) => {\n    const path = videoPath()\n    const stat = fs.statSync(path)\n    const fileSize = stat.size\n    const range = req.headers.range\n    if (range) {\n      const parts = range.replace(/bytes=/, '').split('-')\n      const start = parseInt(parts[0], 10)\n      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1\n      const chunksize = (end - start) + 1\n      const file = fs.createReadStream(path, { start, end })\n      const head = {\n        'Content-Range': `bytes ${start}-${end}/${fileSize}`,\n        'Accept-Ranges': 'bytes',\n        'Content-Length': chunksize,\n        'Content-Location': '/assets/public/videos/owasp_promo.mp4',\n        'Content-Type': 'video/mp4'\n      }\n      res.writeHead(206, head)\n      file.pipe(res)\n    } else {\n      const head = {\n        'Content-Length': fileSize,\n        'Content-Type': 'video/mp4'\n      }\n      res.writeHead(200, head)\n      fs.createReadStream(path).pipe(res)\n    }\n  }\n}\n\nexport const promotionVideo = () => {\n  return (req: Request, res: Response) => {\n    fs.readFile('views/promotionVideo.pug', async function (err, buf) {\n      if (err != null) throw err\n      let template = buf.toString()\n      const subs = getSubsFromFile()\n\n      challengeUtils.solveIf(challenges.videoXssChallenge, () => { return utils.contains(subs, '</script><script>alert(`xss`)</script>') })\n\n      const themeKey = config.get<string>('application.theme') as keyof typeof themes\n      const theme = themes[themeKey] || themes['bluegrey-lightgreen']\n      template = template.replace(/_title_/g, entities.encode(config.get<string>('application.name')))\n      template = template.replace(/_favicon_/g, favicon())\n      template = template.replace(/_bgColor_/g, theme.bgColor)\n      template = template.replace(/_textColor_/g, theme.textColor)\n      template = template.replace(/_navColor_/g, theme.navColor)\n      template = template.replace(/_primLight_/g, theme.primLight)\n      template = template.replace(/_primDark_/g, theme.primDark)\n      const pug = (await import('pug')).default\n      const fn = pug.compile(template)\n      let compiledTemplate = fn()\n      compiledTemplate = compiledTemplate.replace('<script id=\"subtitle\"></script>', '<script id=\"subtitle\" type=\"text/vtt\" data-label=\"English\" data-lang=\"en\">' + subs + '</script>')\n      res.send(compiledTemplate)\n    })\n  }\n  function favicon () {\n    return utils.extractFilename(config.get('application.favicon'))\n  }\n}\n\nfunction getSubsFromFile () {\n  const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\n  return data.toString()\n}\n\nfunction videoPath () {\n  if (config.get<string>('application.promotion.video') !== null) {\n    const video = utils.extractFilename(config.get<string>('application.promotion.video'))\n    return 'frontend/dist/frontend/assets/public/videos/' + video\n  }\n  return 'frontend/dist/frontend/assets/public/videos/owasp_promo.mp4'\n}\n```\n\nRestricoes obrigatorias:\n- Altere o minimo necessario para corrigir a vulnerabilidade. Nao refatore, nao reformate e nao renomeie nada.\n- Não altere mensagens de erro, textos visíveis ao usuário, nomes de identificadores nem assinaturas de funções existentes.\n- Nao altere arquivos de teste.\n- Cada \"trecho_original\" deve ser copiado LITERALMENTE do codigo fornecido (mesmos espacos, quebras de linha e pontuacao) e deve aparecer UMA unica vez no arquivo. Inclua linhas vizinhas se precisar para torna-lo unico.\n- Preserve o comportamento funcional existente.\n- Em \"arquivo\", use exatamente o caminho relativo informado acima.\n\nFormato da resposta: um objeto JSON com os campos\nvulnerabilidade_identificada, causa_da_vulnerabilidade, estrategia_de_correcao,\nedicoes (lista de {arquivo, trecho_original, trecho_corrigido}),\njustificativa_tecnica e limitacoes_da_correcao."
+    }
+  ],
+  "hash_prompt": "3cf56888ea1aa28da960c066767912bc0a3dcf453ddb372ca78338fb0115c353",
+  "usa_rag": false,
+  "arquivo_rag_recuperado": null,
+  "roteiro_status": null,
+  "roteiro_sha256": null,
+  "rag_categoria_recuperada": null,
+  "rag_motivo_recuperacao": null,
+  "rag_cwe_selecionada": null,
+  "rag_documento_versao": null,
+  "rag_documento_sha256": null,
+  "rag_corpo_sha256": null,
+  "rag_index_sha256": null,
+  "rag_base_sha256": null
+}

@@ -1,0 +1,14 @@
+diff --git a/routes/videoHandler.ts b/routes/videoHandler.ts
+index 7b82edbc1..f700c57c9 100644
+--- a/routes/videoHandler.ts
++++ b/routes/videoHandler.ts
+@@ -79,7 +79,8 @@ export const promotionVideo = () => {
+ 
+ function getSubsFromFile () {
+   const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'
+-  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')
++  const safeSubtitles = utils.extractFilename(subtitles)
++  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + safeSubtitles, 'utf8')
+   return data.toString()
+ }
+ 

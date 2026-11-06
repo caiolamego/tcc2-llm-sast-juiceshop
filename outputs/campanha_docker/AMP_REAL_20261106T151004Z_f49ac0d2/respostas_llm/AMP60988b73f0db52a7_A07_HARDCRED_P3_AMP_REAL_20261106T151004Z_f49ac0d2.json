@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de chave HMAC codificada diretamente no código fonte (hardcoded key)\",\"causa_da_vulnerabilidade\":\"A chave secreta usada para gerar o HMAC está codificada diretamente no código fonte, o que pode levar à exposição da chave caso o código seja acessado indevidamente, comprometendo a segurança da aplicação.\",\"estrategia_de_correcao\":\"Remover a chave HMAC codificada no código e obter a chave de uma variável de ambiente configurada externamente. Adicionar uma verificação para garantir que a variável de ambiente esteja definida, lançando um erro caso contrário.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\",\"trecho_corrigido\":\"const HMAC_SECRET = process.env.HMAC_SECRET\\nif (!HMAC_SECRET) throw new Error('Missing HMAC secret configuration')\\nexport const hmac = (data: string) => crypto.createHmac('sha256', HMAC_SECRET).update(data).digest('hex')\"}],\"justificativa_tecnica\":\"Manter a chave HMAC fora do código fonte evita exposição acidental da chave em repositórios ou logs. Utilizar variáveis de ambiente é uma prática recomendada para gerenciar segredos, permitindo rotação e controle de acesso adequados sem alterar o código.\",\"limitacoes_da_correcao\":\"É necessário garantir que a variável de ambiente HMAC_SECRET esteja configurada corretamente no ambiente de execução da aplicação. A ausência dessa configuração causará erro na inicialização, o que deve ser tratado na implantação e operação do sistema.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 3547,
+  "tokens_saida": 370,
+  "latencia_s": 3.952,
+  "custo_usd": 0.001435,
+  "hash_prompt": "78eaf68127e7d3771e2a54998badee845e372d2026895d7e7e53206b6e0957df",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para conteúdo potencialmente não confiável, permitindo Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código utiliza this.sanitizer.bypassSecurityTrustHtml para marcar como seguro um conteúdo HTML que inclui dados de usuários (feedbacks[i].comment) sem sanitização adequada, desabilitando a proteção padrão do Angular contra XSS.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e confiar na sanitização automática do Angular ao usar [innerHTML], garantindo que o conteúdo seja tratado como texto e não como HTML executável. Para preservar a formatação das estrelas, usar bindings seguros ou construir o conteúdo no template sem inserir HTML arbitrário.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\"trecho_corrigido\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\"}],\"justificativa_tecnica\":\"Ao remover bypassSecurityTrustHtml, o Angular aplica sua sanitização padrão ao conteúdo inserido via [innerHTML], prevenindo a execução de scripts maliciosos. Como feedbacks[i].comment é originado de dados externos, confiar na sanitização automática é essencial para evitar XSS. A formatação das estrelas permanece intacta pois é um conteúdo controlado pelo código e não pelo usuário.\",\"limitacoes_da_correcao\":\"Esta correção assume que o template usa [innerHTML] para renderizar feedbacks[i].comment e que a sanitização padrão do Angular é suficiente para remover scripts maliciosos. Caso a formatação das estrelas precise ser exibida como HTML, pode ser necessário refatorar para usar componentes ou bindings seguros para evitar injeção de código.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2954,
+  "tokens_saida": 487,
+  "latencia_s": 4.502,
+  "custo_usd": 0.001385,
+  "hash_prompt": "27e5ff4412a36048eb871d5fd2b50d5fbb399b3d59d7fe2dbd0fb3c82fa1401d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

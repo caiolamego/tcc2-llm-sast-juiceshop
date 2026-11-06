@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml que desativa a sanitização HTML do Angular, permitindo possível Cross-Site Scripting (XSS) ao confiar em conteúdo HTML não confiável.\",\"causa_da_vulnerabilidade\":\"O método trustProductDescription utiliza sanitizer.bypassSecurityTrustHtml diretamente sobre descrições de produtos que podem conter conteúdo malicioso, desativando a sanitização padrão do Angular e permitindo a execução de scripts maliciosos no navegador do usuário.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml para que o Angular aplique sua sanitização padrão ao conteúdo HTML dinâmico. Isso evita a execução de scripts maliciosos mantendo a formatação HTML segura. Portanto, a função trustProductDescription deve ser removida e as descrições devem ser usadas diretamente sem bypass.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/search-result/search-result.component.ts\",\"trecho_original\":\"        this.trustProductDescription(products) // vuln-code-snippet neutral-line restfulXssChallenge\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/search-result/search-result.component.ts\",\"trecho_original\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\",\"trecho_corrigido\":\"\"}],\"justificativa_tecnica\":\"O Angular já aplica sanitização segura ao usar bindings HTML padrão, protegendo contra XSS. O uso de bypassSecurityTrustHtml desativa essa proteção e deve ser evitado para conteúdo externo ou não confiável. Removendo o bypass, o conteúdo HTML é sanitizado automaticamente, mitigando a vulnerabilidade sem perda de funcionalidade.\",\"limitacoes_da_correcao\":\"Se o conteúdo HTML das descrições dos produtos contiver formatação legítima que o sanitizador padrão do Angular remover, essa correção pode alterar a apresentação visual. Para casos que exigem HTML complexo, uma sanitização customizada e segura deve ser implementada, mas isso está fora do escopo desta correção mínima.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3418,
+  "tokens_saida": 507,
+  "latencia_s": 5.355,
+  "custo_usd": 0.001602,
+  "hash_prompt": "692414e7c1cad46b8e03cdd935502adb9546dd00af596960064bb8bc874e10fa",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

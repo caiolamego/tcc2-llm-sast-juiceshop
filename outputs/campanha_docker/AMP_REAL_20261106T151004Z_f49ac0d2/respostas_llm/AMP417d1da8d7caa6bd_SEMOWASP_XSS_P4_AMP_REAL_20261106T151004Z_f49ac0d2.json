@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para exibir conteúdo potencialmente não confiável, permitindo Cross-Site Scripting (CWE-79).\",\"causa_da_vulnerabilidade\":\"O código utiliza this.sanitizer.bypassSecurityTrustHtml para inserir diretamente o valor lastLoginIp no HTML, desabilitando a sanitização padrão do Angular. Como lastLoginIp vem do token JWT armazenado localmente, que pode ser manipulado, isso permite injeção de código malicioso.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o valor lastLoginIp como texto simples, permitindo que o Angular faça a sanitização automática e escape de caracteres perigosos, prevenindo XSS.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)\\n\",\"trecho_corrigido\":\"this.lastLoginIp = `<small>${payload.data.lastLoginIp}</small>`\\n\"}],\"justificativa_tecnica\":\"Ao remover bypassSecurityTrustHtml, o Angular aplica sua sanitização padrão ao interpolar lastLoginIp no template, escapando caracteres especiais e prevenindo execução de scripts maliciosos. Como lastLoginIp é exibido dentro de tags <small> no template, o conteúdo é tratado como texto, eliminando a possibilidade de XSS.\",\"limitacoes_da_correcao\":\"Se lastLoginIp contiver tags HTML legítimas que precisam ser renderizadas, essa correção as exibirá como texto literal, não como HTML formatado. Porém, essa abordagem prioriza segurança evitando XSS. Caso seja necessário renderizar HTML confiável, deve-se implementar sanitização adequada com biblioteca especializada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2000,
+  "tokens_saida": 379,
+  "latencia_s": 4.268,
+  "custo_usd": 0.001406,
+  "hash_prompt": "3b65bc0097666f969848da22afc41de64cc41138c8b4b71f4392ff176f969a56",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

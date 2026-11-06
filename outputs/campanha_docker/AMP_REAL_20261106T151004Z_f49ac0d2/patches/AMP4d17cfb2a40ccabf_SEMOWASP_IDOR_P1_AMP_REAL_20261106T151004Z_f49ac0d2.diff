@@ -1,0 +1,39 @@
+diff --git a/routes/likeProductReviews.ts b/routes/likeProductReviews.ts
+index a8d120fc1..dc8d76ed5 100644
+--- a/routes/likeProductReviews.ts
++++ b/routes/likeProductReviews.ts
+@@ -22,7 +22,7 @@ export function likeProductReviews () {
+     }
+ 
+     try {
+-      const review = await db.reviewsCollection.findOne({ _id: id })
++      const review = await db.reviewsCollection.findOne({ _id: db.ObjectId(id) })
+       if (!review) {
+         return res.status(404).json({ error: 'Not found' })
+       }
+@@ -33,14 +33,14 @@ export function likeProductReviews () {
+       }
+ 
+       await db.reviewsCollection.update(
+-        { _id: id },
++        { _id: db.ObjectId(id) },
+         { $inc: { likesCount: 1 } }
+       )
+ 
+       // Artificial wait for timing attack challenge
+       await sleep(150)
+       try {
+-        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })
++        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: db.ObjectId(id) })
+         const updatedLikedBy = updatedReview.likedBy
+         updatedLikedBy.push(user.data.email)
+ 
+@@ -48,7 +48,7 @@ export function likeProductReviews () {
+         challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)
+ 
+         const result = await db.reviewsCollection.update(
+-          { _id: id },
++          { _id: db.ObjectId(id) },
+           { $set: { likedBy: updatedLikedBy } }
+         )
+         res.json(result)

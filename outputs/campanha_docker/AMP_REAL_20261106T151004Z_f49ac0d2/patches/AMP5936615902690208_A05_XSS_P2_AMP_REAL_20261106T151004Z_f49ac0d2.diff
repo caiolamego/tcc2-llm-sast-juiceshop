@@ -1,0 +1,29 @@
+diff --git a/routes/videoHandler.ts b/routes/videoHandler.ts
+index 7b82edbc1..85b8fa631 100644
+--- a/routes/videoHandler.ts
++++ b/routes/videoHandler.ts
+@@ -79,13 +79,21 @@ export const promotionVideo = () => {
+ 
+ function getSubsFromFile () {
+   const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'
+-  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')
++  const safeSubtitles = utils.extractFilename(subtitles)
++  if (safeSubtitles.includes('..') || safeSubtitles.includes('/') || safeSubtitles.includes('\\')) {
++    throw new Error('Invalid subtitles filename')
++  }
++  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + safeSubtitles, 'utf8')
+   return data.toString()
+ }
+ 
+ function videoPath () {
+-  if (config.get<string>('application.promotion.video') !== null) {
+-    const video = utils.extractFilename(config.get<string>('application.promotion.video'))
++  const videoConfig = config.get<string>('application.promotion.video')
++  if (videoConfig !== null) {
++    const video = utils.extractFilename(videoConfig)
++    if (video.includes('..') || video.includes('/') || video.includes('\\')) {
++      throw new Error('Invalid video filename')
++    }
+     return 'frontend/dist/frontend/assets/public/videos/' + video
+   }
+   return 'frontend/dist/frontend/assets/public/videos/owasp_promo.mp4'

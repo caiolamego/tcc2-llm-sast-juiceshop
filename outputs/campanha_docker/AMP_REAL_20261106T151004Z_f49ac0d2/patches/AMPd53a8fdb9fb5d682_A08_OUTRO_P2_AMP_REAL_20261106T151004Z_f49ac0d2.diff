@@ -1,0 +1,15 @@
+diff --git a/frontend/src/hacking-instructor/helpers/helpers.ts b/frontend/src/hacking-instructor/helpers/helpers.ts
+index 55589bfbb..5bcdd19f2 100644
+--- a/frontend/src/hacking-instructor/helpers/helpers.ts
++++ b/frontend/src/hacking-instructor/helpers/helpers.ts
+@@ -39,9 +39,7 @@ export function waitForInputToHaveValue (inputSelector: string, value: string, o
+ 
+     if (options.replacement?.length === 2) {
+       if (!config) {
+-        const res = await fetch('/rest/admin/application-configuration')
+-        const json = await res.json()
+-        config = json.config
++        throw new Error('Access to application configuration is not allowed in frontend')
+       }
+       const propertyChain = options.replacement[1].split('.')
+       let replacementValue = config

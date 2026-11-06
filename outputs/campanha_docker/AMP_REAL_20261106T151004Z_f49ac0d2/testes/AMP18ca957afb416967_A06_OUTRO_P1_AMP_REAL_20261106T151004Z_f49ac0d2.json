@@ -1,0 +1,455 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 29.210152054998616,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 9.17,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_89813dg3/current_user/primeira.xml",
+        "test/api/user.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 17.71,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+      ],
+      "testes_falhos_novos": [
+        "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /api/Users\n  ✔ GET all users is forbidden via public API (61.29125ms)\n  ✔ GET all users (151.671834ms)\n  ✔ GET all users doesnt include passwords (79.491ms)\n  ✔ POST new user (104.720708ms)\n  ✔ POST new admin (81.194708ms)\n  ✔ POST new blank user (50.194625ms)\n  ✔ POST same blank user in database (145.874833ms)\n  ✔ POST whitespaces user (82.984542ms)\n  ✔ POST new deluxe user (78.570958ms)\n  ✔ POST new accounting user (58.308458ms)\n  ✔ POST user not belonging to customer, deluxe, accounting, admin is forbidden (29.024209ms)\n  ✔ POST new user with XSS attack in email address (105.463083ms)\n✔ /api/Users (2886.909793ms)\n▶ /api/Users/:id\n  ✔ GET existing user by id is forbidden via public API (14.740709ms)\n  ✔ PUT update existing user is forbidden via public API (23.221708ms)\n  ✔ DELETE existing user is forbidden via public API (5.60575ms)\n  ✔ GET existing user by id (57.469583ms)\n  ✔ PUT update existing user is forbidden via API even when authenticated (7.521125ms)\n  ✔ DELETE existing user is forbidden via API even when authenticated (7.46125ms)\n✔ /api/Users/:id (117.208709ms)\n▶ /rest/user/whoami\n  ✔ GET own user id and email on who-am-i request (71.554041ms)\n  ✔ GET who-am-i request returns nothing on missing auth token (18.096416ms)\n  ✔ GET who-am-i request returns nothing on invalid auth token (13.206791ms)\n  ✔ GET who-am-i request returns nothing on broken auth token (11.91325ms)\n  ✔ GET who-am-i request returns nothing on expired auth token (12.767541ms)\n  ✔ GET who-am-i with fields parameter returns only requested fields (147.479709ms)\n  ✔ GET who-am-i with fields parameter does not return password by default (53.18175ms)\n  ✖ GET who-am-i with fields parameter can be tricked into returning password (58.09ms)\n✖ /rest/user/whoami (388.360375ms)\nℹ tests 26\nℹ suites 3\nℹ pass 25\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 9634.743088\n\n✖ failing tests:\n\ntest at test/api/user.test.ts:2:13205\n✖ GET who-am-i with fields parameter can be tricked into returning password (58.09ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.<anonymous> (test/api/user.test.ts:327:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 1.1541000276338309e-05,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/currentUser.ts"
+    ],
+    "grupos": [
+      "current_user"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 9.17
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "current_user",
+      "status": "executada",
+      "duracao_s": 17.71
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "current_user"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 9.17
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "current_user",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/user.test.ts :: /api/Users > GET all users",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > GET all users",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > GET all users doesnt include passwords",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > GET all users doesnt include passwords",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > GET all users is forbidden via public API",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > GET all users is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST new accounting user",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST new accounting user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST new admin",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST new admin",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST new blank user",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST new blank user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST new deluxe user",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST new deluxe user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST new user",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST new user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST new user with XSS attack in email address",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST new user with XSS attack in email address",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST same blank user in database",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST same blank user in database",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST user not belonging to customer, deluxe, accounting, admin is forbidden",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST user not belonging to customer, deluxe, accounting, admin is forbidden",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users > POST whitespaces user",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users > POST whitespaces user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users/:id > DELETE existing user is forbidden via API even when authenticated",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users/:id > DELETE existing user is forbidden via API even when authenticated",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users/:id > DELETE existing user is forbidden via public API",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users/:id > DELETE existing user is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users/:id > GET existing user by id",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users/:id > GET existing user by id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users/:id > GET existing user by id is forbidden via public API",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users/:id > GET existing user by id is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users/:id > PUT update existing user is forbidden via API even when authenticated",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users/:id > PUT update existing user is forbidden via API even when authenticated",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /api/Users/:id > PUT update existing user is forbidden via public API",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/api/Users/:id > PUT update existing user is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /rest/user/whoami > GET own user id and email on who-am-i request",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/rest/user/whoami > GET own user id and email on who-am-i request",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on broken auth token",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/rest/user/whoami > GET who-am-i request returns nothing on broken auth token",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on expired auth token",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/rest/user/whoami > GET who-am-i request returns nothing on expired auth token",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on invalid auth token",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/rest/user/whoami > GET who-am-i request returns nothing on invalid auth token",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on missing auth token",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/rest/user/whoami > GET who-am-i request returns nothing on missing auth token",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter does not return password by default",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/rest/user/whoami > GET who-am-i with fields parameter does not return password by default",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter returns only requested fields",
+            "arquivo": "test/api/user.test.ts",
+            "nome": "/rest/user/whoami > GET who-am-i with fields parameter returns only requested fields",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+        ],
+        "falhos_novos": [
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+        ],
+        "falhos_novos_observados": [
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/user.test.ts :: /api/Users > GET all users",
+          "test/api/user.test.ts :: /api/Users > GET all users doesnt include passwords",
+          "test/api/user.test.ts :: /api/Users > GET all users is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users > POST new accounting user",
+          "test/api/user.test.ts :: /api/Users > POST new admin",
+          "test/api/user.test.ts :: /api/Users > POST new blank user",
+          "test/api/user.test.ts :: /api/Users > POST new deluxe user",
+          "test/api/user.test.ts :: /api/Users > POST new user",
+          "test/api/user.test.ts :: /api/Users > POST new user with XSS attack in email address",
+          "test/api/user.test.ts :: /api/Users > POST same blank user in database",
+          "test/api/user.test.ts :: /api/Users > POST user not belonging to customer, deluxe, accounting, admin is forbidden",
+          "test/api/user.test.ts :: /api/Users > POST whitespaces user",
+          "test/api/user.test.ts :: /api/Users/:id > DELETE existing user is forbidden via API even when authenticated",
+          "test/api/user.test.ts :: /api/Users/:id > DELETE existing user is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users/:id > GET existing user by id",
+          "test/api/user.test.ts :: /api/Users/:id > GET existing user by id is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users/:id > PUT update existing user is forbidden via API even when authenticated",
+          "test/api/user.test.ts :: /api/Users/:id > PUT update existing user is forbidden via public API",
+          "test/api/user.test.ts :: /rest/user/whoami > GET own user id and email on who-am-i request",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on broken auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on expired auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on invalid auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on missing auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter does not return password by default",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter returns only requested fields"
+        ],
+        "esperados": [
+          "test/api/user.test.ts :: /api/Users > GET all users",
+          "test/api/user.test.ts :: /api/Users > GET all users doesnt include passwords",
+          "test/api/user.test.ts :: /api/Users > GET all users is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users > POST new accounting user",
+          "test/api/user.test.ts :: /api/Users > POST new admin",
+          "test/api/user.test.ts :: /api/Users > POST new blank user",
+          "test/api/user.test.ts :: /api/Users > POST new deluxe user",
+          "test/api/user.test.ts :: /api/Users > POST new user",
+          "test/api/user.test.ts :: /api/Users > POST new user with XSS attack in email address",
+          "test/api/user.test.ts :: /api/Users > POST same blank user in database",
+          "test/api/user.test.ts :: /api/Users > POST user not belonging to customer, deluxe, accounting, admin is forbidden",
+          "test/api/user.test.ts :: /api/Users > POST whitespaces user",
+          "test/api/user.test.ts :: /api/Users/:id > DELETE existing user is forbidden via API even when authenticated",
+          "test/api/user.test.ts :: /api/Users/:id > DELETE existing user is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users/:id > GET existing user by id",
+          "test/api/user.test.ts :: /api/Users/:id > GET existing user by id is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users/:id > PUT update existing user is forbidden via API even when authenticated",
+          "test/api/user.test.ts :: /api/Users/:id > PUT update existing user is forbidden via public API",
+          "test/api/user.test.ts :: /rest/user/whoami > GET own user id and email on who-am-i request",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on broken auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on expired auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on invalid auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on missing auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter does not return password by default",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter returns only requested fields"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/user.test.ts :: /api/Users > GET all users",
+          "test/api/user.test.ts :: /api/Users > GET all users doesnt include passwords",
+          "test/api/user.test.ts :: /api/Users > GET all users is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users > POST new accounting user",
+          "test/api/user.test.ts :: /api/Users > POST new admin",
+          "test/api/user.test.ts :: /api/Users > POST new blank user",
+          "test/api/user.test.ts :: /api/Users > POST new deluxe user",
+          "test/api/user.test.ts :: /api/Users > POST new user",
+          "test/api/user.test.ts :: /api/Users > POST new user with XSS attack in email address",
+          "test/api/user.test.ts :: /api/Users > POST same blank user in database",
+          "test/api/user.test.ts :: /api/Users > POST user not belonging to customer, deluxe, accounting, admin is forbidden",
+          "test/api/user.test.ts :: /api/Users > POST whitespaces user",
+          "test/api/user.test.ts :: /api/Users/:id > DELETE existing user is forbidden via API even when authenticated",
+          "test/api/user.test.ts :: /api/Users/:id > DELETE existing user is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users/:id > GET existing user by id",
+          "test/api/user.test.ts :: /api/Users/:id > GET existing user by id is forbidden via public API",
+          "test/api/user.test.ts :: /api/Users/:id > PUT update existing user is forbidden via API even when authenticated",
+          "test/api/user.test.ts :: /api/Users/:id > PUT update existing user is forbidden via public API",
+          "test/api/user.test.ts :: /rest/user/whoami > GET own user id and email on who-am-i request",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on broken auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on expired auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on invalid auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i request returns nothing on missing auth token",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter can be tricked into returning password",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter does not return password by default",
+          "test/api/user.test.ts :: /rest/user/whoami > GET who-am-i with fields parameter returns only requested fields"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/user.test.ts :: /rest/user/whoami > GET own user id and email on who-am-i request",
+          "test/api/user.test.ts :: /api/Users > POST new user"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 17.71,
+        "espera_api_s": 1.1541000276338309e-05,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_89813dg3/current_user/primeira.xml",
+            "test/api/user.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 17.71,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /api/Users\n  ✔ GET all users is forbidden via public API (61.29125ms)\n  ✔ GET all users (151.671834ms)\n  ✔ GET all users doesnt include passwords (79.491ms)\n  ✔ POST new user (104.720708ms)\n  ✔ POST new admin (81.194708ms)\n  ✔ POST new blank user (50.194625ms)\n  ✔ POST same blank user in database (145.874833ms)\n  ✔ POST whitespaces user (82.984542ms)\n  ✔ POST new deluxe user (78.570958ms)\n  ✔ POST new accounting user (58.308458ms)\n  ✔ POST user not belonging to customer, deluxe, accounting, admin is forbidden (29.024209ms)\n  ✔ POST new user with XSS attack in email address (105.463083ms)\n✔ /api/Users (2886.909793ms)\n▶ /api/Users/:id\n  ✔ GET existing user by id is forbidden via public API (14.740709ms)\n  ✔ PUT update existing user is forbidden via public API (23.221708ms)\n  ✔ DELETE existing user is forbidden via public API (5.60575ms)\n  ✔ GET existing user by id (57.469583ms)\n  ✔ PUT update existing user is forbidden via API even when authenticated (7.521125ms)\n  ✔ DELETE existing user is forbidden via API even when authenticated (7.46125ms)\n✔ /api/Users/:id (117.208709ms)\n▶ /rest/user/whoami\n  ✔ GET own user id and email on who-am-i request (71.554041ms)\n  ✔ GET who-am-i request returns nothing on missing auth token (18.096416ms)\n  ✔ GET who-am-i request returns nothing on invalid auth token (13.206791ms)\n  ✔ GET who-am-i request returns nothing on broken auth token (11.91325ms)\n  ✔ GET who-am-i request returns nothing on expired auth token (12.767541ms)\n  ✔ GET who-am-i with fields parameter returns only requested fields (147.479709ms)\n  ✔ GET who-am-i with fields parameter does not return password by default (53.18175ms)\n  ✖ GET who-am-i with fields parameter can be tricked into returning password (58.09ms)\n✖ /rest/user/whoami (388.360375ms)\nℹ tests 26\nℹ suites 3\nℹ pass 25\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 9634.743088\n\n✖ failing tests:\n\ntest at test/api/user.test.ts:2:13205\n✖ GET who-am-i with fields parameter can be tricked into returning password (58.09ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.<anonymous> (test/api/user.test.ts:327:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Users\" time=\"2.886910\" disabled=\"0\" errors=\"0\" tests=\"12\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET all users is forbidden via public API\" time=\"0.061291\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET all users\" time=\"0.151672\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET all users doesnt include passwords\" time=\"0.079491\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new user\" time=\"0.104721\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new admin\" time=\"0.081195\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new blank user\" time=\"0.050195\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST same blank user in database\" time=\"0.145875\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST whitespaces user\" time=\"0.082985\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new deluxe user\" time=\"0.078571\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new accounting user\" time=\"0.058308\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST user not belonging to customer, deluxe, accounting, admin is forbidden\" time=\"0.029024\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new user with XSS attack in email address\" time=\"0.105463\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Users/:id\" time=\"0.117209\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET existing user by id is forbidden via public API\" time=\"0.014741\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"PUT update existing user is forbidden via public API\" time=\"0.023222\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"DELETE existing user is forbidden via public API\" time=\"0.005606\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET existing user by id\" time=\"0.057470\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"PUT update existing user is forbidden via API even when authenticated\" time=\"0.007521\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"DELETE existing user is forbidden via API even when authenticated\" time=\"0.007461\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/user/whoami\" time=\"0.388360\" disabled=\"0\" errors=\"0\" tests=\"8\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET own user id and email on who-am-i request\" time=\"0.071554\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i request returns nothing on missing auth token\" time=\"0.018096\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i request returns nothing on invalid auth token\" time=\"0.013207\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i request returns nothing on broken auth token\" time=\"0.011913\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i request returns nothing on expired auth token\" time=\"0.012768\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i with fields parameter returns only requested fields\" time=\"0.147480\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i with fields parameter does not return password by default\" time=\"0.053182\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i with fields parameter can be tricked into returning password\" time=\"0.058090\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\" failure=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'undefined'&#10;- 'string'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'undefined'&#10;- 'string'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'undefined'\n- 'string'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/user.test.ts:327:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 26 -->\n\t<!-- suites 3 -->\n\t<!-- pass 25 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 9634.743088 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Users\" time=\"2.935561\" disabled=\"0\" errors=\"0\" tests=\"12\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET all users is forbidden via public API\" time=\"0.087710\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET all users\" time=\"0.300258\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET all users doesnt include passwords\" time=\"0.107646\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new user\" time=\"0.077948\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new admin\" time=\"0.068731\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new blank user\" time=\"0.046172\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST same blank user in database\" time=\"0.082874\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST whitespaces user\" time=\"0.089595\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new deluxe user\" time=\"0.084219\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new accounting user\" time=\"0.085579\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST user not belonging to customer, deluxe, accounting, admin is forbidden\" time=\"0.021288\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"POST new user with XSS attack in email address\" time=\"0.137720\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Users/:id\" time=\"0.145636\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET existing user by id is forbidden via public API\" time=\"0.015206\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"PUT update existing user is forbidden via public API\" time=\"0.009956\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"DELETE existing user is forbidden via public API\" time=\"0.017390\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET existing user by id\" time=\"0.086642\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"PUT update existing user is forbidden via API even when authenticated\" time=\"0.008787\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"DELETE existing user is forbidden via API even when authenticated\" time=\"0.006782\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/user/whoami\" time=\"0.546132\" disabled=\"0\" errors=\"0\" tests=\"8\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET own user id and email on who-am-i request\" time=\"0.099325\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i request returns nothing on missing auth token\" time=\"0.012890\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i request returns nothing on invalid auth token\" time=\"0.016326\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i request returns nothing on broken auth token\" time=\"0.013175\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i request returns nothing on expired auth token\" time=\"0.012956\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i with fields parameter returns only requested fields\" time=\"0.210704\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i with fields parameter does not return password by default\" time=\"0.069482\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\"/>\n\t\t<testcase name=\"GET who-am-i with fields parameter can be tricked into returning password\" time=\"0.108869\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user.test.ts\" failure=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'undefined'&#10;- 'string'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'undefined'&#10;- 'string'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'undefined'\n- 'string'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/user.test.ts:327:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 26 -->\n\t<!-- suites 3 -->\n\t<!-- pass 25 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 7125.748336 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

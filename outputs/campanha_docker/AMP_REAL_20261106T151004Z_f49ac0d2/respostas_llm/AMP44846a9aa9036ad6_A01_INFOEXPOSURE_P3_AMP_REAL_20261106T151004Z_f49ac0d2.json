@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações sensíveis por meio de listagem de diretórios habilitada em rotas que podem conter arquivos confidenciais.\",\"causa_da_vulnerabilidade\":\"O uso do middleware 'serveIndex' em diretórios como '/ftp' e '/support/logs' permite que qualquer usuário visualize a listagem completa dos arquivos presentes nesses diretórios, o que pode incluir informações sensíveis ou confidenciais.\",\"estrategia_de_correcao\":\"Desabilitar a listagem de diretórios removendo o middleware 'serveIndex' das rotas que expõem diretórios sensíveis, mantendo apenas o middleware 'express.static' para permitir o acesso direto aos arquivos quando o caminho exato for conhecido. Para diretórios que precisam de listagem, implementar controle de acesso adequado e filtros para limitar os arquivos exibidos.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\",\"trecho_corrigido\":\"app.use('/ftp', express.static('ftp')) // vuln-code-snippet vuln-line directoryListingChallenge\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"app.use('/support/logs', express.static('logs')) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"A listagem de diretórios via 'serveIndex' expõe nomes e estrutura de arquivos que podem conter dados sensíveis, facilitando ataques de enumeração e acesso não autorizado. Ao substituir por 'express.static', os arquivos permanecem acessíveis via URL direta, mas a listagem dos conteúdos do diretório é desabilitada, reduzindo a exposição de informações. Essa alteração mantém a funcionalidade de download e acesso aos arquivos públicos, alinhando-se às melhores práticas de segurança.\",\"limitacoes_da_correcao\":\"A remoção da listagem de diretórios impede que usuários visualizem o conteúdo completo das pastas, o que pode impactar funcionalidades que dependem dessa listagem. Caso a listagem seja necessária para funcionalidades legítimas, será preciso implementar autenticação e filtros adicionais para garantir que apenas usuários autorizados possam visualizar os arquivos listados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3157,
+  "tokens_saida": 497,
+  "latencia_s": 5.5,
+  "custo_usd": 0.002058,
+  "hash_prompt": "a3f581e87205991737ae68d431d3d6e446667731cb3cf401ee9e31de8799cba1",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

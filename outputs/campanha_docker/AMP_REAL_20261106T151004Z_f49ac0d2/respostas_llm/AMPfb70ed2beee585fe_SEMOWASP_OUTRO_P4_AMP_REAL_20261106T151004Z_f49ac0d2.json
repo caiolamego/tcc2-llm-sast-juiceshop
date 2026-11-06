@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Controle de acesso incorreto devido ao uso de email mascarado para consulta de dados do usuário.\",\"causa_da_vulnerabilidade\":\"O código utiliza o email do usuário com caracteres substituídos por asteriscos (email mascarado) para buscar pedidos no banco de dados, o que pode causar colisões e permitir acesso a dados de outros usuários com emails semelhantes.\",\"estrategia_de_correcao\":\"Utilizar um identificador único e imutável do usuário (como o ID do usuário autenticado) para realizar as consultas no banco de dados, garantindo que apenas os dados pertencentes ao usuário autenticado sejam retornados.\",\"edicoes\":[{\"arquivo\":\"routes/dataExport.ts\",\"trecho_original\":\"        const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n\\n        let memories, orders, reviews\\n        try {\\n          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })\\n        } catch (error) {\\n          next(error)\\n          return\\n        }\\n\\n        try {\\n          orders = await db.ordersCollection.find({ email: updatedEmail })\\n        } catch (error) {\\n          next(new Error(`Error retrieving orders for ${updatedEmail}`))\\n          return\\n        }\\n\\n        try {\\n          reviews = await db.reviewsCollection.find({ author: email })\\n        } catch (error) {\\n          next(new Error(`Error retrieving reviews for ${updatedEmail}`))\\n          return\\n        }\",\"trecho_corrigido\":\"        const userId = loggedInUser.data.id\\n\\n        let memories, orders, reviews\\n        try {\\n          memories = await MemoryModel.findAll({ where: { UserId: userId } })\\n        } catch (error) {\\n          next(error)\\n          return\\n        }\\n\\n        try {\\n          orders = await db.ordersCollection.find({ userId: userId })\\n        } catch (error) {\\n          next(new Error(`Error retrieving orders for user ID ${userId}`))\\n          return\\n        }\\n\\n        try {\\n          reviews = await db.reviewsCollection.find({ userId: userId })\\n        } catch (error) {\\n          next(new Error(`Error retrieving reviews for user ID ${userId}`))\\n          return\\n        }\"}],\"justificativa_tecnica\":\"Ao substituir a consulta baseada em email mascarado por consultas baseadas no identificador único do usuário (userId), garantimos que as consultas retornem apenas os dados pertencentes ao usuário autenticado, eliminando o risco de colisões e acesso indevido a dados de outros usuários. O userId é um identificador único e imutável, adequado para controle de acesso e autorização.\",\"limitacoes_da_correcao\":\"A correção assume que as coleções ordersCollection e reviewsCollection possuem o campo userId devidamente indexado e populado para cada documento. Caso contrário, será necessário adaptar o esquema do banco de dados para incluir essa associação. Além disso, a correção não altera a lógica de autorização além do escopo do usuário autenticado, mantendo o comportamento funcional original.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2285,
+  "tokens_saida": 667,
+  "latencia_s": 7.181,
+  "custo_usd": 0.001981,
+  "hash_prompt": "329f5fd64b6340c79a942744b36d34626fb76cc34f2a7598ec0a9363c470d040",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,19 @@
+diff --git a/routes/currentUser.ts b/routes/currentUser.ts
+index 3b6a83f97..5f97f7300 100644
+--- a/routes/currentUser.ts
++++ b/routes/currentUser.ts
+@@ -54,8 +54,12 @@ export function retrieveLoggedInUser () {
+     if (req.query.callback === undefined) {
+       res.json(response)
+     } else {
+-      challengeUtils.solveIf(challenges.emailLeakChallenge, () => { return true })
+-      res.jsonp(response)
++      if (security.verify(req.cookies.token)) {
++        challengeUtils.solveIf(challenges.emailLeakChallenge, () => { return true })
++        res.jsonp(response)
++      } else {
++        res.json(response)
++      }
+     }
+   }
+ }

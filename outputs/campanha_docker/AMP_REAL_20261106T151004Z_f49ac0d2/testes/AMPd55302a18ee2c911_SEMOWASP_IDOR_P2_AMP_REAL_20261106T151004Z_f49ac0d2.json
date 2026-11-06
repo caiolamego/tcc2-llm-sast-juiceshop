@@ -1,0 +1,271 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 27.642381261997798,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+    "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+    "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 8.14,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura__ayem_m3/delivery/primeira.xml",
+        "test/api/delivery.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 15.55,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+        "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method"
+      ],
+      "testes_falhos_novos": [
+        "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+        "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /api/Deliverys\n  ▶ for regular customer\n    ✔ GET delivery methods (18.388542ms)\n  ✔ for regular customer (131.065917ms)\n  ▶ for deluxe customer\n    ✖ GET delivery methods (12.402209ms)\n  ✖ for deluxe customer (49.391958ms)\n✖ /api/Deliverys (894.852709ms)\n▶ /api/Deliverys/:id\n  ▶ for regular customer\n    ✔ GET delivery method (8.501292ms)\n    ✔ GET non-existing delivery method returns 400 (6.349ms)\n  ✔ for regular customer (53.315167ms)\n  ▶ for deluxe customer\n    ✖ GET delivery method (8.352333ms)\n  ✖ for deluxe customer (35.885583ms)\n✖ /api/Deliverys/:id (89.991666ms)\nℹ tests 5\nℹ suites 6\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4679.830128\n\n✖ failing tests:\n\ntest at test/api/delivery.test.ts:2:2511\n✖ GET delivery methods (12.402209ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0.99 !== 0.5\n  \n      at TestContext.<anonymous> (test/api/delivery.test.ts:69:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0.99,\n    expected: 0.5,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/delivery.test.ts:2:4548\n✖ GET delivery method (8.352333ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0.5 !== 0\n  \n      at TestContext.<anonymous> (test/api/delivery.test.ts:129:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0.5,\n    expected: 0,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 3.417000698391348e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+    "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/delivery.ts"
+    ],
+    "grupos": [
+      "delivery"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 8.14
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "delivery",
+      "status": "executada",
+      "duracao_s": 15.55
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "delivery"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 8.14
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "delivery",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys > for deluxe customer > GET delivery methods",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys > for regular customer > GET delivery methods",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys/:id > for deluxe customer > GET delivery method",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET delivery method",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys/:id > for regular customer > GET delivery method",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400",
+            "arquivo": "test/api/delivery.test.ts",
+            "nome": "/api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method"
+        ],
+        "falhos_novos": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method"
+        ],
+        "falhos_novos_observados": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400"
+        ],
+        "esperados": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/delivery.test.ts :: /api/Deliverys > for deluxe customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys > for regular customer > GET delivery methods",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for deluxe customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET delivery method",
+          "test/api/delivery.test.ts :: /api/Deliverys/:id > for regular customer > GET non-existing delivery method returns 400"
+        ],
+        "obrigatorios_aprovados": [],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 15.55,
+        "espera_api_s": 3.417000698391348e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura__ayem_m3/delivery/primeira.xml",
+            "test/api/delivery.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 15.55,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /api/Deliverys\n  ▶ for regular customer\n    ✔ GET delivery methods (18.388542ms)\n  ✔ for regular customer (131.065917ms)\n  ▶ for deluxe customer\n    ✖ GET delivery methods (12.402209ms)\n  ✖ for deluxe customer (49.391958ms)\n✖ /api/Deliverys (894.852709ms)\n▶ /api/Deliverys/:id\n  ▶ for regular customer\n    ✔ GET delivery method (8.501292ms)\n    ✔ GET non-existing delivery method returns 400 (6.349ms)\n  ✔ for regular customer (53.315167ms)\n  ▶ for deluxe customer\n    ✖ GET delivery method (8.352333ms)\n  ✖ for deluxe customer (35.885583ms)\n✖ /api/Deliverys/:id (89.991666ms)\nℹ tests 5\nℹ suites 6\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4679.830128\n\n✖ failing tests:\n\ntest at test/api/delivery.test.ts:2:2511\n✖ GET delivery methods (12.402209ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0.99 !== 0.5\n  \n      at TestContext.<anonymous> (test/api/delivery.test.ts:69:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0.99,\n    expected: 0.5,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/delivery.test.ts:2:4548\n✖ GET delivery method (8.352333ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0.5 !== 0\n  \n      at TestContext.<anonymous> (test/api/delivery.test.ts:129:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0.5,\n    expected: 0,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Deliverys\" time=\"0.894853\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testsuite name=\"for regular customer\" time=\"0.131066\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"GET delivery methods\" time=\"0.018389\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"for deluxe customer\" time=\"0.049392\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"GET delivery methods\" time=\"0.012402\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0.99 !== 0.5&#10;\">\n\t\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0.99 !== 0.5\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0.99 !== 0.5\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0.99 !== 0.5\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/delivery.test.ts:69:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0.99,\n    expected: 0.5,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t\t</failure>\n\t\t\t</testcase>\n\t\t</testsuite>\n\t</testsuite>\n\t<testsuite name=\"/api/Deliverys/:id\" time=\"0.089992\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testsuite name=\"for regular customer\" time=\"0.053315\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"GET delivery method\" time=\"0.008501\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\"/>\n\t\t\t<testcase name=\"GET non-existing delivery method returns 400\" time=\"0.006349\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"for deluxe customer\" time=\"0.035886\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"GET delivery method\" time=\"0.008352\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0.5 !== 0&#10;\">\n\t\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0.5 !== 0\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0.5 !== 0\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0.5 !== 0\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/delivery.test.ts:129:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0.5,\n    expected: 0,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t\t</failure>\n\t\t\t</testcase>\n\t\t</testsuite>\n\t</testsuite>\n\t<!-- tests 5 -->\n\t<!-- suites 6 -->\n\t<!-- pass 3 -->\n\t<!-- fail 2 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 4679.830128 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Deliverys\" time=\"3.333323\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testsuite name=\"for regular customer\" time=\"0.244984\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"GET delivery methods\" time=\"0.029643\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"for deluxe customer\" time=\"0.129185\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"GET delivery methods\" time=\"0.019614\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0.99 !== 0.5&#10;\">\n\t\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0.99 !== 0.5\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0.99 !== 0.5\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0.99 !== 0.5\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/delivery.test.ts:69:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0.99,\n    expected: 0.5,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t\t</failure>\n\t\t\t</testcase>\n\t\t</testsuite>\n\t</testsuite>\n\t<testsuite name=\"/api/Deliverys/:id\" time=\"0.280665\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testsuite name=\"for regular customer\" time=\"0.154973\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"GET delivery method\" time=\"0.028459\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\"/>\n\t\t\t<testcase name=\"GET non-existing delivery method returns 400\" time=\"0.019092\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"for deluxe customer\" time=\"0.122866\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"GET delivery method\" time=\"0.015429\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/delivery.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0.5 !== 0&#10;\">\n\t\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0.5 !== 0\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0.5 !== 0\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0.5 !== 0\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/delivery.test.ts:129:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0.5,\n    expected: 0,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t\t</failure>\n\t\t\t</testcase>\n\t\t</testsuite>\n\t</testsuite>\n\t<!-- tests 5 -->\n\t<!-- suites 6 -->\n\t<!-- pass 3 -->\n\t<!-- fail 2 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 10088.223171 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

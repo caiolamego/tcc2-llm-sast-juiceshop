@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade de Open Redirect devido à verificação inadequada da URL permitida na função isRedirectAllowed.\",\"causa_da_vulnerabilidade\":\"A função isRedirectAllowed verifica se a URL de redirecionamento contém qualquer uma das URLs da lista de permitidos usando url.includes(allowedUrl). Isso permite que URLs maliciosas que contenham uma URL permitida como substring sejam consideradas válidas, possibilitando redirecionamentos para domínios não autorizados.\",\"estrategia_de_correcao\":\"Modificar a verificação para garantir que a URL de redirecionamento corresponda exatamente a uma das URLs permitidas ou que seja um subcaminho válido da URL permitida, evitando correspondências parciais inseguras. Uma abordagem segura é usar a API URL para comparar a origem (protocolo + host + porta) da URL de redirecionamento com as URLs da lista permitida.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\"trecho_corrigido\":\"export const isRedirectAllowed = (url: string) => {\\n  try {\\n    const redirectUrl = new URL(url)\\n    for (const allowedUrl of redirectAllowlist) {\\n      const allowedOrigin = new URL(allowedUrl).origin\\n      if (redirectUrl.origin === allowedOrigin) {\\n        return true\\n      }\\n    }\\n  } catch {\\n    // Se a URL for inválida, não permitir\\n    return false\\n  }\\n  return false\\n}\"}],\"justificativa_tecnica\":\"A alteração utiliza a API URL para analisar a URL de redirecionamento e as URLs permitidas, comparando suas origens (protocolo, host e porta). Isso impede que URLs maliciosas que contenham uma URL permitida como substring sejam aceitas, eliminando a possibilidade de Open Redirect via correspondência parcial insegura.\",\"limitacoes_da_correcao\":\"A correção assume que as URLs na lista de permitidos são URLs completas e válidas. URLs relativas ou formatos incomuns podem não ser corretamente tratados. Além disso, a verificação é restrita à origem, não considerando caminhos específicos, o que pode ser necessário dependendo do contexto de uso.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3087,
+  "tokens_saida": 525,
+  "latencia_s": 4.606,
+  "custo_usd": 0.001499,
+  "hash_prompt": "b84ee01cb53fdd7a5fefaf010bf70ef9402e9c9cace9ca20418795af48448075",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml que pode permitir Cross-Site Scripting (XSS) ao confiar cegamente em dados externos sem sanitização adequada.\",\"causa_da_vulnerabilidade\":\"O método sanitizer.bypassSecurityTrustHtml é utilizado para marcar strings HTML como seguras sem realizar sanitização real, aplicando-se diretamente ao conteúdo de 'user.email' e 'feedback.comment' que podem conter dados controlados por usuários maliciosos.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml para que o Angular aplique sua sanitização padrão automaticamente, evitando a injeção de código malicioso no DOM.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"for (const user of this.userDataSource) {\\n          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`)\\n        }\",\"trecho_corrigido\":\"for (const user of this.userDataSource) {\\n          user.email = `<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`\\n        }\"},{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n        }\",\"trecho_corrigido\":\"for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = feedback.comment\\n        }\"}],\"justificativa_tecnica\":\"O Angular já realiza sanitização automática de interpolação de strings em templates, portanto, ao remover bypassSecurityTrustHtml, o conteúdo será sanitizado corretamente, prevenindo XSS. Manter bypassSecurityTrustHtml sem sanitização explícita permite que código malicioso seja injetado e executado no navegador.\",\"limitacoes_da_correcao\":\"Se os dados originais contiverem HTML legítimo que precisa ser renderizado, essa correção pode impedir sua exibição correta. Para casos que exigem HTML seguro, deve-se implementar uma sanitização adequada antes de marcar o conteúdo como seguro.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1770,
+  "tokens_saida": 483,
+  "latencia_s": 5.18,
+  "custo_usd": 0.001481,
+  "hash_prompt": "14ee831b1ffa647c4477c010f2c0a50c7740647352bb51d4b3d26d0fae802c9d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+diff --git a/routes/captcha.ts b/routes/captcha.ts
+index d874df7bb..a38ab7580 100644
+--- a/routes/captcha.ts
++++ b/routes/captcha.ts
+@@ -19,7 +19,20 @@ export function captchas () {
+     const secondOperator = operators[Math.floor((Math.random() * 3))]
+ 
+     const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()
+-    const answer = eval(expression).toString() // eslint-disable-line no-eval
++    function safeEval(expr: string): number {
++      const operators = expr.match(/[+\-*]/g);
++      const numbers = expr.split(/[+\-*]/).map(Number);
++      if (!operators || numbers.length !== 3) throw new Error('Invalid expression');
++      let result = numbers[0];
++      if (operators[0] === '+') result += numbers[1];
++      else if (operators[0] === '-') result -= numbers[1];
++      else if (operators[0] === '*') result *= numbers[1];
++      if (operators[1] === '+') result += numbers[2];
++      else if (operators[1] === '-') result -= numbers[2];
++      else if (operators[1] === '*') result *= numbers[2];
++      return result;
++    }
++    const answer = safeEval(expression).toString()
+ 
+     const captcha = {
+       captchaId,

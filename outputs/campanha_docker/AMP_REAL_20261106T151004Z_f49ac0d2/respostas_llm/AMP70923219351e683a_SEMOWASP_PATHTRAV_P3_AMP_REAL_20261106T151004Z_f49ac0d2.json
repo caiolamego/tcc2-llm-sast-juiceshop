@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: External Control of File Name or Path via o parâmetro 'layout' no corpo da requisição que é usado diretamente nas opções de renderização do Express.\",\"causa_da_vulnerabilidade\":\"O código aceita um valor arbitrário do cliente para o parâmetro 'layout' e o utiliza diretamente como caminho para renderizar um template, sem validação adequada para garantir que o caminho esteja dentro do diretório permitido de templates. A validação atual apenas verifica se o caminho contém certas strings proibidas, o que é insuficiente para prevenir path traversal ou acesso a arquivos não autorizados.\",\"estrategia_de_correcao\":\"Implementar uma validação rigorosa que restrinja o valor de 'layout' a um conjunto conhecido e permitido de templates, ou garantir que o caminho resolvido esteja dentro do diretório raiz dos templates. Para isso, deve-se resolver o caminho absoluto do template solicitado, comparar com o diretório raiz dos templates usando 'path.relative' e rejeitar se estiver fora da raiz. Assim, evita-se que o usuário acesse arquivos arbitrários fora do diretório de templates.\",\"edicoes\":[{\"arquivo\":\"routes/dataErasure.ts\",\"trecho_original\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\",\"trecho_corrigido\":\"      if (req.body.layout) {\\n        const templatesRoot = path.resolve(__dirname, '..', 'views')\\n        const requestedPath = path.resolve(templatesRoot, req.body.layout)\\n        const relative = path.relative(templatesRoot, requestedPath)\\n        const isOutsideRoot = relative.startsWith('..') || path.isAbsolute(relative)\\n        if (isOutsideRoot) {\\n          next(new Error('File access not allowed'))\\n          return\\n        }\\n        const filePath: string = requestedPath.toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\"}],\"justificativa_tecnica\":\"A correção implementa uma validação robusta do caminho do template solicitado pelo usuário, garantindo que o caminho absoluto resolvido esteja dentro do diretório raiz dos templates. Isso impede ataques de path traversal que poderiam permitir a leitura de arquivos arbitrários no sistema. A validação anterior era insuficiente pois apenas verificava a presença de certas strings proibidas, o que não impede que um atacante use outras técnicas para acessar arquivos sensíveis. A comparação usando 'path.relative' é uma prática recomendada para garantir confinamento à raiz.\",\"limitacoes_da_correcao\":\"A correção assume que todos os templates válidos estão dentro do diretório 'views' relativo ao arquivo atual. Se existirem templates legítimos fora desse diretório, eles serão bloqueados. Além disso, a validação não impede que o usuário solicite templates que existam dentro do diretório mas que não deveriam ser acessíveis; para isso, seria necessário um controle de acesso adicional ou uma lista explícita de templates permitidos. A validação de arquivos proibidos por nome continua presente para reforçar a segurança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 2589,
+  "tokens_saida": 984,
+  "latencia_s": 11.344,
+  "custo_usd": 0.00261,
+  "hash_prompt": "a0eaf17c45835cedcf67467dadf0da93e0c01fd81c395708fc37fc0b41a78d47",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

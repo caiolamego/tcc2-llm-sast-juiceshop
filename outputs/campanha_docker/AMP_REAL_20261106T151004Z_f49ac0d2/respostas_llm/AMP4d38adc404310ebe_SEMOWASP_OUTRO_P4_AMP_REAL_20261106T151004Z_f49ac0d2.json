@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição da resposta correta do CAPTCHA na resposta JSON enviada ao cliente.\",\"causa_da_vulnerabilidade\":\"O código gera uma expressão matemática para o CAPTCHA e calcula sua resposta usando eval, armazenando tanto a expressão quanto a resposta no objeto 'captcha'. Em seguida, envia esse objeto inteiro na resposta JSON, incluindo a resposta correta, o que permite que qualquer cliente veja a solução do CAPTCHA.\",\"estrategia_de_correcao\":\"Modificar a resposta JSON para enviar apenas o identificador do CAPTCHA e a expressão matemática, removendo a resposta correta da resposta enviada ao cliente. A resposta correta deve ser mantida apenas no servidor para validação posterior.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const captcha = {\\n      captchaId,\\n      captcha: expression,\\n      answer\\n    }\\n    const captchaInstance = CaptchaModel.build(captcha)\\n    await captchaInstance.save()\\n    res.json(captcha)\",\"trecho_corrigido\":\"    const captcha = {\\n      captchaId,\\n      captcha: expression,\\n      answer\\n    }\\n    const captchaInstance = CaptchaModel.build(captcha)\\n    await captchaInstance.save()\\n    res.json({ captchaId, captcha: expression })\"}],\"justificativa_tecnica\":\"Ao não enviar a resposta correta do CAPTCHA para o cliente, evita-se que usuários mal-intencionados obtenham a solução diretamente, mantendo a integridade do mecanismo de verificação. A validação continua sendo feita no servidor comparando a resposta enviada pelo cliente com a armazenada, garantindo segurança sem expor informações sensíveis.\",\"limitacoes_da_correcao\":\"Esta correção não impede ataques de força bruta ou tentativas repetidas de adivinhação da resposta do CAPTCHA. Para mitigar esses riscos, seria necessário implementar limitações de taxa e monitoramento adicional, que estão fora do escopo desta correção.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 2230,
+  "tokens_saida": 395,
+  "latencia_s": 5.884,
+  "custo_usd": 0.001524,
+  "hash_prompt": "c87696e5a42288b1fcf803a10c1cf60210b6db0e62bad292d9caa7881cd64d5d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

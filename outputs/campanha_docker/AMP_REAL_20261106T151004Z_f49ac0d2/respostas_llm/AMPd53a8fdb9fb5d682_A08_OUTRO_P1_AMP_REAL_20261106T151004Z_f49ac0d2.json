@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Possível ataque de negação de serviço (DoS) devido a loops infinitos sem timeout nas funções waitForInputToHaveValue, waitForInputToNotHaveValue, waitForInputToNotHaveValueAndNotBeEmpty e waitForInputToNotBeEmpty.\",\"causa_da_vulnerabilidade\":\"As funções utilizam loops while(true) que aguardam uma condição para sair, porém não possuem um mecanismo de timeout ou limite máximo de iterações, o que pode levar a loops infinitos caso a condição nunca seja satisfeita, causando bloqueio da aplicação ou consumo excessivo de recursos.\",\"estrategia_de_correcao\":\"Adicionar um mecanismo de timeout nas funções que utilizam loops while(true), para que após um tempo máximo de espera a função interrompa o loop e evite bloqueio indefinido.\",\"edicoes\":[{\"arquivo\":\"frontend/src/hacking-instructor/helpers/helpers.ts\",\"trecho_original\":\"    while (true) {\\n      if (options.ignoreCase && inputElement.value.toLowerCase() === value.toLowerCase()) {\\n        break\\n      } else if (!options.ignoreCase && inputElement.value === value) {\\n        break\\n      }\\n      await sleep(100)\\n    }\",\"trecho_corrigido\":\"    const startTime = Date.now()\\n    while (true) {\\n      if (Date.now() - startTime > 30000) { // timeout de 30 segundos\\n        break\\n      }\\n      if (options.ignoreCase && inputElement.value.toLowerCase() === value.toLowerCase()) {\\n        break\\n      } else if (!options.ignoreCase && inputElement.value === value) {\\n        break\\n      }\\n      await sleep(100)\\n    }\"},{\"arquivo\":\"frontend/src/hacking-instructor/helpers/helpers.ts\",\"trecho_original\":\"    while (true) {\\n      if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {\\n        break\\n      } else if (!options.ignoreCase && inputElement.value !== value) {\\n        break\\n      }\\n      await sleep(100)\\n    }\",\"trecho_corrigido\":\"    const startTime = Date.now()\\n    while (true) {\\n      if (Date.now() - startTime > 30000) { // timeout de 30 segundos\\n        break\\n      }\\n      if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {\\n        break\\n      } else if (!options.ignoreCase && inputElement.value !== value) {\\n        break\\n      }\\n      await sleep(100)\\n    }\"},{\"arquivo\":\"frontend/src/hacking-instructor/helpers/helpers.ts\",\"trecho_original\":\"    while (true) {\\n      if (inputElement.value !== '') {\\n        if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {\\n          break\\n        } else if (!options.ignoreCase && inputElement.value !== value) {\\n          break\\n        }\\n      }\\n      await sleep(100)\\n    }\",\"trecho_corrigido\":\"    const startTime = Date.now()\\n    while (true) {\\n      if (Date.now() - startTime > 30000) { // timeout de 30 segundos\\n        break\\n      }\\n      if (inputElement.value !== '') {\\n        if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {\\n          break\\n        } else if (!options.ignoreCase && inputElement.value !== value) {\\n          break\\n        }\\n      }\\n      await sleep(100)\\n    }\"},{\"arquivo\":\"frontend/src/hacking-instructor/helpers/helpers.ts\",\"trecho_original\":\"    while (true) {\\n      if (inputElement.value && inputElement.value !== '') {\\n        break\",\"trecho_corrigido\":\"    const startTime = Date.now()\\n    while (true) {\\n      if (Date.now() - startTime > 30000) { // timeout de 30 segundos\\n        break\\n      }\\n      if (inputElement.value && inputElement.value !== '') {\\n        break\"}],\"justificativa_tecnica\":\"Loops infinitos sem timeout podem causar bloqueios e consumo excessivo de recursos, levando a negação de serviço. A inclusão de um timeout garante que a função não fique presa indefinidamente, melhorando a resiliência da aplicação.\",\"limitacoes_da_correcao\":\"O timeout fixo de 30 segundos pode não ser ideal para todos os casos de uso, podendo interromper a espera prematuramente em situações de latência alta. Ajustes no valor do timeout podem ser necessários conforme o contexto da aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1293,
+  "tokens_saida": 990,
+  "latencia_s": 9.371,
+  "custo_usd": 0.002101,
+  "hash_prompt": "7c47166e56ed4a1678e07f170685da8c670d4a7224fe74ef7504633d80a2039a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

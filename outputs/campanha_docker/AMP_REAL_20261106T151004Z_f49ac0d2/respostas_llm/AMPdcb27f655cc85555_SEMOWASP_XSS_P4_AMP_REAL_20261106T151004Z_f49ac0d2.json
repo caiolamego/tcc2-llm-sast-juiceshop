@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para renderizar HTML potencialmente não confiável, permitindo Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código utiliza 'this.sanitizer.bypassSecurityTrustHtml(data.image)' para confiar e renderizar diretamente HTML recebido do serviço 'imageCaptchaService' sem sanitização adequada. Isso desativa a sanitização padrão do Angular, permitindo que conteúdo malicioso seja interpretado como código HTML/JavaScript no navegador.\",\"estrategia_de_correcao\":\"Remover o uso de 'bypassSecurityTrustHtml' e utilizar a sanitização padrão do Angular para o conteúdo HTML recebido. Isso pode ser feito atribuindo diretamente o conteúdo recebido ao binding '[innerHTML]' sem bypass, permitindo que o Angular sanitize o conteúdo automaticamente e bloqueie scripts maliciosos.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"this.captcha = this.sanitizer.bypassSecurityTrustHtml(data.image)\",\"trecho_corrigido\":\"this.captcha = data.image\"}],\"justificativa_tecnica\":\"Ao remover 'bypassSecurityTrustHtml', o Angular aplica sua sanitização padrão ao conteúdo HTML exibido via '[innerHTML]', prevenindo a execução de scripts maliciosos e eliminando a vulnerabilidade XSS. Isso mantém a funcionalidade de exibir HTML formatado legítimo, mas bloqueia conteúdo perigoso.\",\"limitacoes_da_correcao\":\"Se o conteúdo HTML legítimo precisar de elementos ou atributos que o sanitizador padrão do Angular remove, pode haver perda de formatação. Além disso, a correção assume que o serviço 'imageCaptchaService' não entrega conteúdo malicioso intencionalmente. Caso contrário, uma sanitização mais robusta pode ser necessária.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2570,
+  "tokens_saida": 370,
+  "latencia_s": 4.624,
+  "custo_usd": 0.001044,
+  "hash_prompt": "363a65b82f52d00b7b751497b81d03950da53160890494fdd27e16ae559fe4f2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

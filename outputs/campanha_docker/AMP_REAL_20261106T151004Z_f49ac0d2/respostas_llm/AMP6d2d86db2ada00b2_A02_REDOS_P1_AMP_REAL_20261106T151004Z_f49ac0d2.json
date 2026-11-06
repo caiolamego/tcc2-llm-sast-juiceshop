@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de expressão regular (ReDoS) devido ao uso de entrada não sanitizada em RegExp.\",\"causa_da_vulnerabilidade\":\"O código constrói expressões regulares dinamicamente usando strings fornecidas (challengeKey) sem sanitização, o que pode permitir que um atacante insira padrões maliciosos que causem negação de serviço por meio de ataques de expressão regular (ReDoS).\",\"estrategia_de_correcao\":\"Sanitizar o valor de challengeKey antes de usá-lo para construir expressões regulares, escapando caracteres especiais para que sejam tratados como literais, evitando assim a execução de padrões maliciosos.\",\"edicoes\":[{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\\n  }\",\"trecho_corrigido\":\"function escapeRegExp(string: string) {\\n    return string.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&');\\n  }\\n\\n  const escapedChallengeKey = escapeRegExp(challengeKey);\\n\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\\n  }\"}],\"justificativa_tecnica\":\"A construção dinâmica de expressões regulares com entrada não confiável pode levar a ataques de ReDoS, onde padrões maliciosos causam alto consumo de CPU. Escapar os caracteres especiais da entrada impede que padrões maliciosos sejam interpretados como expressões regulares, mitigando essa vulnerabilidade.\",\"limitacoes_da_correcao\":\"A correção protege contra injeção de expressões regulares, mas não valida o conteúdo lógico do challengeKey. Se challengeKey for controlado por usuários externos, outras validações podem ser necessárias.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1651,
+  "tokens_saida": 547,
+  "latencia_s": 4.864,
+  "custo_usd": 0.001113,
+  "hash_prompt": "ac03662e2ebf9f88f59d07b8df123113f22496ed7276931ffee0dcb4204016c5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1408,
+  "tokens_escrita_cache": 0
+}

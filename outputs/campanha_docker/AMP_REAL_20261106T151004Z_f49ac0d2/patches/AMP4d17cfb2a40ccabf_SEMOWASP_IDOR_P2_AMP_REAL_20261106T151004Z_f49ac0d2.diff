@@ -1,0 +1,16 @@
+diff --git a/routes/likeProductReviews.ts b/routes/likeProductReviews.ts
+index a8d120fc1..2c38fb82f 100644
+--- a/routes/likeProductReviews.ts
++++ b/routes/likeProductReviews.ts
+@@ -21,6 +21,11 @@ export function likeProductReviews () {
+       return res.status(401).json({ error: 'Unauthorized' })
+     }
+ 
++    // Validação do id para evitar injeção de consulta
++    if (typeof id !== 'string' || !id.match(/^[a-fA-F0-9]{24}$/)) {
++      return res.status(400).json({ error: 'Wrong Params' })
++    }
++
+     try {
+       const review = await db.reviewsCollection.findOne({ _id: id })
+       if (!review) {

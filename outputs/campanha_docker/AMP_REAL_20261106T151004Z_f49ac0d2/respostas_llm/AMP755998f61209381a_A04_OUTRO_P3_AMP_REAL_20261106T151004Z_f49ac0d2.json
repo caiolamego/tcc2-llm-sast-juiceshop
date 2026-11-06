@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de token JWT hard-coded em testes automatizados.\",\"causa_da_vulnerabilidade\":\"O código de teste contém tokens JWT codificados diretamente no arquivo, o que pode expor segredos ou chaves criptográficas se esses tokens forem reais ou usados em ambientes de produção.\",\"estrategia_de_correcao\":\"Remover os tokens JWT hard-coded do código de teste e substituí-los por mocks ou valores gerados dinamicamente que não contenham segredos reais. Como o arquivo é um teste, a melhor prática é usar mocks para simular o comportamento do token JWT sem expor valores reais.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\",\"trecho_corrigido\":\"localStorage.setItem('token', 'mocked.jwt.token')\"},{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7fX0.bVBhvll6IaeR3aUdoOeyR8YZe2S2DfhGAxTGfd9enLw')\",\"trecho_corrigido\":\"localStorage.setItem('token', 'mocked.jwt.token')\"}],\"justificativa_tecnica\":\"Tokens JWT hard-coded podem conter segredos ou chaves criptográficas que, se expostos, comprometem a segurança da aplicação. Mesmo em testes, é importante evitar expor tokens reais ou válidos. Substituir por tokens fictícios ou mocks mantém a funcionalidade do teste sem riscos de segurança.\",\"limitacoes_da_correcao\":\"A correção não altera a lógica dos testes, apenas substitui os tokens JWT reais por valores fictícios. Isso pode limitar a cobertura de testes que dependem da decodificação real do token, mas é uma prática segura para evitar exposição de segredos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1864,
+  "tokens_saida": 515,
+  "latencia_s": 4.504,
+  "custo_usd": 0.00157,
+  "hash_prompt": "890c9ecc6a3fec8cb459def19df07e7b949a76c7bde7fdbb10832ba33040b625",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

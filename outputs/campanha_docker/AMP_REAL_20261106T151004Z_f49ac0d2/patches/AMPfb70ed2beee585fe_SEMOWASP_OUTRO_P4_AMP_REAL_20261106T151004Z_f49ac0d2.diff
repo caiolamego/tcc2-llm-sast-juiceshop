@@ -1,0 +1,38 @@
+diff --git a/routes/dataExport.ts b/routes/dataExport.ts
+index ee3b4afcd..58cbf7889 100644
+--- a/routes/dataExport.ts
++++ b/routes/dataExport.ts
+@@ -19,27 +19,27 @@ export function dataExport () {
+       if (loggedInUser?.data?.email && loggedInUser.data.id) {
+         const username = loggedInUser.data.username
+         const email = loggedInUser.data.email
+-        const updatedEmail = email.replace(/[aeiou]/gi, '*')
++        const userId = loggedInUser.data.id
+ 
+         let memories, orders, reviews
+         try {
+-          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })
++          memories = await MemoryModel.findAll({ where: { UserId: userId } })
+         } catch (error) {
+           next(error)
+           return
+         }
+ 
+         try {
+-          orders = await db.ordersCollection.find({ email: updatedEmail })
++          orders = await db.ordersCollection.find({ userId: userId })
+         } catch (error) {
+-          next(new Error(`Error retrieving orders for ${updatedEmail}`))
++          next(new Error(`Error retrieving orders for user ID ${userId}`))
+           return
+         }
+ 
+         try {
+-          reviews = await db.reviewsCollection.find({ author: email })
++          reviews = await db.reviewsCollection.find({ userId: userId })
+         } catch (error) {
+-          next(new Error(`Error retrieving reviews for ${updatedEmail}`))
++          next(new Error(`Error retrieving reviews for user ID ${userId}`))
+           return
+         }
+ 

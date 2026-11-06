@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-620: Unverified Password Change - a senha atual não é verificada quando não é fornecida, permitindo alteração de senha sem autenticação adequada.\",\"causa_da_vulnerabilidade\":\"O código verifica a senha atual apenas se o parâmetro 'currentPassword' estiver presente. Caso contrário, permite a troca de senha sem validação da senha atual, o que possibilita alteração não autorizada.\",\"estrategia_de_correcao\":\"Exigir que o parâmetro 'currentPassword' seja sempre fornecido e que sua hash corresponda à senha armazenada do usuário antes de permitir a alteração da senha.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\",\"trecho_corrigido\":\"if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\"}],\"justificativa_tecnica\":\"Ao exigir que a senha atual seja sempre fornecida e validada, impede-se que usuários autenticados alterem a senha sem comprovar a posse da senha atual, mitigando o risco de alteração não autorizada da senha.\",\"limitacoes_da_correcao\":\"Usuários que não conhecem a senha atual não poderão alterar a senha, o que pode impactar fluxos de recuperação de senha que dependam de outros mecanismos de autenticação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 1629,
+  "tokens_saida": 333,
+  "latencia_s": 3.93,
+  "custo_usd": 0.001184,
+  "hash_prompt": "3a7be64cb55c696c52871a03a27bec627774f6b01d9639eeb762cd503f80d6e1",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

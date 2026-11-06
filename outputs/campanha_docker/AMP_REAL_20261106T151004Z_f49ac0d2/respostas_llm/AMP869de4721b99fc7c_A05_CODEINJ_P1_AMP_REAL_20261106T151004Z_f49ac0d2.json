@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função eval para calcular a expressão do CAPTCHA.\",\"causa_da_vulnerabilidade\":\"A função eval executa código JavaScript arbitrário, o que pode levar à execução de código malicioso se a expressão for manipulada ou construída de forma insegura.\",\"estrategia_de_correcao\":\"Substituir o uso de eval por uma função segura que avalie a expressão aritmética sem executar código arbitrário, garantindo que apenas operações matemáticas simples sejam processadas.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\\n\",\"trecho_corrigido\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    function safeEval(expr: string): number {\\n      const operators = expr.match(/[+\\\\-*]/g);\\n      const numbers = expr.split(/[+\\\\-*]/).map(Number);\\n      if (!operators || numbers.length !== 3) throw new Error('Invalid expression');\\n      let result = numbers[0];\\n      if (operators[0] === '+') result += numbers[1];\\n      else if (operators[0] === '-') result -= numbers[1];\\n      else if (operators[0] === '*') result *= numbers[1];\\n      if (operators[1] === '+') result += numbers[2];\\n      else if (operators[1] === '-') result -= numbers[2];\\n      else if (operators[1] === '*') result *= numbers[2];\\n      return result;\\n    }\\n    const answer = safeEval(expression).toString()\\n\"}],\"justificativa_tecnica\":\"O uso de eval é uma prática insegura pois pode executar código arbitrário, abrindo brechas para ataques de injeção. Ao implementar uma função de avaliação segura que apenas processa operações matemáticas básicas, eliminamos o risco de execução de código malicioso, mantendo a funcionalidade original do CAPTCHA.\",\"limitacoes_da_correcao\":\"A função safeEval implementada suporta apenas expressões com dois operadores e três operandos, conforme o padrão atual do código. Caso a complexidade das expressões aumente, será necessário adaptar a função para suportar mais casos ou utilizar uma biblioteca segura para avaliação de expressões matemáticas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 923,
+  "tokens_saida": 538,
+  "latencia_s": 5.749,
+  "custo_usd": 0.00123,
+  "hash_prompt": "f369ed4a4fe3dca245fb6a11041a509e43e43724413d59da1d50bd10a6f545c9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

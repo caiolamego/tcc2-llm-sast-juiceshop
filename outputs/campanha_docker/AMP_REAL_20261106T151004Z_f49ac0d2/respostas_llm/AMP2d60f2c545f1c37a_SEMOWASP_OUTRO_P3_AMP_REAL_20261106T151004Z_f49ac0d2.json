@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Mass assignment (atribuição em massa) inseguro na criação de usuários via recurso Finale, permitindo que campos sensíveis sejam definidos pelo cliente.\",\"causa_da_vulnerabilidade\":\"O recurso Finale cria registros diretamente a partir dos dados enviados pelo cliente sem restringir quais campos podem ser definidos, possibilitando que campos como 'isAdmin' ou outros atributos sensíveis sejam manipulados indevidamente.\",\"estrategia_de_correcao\":\"Adicionar um middleware 'write' no recurso Finale para o modelo 'User' que filtra explicitamente os campos permitidos para criação, rejeitando quaisquer campos não autorizados enviados pelo cliente, prevenindo assim a atribuição em massa de campos sensíveis.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"if (name === 'User') { // vuln-code-snippet neutral-line registerAdminChallenge\\n  resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge\\n    WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\\n      console.log(err)\\n    })\\n    return context.continue // vuln-code-snippet neutral-line registerAdminChallenge\\n  }) // vuln-code-snippet neutral-line registerAdminChallenge\\n} // vuln-code-snippet neutral-line registerAdminChallenge\",\"trecho_corrigido\":\"if (name === 'User') { // vuln-code-snippet neutral-line registerAdminChallenge\\n  resource.write.before((req: Request, res: Response, context: any) => {\\n    const allowedFields = ['email', 'username', 'password', 'role', 'active']\\n    Object.keys(req.body).forEach(key => {\\n      if (!allowedFields.includes(key)) {\\n        delete req.body[key]\\n      }\\n    })\\n    return context.continue\\n  })\\n  resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge\\n    WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\\n      console.log(err)\\n    })\\n    return context.continue // vuln-code-snippet neutral-line registerAdminChallenge\\n  }) // vuln-code-snippet neutral-line registerAdminChallenge\\n} // vuln-code-snippet neutral-line registerAdminChallenge\"}],\"justificativa_tecnica\":\"A vulnerabilidade ocorre porque o recurso Finale permite que o cliente envie qualquer campo para criação do usuário, incluindo campos sensíveis que podem alterar privilégios ou dados críticos. Ao adicionar um middleware 'write.before' que filtra os campos permitidos, garantimos que apenas os campos explicitamente autorizados sejam aceitos, mitigando o risco de mass assignment. Essa abordagem preserva o funcionamento original e mantém a criação do 'Wallet' após o usuário ser criado.\",\"limitacoes_da_correcao\":\"A correção depende da lista correta e completa de campos permitidos ('allowedFields') para criação de usuários. Se novos campos editáveis forem adicionados, a lista deve ser atualizada. Além disso, essa medida não substitui outras verificações de autorização e validação de dados que devem ser feitas em camadas superiores.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2878,
+  "tokens_saida": 687,
+  "latencia_s": 5.537,
+  "custo_usd": 0.00225,
+  "hash_prompt": "c5e74dac97558f2414984fd59e7546d2760a9bc73994021cf8dffce1c50381b2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

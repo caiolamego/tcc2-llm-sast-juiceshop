@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-611: Improper Restriction of XML External Entity Reference (XXE)\",\"causa_da_vulnerabilidade\":\"O parser XML está configurado com as opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD habilitadas, o que permite a expansão de entidades externas e o carregamento de DTDs externas. Isso possibilita ataques XXE, onde um atacante pode acessar arquivos locais ou causar negação de serviço.\",\"estrategia_de_correcao\":\"Desabilitar a expansão de entidades externas e o carregamento de DTDs externas removendo as opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD do parâmetro 'option' passado ao parser XML. Isso impede que o parser processe entidades externas e DTDs, mitigando a vulnerabilidade XXE.\",\"edicoes\":[{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\"trecho_corrigido\":\"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"}],\"justificativa_tecnica\":\"A remoção das flags XML_PARSE_NOENT e XML_PARSE_DTDLOAD impede que o parser expanda entidades externas e carregue DTDs externas, eliminando a possibilidade de ataques XXE. As demais opções são mantidas para preservar o comportamento funcional esperado. Essa alteração é a forma recomendada para mitigar vulnerabilidades XXE em parsers XML que suportam essas opções.\",\"limitacoes_da_correcao\":\"Com a desativação da expansão de entidades externas e do carregamento de DTDs, funcionalidades legítimas que dependam dessas características podem ser impactadas. No entanto, para dados XML não confiáveis, essa é a configuração segura recomendada. Caso a aplicação precise processar DTDs externas de forma segura, será necessário implementar validações adicionais ou usar um parser XML com suporte a controles mais granulares.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 2415,
+  "tokens_saida": 437,
+  "latencia_s": 4.973,
+  "custo_usd": 0.001665,
+  "hash_prompt": "7307f5e8571dc43de26334719eef770098d041dfaa5a58a23ae08bd5dfabc275",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

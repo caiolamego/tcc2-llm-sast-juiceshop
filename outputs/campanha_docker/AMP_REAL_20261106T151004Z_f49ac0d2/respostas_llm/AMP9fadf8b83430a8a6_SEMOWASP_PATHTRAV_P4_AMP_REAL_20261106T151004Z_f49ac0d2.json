@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-22: Improper Limitation of a Pathname to a Restricted Directory (Directory Traversal) na função extractZipBuffer ao extrair arquivos de um arquivo ZIP sem restringir corretamente os caminhos dos arquivos extraídos.\",\"causa_da_vulnerabilidade\":\"O código resolve o caminho absoluto dos arquivos extraídos usando path.resolve('uploads/complaints/' + fileName), mas não verifica se o caminho resultante está dentro do diretório 'uploads/complaints'. Isso permite que um arquivo ZIP malicioso contenha entradas com caminhos como '../../arquivo.txt' que podem escapar do diretório pretendido e sobrescrever arquivos arbitrários no sistema.\",\"estrategia_de_correcao\":\"Após resolver o caminho absoluto do arquivo extraído, calcular o caminho relativo em relação ao diretório raiz 'uploads/complaints' e verificar se esse caminho relativo não sobe para fora do diretório (não começa com '..' nem é um caminho absoluto). Somente permitir a escrita se o arquivo estiver dentro do diretório permitido. Caso contrário, rejeitar a extração daquele arquivo.\",\"edicoes\":[{\"arquivo\":\"routes/fileUpload.ts\",\"trecho_original\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve('uploads/complaints/' + fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.includes(path.resolve('.'))) {\\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  const rootDir = path.resolve('uploads/complaints')\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve(rootDir, fileName)\\n    const relative = path.relative(rootDir, absolutePath)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (relative && !relative.startsWith('..') && !path.isAbsolute(relative)) {\\n      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"A correção garante que o caminho absoluto do arquivo extraído esteja dentro do diretório raiz 'uploads/complaints' ao verificar o caminho relativo entre eles. Se o caminho relativo indicar que o arquivo está fora do diretório (começando com '..' ou sendo absoluto), a extração daquele arquivo é ignorada. Isso impede ataques de traversal que poderiam sobrescrever arquivos arbitrários fora do diretório permitido.\",\"limitacoes_da_correcao\":\"A correção não trata links simbólicos que possam apontar para fora do diretório raiz, o que pode ser uma limitação em ambientes onde links simbólicos são usados. Também não valida nomes de arquivos para caracteres inválidos ou outros vetores de ataque, focando apenas na restrição do caminho. A funcionalidade de extração mantém arquivos legítimos dentro do diretório 'uploads/complaints'.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3069,
+  "tokens_saida": 711,
+  "latencia_s": 6.533,
+  "custo_usd": 0.001789,
+  "hash_prompt": "c44af7951939ccfe59d262462ae30a564985f8096eac973a4aa5612c24a09ab8",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

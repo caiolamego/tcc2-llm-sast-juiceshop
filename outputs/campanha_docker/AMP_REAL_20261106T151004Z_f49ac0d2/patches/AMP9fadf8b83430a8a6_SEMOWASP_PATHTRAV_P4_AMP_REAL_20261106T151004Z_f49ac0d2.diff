@@ -1,0 +1,22 @@
+diff --git a/routes/fileUpload.ts b/routes/fileUpload.ts
+index 0d22fde0a..be0654057 100644
+--- a/routes/fileUpload.ts
++++ b/routes/fileUpload.ts
+@@ -26,12 +26,14 @@ function ensureFileIsPassed ({ file }: Request, res: Response, next: NextFunctio
+ 
+ async function extractZipBuffer (buffer: Buffer) {
+   const directory = await unzipper.Open.buffer(buffer)
++  const rootDir = path.resolve('uploads/complaints')
+   for (const entry of directory.files) {
+     const fileName = entry.path
+-    const absolutePath = path.resolve('uploads/complaints/' + fileName)
++    const absolutePath = path.resolve(rootDir, fileName)
++    const relative = path.relative(rootDir, absolutePath)
+     challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })
+-    if (absolutePath.includes(path.resolve('.'))) {
+-      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))
++    if (relative && !relative.startsWith('..') && !path.isAbsolute(relative)) {
++      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))
+     }
+   }
+ }
