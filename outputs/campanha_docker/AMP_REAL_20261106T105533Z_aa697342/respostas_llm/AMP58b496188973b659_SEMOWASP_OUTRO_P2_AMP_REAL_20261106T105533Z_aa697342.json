@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL por meio do operador MongoDB $where, que avalia código JavaScript construído com dados da requisição.\",\n  \"causa_da_vulnerabilidade\": \"O valor de req.params.id é concatenado diretamente na expressão JavaScript de $where. Quando o desafio correspondente está habilitado, utils.trunc apenas limita o comprimento do valor e não o valida nem o torna seguro para inclusão em código. Assim, um atacante pode fornecer uma expressão JavaScript em vez de um identificador numérico.\",\n  \"estrategia_de_correcao\": \"Substituir a consulta com $where por uma consulta MongoDB normal, usando igualdade no campo product e um identificador convertido para número. Isso evita avaliar entrada da requisição como código e mantém a busca de avaliações pelo produto.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/showProductReviews.ts\",\n      \"trecho_original\": \"    // Truncate id to avoid unintentional RCE\\n    const id = !utils.isChallengeEnabled(challenges.noSqlCommandChallenge) ? Number(req.params.id) : utils.trunc(req.params.id, 40)\\n\\n    // Measure how long the query takes, to check if there was a nosql dos attack\\n    const t0 = new Date().getTime()\\n\\n    db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\",\n      \"trecho_corrigido\": \"    const id = Number(req.params.id)\\n\\n    // Measure how long the query takes, to check if there was a nosql dos attack\\n    const t0 = new Date().getTime()\\n\\n    db.reviewsCollection.find({ product: id }).then((reviews: Review[]) => {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta deixa de usar $where, portanto o MongoDB não interpreta o valor recebido como JavaScript. O campo product é comparado como dado por meio da igualdade nativa do MongoDB, eliminando a concatenação de entrada em código executável e também evitando o custo de avaliação de $where.\",\n  \"limitacoes_da_correcao\": \"A conversão para Number preserva a busca por identificadores numéricos, mas valores inválidos tornam-se NaN e não correspondem a um produto válido. A alteração também desativa intencionalmente o comportamento do desafio que dependia da injeção em $where.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1103,
+  "tokens_saida": 529,
+  "latencia_s": 6.07,
+  "custo_usd": 0.000402,
+  "hash_prompt": "d6eedbc74f4a157bd4a59af2ab60b89481b3406533f24e9e3020460466bba132",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1100
+}

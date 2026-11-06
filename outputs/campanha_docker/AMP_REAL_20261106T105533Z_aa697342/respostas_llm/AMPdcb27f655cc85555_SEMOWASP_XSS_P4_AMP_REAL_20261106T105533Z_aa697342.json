@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) ao exibir dados de exportação como HTML sem sanitização.\",\n  \"causa_da_vulnerabilidade\": \"O valor recebido em data.image é passado a bypassSecurityTrustHtml, que instrui o Angular a confiar no conteúdo e desativa a sanitização contextual. Como a origem do valor é uma resposta de serviço, conteúdo malicioso pode ser interpretado como HTML ativo.\",\n  \"estrategia_de_correcao\": \"Remover o bypass de confiança e atribuir a string recebida diretamente. Quando esse valor for usado em um binding HTML do Angular, o sanitizador padrão poderá remover conteúdo perigoso, preservando markup permitido.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/data-export/data-export.component.ts\",\n      \"trecho_original\": \"      this.captcha = this.sanitizer.bypassSecurityTrustHtml(data.image)\",\n      \"trecho_corrigido\": \"      this.captcha = data.image\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A atribuição direta evita marcar conteúdo externo como confiável. Se captcha for renderizado por [innerHTML], o Angular aplicará sua sanitização HTML padrão, removendo construções perigosas, como scripts e manipuladores de eventos, sem desativar a exibição de markup permitido. Isso elimina o bypass que possibilitava a interpretação de HTML não confiável.\",\n  \"limitacoes_da_correcao\": \"A mitigação depende de captcha ser exibido por um binding Angular que aplique sanitização, como [innerHTML]. Se for inserido no DOM por uma API imperativa ou em outro contexto, esse sink também deverá ser protegido. A sanitização pode remover partes do HTML da imagem CAPTCHA; confirme que o conteúdo legítimo continua sendo exibido.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2567,
+  "tokens_saida": 386,
+  "latencia_s": 5.144,
+  "custo_usd": 0.000514,
+  "hash_prompt": "cb1d7be060460ff4befab5e127758fba970a46bdbd4f7e0b2f98296d310e322d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2564
+}

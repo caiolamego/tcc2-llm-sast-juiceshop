@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de dados controlados pelo cliente como opções de renderização, permitindo que o campo layout influencie a seleção do template e potencialmente acesse arquivos fora do diretório de templates (CWE-73).\",\n  \"causa_da_vulnerabilidade\": \"O corpo inteiro da requisição é propagado para res.render por meio de ...req.body. Quando layout está presente, seu valor é controlado pelo cliente e pode ser interpretado pelo mecanismo de templates como caminho de layout. A verificação por substrings de alguns nomes não confina o caminho ao diretório permitido.\",\n  \"estrategia_de_correcao\": \"Não propagar o corpo da requisição como opções de renderização. Construir as opções apenas com valores definidos pelo servidor e, quando layout for fornecido, aceitar somente o layout legítimo conhecido, sem permitir que a entrada determine um caminho de arquivo.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\",\n      \"trecho_corrigido\": \"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile && req.body.layout === 'dataErasureResult') {\\n          res.render('dataErasureResult', {\\n            ...themeVars\\n          }, (error, html) => {\"\n    },\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"      } else {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\\n      }\",\n      \"trecho_corrigido\": \"      } else {\\n        res.render('dataErasureResult', {\\n          ...themeVars\\n        })\\n      }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"As opções de res.render deixam de incluir propriedades arbitrárias do corpo da requisição, eliminando a possibilidade de o cliente sobrescrever opções do Express ou do mecanismo de templates. No ramo que recebe layout, a entrada só é aceita quando corresponde ao identificador fixo do template esperado; valores diferentes seguem o caminho de recusa já existente. O template renderizado continua sendo dataErasureResult e os valores de tema continuam disponíveis.\",\n  \"limitacoes_da_correcao\": \"A aceitação de layout fica restrita ao identificador dataErasureResult; se a aplicação precisar suportar outros layouts legítimos, eles devem ser adicionados explicitamente a uma lista de identificadores permitidos, sem aceitar caminhos arbitrários. A correção não altera a lógica de autorização nem outros aspectos do fluxo de solicitação de apagamento.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2586,
+  "tokens_saida": 715,
+  "latencia_s": 6.841,
+  "custo_usd": 0.000681,
+  "hash_prompt": "0bb94acab446c6bfc5885c86f85989f844992e08451e397fd241c9def78fadab",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2583
+}

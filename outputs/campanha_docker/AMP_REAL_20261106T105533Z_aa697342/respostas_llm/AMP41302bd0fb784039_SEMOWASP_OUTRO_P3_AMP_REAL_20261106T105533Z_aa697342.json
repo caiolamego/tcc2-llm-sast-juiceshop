@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de MD5 na função hash, algoritmo inadequado para armazenamento de senhas por ser rápido e vulnerável a ataques de força bruta.\",\n  \"causa_da_vulnerabilidade\": \"A função hash aplica MD5 a qualquer dado recebido. Embora o alerta não demonstre que esse resultado seja usado para armazenar senhas, o uso de um hash rápido não é apropriado para esse propósito.\",\n  \"estrategia_de_correcao\": \"Substituir MD5 por scrypt, uma função de derivação de chave apropriada para senhas, com salt aleatório e parâmetros de custo explícitos. Manter a assinatura da função e retornar uma representação hexadecimal.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\",\n      \"trecho_corrigido\": \"export const hash = (data: string) => {\\n  const salt = crypto.randomBytes(16)\\n  return crypto.scryptSync(data, salt, 32, { N: 16384, r: 8, p: 1 }).toString('hex')\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"scrypt é deliberadamente custoso em memória e computação, dificultando ataques de tentativa em larga escala. O salt aleatório impede que entradas iguais produzam hashes iguais. A assinatura e o tipo de retorno permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"O formato de saída muda e inclui apenas o resultado derivado, não o salt; portanto, não é possível verificar posteriormente um valor armazenado sem também persistir o salt e os parâmetros. Se a função for usada para autenticação ou comparação de valores persistidos, será necessária uma migração compatível que armazene esses metadados. O alerta, por si só, não confirma que a função seja usada para senhas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3542,
+  "tokens_saida": 434,
+  "latencia_s": 4.769,
+  "custo_usd": 0.00066,
+  "hash_prompt": "2eb7a0026ba25e615492cd03e693d5bd71f47f3ae3f1ae2919cfa13ad8c34fc7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3539
+}

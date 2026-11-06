@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção de código (CWE-95) por avaliação de conteúdo controlável pelo usuário com eval.\",\n  \"causa_da_vulnerabilidade\": \"O nome de usuário é obtido do registro do usuário e, quando corresponde ao padrão #{...}, o conteúdo entre chaves é passado diretamente a eval. Como o nome pode ser definido por entrada externa, um atacante pode fornecer JavaScript arbitrário para execução no processo da aplicação.\",\n  \"estrategia_de_correcao\": \"Remover a avaliação dinâmica e tratar o conteúdo entre chaves como texto literal. Manter o fluxo existente de escape do nome de usuário e a lógica de desafio, sem executar código fornecido pelo usuário.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/userProfile.ts\",\n      \"trecho_original\": \"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\",\n      \"trecho_corrigido\": \"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      username = '\\\\\\\\' + username\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A correção elimina o interpretador de JavaScript aplicado a dados do usuário, impedindo execução arbitrária no processo Node.js. O nome continua sendo tratado como texto e recebe o mesmo prefixo de escape usado no ramo alternativo, preservando a apresentação literal do valor e evitando alterações em mensagens, assinaturas ou outros arquivos.\",\n  \"limitacoes_da_correcao\": \"O ramo associado ao desafio deixa de avaliar expressões embutidas no nome de usuário; esse comportamento inseguro não pode ser preservado sem manter a execução de código controlável pelo usuário. A lógica de detecção e sinalização do desafio permanece, mas testes que dependam da execução da expressão precisarão considerar que ela agora é texto literal.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2784,
+  "tokens_saida": 552,
+  "latencia_s": 6.203,
+  "custo_usd": 0.000624,
+  "hash_prompt": "6078eb41db7e460f6cae86a6d73acb3837a7375c9d70a73359c257188d233a2c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2781
+}

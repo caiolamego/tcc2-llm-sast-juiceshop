@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL no filtro de atualização de avaliações de produtos.\",\n  \"causa_da_vulnerabilidade\": \"O valor req.body.id é usado diretamente como _id no filtro do MongoDB. Como o corpo da requisição pode conter um objeto em vez de um identificador escalar, um atacante pode fornecer operadores de consulta e alterar avaliações que não deveria poder modificar. A opção multi: true amplia o impacto ao permitir atualizar vários documentos.\",\n  \"estrategia_de_correcao\": \"Validar que id e message sejam strings antes de executar a atualização e desabilitar a atualização de múltiplos documentos. Requisições com tipos inesperados recebem resposta 400.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/updateProductReviews.ts\",\n      \"trecho_original\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\",\n      \"trecho_corrigido\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    if (typeof req.body.id !== 'string' || typeof req.body.message !== 'string') {\\n      return res.sendStatus(400)\\n    }\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: false } // vuln-code-snippet vuln-line noSqlReviewsChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação de tipos impede que objetos com operadores MongoDB sejam interpretados como parte do filtro ou do valor atualizado. Definir multi como false limita a operação a um único documento, evitando atualizações em massa mesmo que o filtro corresponda a mais de um registro. Os valores string continuam usando o mesmo fluxo de atualização.\",\n  \"limitacoes_da_correcao\": \"A validação de tipo não confirma que o identificador corresponda a um formato ou registro válido, nem verifica se o usuário autenticado é o autor da avaliação. A autorização por propriedade deve ser aplicada separadamente caso seja requisito do sistema.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 897,
+  "tokens_saida": 557,
+  "latencia_s": 5.71,
+  "custo_usd": 0.000368,
+  "hash_prompt": "16ce8b90aebc344f4545bbe91fba0fdfd9e8ec9b260e7df791a208a873b2c171",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

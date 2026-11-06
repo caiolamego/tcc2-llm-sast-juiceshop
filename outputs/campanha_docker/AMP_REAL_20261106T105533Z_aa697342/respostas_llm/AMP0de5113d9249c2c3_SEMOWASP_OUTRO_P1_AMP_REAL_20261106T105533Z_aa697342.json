@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso não autorizado a todos os pedidos por meio do endpoint allOrders, além de alteração não autorizada do estado de entrega de pedidos por meio de toggleDeliveryStatus.\",\n  \"causa_da_vulnerabilidade\": \"As duas rotas executam operações sobre pedidos sem autenticar o usuário nem verificar sua autorização. allOrders retorna a coleção inteira, e toggleDeliveryStatus aceita um identificador fornecido pelo cliente e atualiza o pedido correspondente sem controle de acesso.\",\n  \"estrategia_de_correcao\": \"Exigir uma sessão autenticada antes de executar as operações administrativas de listagem e atualização, usando o mesmo mecanismo de autenticação já empregado em orderHistory. Manter as respostas e operações existentes para usuários autenticados.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/orderHistory.ts\",\n      \"trecho_original\": \"export function allOrders () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const order = await ordersCollection.find()\\n    res.status(200).json({ status: 'success', data: order.reverse() })\\n  }\\n}\",\n      \"trecho_corrigido\": \"export function allOrders () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.email && loggedInUser.data.id) {\\n      const order = await ordersCollection.find()\\n      res.status(200).json({ status: 'success', data: order.reverse() })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\\n}\"\n    },\n    {\n      \"arquivo\": \"routes/orderHistory.ts\",\n      \"trecho_original\": \"export function toggleDeliveryStatus () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\\n}\",\n      \"trecho_corrigido\": \"export function toggleDeliveryStatus () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.email && loggedInUser.data.id) {\\n      const deliveryStatus = !req.body.deliveryStatus\\n      const eta = deliveryStatus ? '0' : '1'\\n      await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n      res.status(200).json({ status: 'success' })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A verificação impede que requisições sem uma sessão reconhecida acessem a listagem global ou alterem o estado de entrega. A autenticação segue o padrão já presente no arquivo e preserva o comportamento das operações para sessões autenticadas.\",\n  \"limitacoes_da_correcao\": \"A verificação confirma apenas que existe um usuário autenticado; não distingue privilégios administrativos. Se essas operações forem destinadas exclusivamente a administradores, é necessário validar também uma função ou permissão administrativa. A atualização ainda não verifica se o pedido existe nem se o valor de deliveryStatus enviado é válido.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 890,
+  "tokens_saida": 828,
+  "latencia_s": 8.374,
+  "custo_usd": 0.000503,
+  "hash_prompt": "e17cc4293a69aa2d3f090d8643ca2fa11ebbb38fbbc05698c5da09ca4a59d75f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

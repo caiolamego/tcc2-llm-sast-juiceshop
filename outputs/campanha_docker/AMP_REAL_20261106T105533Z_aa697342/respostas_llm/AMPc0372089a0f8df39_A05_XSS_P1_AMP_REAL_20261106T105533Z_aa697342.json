@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) por interpretação de conteúdo de legendas como HTML.\",\n  \"causa_da_vulnerabilidade\": \"O conteúdo de legenda é passado a VTTCue, cujo texto pode interpretar marcação WebVTT/HTML. Assim, conteúdo controlado por terceiros pode inserir elementos ou marcação ativa na legenda exibida.\",\n  \"estrategia_de_correcao\": \"Escapar os caracteres que podem formar marcação HTML no texto de cada linha da legenda antes de armazená-la no payload do VTTCue, preservando quebras de linha e o restante do comportamento do parser.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"views/promotionVideo.pug\",\n      \"trecho_original\": \"            function quick_and_dirty_vtt_or_srt_parser(vtt) {\\n            var lines = vtt.trim().replace('\\\\\\\\r\\\\n', '\\\\n').split(/[\\\\r\\\\n]/).map(function(line) {\\n            return line.trim();\\n            });\",\n      \"trecho_corrigido\": \"            function quick_and_dirty_vtt_or_srt_parser(vtt) {\\n            var lines = vtt.trim().replace('\\\\\\\\r\\\\n', '\\\\n').split(/[\\\\r\\\\n]/).map(function(line) {\\n            return line.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\\n            });\"\n    }\n  ],\n  \"justificativa_tecnica\": \"VTTCue pode interpretar tags presentes no texto da legenda. Escapar &, < e > impede que conteúdo fornecido como legenda seja interpretado como marcação, sem alterar a estrutura dos cues, os timestamps ou as quebras de linha. O escape de & é feito primeiro para evitar que as entidades introduzidas pelos escapes seguintes sejam escapadas novamente.\",\n  \"limitacoes_da_correcao\": \"A alteração protege o texto das legendas processadas por este parser. Não valida a origem nem o formato completo do arquivo de legenda e não corrige possíveis vulnerabilidades em outros pontos que exibam conteúdo não confiável.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1625,
+  "tokens_saida": 460,
+  "latencia_s": 5.343,
+  "custo_usd": 0.000433,
+  "hash_prompt": "36ca42c34509e337c671854d1420384d1a29b0a7e1188531559bf2631a522b68",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1622
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL e atualização não autorizada de avaliações por uso de um identificador controlado pelo cliente em uma atualização multipla.\",\n  \"causa_da_vulnerabilidade\": \"req.body.id é usado diretamente como filtro MongoDB, sem validação de tipo, e a opção multi: true permite atualizar vários documentos. Um objeto com operadores NoSQL pode alterar a semântica do filtro; além disso, não há verificação de que a avaliação pertence ao usuário autenticado.\",\n  \"estrategia_de_correcao\": \"Exigir que o identificador seja uma string escalar não vazia e construir o filtro com campos conhecidos, incluindo o autor correspondente ao usuário autenticado. Remover a atualização multipla para limitar a operação a um único registro autorizado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/updateProductReviews.ts\",\n      \"trecho_original\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\",\n      \"trecho_corrigido\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    if (typeof req.body.id !== 'string' || req.body.id.length === 0) return res.status(400).json({ error: 'Invalid review id' })\\n    db.reviewsCollection.update(\\n      { _id: req.body.id, author: user?.data?.email },\\n      { $set: { message: req.body.message } },\\n      { multi: false }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação impede que objetos ou operadores NoSQL fornecidos no corpo sejam interpretados como parte do filtro. O filtro usa somente valores escalares e campos definidos pelo servidor, e a condição de autor restringe a alteração à avaliação do usuário autenticado. multi: false impede que uma requisição modifique vários documentos. A operação continua atualizando a mensagem e retornando o resultado pelo fluxo existente.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que avaliações autorizadas são identificadas pelo campo author igual ao email do usuário autenticado e que _id é armazenado como string. Se o esquema usar outro tipo de ID ou outra regra de propriedade, a validação e o filtro devem refletir esse esquema. A mensagem de erro para ID inválido é nova; pode ser substituída por uma resposta já padronizada no projeto, sem alterar a proteção.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2293,
+  "tokens_saida": 608,
+  "latencia_s": 6.635,
+  "custo_usd": 0.000591,
+  "hash_prompt": "db771cb3559beba6488f4def9cdd02831b9b1ce892101771d841f3b119066e60",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2290
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Falha de autorização horizontal na exportação de dados: a consulta de pedidos usa um e-mail mascarado como seletor, o que pode causar colisões entre usuários e retornar pedidos de outra pessoa.\",\n  \"causa_da_vulnerabilidade\": \"O valor `updatedEmail` substitui vogais por asteriscos e é usado para selecionar pedidos. Essa transformação não é única; usuários diferentes podem produzir o mesmo valor mascarado. A identidade autenticada já está disponível no servidor em `loggedInUser.data.email`, mas não é usada diretamente nessa consulta.\",\n  \"estrategia_de_correcao\": \"Usar o e-mail original da identidade autenticada como seletor dos pedidos, sem alterar as demais consultas, a resposta ou o fluxo da rota.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/dataExport.ts\",\n      \"trecho_original\": \"        try {\\n          orders = await db.ordersCollection.find({ email: updatedEmail })\\n        } catch (error) {\\n          next(new Error(`Error retrieving orders for ${updatedEmail}`))\",\n      \"trecho_corrigido\": \"        try {\\n          orders = await db.ordersCollection.find({ email })\\n        } catch (error) {\\n          next(new Error(`Error retrieving orders for ${updatedEmail}`))\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta passa a usar o e-mail associado à sessão autenticada, em vez de um valor transformado que pode corresponder a múltiplas identidades. A alteração é mínima e mantém a estrutura da resposta e as mensagens existentes. O e-mail mascarado continua sendo usado na mensagem de erro, preservando o texto atual.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que o campo `email` dos pedidos armazena o e-mail original da conta. Se os dados forem persistidos com o e-mail mascarado, será necessário migrar ou ajustar o modelo de armazenamento para permitir uma associação única e confiável.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2174,
+  "tokens_saida": 433,
+  "latencia_s": 4.756,
+  "custo_usd": 0.000488,
+  "hash_prompt": "c48935c7815436e0cd43804be87f44c08da8773a4cf44b081f627eef29c19ae9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2171
+}

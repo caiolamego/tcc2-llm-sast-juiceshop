@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"CWE-73: o parâmetro controlado pelo usuário pode permitir que `res.sendFile` leia arquivos fora de `ftp/quarantine/`.\",\n  \"causa_da_vulnerabilidade\": \"A verificação rejeita apenas nomes que contenham `/`. Ela não impede traversal com `..`, separadores invertidos ou caminhos absolutos, e o caminho é resolvido sem confinamento explícito à raiz pretendida.\",\n  \"estrategia_de_correcao\": \"Definir a raiz de quarentena como caminho absoluto e passá-la à opção `root` de `res.sendFile`, mantendo a validação existente e encaminhando erros de envio para `next`.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/quarantineServer.ts\",\n      \"trecho_original\": \"export function serveQuarantineFiles () {\\n  return ({ params, query }: Request, res: Response, next: NextFunction) => {\\n    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\",\n      \"trecho_corrigido\": \"export function serveQuarantineFiles () {\\n  const root = path.resolve('ftp/quarantine/')\\n  return ({ params, query }: Request, res: Response, next: NextFunction) => {\\n    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(file, { root }, (err) => {\\n        if (err) next(err)\\n      })\\n    } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A opção `root` do Express confina o caminho relativo fornecido a `res.sendFile` à raiz absoluta configurada e rejeita caminhos que escapem dela. Isso protege contra traversal mesmo quando a validação textual existente não reconhece uma variante do ataque. O callback encaminha falhas de envio ao middleware de erro, sem alterar a mensagem de recusa já existente.\",\n  \"limitacoes_da_correcao\": \"A raiz é relativa ao diretório de trabalho do processo, preservando a resolução usada anteriormente. A proteção não verifica links simbólicos dentro da raiz nem substitui controles de autorização sobre quais arquivos podem ser acessados.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1729,
+  "tokens_saida": 494,
+  "latencia_s": 5.419,
+  "custo_usd": 0.000463,
+  "hash_prompt": "495927775ce2a5336d819a6949dad73b3a769e56245a84854c8d5bf0b2ed2a26",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1726
+}

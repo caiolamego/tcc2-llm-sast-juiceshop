@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção de propriedade remota (CWE-915): o parâmetro `fields` controlado pelo cliente é usado para selecionar propriedades do objeto do usuário, permitindo solicitar e receber campos que não deveriam ser expostos, como `password`.\",\n  \"causa_da_vulnerabilidade\": \"O código divide `req.query.fields` e usa cada valor diretamente como chave em `user.data[field]` e `baseUser[field]`. Como a lista de campos não é validada contra uma lista permitida, um cliente pode escolher propriedades sensíveis do objeto autenticado. A verificação de `undefined` não impede a leitura de propriedades confidenciais.\",\n  \"estrategia_de_correcao\": \"Restringir os campos selecionáveis a uma lista explícita de propriedades públicas já retornadas pelo comportamento padrão. Ignorar qualquer campo fora dessa lista, preservando a seleção de campos válidos e a resposta padrão quando `fields` não é informado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/currentUser.ts\",\n      \"trecho_original\": \"        let baseUser: any = {}\\n\\n        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\n      \"trecho_corrigido\": \"        let baseUser: any = {}\\n        const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n\\n        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A lista permitida limita a leitura e a inclusão na resposta aos mesmos campos públicos do retorno padrão. Assim, valores controlados pelo cliente, incluindo `password` e nomes de propriedades herdadas, não são usados como chaves para acessar `user.data`. A alteração mantém a seleção de campos públicos solicitados e o comportamento existente quando nenhum campo é informado.\",\n  \"limitacoes_da_correcao\": \"A correção protege este endpoint contra a seleção de propriedades não autorizadas; não altera a exposição de dados por outros endpoints nem a política de armazenamento de credenciais. Campos públicos futuros só poderão ser selecionados via `fields` após inclusão explícita na lista permitida.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1647,
+  "tokens_saida": 604,
+  "latencia_s": 6.105,
+  "custo_usd": 0.000508,
+  "hash_prompt": "715e66e967af3e1cb2443dff9394a6b9eb32631d286738aeffe3cf7ae904a850",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1644
+}

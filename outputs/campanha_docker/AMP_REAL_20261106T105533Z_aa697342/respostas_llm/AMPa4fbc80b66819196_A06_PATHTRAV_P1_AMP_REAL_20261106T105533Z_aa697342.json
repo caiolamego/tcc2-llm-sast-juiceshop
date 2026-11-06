@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de diretório (path traversal) ao servir arquivos de quarentena.\",\n  \"causa_da_vulnerabilidade\": \"A validação rejeita apenas nomes que contenham barra normal (/), mas não impede sequências de travessia com barras invertidas em sistemas que as interpretam como separadores. Além disso, o caminho resolvido não é verificado para garantir que permaneça dentro do diretório ftp/quarantine.\",\n  \"estrategia_de_correcao\": \"Resolver o caminho solicitado e o diretório permitido, e só servir o arquivo quando o caminho resolvido estiver estritamente dentro do diretório de quarentena. Manter a validação existente e a mensagem de erro inalteradas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/quarantineServer.ts\",\n      \"trecho_original\": \"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\",\n      \"trecho_corrigido\": \"    const quarantineDirectory = path.resolve('ftp/quarantine')\\n    const resolvedFile = path.resolve(quarantineDirectory, file)\\n\\n    if (!file.includes('/') && resolvedFile.startsWith(`${quarantineDirectory}${path.sep}`)) {\\n      res.sendFile(resolvedFile)\\n    } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação do caminho resolvido com o diretório permitido, incluindo o separador de caminho no prefixo, impede que nomes como ../arquivo ou ..\\\\\\\\arquivo escapem do diretório de quarentena. A validação do prefixo evita também aceitar caminhos cujo nome apenas compartilhe o prefixo textual do diretório permitido.\",\n  \"limitacoes_da_correcao\": \"A proteção é baseada em caminhos resolvidos e não impede que links simbólicos existentes dentro do diretório de quarentena apontem para arquivos externos. Se links simbólicos não forem confiáveis, será necessária uma política adicional para rejeitá-los ou validar o destino real.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 666,
+  "tokens_saida": 435,
+  "latencia_s": 4.64,
+  "custo_usd": 0.000284,
+  "hash_prompt": "f6c4267a5a7a90b67db768166b26795b9395fec61f85cda564956ff08bfc8e98",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

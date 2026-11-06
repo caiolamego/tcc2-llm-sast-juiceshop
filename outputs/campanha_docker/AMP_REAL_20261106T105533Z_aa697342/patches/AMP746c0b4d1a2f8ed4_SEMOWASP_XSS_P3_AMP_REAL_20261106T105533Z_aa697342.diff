@@ -1,0 +1,26 @@
+diff --git a/frontend/src/app/about/about.component.ts b/frontend/src/app/about/about.component.ts
+index c33b1c813..dacc5f9a9 100644
+--- a/frontend/src/app/about/about.component.ts
++++ b/frontend/src/app/about/about.component.ts
+@@ -4,7 +4,7 @@
+  */
+ 
+ import { Component, type OnInit, inject } from '@angular/core'
+-import { DomSanitizer } from '@angular/platform-browser'
++import { DomSanitizer, SecurityContext } from '@angular/platform-browser'
+ import { ConfigurationService } from '../Services/configuration.service'
+ import { FeedbackService } from '../Services/feedback.service'
+ import { Gallery, type GalleryRef, GalleryComponent, GalleryImageDef } from 'ng-gallery'
+@@ -116,9 +116,10 @@ export class AboutComponent implements OnInit {
+           feedbacks[i].comment = `<figcaption><p class="feedback-comment">${
+             feedbacks[i].comment
+           }</p><div class="feedback-stars">(${this.stars[feedbacks[i].rating]})</div></figcaption>`
+-          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(
++          feedbacks[i].comment = this.sanitizer.sanitize(
++            SecurityContext.HTML,
+             feedbacks[i].comment
+-          )
++          ) ?? ''
+ 
+           this.galleryRef.addImage({
+             src: this.images[i % this.images.length],

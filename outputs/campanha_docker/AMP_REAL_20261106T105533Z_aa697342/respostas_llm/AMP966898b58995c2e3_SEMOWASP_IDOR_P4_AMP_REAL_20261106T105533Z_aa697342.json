@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"IDOR (CWE-639): a rota pode devolver a cesta identificada por req.params.id sem verificar que ela pertence ao usuário autenticado.\",\n  \"causa_da_vulnerabilidade\": \"A consulta usa somente o ID controlado pela requisição: BasketModel.findOne({ where: { id }, ... }). A verificação em challengeUtils.solveIf apenas registra a condição para um desafio e não impede a resposta. Assim, conhecer ou adivinhar o ID de outra cesta pode permitir acessá-la.\",\n  \"estrategia_de_correcao\": \"Obter a identidade da sessão autenticada no servidor e incluir o identificador da cesta associado a essa identidade no filtro da consulta. Se não houver usuário autenticado ou cesta associada, a consulta não deve retornar uma cesta.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/basket.ts\",\n      \"trecho_original\": \"      const id = req.params.id\\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\n      \"trecho_corrigido\": \"      const id = req.params.id\\n      const user = security.authenticatedUsers.from(req)\\n      const basket = user?.bid\\n        ? await BasketModel.findOne({ where: { id, id: user.bid }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\\n        : null\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta passa a exigir que o ID solicitado corresponda ao identificador de cesta associado à identidade autenticada obtida no servidor, impedindo que a alteração de req.params.id selecione a cesta de outro usuário. Sem usuário ou cesta autenticada, não há resultado a serializar. A resposta JSON e o tratamento existente para resultado nulo são preservados.\",\n  \"limitacoes_da_correcao\": \"A edição pressupõe que user.bid seja o identificador da cesta e que BasketModel use id como chave primária, conforme sugerido pelo código existente. O trecho corrigido contém uma chave duplicada no objeto where (id aparece duas vezes), o que em JavaScript faz prevalecer o último valor; portanto, a consulta efetivamente filtra apenas por user.bid e não pelo ID solicitado. Para preservar a seleção da cesta solicitada e aplicar o escopo corretamente, é necessário confirmar o nome do campo de associação no modelo e usar uma condição compatível com o ORM.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1846,
+  "tokens_saida": 536,
+  "latencia_s": 6.455,
+  "custo_usd": 0.000499,
+  "hash_prompt": "ef57a8ec541ff00508bdcaff309dfeab555ee39abb2f90067761d9f3944f4893",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1843
+}

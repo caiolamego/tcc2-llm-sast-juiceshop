@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado/refletido na apresentação do número do pedido.\",\n  \"causa_da_vulnerabilidade\": \"O valor results.data[0].orderId, recebido do serviço, é interpolado diretamente em uma string HTML e passado a bypassSecurityTrustHtml. Esse método instrui o Angular a confiar no HTML sem sanitizá-lo; portanto, conteúdo controlado por um atacante pode ser interpretado como marcação ou código executável quando exibido pelo template.\",\n  \"estrategia_de_correcao\": \"Remover o bypass de segurança e manter o número do pedido como dado textual. O template deve exibi-lo por interpolação Angular, que escapa conteúdo HTML, preservando a apresentação do valor sem permitir sua interpretação como marcação.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/track-result/track-result.component.ts\",\n      \"trecho_original\": \"import { DomSanitizer } from '@angular/platform-browser'\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/track-result/track-result.component.ts\",\n      \"trecho_original\": \"  private readonly sanitizer = inject(DomSanitizer)\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/track-result/track-result.component.ts\",\n      \"trecho_original\": \"      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\",\n      \"trecho_corrigido\": \"      this.results.orderNo = results.data[0].orderId\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem bypassSecurityTrustHtml, o valor deixa de ser marcado como HTML confiável. Ao ser apresentado por interpolação Angular, caracteres como < e > são escapados e não formam elementos ou scripts executáveis. A remoção do import e da propriedade injetada elimina também o uso desnecessário do sanitizador. Para preservar a aparência de código, o template pode envolver a interpolação em um elemento <code>.\",\n  \"limitacoes_da_correcao\": \"A alteração pressupõe que o template exiba results.orderNo por interpolação Angular. Se o template usar [innerHTML] ou outra forma de interpretar o valor como HTML, essa forma de exibição também deve ser alterada para interpolação; o template não foi fornecido para edição.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1286,
+  "tokens_saida": 531,
+  "latencia_s": 5.487,
+  "custo_usd": 0.000426,
+  "hash_prompt": "cd12292877139c64def5ae1cf25411e584e0fcd0fe88b4b836d80ad6923c49b2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1283
+}

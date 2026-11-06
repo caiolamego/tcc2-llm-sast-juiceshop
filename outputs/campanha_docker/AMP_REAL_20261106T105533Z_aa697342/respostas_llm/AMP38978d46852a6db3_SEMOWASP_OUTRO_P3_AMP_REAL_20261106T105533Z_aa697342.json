@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A autenticidade do cupom de desconto não é verificada: o valor numérico do desconto é obtido de dados controlados pelo cliente codificados em Z85.\",\n  \"causa_da_vulnerabilidade\": \"Z85 apenas codifica os dados e não fornece integridade nem autenticação. A validação de formato e de mês não impede que um cliente altere o desconto e envie um cupom adulterado.\",\n  \"estrategia_de_correcao\": \"Aceitar o desconto somente quando o cupom corresponder exatamente a um cupom gerado pelo servidor para o mês atual. Comparar o valor decodificado com a codificação do cupom reconstruído a partir do desconto validado, sem alterar o formato dos cupons legítimos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"    if (utils.toMMMYY(new Date()) === validity) {\\n      const discount = parts[1]\\n      return parseInt(discount)\\n    }\",\n      \"trecho_corrigido\": \"    if (utils.toMMMYY(new Date()) === validity) {\\n      const discount = parts[1]\\n      const parsedDiscount = parseInt(discount)\\n      if (Number.isSafeInteger(parsedDiscount) && parsedDiscount >= 0 && z85.encode(validity + '-' + parsedDiscount) === coupon) {\\n        return parsedDiscount\\n      }\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação com a codificação canônica do cupom reconstruído rejeita alterações no valor, sufixos ou formatos numéricos não canônicos, preservando os cupons produzidos por generateCoupon para descontos inteiros não negativos. A validação de inteiro seguro também evita aceitar valores numéricos fora do intervalo representável com segurança em JavaScript.\",\n  \"limitacoes_da_correcao\": \"A correção não introduz assinatura nem segredo: um cliente ainda pode fabricar um cupom válido para qualquer desconto inteiro não negativo, pois a codificação Z85 é pública e reversível. Para autenticar a origem e restringir descontos a valores autorizados, é necessário validar o cupom contra estado confiável do servidor ou adotar um formato autenticado compatível com os produtores e consumidores existentes.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3469,
+  "tokens_saida": 496,
+  "latencia_s": 5.26,
+  "custo_usd": 0.000682,
+  "hash_prompt": "6afd07692eeec537c37019cf87bc8bfbd0d31279b1cd695adeffa794ad3271b7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3466
+}

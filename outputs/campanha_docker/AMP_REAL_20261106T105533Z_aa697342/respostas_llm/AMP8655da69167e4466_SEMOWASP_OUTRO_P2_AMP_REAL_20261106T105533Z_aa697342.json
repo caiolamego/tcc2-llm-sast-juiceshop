@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Controle de acesso quebrado (BOLA/IDOR) na atualização de produtos: a rota PUT /api/Products/:id não exige autenticação nem autorização.\",\n  \"causa_da_vulnerabilidade\": \"A proteção da rota PUT está comentada. A rota POST /api/Products exige autenticação, mas essa regra não se aplica automaticamente a outros métodos ou caminhos, como PUT /api/Products/:id. Assim, a requisição de atualização pode alcançar o manipulador posterior sem passar por um controle de acesso.\",\n  \"estrategia_de_correcao\": \"Ativar a verificação de autorização já indicada para a rota PUT /api/Products/:id, sem alterar as demais rotas ou o comportamento funcional autorizado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\",\n      \"trecho_corrigido\": \"  app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Com a rota PUT registrada com security.isAuthorized(), requisições sem autenticação válida são bloqueadas antes de prosseguir para os manipuladores da aplicação. Isso impede que usuários não autenticados atualizem produtos por meio desse endpoint e mantém o acesso funcional para usuários autenticados, conforme a regra já expressa no código.\",\n  \"limitacoes_da_correcao\": \"A alteração garante autenticação, mas não demonstra autorização por produto ou por função. Se a política exigir que apenas determinados usuários possam atualizar produtos, será necessário aplicar também uma verificação de autorização específica. O trecho fornecido não mostra os manipuladores posteriores da rota, portanto não é possível avaliar controles adicionais existentes.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2448,
+  "tokens_saida": 399,
+  "latencia_s": 4.84,
+  "custo_usd": 0.000505,
+  "hash_prompt": "141f51675abb84c0fb59825ac0f66046bbfb395890908c8d5ff3a2e1c5f401df",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2445
+}

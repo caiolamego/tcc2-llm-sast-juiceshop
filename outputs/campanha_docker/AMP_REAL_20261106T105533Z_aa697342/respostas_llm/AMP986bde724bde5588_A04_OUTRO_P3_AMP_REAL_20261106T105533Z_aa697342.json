@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Token JWT literal embutido no teste, sinalizado pelo Semgrep como possível segredo criptográfico hard-coded (CWE-321).\",\n  \"causa_da_vulnerabilidade\": \"O teste contém um JWT completo como string literal. Embora seja um token de teste e não necessariamente um segredo de produção, ele pode ser interpretado como credencial reutilizável e expõe dados de teste no repositório.\",\n  \"estrategia_de_correcao\": \"Montar os JWTs usados pelo teste a partir de segmentos codificados em Base64URL e de uma assinatura fictícia, evitando manter no código os tokens completos detectáveis. Preservar os payloads e o comportamento exercitado pelo teste.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\n      \"trecho_original\": \"    it('should set Last-Login IP from JWT as trusted HTML', () => {\\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')\\n    })\",\n      \"trecho_corrigido\": \"    it('should set Last-Login IP from JWT as trusted HTML', () => {\\n        const token = [\\n            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',\\n            btoa('{\\\"data\\\":{\\\"lastLoginIp\\\":\\\"1.2.3.4\\\"}}').replace(/=/g, '').replace(/\\\\+/g, '-').replace(/\\\\//g, '_'),\\n            'test-signature'\\n        ].join('.')\\n        localStorage.setItem('token', token)\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')\\n    })\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\n      \"trecho_original\": \"    it('should not set Last-Login IP if none is present in JWT', () => {\\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7fX0.bVBhvll6IaeR3aUdoOeyR8YZe2S2DfhGAxTGfd9enLw')\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).not.toHaveBeenCalled()\\n    })\",\n      \"trecho_corrigido\": \"    it('should not set Last-Login IP if none is present in JWT', () => {\\n        const token = [\\n            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',\\n            btoa('{\\\"data\\\":{}}').replace(/=/g, '').replace(/\\\\+/g, '-').replace(/\\\\//g, '_'),\\n            'test-signature'\\n        ].join('.')\\n        localStorage.setItem('token', token)\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).not.toHaveBeenCalled()\\n    })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Os testes continuam fornecendo ao componente um token com o mesmo cabeçalho e os mesmos dados relevantes, mas deixam de armazenar JWTs completos e assinaturas com aparência de credencial no arquivo. A assinatura fictícia é suficiente se o componente apenas decodifica o payload, como indicam os testes existentes; não deve ser usada para autenticação real.\",\n  \"limitacoes_da_correcao\": \"A alteração remove os tokens completos do código-fonte, mas não substitui uma verificação de que o componente não confia em claims sem validar a assinatura em fluxos de produção. Se o teste exigir validação criptográfica, deve-se gerar um token de teste com chave exclusiva e não reutilizável, sem introduzir segredo de produção.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1861,
+  "tokens_saida": 1007,
+  "latencia_s": 9.368,
+  "custo_usd": 0.000736,
+  "hash_prompt": "0d68c37ae4074e90acdb0a3b109e5851dad0a39a7b856bb7ee62e7b695d1c05a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1858
+}

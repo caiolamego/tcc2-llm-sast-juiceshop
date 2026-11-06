@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso não autorizado a dados de pedidos: o endpoint allOrders retorna o histórico completo de pedidos sem verificar autenticação ou autorização.\",\n  \"causa_da_vulnerabilidade\": \"A função allOrders consulta ordersCollection sem validar a identidade do solicitante nem restringir os resultados aos pedidos que ele pode acessar. Assim, qualquer cliente que consiga chamar a rota recebe todos os registros.\",\n  \"estrategia_de_correcao\": \"Exigir uma sessão autenticada válida antes de consultar a coleção e filtrar os pedidos pelo e-mail do usuário autenticado, aplicando a mesma transformação de e-mail já usada em orderHistory. Manter a ordenação reversa e a resposta existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/orderHistory.ts\",\n      \"trecho_original\": \"export function allOrders () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const order = await ordersCollection.find()\\n    res.status(200).json({ status: 'success', data: order.reverse() })\\n  }\\n}\",\n      \"trecho_corrigido\": \"export function allOrders () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.email && loggedInUser.data.id) {\\n      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ email: updatedEmail })\\n      res.status(200).json({ status: 'success', data: order.reverse() })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta deixa de retornar a coleção inteira e só é executada quando há um usuário autenticado com e-mail e ID. O filtro limita os resultados aos pedidos associados ao e-mail transformado, conforme o padrão já utilizado por orderHistory, impedindo que uma chamada anônima obtenha os pedidos de todos os usuários. A ordenação e o formato da resposta para usuários autorizados permanecem iguais.\",\n  \"limitacoes_da_correcao\": \"A proteção depende da validade e integridade dos dados mantidos em authenticatedUsers e da correspondência entre o e-mail transformado e os registros de pedidos. Esta alteração corrige a exposição em allOrders; não avalia outras rotas, como toggleDeliveryStatus, que podem exigir controles de autorização próprios.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 998,
+  "tokens_saida": 582,
+  "latencia_s": 5.936,
+  "custo_usd": 0.000391,
+  "hash_prompt": "acd30a06d956b617ed4c591cd48fc7af8de6de32c551fa543bee9849527f5ad7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A função toggleDeliveryStatus permite alterar o estado de entrega de qualquer pedido usando apenas o _id fornecido na URL, sem verificar se o pedido pertence ao usuário autenticado ou se o usuário tem autorização administrativa.\",\n  \"causa_da_vulnerabilidade\": \"A atualização seleciona o documento exclusivamente por req.params.id. A autenticação, se aplicada em middleware, não demonstra que o usuário pode modificar esse pedido; o identificador controlado pelo cliente não é uma verificação de propriedade.\",\n  \"estrategia_de_correcao\": \"Restringir a atualização ao pedido associado à identidade autenticada no servidor, usando o e-mail validado da sessão como escopo. Como o trecho não define uma regra de acesso administrativo nem mostra outra identidade de proprietário, a correção aplica o escopo mínimo inferível a partir do código.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/orderHistory.ts\",\n      \"trecho_original\": \"export function toggleDeliveryStatus () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\\n}\",\n      \"trecho_corrigido\": \"export function toggleDeliveryStatus () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.email && loggedInUser.data.id) {\\n      const deliveryStatus = !req.body.deliveryStatus\\n      const eta = deliveryStatus ? '0' : '1'\\n      await ordersCollection.update({ _id: req.params.id, email: loggedInUser.data.email }, { $set: { delivered: deliveryStatus, eta } })\\n      res.status(200).json({ status: 'success' })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta de atualização agora exige simultaneamente o _id solicitado e o e-mail obtido do registro de autenticação mantido no servidor. Assim, conhecer ou fornecer o identificador de um pedido de outro usuário não basta para alterá-lo. A resposta de sucesso e o formato existente são preservados para atualizações autorizadas; usuários sem identidade autenticada válida seguem o tratamento de atividade ilegal já usado neste arquivo.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que o campo email do pedido identifica seu proprietário, conforme o uso de email em orderHistory. Se a aplicação permitir que administradores alterem pedidos de terceiros, essa regra de papel deve ser verificada com uma fonte confiável do servidor e incorporada explicitamente. Também é necessário confirmar que o middleware de autenticação e o formato do cabeçalho são consistentes com o restante da aplicação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1751,
+  "tokens_saida": 692,
+  "latencia_s": 7.099,
+  "custo_usd": 0.000565,
+  "hash_prompt": "4e28b7eb1e67717030bebc7bdeb87ed7eb8427de0b8fb5450d496ad3ddb913b0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1748
+}

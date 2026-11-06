@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível XSS por conteúdo de legendas inserido sem escape em um template Pug.\",\n  \"causa_da_vulnerabilidade\": \"O alerta aponta para o uso de `subtitle.innerHTML` como entrada do parser de legendas. Esse conteúdo é interpretado como HTML, permitindo que marcação controlada por terceiros seja processada no navegador.\",\n  \"estrategia_de_correcao\": \"Ler o conteúdo do elemento de legenda como texto, usando `textContent` em vez de `innerHTML`, para que a entrada não seja interpretada como markup.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"views/promotionVideo.pug\",\n      \"trecho_original\": \"            quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function(cue) {\",\n      \"trecho_corrigido\": \"            quick_and_dirty_vtt_or_srt_parser(subtitle.textContent).map(function(cue) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A alteração impede que o conteúdo da legenda seja obtido por uma API de leitura de HTML. `textContent` fornece texto literal ao parser, preservando a leitura das legendas sem interpretar tags ou atributos como markup executável.\",\n  \"limitacoes_da_correcao\": \"O trecho fornecido não contém uma interpolação Pug explícita com `!{}`. Se o alerta se refere a conteúdo inserido no elemento `script#subtitle` por outro código, essa origem não está presente no arquivo apresentado e deve ser verificada separadamente. A mudança também pressupõe que o conteúdo da legenda esteja disponível como texto no elemento.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2725,
+  "tokens_saida": 356,
+  "latencia_s": 4.214,
+  "custo_usd": 0.000519,
+  "hash_prompt": "79ff61b8da640567b8b0841ade564eb1a1136f82e40658d77563d2fe6018e8d6",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2722
+}

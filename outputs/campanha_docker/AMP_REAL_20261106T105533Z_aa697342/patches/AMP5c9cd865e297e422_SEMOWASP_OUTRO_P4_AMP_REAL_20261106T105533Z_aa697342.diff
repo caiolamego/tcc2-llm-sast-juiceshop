@@ -1,0 +1,42 @@
+diff --git a/routes/likeProductReviews.ts b/routes/likeProductReviews.ts
+index a8d120fc1..466e96af2 100644
+--- a/routes/likeProductReviews.ts
++++ b/routes/likeProductReviews.ts
+@@ -27,30 +27,21 @@ export function likeProductReviews () {
+         return res.status(404).json({ error: 'Not found' })
+       }
+ 
+-      const likedBy = review.likedBy
+-      if (likedBy.includes(user.data.email)) {
++      const result = await db.reviewsCollection.update(
++        { _id: id, likedBy: { $ne: user.data.email } },
++        { $inc: { likesCount: 1 }, $addToSet: { likedBy: user.data.email } }
++      )
++
++      if (result.n === 0) {
+         return res.status(403).json({ error: 'Not allowed' })
+       }
+ 
+-      await db.reviewsCollection.update(
+-        { _id: id },
+-        { $inc: { likesCount: 1 } }
+-      )
+-
+       // Artificial wait for timing attack challenge
+       await sleep(150)
+       try {
+         const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })
+-        const updatedLikedBy = updatedReview.likedBy
+-        updatedLikedBy.push(user.data.email)
+-
+-        const count = updatedLikedBy.filter(email => email === user.data.email).length
++        const count = updatedReview.likedBy.filter(email => email === user.data.email).length
+         challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)
+-
+-        const result = await db.reviewsCollection.update(
+-          { _id: id },
+-          { $set: { likedBy: updatedLikedBy } }
+-        )
+         res.json(result)
+       } catch (err) {
+         res.status(500).json(err)

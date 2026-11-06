@@ -1,0 +1,13 @@
+diff --git a/frontend/src/app/administration/administration.component.ts b/frontend/src/app/administration/administration.component.ts
+index 90cb16519..4eda9b002 100644
+--- a/frontend/src/app/administration/administration.component.ts
++++ b/frontend/src/app/administration/administration.component.ts
+@@ -88,7 +88,7 @@ export class AdministrationComponent implements OnInit {
+       next: (feedbacks) => {
+         this.feedbackDataSource = feedbacks
+         for (const feedback of this.feedbackDataSource) {
+-          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)
++          feedback.comment = feedback.comment
+         }
+         this.feedbackDataSource = new MatTableDataSource(this.feedbackDataSource)
+         this.feedbackDataSource.paginator = this.paginatorFeedb

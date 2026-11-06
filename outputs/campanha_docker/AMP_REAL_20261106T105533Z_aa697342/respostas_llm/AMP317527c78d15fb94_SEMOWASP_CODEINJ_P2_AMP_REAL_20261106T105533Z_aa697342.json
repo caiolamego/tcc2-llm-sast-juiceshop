@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Execução remota de código (RCE) por avaliação de dados controlados pelo usuário.\",\n  \"causa_da_vulnerabilidade\": \"O valor body.orderLinesData, recebido na requisição, é passado a safeEval dentro de um contexto criado com vm.createContext. A avaliação de expressões fornecidas pelo usuário continua sendo uma operação de execução de código; o sandbox do módulo vm não deve ser considerado uma fronteira de segurança, e a biblioteca safeEval não torna seguro executar entrada arbitrária.\",\n  \"estrategia_de_correcao\": \"Remover a avaliação de código e tratar orderLinesData como dados JSON. Rejeitar conteúdo que não seja JSON válido, preservando o fluxo de resposta para dados válidos e o tratamento de erros existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/b2bOrder.ts\",\n      \"trecho_original\": \"import vm from 'node:vm'\\nimport { type Request, type Response, type NextFunction } from 'express'\\n// @ts-expect-error FIXME due to non-existing type definitions for notevil\\nimport { eval as safeEval } from 'notevil'\",\n      \"trecho_corrigido\": \"import { type Request, type Response, type NextFunction } from 'express'\"\n    },\n    {\n      \"arquivo\": \"routes/b2bOrder.ts\",\n      \"trecho_original\": \"        const sandbox = { safeEval, orderLinesData }\\n        vm.createContext(sandbox)\\n        vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })\",\n      \"trecho_corrigido\": \"        JSON.parse(orderLinesData)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"JSON.parse interpreta a entrada como dados segundo a gramática JSON, não como código JavaScript, impedindo que expressões ou instruções fornecidas pelo atacante sejam executadas. A remoção de vm e safeEval também elimina a dependência de uma sandbox como mecanismo de isolamento. A validação permanece dentro do try existente, portanto entradas inválidas seguem o caminho de erro já implementado.\",\n  \"limitacoes_da_correcao\": \"A alteração impede execução de código, mas não valida a estrutura ou os campos esperados de orderLinesData; isso deve ser feito separadamente conforme o esquema funcional da aplicação. Entradas que antes eram aceitas como expressões, mas não são JSON válido, passarão a ser rejeitadas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1113,
+  "tokens_saida": 524,
+  "latencia_s": 5.495,
+  "custo_usd": 0.000401,
+  "hash_prompt": "4a492a0f32303c670228ff713e71b2f7cd2c14f944cc98236665b3b43aeafbdb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1110
+}

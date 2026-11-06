@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possibilidade de ReDoS por construção de expressões regulares com o valor variável challengeKey.\",\n  \"causa_da_vulnerabilidade\": \"challengeKey é interpolado diretamente em padrões RegExp. Embora as chaves sejam extraídas do conteúdo dos arquivos de snippets, caracteres especiais nelas podem alterar a expressão regular e provocar correspondências com backtracking excessivo.\",\n  \"estrategia_de_correcao\": \"Escapar os caracteres especiais de challengeKey antes de interpolá-lo nas expressões regulares, preservando a busca e a marcação de linhas existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/codingChallenges.ts\",\n      \"trecho_original\": \"  const vulnLines = []\\n  const neutralLines = []\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\",\n      \"trecho_corrigido\": \"  const vulnLines = []\\n  const neutralLines = []\\n  const escapedChallengeKey = challengeKey.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O escape impede que challengeKey seja interpretado como sintaxe de expressão regular, fazendo com que corresponda apenas ao texto literal da chave. Isso elimina a possibilidade de a chave introduzir operadores ou padrões com comportamento de backtracking, sem alterar a lógica de identificação das linhas vulneráveis e neutras.\",\n  \"limitacoes_da_correcao\": \"A correção protege as duas expressões que usam challengeKey para identificar linhas. Ela não impõe limites ao tamanho ou à quantidade de conteúdo dos arquivos de snippets, nem altera as demais expressões regulares do módulo.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2934,
+  "tokens_saida": 539,
+  "latencia_s": 5.596,
+  "custo_usd": 0.000636,
+  "hash_prompt": "36f28ddf6f203ecf351b7a2c8e1238124b23d15899f66f093a351faee0b0acd2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2931
+}

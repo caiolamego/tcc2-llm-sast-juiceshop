@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição não autorizada de dados sensíveis do usuário (mass assignment / divulgação excessiva de propriedades), incluindo o hash da senha.\",\n  \"causa_da_vulnerabilidade\": \"O parâmetro controlado pelo cliente `fields` é dividido em nomes de propriedades e cada nome é usado diretamente para ler `user.data`. Não há lista de campos permitidos nem exclusão explícita de propriedades sensíveis. Assim, um cliente autenticado pode solicitar `?fields=password` e receber o valor de `user.data.password` na resposta.\",\n  \"estrategia_de_correcao\": \"Manter a seleção dinâmica de campos, mas permitir somente os campos já expostos pela resposta padrão: `id`, `email`, `lastLoginIp` e `profileImage`. Ignorar qualquer outro nome solicitado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/currentUser.ts\",\n      \"trecho_original\": \"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        }\",\n      \"trecho_corrigido\": \"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação por lista de permissões ocorre antes de acessar e copiar cada propriedade. Portanto, nomes como `password` não são incluídos na resposta, mesmo quando enviados em `fields`. Os quatro campos permitidos correspondem aos campos que a rota já retornava sem esse parâmetro, preservando o comportamento funcional esperado para os campos públicos.\",\n  \"limitacoes_da_correcao\": \"A correção impede a exposição de propriedades não permitidas por meio do parâmetro `fields` nesta rota. Ela não altera outros endpoints nem a forma como os dados sensíveis são armazenados ou tratados em outras partes da aplicação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1125,
+  "tokens_saida": 539,
+  "latencia_s": 9.396,
+  "custo_usd": 0.000281,
+  "hash_prompt": "716f23669255bb42815bdadf638cc275f26be42183e6dce9483ab34c3a150879",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1122,
+  "tokens_escrita_cache": 0
+}

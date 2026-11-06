@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção SQL no parâmetro de busca de produtos.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em req.query.q é interpolado diretamente na consulta SQL. Limitar o tamanho do valor não impede que ele altere a estrutura da consulta.\",\n  \"estrategia_de_correcao\": \"Usar um parâmetro vinculado do Sequelize para o termo de busca, mantendo a consulta e o comportamento de busca existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/search.ts\",\n      \"trecho_original\": \"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\n      \"trecho_corrigido\": \"    models.sequelize.query(\\\"SELECT * FROM Products WHERE ((name LIKE $search OR description LIKE $search) AND deletedAt IS NULL) ORDER BY name\\\", { bind: { search: `%${criteria}%` } })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O valor de busca é enviado separadamente da instrução SQL por meio de bind parameters. Assim, caracteres especiais ou conteúdo SQL fornecidos pelo usuário são tratados como dados do padrão LIKE, não como parte executável da consulta. O padrão `%${criteria}%` preserva a busca parcial anterior.\",\n  \"limitacoes_da_correcao\": \"A correção impede a injeção SQL por este parâmetro, mas não altera a semântica de curingas do LIKE: os caracteres % e _ fornecidos pelo usuário continuam funcionando como curingas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1204,
+  "tokens_saida": 367,
+  "latencia_s": 4.862,
+  "custo_usd": 0.000334,
+  "hash_prompt": "fad37f2db4ff506899246a0a66fc1ff3182d03431a015e08747a9a3cb9c8d4e4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1201
+}

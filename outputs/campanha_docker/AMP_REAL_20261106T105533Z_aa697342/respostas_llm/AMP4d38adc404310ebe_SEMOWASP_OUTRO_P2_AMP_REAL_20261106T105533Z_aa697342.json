@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de eval() para calcular a resposta do CAPTCHA, criando risco de execução de código (CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code).\",\n  \"causa_da_vulnerabilidade\": \"A expressão aritmética é construída como texto e passada a eval(). Embora os termos e operadores sejam atualmente escolhidos de listas e valores numéricos fixos, eval executa seu argumento como código JavaScript. Isso torna o cálculo dependente de um mecanismo de execução dinâmica desnecessário e vulnerável a alterações futuras que introduzam dados controláveis por um atacante na expressão.\",\n  \"estrategia_de_correcao\": \"Substituir eval() por cálculo aritmético explícito, preservando os operadores e a precedência de JavaScript. Como a expressão contém dois operadores, calcular primeiro a multiplicação quando presente; nos demais casos, avaliar da esquerda para a direita, como ocorre com + e -.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/captcha.ts\",\n      \"trecho_original\": \"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\n      \"trecho_corrigido\": \"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = (firstOperator === '*'\\n      ? firstTerm * (secondOperator === '*' ? secondTerm * thirdTerm : secondOperator === '+' ? secondTerm + thirdTerm : secondTerm - thirdTerm)\\n      : secondOperator === '*'\\n        ? (firstOperator === '+' ? firstTerm + secondTerm * thirdTerm : firstTerm - secondTerm * thirdTerm)\\n        : firstOperator === '+'\\n          ? (secondOperator === '+' ? firstTerm + secondTerm + thirdTerm : firstTerm + secondTerm - thirdTerm)\\n          : (secondOperator === '+' ? firstTerm - secondTerm + thirdTerm : firstTerm - secondTerm - thirdTerm)).toString()\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O cálculo passa a usar somente operações aritméticas sobre os três valores numéricos já gerados e comparações com os operadores permitidos. Nenhuma string é interpretada ou executada como código. A lógica mantém a precedência usual da multiplicação sobre adição e subtração e preserva a avaliação da esquerda para a direita entre operadores de mesma precedência, mantendo a resposta correspondente à expressão exibida.\",\n  \"limitacoes_da_correcao\": \"A correção elimina a execução dinâmica de código neste cálculo, mas não altera outras propriedades do CAPTCHA, como a previsibilidade dos valores gerados por Math.random() ou a exposição da expressão e do identificador na resposta.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1028,
+  "tokens_saida": 617,
+  "latencia_s": 6.343,
+  "custo_usd": 0.000319,
+  "hash_prompt": "2d95a9b9c8754828bdd2b1d93168cacd2876158d89a41cc0443cda9f7632d433",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1025,
+  "tokens_escrita_cache": 0
+}

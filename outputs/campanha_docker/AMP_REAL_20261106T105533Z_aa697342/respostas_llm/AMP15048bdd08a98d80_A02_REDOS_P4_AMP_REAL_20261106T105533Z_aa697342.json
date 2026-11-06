@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possibilidade de ReDoS (CWE-1333) ao construir expressões regulares com o valor variável challengeKey.\",\n  \"causa_da_vulnerabilidade\": \"challengeKey é extraído do conteúdo dos arquivos e interpolado sem escape em chamadas a new RegExp. Metacaracteres presentes no valor podem alterar o padrão e, em combinação com o restante da expressão, causar processamento excessivo síncrono no event loop. O valor é derivado dos arquivos varridos, não diretamente de uma requisição; a exploração depende de um atacante conseguir influenciar esses arquivos ou o conteúdo processado.\",\n  \"estrategia_de_correcao\": \"Escapar os caracteres especiais de challengeKey antes de interpolá-lo nas duas expressões regulares usadas para identificar linhas vulneráveis e neutras, preservando a correspondência literal do identificador.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/codingChallenges.ts\",\n      \"trecho_original\": \"  const vulnLines = []\\n  const neutralLines = []\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\",\n      \"trecho_corrigido\": \"  const vulnLines = []\\n  const neutralLines = []\\n  const escapedChallengeKey = challengeKey.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O escape impede que challengeKey introduza operadores ou quantificadores no padrão: seus caracteres especiais passam a ser interpretados literalmente. Assim, as expressões continuam localizando as marcações associadas ao identificador, sem permitir que o identificador altere a estrutura do regex e provoque backtracking adversarial. A alteração é localizada e mantém as assinaturas e o comportamento esperado para chaves comuns.\",\n  \"limitacoes_da_correcao\": \"A correção protege as duas expressões que usam challengeKey para localizar linhas. O padrão de captura de desafios e a expressão dinâmica em getCodingChallengeFromFileContent não foram alterados; a exploração descrita depende de conteúdo de arquivo controlável e essas expressões podem exigir análise separada caso arquivos não confiáveis possam ser introduzidos. O escape não substitui limites de tamanho ou de quantidade de arquivos processados.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3042,
+  "tokens_saida": 659,
+  "latencia_s": 7.114,
+  "custo_usd": 0.00071,
+  "hash_prompt": "9123e8918beb26e4e655498ea474c6e45dd908e4697ff6cfa471d36e04b24dff",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3039
+}

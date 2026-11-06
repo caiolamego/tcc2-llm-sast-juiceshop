@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de dados controlados pelo cliente como opções de renderização, permitindo que `layout` influencie a seleção do template e que propriedades adicionais do corpo da requisição sejam propagadas para `res.render`. Isso pode resultar em leitura de arquivos fora dos templates e em controle indevido de opções de renderização.\",\n  \"causa_da_vulnerabilidade\": \"O código passa `req.body` diretamente como objeto de opções para `res.render` nos dois caminhos. Além disso, quando `req.body.layout` está presente, ele é usado como caminho de template após apenas uma verificação por substrings proibidas. Essa verificação não confina o caminho ao diretório de templates e pode ser contornada com caminhos ou formas não contempladas.\",\n  \"estrategia_de_correcao\": \"Não aceitar opções de renderização do corpo da requisição. Renderizar sempre o template fixo `dataErasureResult` e passar somente os dados necessários à resposta, mantendo o comportamento de resposta reduzida e a resolução do desafio no fluxo em que `layout` foi informado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\",\n      \"trecho_corrigido\": \"      if (req.body.layout) {\\n        res.render('dataErasureResult', {\\n          email: req.body.email,\\n          securityAnswer: req.body.securityAnswer,\\n          ...themeVars\\n        }, (error, html) => {\"\n    },\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"      } else {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\\n      }\",\n      \"trecho_corrigido\": \"      } else {\\n        res.render('dataErasureResult', {\\n          email: req.body.email,\\n          securityAnswer: req.body.securityAnswer,\\n          ...themeVars\\n        })\\n      }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O template permanece fixo e deixa de ser selecionável por entrada externa. As opções de renderização passam a ser construídas explicitamente com os campos previstos (`email`, `securityAnswer` e variáveis de tema), impedindo que propriedades arbitrárias do corpo sejam interpretadas pelo Express ou pelo mecanismo de templates. O fluxo com `layout` continua produzindo a resposta truncada e resolvendo o desafio como antes; o fluxo sem `layout` continua renderizando a resposta normalmente.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que `email` e `securityAnswer` são os únicos campos do corpo necessários ao template. Se o template depender de outros campos legítimos, eles devem ser adicionados explicitamente à lista permitida. A solicitação de exclusão e a limpeza do cookie continuam ocorrendo antes da renderização, conforme o comportamento existente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2694,
+  "tokens_saida": 727,
+  "latencia_s": 6.847,
+  "custo_usd": 0.0007,
+  "hash_prompt": "e850554ea3f1c0c725f68d121dc0e95f11fa4472fdcb93b1dd57014449129beb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2691
+}

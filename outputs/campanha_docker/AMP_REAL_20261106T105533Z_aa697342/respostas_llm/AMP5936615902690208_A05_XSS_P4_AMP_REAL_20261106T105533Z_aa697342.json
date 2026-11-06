@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado/refletido na página de vídeo promocional: o conteúdo dos arquivos de legendas é inserido sem escape dentro de um elemento <script>.\",\n  \"causa_da_vulnerabilidade\": \"getSubsFromFile() lê um arquivo de legendas cujo nome vem da configuração e retorna seu conteúdo. Esse valor é concatenado diretamente no HTML entre as tags <script> por meio de compiledTemplate.replace(). Se o conteúdo contiver uma sequência como </script> seguida de markup ou JavaScript, o navegador encerra o elemento e interpreta o restante como HTML executável.\",\n  \"estrategia_de_correcao\": \"Manter a apresentação das legendas como conteúdo de texto, mas codificar caracteres que possam encerrar o elemento script ou iniciar markup antes de inseri-las no HTML. A codificação de <, > e & impede que o conteúdo das legendas seja interpretado como marcação ou código, sem alterar a estrutura da página.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/videoHandler.ts\",\n      \"trecho_original\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\n      \"trecho_corrigido\": \"      const safeSubs = subs.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')\\n      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + safeSubs + '</script>')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A vulnerabilidade ocorre porque o navegador reconhece a sequência literal </script> mesmo quando ela aparece dentro do conteúdo de um elemento script. Codificar < como &lt; impede que dados da legenda formem essa sequência de encerramento; codificar também & e > evita ambiguidades na representação do conteúdo. Assim, o conteúdo não consegue sair do elemento e criar markup ou executar JavaScript. A alteração é localizada e mantém o elemento de legendas e o fluxo de renderização existentes.\",\n  \"limitacoes_da_correcao\": \"A codificação é apropriada para impedir que o conteúdo seja interpretado como markup no elemento de legendas. Deve-se confirmar que o código cliente que consome esse elemento decodifica as entidades HTML conforme esperado; caso ele exija o texto VTT original sem entidades, a solução mais robusta é transportar as legendas em um elemento de texto escapado ou em uma resposta separada e lê-las como texto, sem inseri-las em um elemento script.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2593,
+  "tokens_saida": 596,
+  "latencia_s": 6.099,
+  "custo_usd": 0.000622,
+  "hash_prompt": "573c51c3c88c6548eb0f364cba213eab83dce2ef31590f24653582f44c0b8fc7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2590
+}

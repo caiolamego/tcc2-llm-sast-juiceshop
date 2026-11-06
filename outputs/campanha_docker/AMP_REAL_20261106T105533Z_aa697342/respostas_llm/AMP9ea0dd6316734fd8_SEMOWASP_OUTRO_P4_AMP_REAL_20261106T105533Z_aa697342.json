@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"CWE-620: alteração de senha sem verificação obrigatória da senha atual. Um usuário autenticado pode trocar a senha sem apresentar a credencial atual.\",\n  \"causa_da_vulnerabilidade\": \"A comparação da senha atual com o hash armazenado está condicionada a `currentPassword` ser informado. Quando esse valor está ausente, a condição é ignorada e o fluxo prossegue até atualizar a senha.\",\n  \"estrategia_de_correcao\": \"Rejeitar a solicitação quando a senha atual estiver ausente ou não corresponder à senha armazenada, mantendo a mensagem de erro existente e o restante do fluxo inalterado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/changePassword.ts\",\n      \"trecho_original\": \"    if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\",\n      \"trecho_corrigido\": \"    if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A condição agora exige que `currentPassword` esteja presente e que seu hash corresponda ao hash armazenado. Se a senha atual estiver ausente ou incorreta, a solicitação termina com a resposta 401 já existente, antes de atualizar a senha. Assim, a sessão autenticada, por si só, não basta para alterar a credencial.\",\n  \"limitacoes_da_correcao\": \"Esta alteração protege o fluxo de mudança de senha que exige a senha atual. Fluxos legítimos de recuperação de senha devem continuar usando um mecanismo separado de prova de identidade. A correção não adiciona limitação de tentativas nem altera o mecanismo de hashing existente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1626,
+  "tokens_saida": 422,
+  "latencia_s": 5.081,
+  "custo_usd": 0.000414,
+  "hash_prompt": "1882f3b897ba8f2333dfd80edc50bf41f6cdafa22978832860ae111feb10332b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1623
+}

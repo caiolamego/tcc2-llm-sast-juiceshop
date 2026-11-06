@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Bypass do rate limiting do endpoint de redefinição de senha por falsificação do cabeçalho X-Forwarded-For.\",\n  \"causa_da_vulnerabilidade\": \"O limitador usa headers['X-Forwarded-For'] como chave, mas os nomes dos cabeçalhos HTTP são normalizados para minúsculas pelo Node.js. Assim, essa propriedade normalmente não é encontrada e o código recorre a ip; além disso, com trust proxy habilitado, o endereço IP pode ser derivado de X-Forwarded-For fornecido pelo cliente, permitindo que o atacante altere a chave usada pelo limitador a cada requisição.\",\n  \"estrategia_de_correcao\": \"Usar req.ip como chave do limitador e remover a leitura direta do cabeçalho encaminhado. Com a configuração de proxy confiável existente, req.ip obtém o endereço conforme a cadeia de proxies configurada, em vez de aceitar diretamente um valor arbitrário do cabeçalho.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\",\n      \"trecho_corrigido\": \"    keyGenerator ({ ip }: { ip: any }) { return ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A chave do rate limiter deixa de depender de um cabeçalho encaminhado lido diretamente da requisição e passa a usar o IP calculado pelo Express. Isso impede que o cliente escolha livremente uma chave diferente por requisição por meio de X-Forwarded-For, desde que trust proxy esteja configurado para refletir apenas proxies confiáveis.\",\n  \"limitacoes_da_correcao\": \"A aplicação mantém app.enable('trust proxy'). Se estiver acessível diretamente por clientes ou se a cadeia de proxies confiáveis não estiver configurada corretamente, req.ip ainda poderá ser influenciado por X-Forwarded-For. A configuração de trust proxy deve corresponder à topologia real de proxies.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2212,
+  "tokens_saida": 479,
+  "latencia_s": 5.393,
+  "custo_usd": 0.000516,
+  "hash_prompt": "6b5dfff34ae7c0375c79be516ad2c2e0db9c0745bc466958c6a61b66ef2bf898",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2209
+}

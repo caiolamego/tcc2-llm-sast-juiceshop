@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de diretórios (path traversal) ao servir arquivos públicos.\",\n  \"causa_da_vulnerabilidade\": \"A validação rejeita apenas nomes que contenham a barra `/` e permite nomes com extensão `.md` ou `.pdf`. Em sistemas que aceitam `\\\\` como separador de caminho, um nome como `..\\\\arquivo.md` passa por essas verificações. `path.resolve('ftp/', file)` então pode resolver para um caminho fora de `ftp/`, e `sendFile` pode expor arquivos locais.\",\n  \"estrategia_de_correcao\": \"Resolver o caminho candidato e o diretório-base com `path.resolve` e confirmar que o candidato permanece dentro do diretório `ftp/` antes de chamar `sendFile`. Rejeitar caminhos que escapem do diretório permitido, mantendo as mensagens de erro existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/fileServer.ts\",\n      \"trecho_original\": \"      res.sendFile(path.resolve('ftp/', file))\",\n      \"trecho_corrigido\": \"      const basePath = path.resolve('ftp')\\n      const filePath = path.resolve(basePath, file)\\n      if (filePath === basePath || !filePath.startsWith(basePath + path.sep)) {\\n        res.status(403)\\n        next(new Error('Only .md and .pdf files are allowed!'))\\n        return\\n      }\\n      res.sendFile(filePath)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A verificação compara o caminho absoluto resolvido com o diretório-base absoluto, exigindo que o arquivo esteja estritamente abaixo de `ftp/`. Assim, segmentos `..` e separadores reconhecidos pelo sistema operacional não podem direcionar `sendFile` para fora desse diretório. A comparação inclui `path.sep` para evitar aceitar caminhos cujo nome apenas compartilhe o prefixo do diretório, como `ftp-backup`.\",\n  \"limitacoes_da_correcao\": \"A proteção limita o caminho lexical resolvido ao diretório `ftp/`; não impede que um link simbólico dentro desse diretório aponte para fora dele. Se diretórios ou arquivos sob `ftp/` puderem ser controlados por um atacante, também será necessário validar o destino real com `realpath` ou impedir links simbólicos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1195,
+  "tokens_saida": 507,
+  "latencia_s": 5.845,
+  "custo_usd": 0.000403,
+  "hash_prompt": "b8286cb50656209c6bfa13f908bf34a38a6c20df0d6b474dc329707db687dd09",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1192
+}

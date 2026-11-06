@@ -1,0 +1,25 @@
+diff --git a/routes/captcha.ts b/routes/captcha.ts
+index d874df7bb..e44c23312 100644
+--- a/routes/captcha.ts
++++ b/routes/captcha.ts
+@@ -19,7 +19,19 @@ export function captchas () {
+     const secondOperator = operators[Math.floor((Math.random() * 3))]
+ 
+     const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()
+-    const answer = eval(expression).toString() // eslint-disable-line no-eval
++    const terms = [firstTerm, secondTerm, thirdTerm]
++    const expressionOperators = [firstOperator, secondOperator]
++    let answerValue = terms[0]
++    for (let i = 0; i < expressionOperators.length; i++) {
++      if (expressionOperators[i] === '*') {
++        answerValue *= terms[i + 1]
++      } else if (i === 0 || expressionOperators[i - 1] === '*') {
++        answerValue += expressionOperators[i] === '+' ? terms[i + 1] : -terms[i + 1]
++      } else {
++        answerValue = expressionOperators[i] === '+' ? answerValue + terms[i + 1] : answerValue - terms[i + 1]
++      }
++    }
++    const answer = answerValue.toString()
+ 
+     const captcha = {
+       captchaId,

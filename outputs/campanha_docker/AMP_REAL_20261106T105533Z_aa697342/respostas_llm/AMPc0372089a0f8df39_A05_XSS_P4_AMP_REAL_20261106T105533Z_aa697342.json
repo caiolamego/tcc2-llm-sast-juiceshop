@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível XSS (CWE-79) por conteúdo de legendas inserido sem escape em um template Pug. No trecho fornecido, porém, não há construção Pug explícita de escape desativado (`!=` ou `!{...}`); o alerta parece apontar para o uso posterior de `subtitle.innerHTML` no JavaScript.\",\n  \"causa_da_vulnerabilidade\": \"O conteúdo de `#subtitle` é lido por `innerHTML` e passado ao parser de legendas. Se esse conteúdo puder conter dados não confiáveis, o navegador interpreta marcação HTML em vez de tratá-la como texto. A regra Semgrep citada refere-se a saída Pug sem escape, mas essa construção não aparece no código apresentado.\",\n  \"estrategia_de_correcao\": \"Ler o conteúdo da legenda como texto com `textContent`, evitando que marcação HTML seja interpretada. Isso preserva o processamento de texto das legendas e impede a execução de markup inserido nesse elemento.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"views/promotionVideo.pug\",\n      \"trecho_original\": \"            quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function(cue) {\",\n      \"trecho_corrigido\": \"            quick_and_dirty_vtt_or_srt_parser(subtitle.textContent).map(function(cue) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A propriedade `textContent` retorna o conteúdo textual do elemento sem interpretar tags ou atributos como HTML. Assim, conteúdo como `<img onerror=...>` é tratado como texto da legenda, não como elemento executável. A alteração é localizada e mantém o parser e o fluxo de criação das legendas.\",\n  \"limitacoes_da_correcao\": \"O trecho fornecido não contém a construção Pug `!=` ou `!{...}` indicada pelo alerta, portanto não é possível confirmar nem corrigir diretamente um eventual unescape no template sem o código correspondente. A troca para `textContent` mitiga o sink visível, mas deve-se verificar a origem e o preenchimento de `#subtitle`; se legendas com formatação HTML forem requisito funcional, será necessária sanitização apropriada antes de interpretar HTML.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2833,
+  "tokens_saida": 486,
+  "latencia_s": 5.857,
+  "custo_usd": 0.000597,
+  "hash_prompt": "6c498f99bf723d2503c32430947bd4ae948bc66652b4952e67bc792f57db438b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2830
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível IDOR (CWE-639) na consulta de método de entrega por ID fornecido na requisição.\",\n  \"causa_da_vulnerabilidade\": \"A rota consulta DeliveryModel pelo req.params.id sem escopo de proprietário ou verificação de autorização por objeto. Contudo, o código apresentado não indica que métodos de entrega sejam recursos privados ou pertençam a usuários; eles aparentam ser opções públicas do catálogo.\",\n  \"estrategia_de_correcao\": \"Não adicionar um filtro de proprietário sem evidência de que esses registros pertencem a usuários: isso poderia impedir o acesso legítimo ao catálogo. A consulta por ID, isoladamente, não comprova IDOR. Confirmar a regra de acesso e os middlewares da rota antes de alterar o código.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"A regra do Semgrep identifica um padrão que merece revisão, mas não demonstra por si só uma falha de autorização. Os métodos de entrega são apresentados como opções gerais, e a rota não expõe dados de usuário nem altera recursos. Adicionar um escopo de proprietário exigiria uma relação de propriedade que não aparece no trecho e poderia quebrar o comportamento funcional. A correção segura depende de confirmar se esses métodos são públicos e se há controles adicionais na configuração da rota.\",\n  \"limitacoes_da_correcao\": \"Não foi possível confirmar, apenas com o arquivo fornecido, a configuração da rota, os middlewares aplicados ou a semântica de propriedade de DeliveryModel. Se os métodos forem privados ou restritos por usuário, é necessário aplicar autorização baseada na identidade validada pelo servidor antes de devolver o objeto, usando o escopo de propriedade apropriado.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1754,
+  "tokens_saida": 365,
+  "latencia_s": 5.202,
+  "custo_usd": 0.000402,
+  "hash_prompt": "ec9d6ea600c16bc83c24e2e0163bfdf87d9ad256c0311bebfbed78f454382371",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1751
+}

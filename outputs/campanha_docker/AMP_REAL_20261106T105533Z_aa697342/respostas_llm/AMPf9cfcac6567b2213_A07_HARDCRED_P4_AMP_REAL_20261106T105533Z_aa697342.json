@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Chave HMAC hardcoded em `hmac`, permitindo que qualquer pessoa com acesso ao código obtenha o segredo usado para gerar os HMACs.\",\n  \"causa_da_vulnerabilidade\": \"A função `hmac` passa a string literal `'pa4qacea4VK9t9nGv7yZtwmj'` diretamente como chave para `crypto.createHmac`. Como o segredo está versionado no código, não é confidencial e não pode ser rotacionado independentemente de uma alteração e implantação do código.\",\n  \"estrategia_de_correcao\": \"Obter a chave de uma variável de ambiente obrigatória e falhar durante a inicialização se ela não estiver configurada, sem incluir um segredo de fallback no código. Configurar a variável no ambiente de execução com um valor aleatório e protegido.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\\nexport const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\",\n      \"trecho_corrigido\": \"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\\nconst hmacKey = process.env.HMAC_KEY\\nif (!hmacKey) throw new Error('Missing HMAC configuration')\\nexport const hmac = (data: string) => crypto.createHmac('sha256', hmacKey).update(data).digest('hex')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A chave deixa de estar embutida no repositório e passa a ser fornecida pela configuração do ambiente. A verificação explícita impede que a aplicação opere silenciosamente com uma chave previsível ou fallback conhecido quando a configuração estiver ausente. O algoritmo, o formato do resultado e a assinatura da função `hmac` permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A implantação precisa definir `HMAC_KEY` como um segredo aleatório, com controle de acesso e armazenamento apropriados; sem essa configuração, a aplicação falhará ao carregar este módulo. Se a chave antiga já foi usada em produção, ela deve ser considerada comprometida e rotacionada. A rotação pode invalidar HMACs previamente gerados e requer avaliar os consumidores desses valores.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3652,
+  "tokens_saida": 558,
+  "latencia_s": 5.414,
+  "custo_usd": 0.000735,
+  "hash_prompt": "8c74a7eb4a6679347ad99cc57c5143558b10cbca96bb8746eed782c99fc13666",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3649
+}

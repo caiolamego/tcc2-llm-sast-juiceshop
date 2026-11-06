@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de diretório (path traversal) ao servir arquivos de chave.\",\n  \"causa_da_vulnerabilidade\": \"A validação rejeita apenas nomes que contenham `/`. O parâmetro `file` ainda pode conter sequências de travessia com barras invertidas, como `..\\\\`, que são separadores de caminho em sistemas Windows. `path.resolve('encryptionkeys/', file)` então pode resolver para um arquivo fora do diretório pretendido.\",\n  \"estrategia_de_correcao\": \"Resolver o caminho solicitado e o diretório permitido, e só servir o arquivo quando o caminho resolvido permanecer dentro desse diretório. Manter a rejeição existente de nomes com barra e a mensagem de erro.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/keyServer.ts\",\n      \"trecho_original\": \"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\",\n      \"trecho_corrigido\": \"    const keyDirectory = path.resolve('encryptionkeys')\\n    const resolvedFile = path.resolve(keyDirectory, file)\\n\\n    if (!file.includes('/') && resolvedFile.startsWith(`${keyDirectory}${path.sep}`)) {\\n      res.sendFile(resolvedFile)\\n    } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A verificação usa o caminho já normalizado por `path.resolve` e exige que ele comece pelo diretório permitido seguido do separador de caminho. Assim, nomes com `..` ou separadores alternativos que escapariam de `encryptionkeys` são recusados antes de `sendFile`. Arquivos válidos dentro do diretório continuam sendo servidos, e a mensagem de erro existente é preservada.\",\n  \"limitacoes_da_correcao\": \"A verificação protege contra travessia lexical de caminho, mas não resolve ataques envolvendo links simbólicos dentro de `encryptionkeys` que apontem para fora do diretório. Se esse diretório puder ser alterado por usuários não confiáveis, será necessário também controlar links simbólicos e permissões.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 770,
+  "tokens_saida": 462,
+  "latencia_s": 5.018,
+  "custo_usd": 0.000308,
+  "hash_prompt": "ead380a2dda78ace8da875bfca0ae82e471ce0fecc291794b6226a97abe63089",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção SQL (SQL injection) na busca de produtos.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em req.query.q é interpolado diretamente na string SQL dentro de critérios LIKE. Aspas e outros caracteres fornecidos pelo atacante podem alterar a estrutura da consulta, em vez de serem tratados apenas como dados.\",\n  \"estrategia_de_correcao\": \"Substituir a interpolação do critério por parâmetros vinculados do Sequelize, mantendo os curingas LIKE e o restante da consulta inalterado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/search.ts\",\n      \"trecho_original\": \"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\n      \"trecho_corrigido\": \"    models.sequelize.query(\\\"SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name\\\", { replacements: { criteria: `%${criteria}%` } }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O critério passa a ser enviado separadamente da instrução SQL por meio de replacements do Sequelize. Assim, caracteres como aspas e operadores presentes na entrada não podem modificar a sintaxe da consulta; são interpretados como parte do valor pesquisado. O padrão com curingas preserva a busca parcial existente.\",\n  \"limitacoes_da_correcao\": \"A correção impede a injeção SQL por meio deste parâmetro, mas não altera outras características da busca, como o tratamento de curingas LIKE fornecidos pelo usuário, nem corrige possíveis vulnerabilidades em outras consultas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1312,
+  "tokens_saida": 405,
+  "latencia_s": 5.692,
+  "custo_usd": 0.000366,
+  "hash_prompt": "f27d8c0e3068ffe6212abc4bf997012547f8717d4db40704781dbe218fa72c72",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1309
+}

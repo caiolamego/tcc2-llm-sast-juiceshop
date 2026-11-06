@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Path traversal ao servir arquivos de chave.\",\n  \"causa_da_vulnerabilidade\": \"A validação rejeita apenas barras `/`, mas permite outros caminhos de traversal, como `..\\\\` em sistemas Windows. O caminho resultante pode escapar do diretório `encryptionkeys/`.\",\n  \"estrategia_de_correcao\": \"Resolver o caminho solicitado e o diretório permitido para caminhos absolutos e verificar que o arquivo permanece dentro desse diretório antes de chamar `sendFile`. Manter a mensagem de erro existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/keyServer.ts\",\n      \"trecho_original\": \"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\n      \"trecho_corrigido\": \"    const keyDirectory = path.resolve('encryptionkeys')\\n    const filePath = path.resolve(keyDirectory, file)\\n\\n    if (!file.includes('/') && filePath.startsWith(`${keyDirectory}${path.sep}`)) {\\n      res.sendFile(filePath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A verificação de prefixo com o separador de diretório impede que segmentos `..` ou separadores específicos da plataforma façam o caminho resolvido sair de `encryptionkeys`. A condição também preserva a rejeição existente de nomes com `/`.\",\n  \"limitacoes_da_correcao\": \"A validação protege contra traversal lexical, mas não contra links simbólicos dentro de `encryptionkeys` que apontem para arquivos fora do diretório. A mensagem de erro existente menciona apenas barras `/`, embora a validação também possa rejeitar outros caminhos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 662,
+  "tokens_saida": 433,
+  "latencia_s": 4.491,
+  "custo_usd": 0.000283,
+  "hash_prompt": "2a439137d6d712e717b472b88b7b405ff6ee06f6c34230a566a2a43d99bb4c3a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

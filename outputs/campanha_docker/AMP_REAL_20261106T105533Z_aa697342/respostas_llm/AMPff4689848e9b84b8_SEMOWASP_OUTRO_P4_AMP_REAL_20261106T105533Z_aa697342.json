@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Validação insuficiente do rating: o modelo aceita qualquer valor numérico inteiro, inclusive valores negativos ou acima da faixa permitida, podendo persistir avaliações inválidas.\",\n  \"causa_da_vulnerabilidade\": \"O setter de rating grava o valor diretamente com setDataValue e não define validação de faixa. allowNull: false impede apenas valores nulos; não restringe o mínimo nem o máximo. A verificação do desafio para rating zero não rejeita nem valida outros valores.\",\n  \"estrategia_de_correcao\": \"Adicionar validação no próprio atributo do modelo para aceitar somente inteiros entre 1 e 5, preservando o zero quando o desafio de zero estrelas estiver habilitado. Manter o setter e o comportamento existente do desafio.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"models/feedback.ts\",\n      \"trecho_original\": \"      rating: {\\n        type: DataTypes.INTEGER,\\n        allowNull: false,\\n        set (rating: number) {\",\n      \"trecho_corrigido\": \"      rating: {\\n        type: DataTypes.INTEGER,\\n        allowNull: false,\\n        validate: {\\n          isInt: true,\\n          min: utils.isChallengeEnabled(challenges.zeroStarsChallenge) ? 0 : 1,\\n          max: 5\\n        },\\n        set (rating: number) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação do Sequelize é executada ao validar/criar ou salvar o modelo e rejeita valores fora da faixa, além de valores que não sejam inteiros. O limite inferior condicional mantém o zero permitido apenas quando o desafio correspondente está habilitado; o limite superior de 5 restringe a avaliação à faixa usual de 1 a 5. A validação no modelo também protege contra caminhos de gravação que não dependam de validações anteriores na camada HTTP.\",\n  \"limitacoes_da_correcao\": \"A faixa de 1 a 5 é inferida do contrato usual de rating e deve ser confirmada com os requisitos do produto. A validação do Sequelize pode ser ignorada por operações que explicitamente desabilitem validações ou usem SQL direto; esses caminhos também devem ser controlados. A validação não substitui a validação de entrada na API.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1548,
+  "tokens_saida": 500,
+  "latencia_s": 5.888,
+  "custo_usd": 0.000443,
+  "hash_prompt": "e7bf82337bff22ba2b76953079b3eaaf7543414893dd37993c492aa0eb2f8d04",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1545
+}

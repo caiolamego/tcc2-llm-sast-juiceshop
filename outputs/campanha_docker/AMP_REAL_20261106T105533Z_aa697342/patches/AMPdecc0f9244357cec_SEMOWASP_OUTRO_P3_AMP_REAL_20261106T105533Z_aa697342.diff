@@ -1,0 +1,16 @@
+diff --git a/routes/basketItems.ts b/routes/basketItems.ts
+index 077a0d4d2..ac975dade 100644
+--- a/routes/basketItems.ts
++++ b/routes/basketItems.ts
+@@ -83,6 +83,11 @@ export function quantityCheckBeforeBasketItemUpdate () {
+ }
+ 
+ async function quantityCheck (req: Request, res: Response, next: NextFunction, id: number, quantity: number) {
++  if (!Number.isSafeInteger(quantity) || quantity <= 0) {
++    res.status(400).json({ error: 'Invalid quantity' })
++    return
++  }
++
+   const product = await QuantityModel.findOne({ where: { ProductId: id } })
+   if (product == null) {
+     throw new Error('No such product found!')

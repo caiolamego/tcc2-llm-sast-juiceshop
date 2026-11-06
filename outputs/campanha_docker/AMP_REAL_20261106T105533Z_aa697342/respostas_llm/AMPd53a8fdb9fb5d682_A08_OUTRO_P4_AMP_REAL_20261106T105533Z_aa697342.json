@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível poluição de protótipo ao percorrer uma cadeia de propriedades dinâmica obtida de options.replacement[1].\",\n  \"causa_da_vulnerabilidade\": \"O código divide uma cadeia de propriedades controlável em segmentos e os usa diretamente para acessar propriedades de config. Segmentos como __proto__, constructor ou prototype podem atravessar a cadeia de protótipos e permitir que valores inesperados sejam usados como substituição. O trecho mostrado não modifica diretamente um protótipo, mas a navegação dinâmica sem validação é o padrão sinalizado pela análise estática.\",\n  \"estrategia_de_correcao\": \"Validar cada segmento antes de acessá-lo e interromper a resolução quando o segmento for uma propriedade especial de protótipo ou não for uma propriedade própria do objeto atual. Manter a substituição existente para cadeias de propriedades próprias válidas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/hacking-instructor/helpers/helpers.ts\",\n      \"trecho_original\": \"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\",\n      \"trecho_corrigido\": \"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        if (property === '__proto__' || property === 'prototype' || property === 'constructor' || replacementValue == null || !Object.prototype.hasOwnProperty.call(replacementValue, property)) {\\n          replacementValue = undefined\\n          break\\n        }\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A correção impede que a resolução atravesse propriedades herdadas ou os nomes especiais associados à cadeia de protótipos. A verificação hasOwnProperty.call não depende de um método hasOwnProperty potencialmente sobrescrito no objeto consultado. Assim, somente propriedades próprias de cada nível de config são aceitas, sem alterar o comportamento para caminhos válidos que apontem a propriedades próprias.\",\n  \"limitacoes_da_correcao\": \"O trecho disponível não mostra a origem nem a validação de options.replacement ou a estrutura completa de config. A alteração protege esta resolução de propriedades, mas não substitui validação de entrada na origem nem garante que os valores próprios de config sejam confiáveis. Para caminhos inválidos, a substituição passa a receber undefined.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2307,
+  "tokens_saida": 574,
+  "latencia_s": 6.295,
+  "custo_usd": 0.000575,
+  "hash_prompt": "33b312c07d9e654236a57589b1773abda2a668ae44712a974983f49db8beb3ca",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2304
+}

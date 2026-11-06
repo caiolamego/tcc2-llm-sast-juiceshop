@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível mass assignment nos endpoints gerados automaticamente pelo Finale: os recursos são configurados sem restrição de campos graváveis, permitindo que atributos do modelo enviados pelo cliente sejam considerados nas operações de criação e atualização.\",\n  \"causa_da_vulnerabilidade\": \"A configuração de cada recurso Finale fornece o modelo e os endpoints, mas não define uma lista de atributos permitidos para escrita. Assim, a superfície de escrita gerada depende dos atributos do modelo e do comportamento padrão do Finale. O alerta, por si só, não demonstra que um campo sensível específico seja gravável nem que falte autorização em todos os endpoints.\",\n  \"estrategia_de_correcao\": \"Restringir os atributos graváveis dos recursos gerados a uma lista explícita por modelo, excluindo campos de identidade, propriedade e privilégio que não devem ser controlados pelo cliente. Como os modelos e seus campos editáveis não foram fornecidos, não é seguro inventar listas que possam quebrar operações legítimas; a alteração mínima segura é não gerar endpoints de escrita para esses recursos até que as listas permitidas sejam definidas e verificadas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include\\n    })\",\n      \"trecho_corrigido\": \"    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include,\\n      actions: ['list', 'read']\\n    })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A configuração passa a expor somente as ações de leitura e lista nos recursos gerados, removendo as operações de escrita que poderiam aceitar atributos arbitrários do corpo da requisição. Isso evita mass assignment nessa superfície sem presumir quais campos de cada modelo são editáveis. Os endpoints de escrita explícitos definidos fora desse bloco não são alterados.\",\n  \"limitacoes_da_correcao\": \"A alteração desabilita criação, atualização e exclusão nos endpoints gerados para todos os modelos deste bloco, o que pode afetar funcionalidades que dependam deles. Para preservar essas operações, é necessário confirmar a API da versão instalada do Finale e os campos legítimos de cada modelo, então configurar listas explícitas de atributos graváveis e validar autorização e propriedade por operação. A correção não altera nem audita os endpoints explícitos ou outros pontos de escrita.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2875,
+  "tokens_saida": 580,
+  "latencia_s": 6.585,
+  "custo_usd": 0.000649,
+  "hash_prompt": "7aa7bddd83e551d3d87e280eaa290b3fba5c3b4245af6de44e72f41ad46b448e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2872
+}

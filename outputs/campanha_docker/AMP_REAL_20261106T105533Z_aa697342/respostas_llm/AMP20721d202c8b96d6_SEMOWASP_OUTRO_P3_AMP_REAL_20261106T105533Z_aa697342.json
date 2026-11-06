@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL por uso de $where com JavaScript dinâmico na consulta de pedidos (CWE-943).\",\n  \"causa_da_vulnerabilidade\": \"O valor de req.params.id é interpolado em uma expressão JavaScript executada pelo MongoDB. A sanitização condicional não torna seguro o uso de $where e, no caminho do desafio de XSS, permite caracteres controlados pelo cliente.\",\n  \"estrategia_de_correcao\": \"Substituir a expressão $where por um filtro declarativo pelo campo orderId, passando o ID como valor escalar. Converter o ID para string para preservar a comparação com IDs armazenados como texto.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/trackOrder.ts\",\n      \"trecho_original\": \"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\n      \"trecho_corrigido\": \"    db.ordersCollection.find({ orderId: String(id) }).then((order: any) => {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O filtro estruturado não interpreta o conteúdo de id como código JavaScript nem como operador de consulta, eliminando a injeção por $where. A conversão explícita para string mantém a comparação com orderId textual e preserva o fluxo existente de resultados e tratamento de erros.\",\n  \"limitacoes_da_correcao\": \"A equivalência funcional pressupõe que orderId seja armazenado como string. Se a coleção também contiver orderId numérico, a consulta por string não encontrará esses documentos; confirme o tipo efetivamente usado no esquema e nos dados. A correção remove a execução de JavaScript no banco, mas não altera a lógica de desafio de XSS existente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2228,
+  "tokens_saida": 394,
+  "latencia_s": 4.829,
+  "custo_usd": 0.000475,
+  "hash_prompt": "ffa884abe06975f7b70ae86b41600166498109429fffc2c686445f5f2b7e63f4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2225
+}

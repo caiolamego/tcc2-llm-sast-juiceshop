@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Bypass da allowlist de redirecionamento (open redirect).\",\n  \"causa_da_vulnerabilidade\": \"isRedirectAllowed verifica se a URL recebida contém uma URL permitida em qualquer posição. Um atacante pode incluir uma URL permitida como parte de uma URL externa, fazendo-a passar pela validação.\",\n  \"estrategia_de_correcao\": \"Analisar a URL recebida e comparar sua origem e seu caminho com os componentes de cada URL permitida, exigindo correspondência exata e rejeitando URLs inválidas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\n      \"trecho_corrigido\": \"export const isRedirectAllowed = (url: string) => {\\n  try {\\n    const candidate = new URL(url)\\n    for (const allowedUrl of redirectAllowlist) {\\n      const allowed = new URL(allowedUrl)\\n      if (candidate.origin === allowed.origin && candidate.pathname === allowed.pathname && candidate.search === allowed.search && candidate.hash === allowed.hash) {\\n        return true\\n      }\\n    }\\n  } catch {\\n    return false\\n  }\\n  return false\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação por componentes da URL impede que uma URL externa seja aceita apenas por conter uma URL permitida em seu texto. A análise com URL também rejeita entradas malformadas. A comparação exata de origem, caminho, query e fragmento mantém permitidas as URLs listadas, sem aceitar destinos adicionais.\",\n  \"limitacoes_da_correcao\": \"A validação exige correspondência exata com as URLs da allowlist; variações de caminho, query ou fragmento que antes pudessem ser aceitas não serão permitidas. A segurança também depende de todos os pontos que executam redirecionamentos utilizarem esta validação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2976,
+  "tokens_saida": 476,
+  "latencia_s": 5.085,
+  "custo_usd": 0.000268,
+  "hash_prompt": "d9b2667621b932eff352d540dfa69a81eb837278f748fb86a7c0552f14fdb17c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2973,
+  "tokens_escrita_cache": 0
+}

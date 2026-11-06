@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL por execução de JavaScript arbitrário na consulta de avaliações, com possibilidade de negação de serviço.\",\n  \"causa_da_vulnerabilidade\": \"O valor de id é concatenado em uma expressão JavaScript passada ao operador MongoDB $where. Quando o desafio correspondente está habilitado, o valor é apenas truncado, não validado nem escapado, permitindo que conteúdo controlado pelo usuário altere a expressão executada.\",\n  \"estrategia_de_correcao\": \"Remover o uso de $where e consultar pelo campo product com um valor numérico validado. Rejeitar identificadores que não sejam inteiros seguros e positivos, sem alterar a resposta de erro existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/showProductReviews.ts\",\n      \"trecho_original\": \"    // Truncate id to avoid unintentional RCE\\n    const id = !utils.isChallengeEnabled(challenges.noSqlCommandChallenge) ? Number(req.params.id) : utils.trunc(req.params.id, 40)\\n\\n    // Measure how long the query takes, to check if there was a nosql dos attack\\n    const t0 = new Date().getTime()\\n\\n    db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\",\n      \"trecho_corrigido\": \"    const id = Number(req.params.id)\\n    if (!Number.isSafeInteger(id) || id <= 0) {\\n      res.status(400).json({ error: 'Wrong Params' })\\n      return\\n    }\\n\\n    // Measure how long the query takes, to check if there was a nosql dos attack\\n    const t0 = new Date().getTime()\\n\\n    db.reviewsCollection.find({ product: id }).then((reviews: Review[]) => {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta passa a usar igualdade sobre um campo, sem interpretar JavaScript nem concatenar entrada do usuário em código executável. A validação garante que o identificador seja um inteiro seguro e positivo antes de consultar o banco. A resposta de erro permanece igual para parâmetros inválidos.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que o campo product esteja armazenado como número, conforme o identificador numérico usado pela rota. A remoção de $where também impede que esta rota acione o desafio de injeção NoSQL baseado em execução de JavaScript.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 995,
+  "tokens_saida": 542,
+  "latencia_s": 5.624,
+  "custo_usd": 0.000371,
+  "hash_prompt": "c3357fe2e94cb0dc8e3dd3e9fada028fc4f47c3249f00faa06cac00f775afede",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

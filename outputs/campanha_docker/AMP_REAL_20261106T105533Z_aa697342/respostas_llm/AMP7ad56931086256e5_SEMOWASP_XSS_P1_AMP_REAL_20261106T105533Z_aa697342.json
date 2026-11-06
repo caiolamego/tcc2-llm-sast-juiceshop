@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado por renderização de HTML não confiável na descrição dos desafios.\",\n  \"causa_da_vulnerabilidade\": \"A descrição recebida do serviço é tratada como HTML confiável por meio de bypassSecurityTrustHtml. Isso desativa a sanitização de segurança do Angular e pode permitir que conteúdo malicioso armazenado na descrição seja executado quando renderizado pelo template.\",\n  \"estrategia_de_correcao\": \"Remover o bypass de segurança e deixar o Angular sanitizar a descrição como HTML não confiável. Manter a descrição original e o fluxo de dados existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/score-board/score-board.component.ts\",\n      \"trecho_original\": \"          originalDescription: challenge.description as string,\\n          description: this.sanitizer.bypassSecurityTrustHtml(challenge.description as string)\",\n      \"trecho_corrigido\": \"          originalDescription: challenge.description as string,\\n          description: challenge.description as string\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Ao fornecer a descrição como string comum, o Angular aplica sua sanitização contextual quando o template a insere como HTML, removendo conteúdo perigoso, como scripts e atributos de evento. A alteração é localizada e preserva o conteúdo e o comportamento funcional legítimo, sem confiar cegamente em dados provenientes do serviço.\",\n  \"limitacoes_da_correcao\": \"A proteção depende de a descrição ser renderizada pelo template usando os mecanismos padrão do Angular. Outros pontos da aplicação que usem bypassSecurityTrustHtml ou renderizem o mesmo conteúdo sem sanitização precisam ser avaliados separadamente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2216,
+  "tokens_saida": 363,
+  "latencia_s": 4.851,
+  "custo_usd": 0.000458,
+  "hash_prompt": "3c74fb8c1b2c1ad4c0919f088cc510829f763264f7169f2ea873661549f4890a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2213
+}
