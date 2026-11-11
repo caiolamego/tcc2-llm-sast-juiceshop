@@ -1,0 +1,34 @@
+{
+  "AMP1f800f046503c14c": {
+    "categoria": "A05",
+    "justificativa": "A regra sinaliza consulta NoSQL com $where dinâmico. O código converte id por Number(id) antes da concatenação: a triagem arquivada considera esta ocorrência falso positivo. A05 classifica a família do alerta, sem afirmar injeção explorável neste caso."
+  },
+  "AMP58b496188973b659": {
+    "categoria": "A05",
+    "justificativa": "req.params.id é concatenado na expressão JavaScript de $where quando o desafio está habilitado. A05 inclui injeção NoSQL e execução de entrada em interpretadores. A associação depende dessa condição do código, sem novo teste de exploração."
+  },
+  "AMP20721d202c8b96d6": {
+    "categoria": "A05",
+    "justificativa": "O identificador da rota é interpolado em uma string JavaScript de $where; com o desafio habilitado, truncamento não remove a estrutura da expressão. O mecanismo é injeção NoSQL, incluída na descrição de A05."
+  },
+  "AMP3d463bdbd0a7b446": {
+    "categoria": "A05",
+    "justificativa": "O seletor _id recebe req.body.id sem restringi-lo a um identificador escalar e a atualização permite multi:true. A associação descreve a possibilidade de manipular a lógica da consulta NoSQL; a ocorrência de autorização no mesmo arquivo é outro caso e não foi fundida a este."
+  },
+  "AMPff4689848e9b84b8": {
+    "categoria": "A06",
+    "justificativa": "O modelo persiste rating inteiro sem impor o intervalo de negócio. A triagem arquivada descreve persistência de nota zero. O agrupamento contextual é por ausência da restrição de negócio, conforme o escopo de lógica de negócio de A06; não há evidência de interpretação de entrada como código que sustente chamar este caso de injeção."
+  },
+  "AMPaf88892821bf5a51": {
+    "categoria": "A01",
+    "justificativa": "O fluxo confere o primeiro BasketId, mas persiste o último valor recebido. A justificativa arquivada descreve acesso a carrinho diferente do usuário autenticado. A01 representa o contorno do controle de propriedade, mais especificamente que o CWE-20 genérico registrado."
+  },
+  "AMPdecc0f9244357cec": {
+    "categoria": "A06",
+    "justificativa": "O controle verifica apenas limites superiores e não exige quantidade positiva. A triagem arquivada descreve quantidade negativa persistida e total negativo no fluxo de compra. O agrupamento contextual é pela restrição de negócio ausente, dentro do escopo de A06; não se afirma injeção."
+  },
+  "AMP8655da69167e4466": {
+    "categoria": "A07",
+    "justificativa": "O cadastro condiciona a validação à presença conjunta de campos e não verifica a igualdade de password/passwordRepeat. A triagem arquivada relata persistência com credenciais vazias quando passwordRepeat é omitido. A associação contextual descreve falhas no estabelecimento das credenciais em A07, sem afirmar novo teste ponta a ponta."
+  }
+}

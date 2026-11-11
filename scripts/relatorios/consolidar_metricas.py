@@ -18,11 +18,18 @@ def main(argv=None):
     ap.add_argument('--definicao-f',choices=('criterio','marcador','sem_separacao'),default='criterio')
     ap.add_argument('--evidencia-rris',type=Path)
     ap.add_argument('--politica-pesos',type=Path)
+    ap.add_argument('--classificacao-owasp',type=Path,
+                    help='Pasta de classificação complementar; preserva as evidências originais')
     args=ap.parse_args(argv)
     try:
         entrada=carregar(args.entrada,args.execucao,args.catalogo)
+        if args.classificacao_owasp:
+            from pipeline.etapas.e09_metricas.classificacao_owasp import aplicar
+            aplicar(entrada,args.classificacao_owasp)
         pesos=carregar_pesos(args.politica_pesos,entrada)
         report=calcular(entrada,args.definicao_f,pesos)
+        if args.classificacao_owasp:
+            report['classificacao_owasp']=entrada.classificacao_owasp
         report['RRIS']=calcular_rris(args.evidencia_rris,entrada,args.definicao_f)
         # Fontes opcionais registradas pelo leitor RRIS pertencem ao relatório também.
         report['proveniencia']['fontes_sha256']=dict(sorted(entrada.fontes.items()))

@@ -95,9 +95,14 @@ em [config/README.md](config/README.md).
 
 ## Resultados
 
-A campanha oficial (52 casos, P1–P4, gpt-4.1-mini) está em
-`outputs/campanha_docker/AMP_PAINEL_20261019T183425Z_282e13b4/`, com as métricas na pasta irmã
-`_METRICAS`. O papel de cada pasta de resultados está em [outputs/README.md](outputs/README.md).
+Os resultados finais das campanhas de 06/11/2026 (78 casos por modelo, P1–P4,
+GPT-4.1 mini, GPT-5.6 Luna e GPT-6 Luna), com a classificação OWASP complementar,
+estão em [outputs/resultados_finais/](outputs/resultados_finais/README.md).
+Essa consolidação posterior preserva as métricas gerais e exporta as categorias
+original e da análise. Os registros e artefatos das campanhas continuam em
+`outputs/campanha_docker/AMP_REAL_20261106T*/`; a consolidação anterior permanece
+em `outputs/rris/<EXECUCAO>_METRICAS/`.
+O índice completo está em [outputs/README.md](outputs/README.md).
 
 ## Mais detalhes
 

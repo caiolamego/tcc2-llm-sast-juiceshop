@@ -194,6 +194,8 @@ def calcular(entrada, definicao_principal='criterio', pesos=None):
                              'normalizacao_incompleta':sum(l.get('incompleto_'+d,False) for l in ls)} for d in DEFS}}
         aggregate[name]={}
         dimensions=dict(DIMENSOES)
+        if getattr(entrada,'classificacao_owasp',None):
+            dimensions['owasp_original']='owasp_2025_original'
         if entrada.contrato and entrada.contrato.get('schema_versao')=='5.0':
             dimensions.update(inferencia='identidade_inferencia')
         for dim,field in dimensions.items():

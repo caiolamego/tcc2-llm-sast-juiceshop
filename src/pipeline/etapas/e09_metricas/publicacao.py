@@ -64,6 +64,8 @@ def construir(report, entrada):
             'custo_usd','tokens_entrada','tokens_saida','historico','resposta_registrada'],
             report['operacional_llm']['eventos'])
     colunas = list(COL_ROW)
+    if getattr(entrada,'classificacao_owasp',None):
+        colunas += ['owasp_2025_original','owasp_classificacao_metodo']
     if entrada.contrato and entrada.contrato.get('schema_versao') in ('3.0','4.0','5.0'):
         colunas += ['politica_validacao','cache_validacao','tempos_medicao','selecao_testes','etapas_validacao']
         if (entrada.contrato['schema_versao']=='4.0' or entrada.contrato['schema_versao']=='5.0' and entrada.contrato.get('contrato_validacao_versao')=='4.0'):colunas+=['cobertura_funcional','cobertura_detalhada']
@@ -80,7 +82,14 @@ def construir(report, entrada):
     cases=[]
     for c in report['casos']:
         cases.append({**{k:v for k,v in c.items() if k!='definicoes'},**{f'aceito_{d}':c['definicoes'][d] for d in DEFS}})
-    artifacts['casos.csv']=csv_bytes(['caso_id','status','iniciado','estrategia_aceite_original','estrategias_observadas',*(f'aceito_{d}' for d in DEFS)],cases)
+    cols_casos=['caso_id','status','iniciado','estrategia_aceite_original','estrategias_observadas',*(f'aceito_{d}' for d in DEFS)]
+    if getattr(entrada,'classificacao_owasp',None):
+        por_caso=entrada.classificacao_owasp['categorias_por_caso']
+        for c in cases:
+            l=por_caso.get(c['caso_id'],{})
+            c.update({k:l.get(k) for k in ('owasp_2025','owasp_2025_original','owasp_classificacao_metodo')})
+        cols_casos += ['owasp_2025','owasp_2025_original','owasp_classificacao_metodo']
+    artifacts['casos.csv']=csv_bytes(cols_casos,cases)
     general=[]
     for pop,summary in report['populacoes'].items():
         for d in DEFS:
@@ -90,6 +99,7 @@ def construir(report, entrada):
     general+=_metric_rows(report['execucao'],'conjunto',report['definicao_f_principal'],None,{'RRIS':report['RRIS']})
     artifacts['metricas_gerais.csv']=csv_bytes(COL_AGG,general)
     dims={'estrategia':'estrategia','caso':'caso','cwe':'cwe','owasp':'owasp','severidade':'severidade','regra':'regra','auditoria':'auditoria'}
+    if getattr(entrada,'classificacao_owasp',None):dims['owasp_original']='owasp_original'
     if entrada.contrato and entrada.contrato.get('schema_versao')=='5.0':dims['inferencia']='inferencia'
     for suffix,dim in dims.items():
         agg=[]

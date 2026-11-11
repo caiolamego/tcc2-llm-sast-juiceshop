@@ -12,7 +12,11 @@ Campanha dos 78 casos, P1–P4, três modelos, no ambiente Docker (06/11/2026):
 - GPT-6 Luna: `campanha_docker/AMP_REAL_20261106T105533Z_aa697342/`
 - GPT-5.6 Luna: `campanha_docker/AMP_REAL_20261106T125801Z_0eb68fe4/`
 - GPT-4.1 mini: `campanha_docker/AMP_REAL_20261106T151004Z_f49ac0d2/`
-- métricas com a RRIS: `rris/<EXECUCAO>_METRICAS/`
+- métricas finais com a RRIS e classificação OWASP complementar:
+  [`resultados_finais/OWASP_20261111_V1/`](resultados_finais/OWASP_20261111_V1/),
+  com procedimento e conferências em [resultados_finais/README.md](resultados_finais/README.md)
+- métricas anteriores à classificação complementar, preservadas:
+  `rris/<EXECUCAO>_METRICAS/`
 - baseline funcional usado: `cobertura_funcional/IMAGEM_81FE_D3_20261106/`
 
 Antes dela, a referência era a campanha dos 52 casos preparados, P1–P4, gpt-4.1-mini, no ambiente Docker (19/10/2026):
@@ -30,6 +34,7 @@ reorganização do código (`docker/referencia.json`). Os 39 grupos de testes de
 
 | Pasta | Conteúdo |
 |---|---|
+| `resultados_finais/OWASP_20261111_V1/` | Consolidação offline dos três modelos com classificação OWASP para os 78 casos; categorias originais preservadas em colunas e agrupamento próprios. Sem novas chamadas LLM, SAST ou testes do alvo. |
 | `campanha_docker/AMP_REAL_20261106T*` | Campanha completa de 06/11/2026: 78 casos, três modelos, com chamadas reais à LLM. GPT-6 Luna `105533Z_aa697342`, GPT-5.6 Luna `125801Z_0eb68fe4`, GPT-4.1 mini `151004Z_f49ac0d2`. |
 | `rris/` | Evidência conjunta da RRIS dos três modelos, com as métricas consolidadas em `<EXECUCAO>_METRICAS/`. |
 | `cobertura_funcional/IMAGEM_81FE_D3_20261106/` | Baseline da revisão funcional v8, na imagem `81fe`, usado pela campanha de 06/11/2026. |
