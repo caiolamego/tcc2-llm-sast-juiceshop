@@ -1,0 +1,16 @@
+diff --git a/routes/b2bOrder.ts b/routes/b2bOrder.ts
+index a3b5e398b..bf2f9f235 100644
+--- a/routes/b2bOrder.ts
++++ b/routes/b2bOrder.ts
+@@ -18,9 +18,8 @@ export function b2bOrder () {
+     if (utils.isChallengeEnabled(challenges.rceChallenge) || utils.isChallengeEnabled(challenges.rceOccupyChallenge)) {
+       const orderLinesData = body.orderLinesData || ''
+       try {
+-        const sandbox = { safeEval, orderLinesData }
+-        vm.createContext(sandbox)
+-        vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })
++        // Removida execução dinâmica para evitar RCE
++        JSON.parse(orderLinesData)
+         res.json({ cid: body.cid, orderNo: uniqueOrderNumber(), paymentDue: dateTwoWeeksFromNow() })
+       } catch (err) {
+         if (utils.getErrorMessage(err).match(/Script execution timed out.*/) != null) {

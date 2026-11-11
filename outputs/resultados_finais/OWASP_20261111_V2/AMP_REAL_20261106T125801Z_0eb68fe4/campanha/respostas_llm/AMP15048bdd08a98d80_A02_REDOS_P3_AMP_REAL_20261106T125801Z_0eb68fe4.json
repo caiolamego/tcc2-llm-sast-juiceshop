@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de expressões regulares construídas dinamicamente com challengeKey, permitindo que metacaracteres presentes no identificador alterem o padrão e potencialmente causem ReDoS.\",\"causa_da_vulnerabilidade\":\"As chamadas new RegExp() interpolam challengeKey diretamente no padrão. Embora os identificadores sejam normalmente obtidos de arquivos do projeto, o valor não é tratado como texto literal e pode introduzir quantificadores ou estruturas regex complexas.\",\"estrategia_de_correcao\":\"Escapar challengeKey antes de interpolá-lo nas expressões regulares, preservando a busca por identificador literal e evitando que seu conteúdo seja interpretado como sintaxe regex.\",\"edicoes\":[{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"  const vulnLines = []\\n  const neutralLines = []\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\\n  }\",\"trecho_corrigido\":\"  const vulnLines = []\\n  const neutralLines = []\\n  const escapedChallengeKey = challengeKey.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\\n  }\"}],\"justificativa_tecnica\":\"O escape converte os caracteres especiais de challengeKey em literais, impedindo a injeção de operadores regex e reduzindo o risco de padrões controlados pelo conteúdo do identificador provocarem backtracking excessivo. A alteração é localizada, mantém as mesmas expressões e preserva a identificação das linhas para chaves normais.\",\"limitacoes_da_correcao\":\"As expressões ainda são avaliadas de forma síncrona e contêm curingas existentes no código, como .*. A correção impede que challengeKey amplie a complexidade do padrão, mas não substitui limites de tamanho ou uma análise adicional caso o conteúdo dos arquivos possa ser controlado por um atacante.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2934,
+  "tokens_saida": 592,
+  "latencia_s": 5.94,
+  "custo_usd": 0.001444,
+  "hash_prompt": "b2b3d0e06120d2d08ba435bc5739e0804b01f064918df501c409fbec998fe9c6",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2931
+}

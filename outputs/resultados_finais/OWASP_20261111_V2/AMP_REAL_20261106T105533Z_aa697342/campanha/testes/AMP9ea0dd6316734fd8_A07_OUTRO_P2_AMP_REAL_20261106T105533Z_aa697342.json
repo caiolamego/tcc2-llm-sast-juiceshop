@@ -1,0 +1,382 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 38.076871851008036,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 12.87,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_tmqv501y/password/primeira.xml",
+        "test/api/password.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 21.25,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request"
+      ],
+      "testes_falhos_novos": [
+        "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /rest/user/change-password\n  ✔ GET password change for newly created user with recognized token as Authorization header (582.6935ms)\n  ✔ GET password change with passing wrong current password (179.380416ms)\n  ✔ GET password change without passing any passwords (34.57925ms)\n  ✔ GET password change with passing wrong repeated password (15.508667ms)\n  ✔ GET password change without passing an authorization token (68.551208ms)\n  ✔ GET password change with passing unrecognized authorization token (73.209042ms)\n  ✖ GET password change for Bender without current password using GET request (634.093292ms)\n✖ /rest/user/change-password (3829.096252ms)\n▶ /rest/user/reset-password\n  ✔ POST password reset for Jim with correct answer to his security question (196.25125ms)\n  ✔ POST password reset for Bender with correct answer to his security question (103.1865ms)\n  ✔ POST password reset for Bjoern´s internal account with correct answer to his security question (40.608208ms)\n  ✔ POST password reset for Bjoern´s OWASP account with correct answer to his security question (60.876875ms)\n  ✔ POST password reset for Morty with correct answer to his security question (34.473667ms)\n  ✔ POST password reset with wrong answer to security question (40.021042ms)\n  ✔ POST password reset without any data is blocked (20.726625ms)\n  ✔ POST password reset without new password throws a 401 error (16.601334ms)\n  ✔ POST password reset with mismatching passwords throws a 401 error (15.256333ms)\n  ✔ POST password reset with no email address throws a 412 error (20.686333ms)\n  ✔ POST password reset with no answer to the security question throws a 412 error (29.904958ms)\n✔ /rest/user/reset-password (582.636083ms)\nℹ tests 18\nℹ suites 2\nℹ pass 17\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 12067.70713\n\n✖ failing tests:\n\ntest at test/api/password.test.ts:2:4133\n✖ GET password change for Bender without current password using GET request (634.093292ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/password.test.ts:102:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 4.1249950299970806e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/changePassword.ts"
+    ],
+    "grupos": [
+      "password"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 12.87
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "password",
+      "status": "executada",
+      "duracao_s": 21.25
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "password"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 12.87
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "password",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/change-password > GET password change for Bender without current password using GET request",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/change-password > GET password change for newly created user with recognized token as Authorization header",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/change-password > GET password change for newly created user with recognized token as Authorization header",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing unrecognized authorization token",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/change-password > GET password change with passing unrecognized authorization token",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing wrong current password",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/change-password > GET password change with passing wrong current password",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing wrong repeated password",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/change-password > GET password change with passing wrong repeated password",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/change-password > GET password change without passing an authorization token",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/change-password > GET password change without passing an authorization token",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/change-password > GET password change without passing any passwords",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/change-password > GET password change without passing any passwords",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bender with correct answer to his security question",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset for Bender with correct answer to his security question",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bjoern´s OWASP account with correct answer to his security question",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset for Bjoern´s OWASP account with correct answer to his security question",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bjoern´s internal account with correct answer to his security question",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset for Bjoern´s internal account with correct answer to his security question",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Jim with correct answer to his security question",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset for Jim with correct answer to his security question",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Morty with correct answer to his security question",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset for Morty with correct answer to his security question",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with mismatching passwords throws a 401 error",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset with mismatching passwords throws a 401 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with no answer to the security question throws a 412 error",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset with no answer to the security question throws a 412 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with no email address throws a 412 error",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset with no email address throws a 412 error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with wrong answer to security question",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset with wrong answer to security question",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset without any data is blocked",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset without any data is blocked",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/password.test.ts :: /rest/user/reset-password > POST password reset without new password throws a 401 error",
+            "arquivo": "test/api/password.test.ts",
+            "nome": "/rest/user/reset-password > POST password reset without new password throws a 401 error",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request"
+        ],
+        "falhos_novos": [
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request"
+        ],
+        "falhos_novos_observados": [
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for newly created user with recognized token as Authorization header",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing unrecognized authorization token",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing wrong current password",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing wrong repeated password",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change without passing an authorization token",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change without passing any passwords",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bender with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bjoern´s OWASP account with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bjoern´s internal account with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Jim with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Morty with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with mismatching passwords throws a 401 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with no answer to the security question throws a 412 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with no email address throws a 412 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with wrong answer to security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset without any data is blocked",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset without new password throws a 401 error"
+        ],
+        "esperados": [
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for newly created user with recognized token as Authorization header",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing unrecognized authorization token",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing wrong current password",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing wrong repeated password",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change without passing an authorization token",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change without passing any passwords",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bender with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bjoern´s OWASP account with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bjoern´s internal account with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Jim with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Morty with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with mismatching passwords throws a 401 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with no answer to the security question throws a 412 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with no email address throws a 412 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with wrong answer to security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset without any data is blocked",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset without new password throws a 401 error"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for Bender without current password using GET request",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for newly created user with recognized token as Authorization header",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing unrecognized authorization token",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing wrong current password",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change with passing wrong repeated password",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change without passing an authorization token",
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change without passing any passwords",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bender with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bjoern´s OWASP account with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Bjoern´s internal account with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Jim with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset for Morty with correct answer to his security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with mismatching passwords throws a 401 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with no answer to the security question throws a 412 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with no email address throws a 412 error",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset with wrong answer to security question",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset without any data is blocked",
+          "test/api/password.test.ts :: /rest/user/reset-password > POST password reset without new password throws a 401 error"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/password.test.ts :: /rest/user/change-password > GET password change for newly created user with recognized token as Authorization header"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 21.25,
+        "espera_api_s": 4.1249950299970806e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_tmqv501y/password/primeira.xml",
+            "test/api/password.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 21.25,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /rest/user/change-password\n  ✔ GET password change for newly created user with recognized token as Authorization header (582.6935ms)\n  ✔ GET password change with passing wrong current password (179.380416ms)\n  ✔ GET password change without passing any passwords (34.57925ms)\n  ✔ GET password change with passing wrong repeated password (15.508667ms)\n  ✔ GET password change without passing an authorization token (68.551208ms)\n  ✔ GET password change with passing unrecognized authorization token (73.209042ms)\n  ✖ GET password change for Bender without current password using GET request (634.093292ms)\n✖ /rest/user/change-password (3829.096252ms)\n▶ /rest/user/reset-password\n  ✔ POST password reset for Jim with correct answer to his security question (196.25125ms)\n  ✔ POST password reset for Bender with correct answer to his security question (103.1865ms)\n  ✔ POST password reset for Bjoern´s internal account with correct answer to his security question (40.608208ms)\n  ✔ POST password reset for Bjoern´s OWASP account with correct answer to his security question (60.876875ms)\n  ✔ POST password reset for Morty with correct answer to his security question (34.473667ms)\n  ✔ POST password reset with wrong answer to security question (40.021042ms)\n  ✔ POST password reset without any data is blocked (20.726625ms)\n  ✔ POST password reset without new password throws a 401 error (16.601334ms)\n  ✔ POST password reset with mismatching passwords throws a 401 error (15.256333ms)\n  ✔ POST password reset with no email address throws a 412 error (20.686333ms)\n  ✔ POST password reset with no answer to the security question throws a 412 error (29.904958ms)\n✔ /rest/user/reset-password (582.636083ms)\nℹ tests 18\nℹ suites 2\nℹ pass 17\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 12067.70713\n\n✖ failing tests:\n\ntest at test/api/password.test.ts:2:4133\n✖ GET password change for Bender without current password using GET request (634.093292ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/password.test.ts:102:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/user/change-password\" time=\"3.829096\" disabled=\"0\" errors=\"0\" tests=\"7\" failures=\"1\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"GET password change for newly created user with recognized token as Authorization header\" time=\"0.582693\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change with passing wrong current password\" time=\"0.179380\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change without passing any passwords\" time=\"0.034579\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change with passing wrong repeated password\" time=\"0.015509\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change without passing an authorization token\" time=\"0.068551\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change with passing unrecognized authorization token\" time=\"0.073209\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change for Bender without current password using GET request\" time=\"0.634093\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/password.test.ts:102:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<testsuite name=\"/rest/user/reset-password\" time=\"0.582636\" disabled=\"0\" errors=\"0\" tests=\"11\" failures=\"0\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"POST password reset for Jim with correct answer to his security question\" time=\"0.196251\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset for Bender with correct answer to his security question\" time=\"0.103187\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset for Bjoern´s internal account with correct answer to his security question\" time=\"0.040608\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset for Bjoern´s OWASP account with correct answer to his security question\" time=\"0.060877\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset for Morty with correct answer to his security question\" time=\"0.034474\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset with wrong answer to security question\" time=\"0.040021\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset without any data is blocked\" time=\"0.020727\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset without new password throws a 401 error\" time=\"0.016601\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset with mismatching passwords throws a 401 error\" time=\"0.015256\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset with no email address throws a 412 error\" time=\"0.020686\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset with no answer to the security question throws a 412 error\" time=\"0.029905\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 18 -->\n\t<!-- suites 2 -->\n\t<!-- pass 17 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 12067.70713 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/user/change-password\" time=\"1.427443\" disabled=\"0\" errors=\"0\" tests=\"7\" failures=\"1\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"GET password change for newly created user with recognized token as Authorization header\" time=\"0.227245\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change with passing wrong current password\" time=\"0.056800\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change without passing any passwords\" time=\"0.018556\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change with passing wrong repeated password\" time=\"0.020548\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change without passing an authorization token\" time=\"0.027662\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change with passing unrecognized authorization token\" time=\"0.036152\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"GET password change for Bender without current password using GET request\" time=\"0.124383\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/password.test.ts:102:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<testsuite name=\"/rest/user/reset-password\" time=\"0.272733\" disabled=\"0\" errors=\"0\" tests=\"11\" failures=\"0\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"POST password reset for Jim with correct answer to his security question\" time=\"0.059918\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset for Bender with correct answer to his security question\" time=\"0.036693\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset for Bjoern´s internal account with correct answer to his security question\" time=\"0.030072\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset for Bjoern´s OWASP account with correct answer to his security question\" time=\"0.026449\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset for Morty with correct answer to his security question\" time=\"0.027142\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset with wrong answer to security question\" time=\"0.026118\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset without any data is blocked\" time=\"0.012614\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset without new password throws a 401 error\" time=\"0.010022\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset with mismatching passwords throws a 401 error\" time=\"0.020108\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset with no email address throws a 412 error\" time=\"0.010898\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t\t<testcase name=\"POST password reset with no answer to the security question throws a 412 error\" time=\"0.010668\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/password.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 18 -->\n\t<!-- suites 2 -->\n\t<!-- pass 17 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 7988.092129 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"O campo rating aceita qualquer valor inteiro, sem validar que esteja dentro do intervalo permitido para uma avaliação.\",\n  \"causa_da_vulnerabilidade\": \"A definição do modelo exige apenas que rating não seja nulo. O setter grava o valor recebido sem verificar limites; assim, valores negativos ou acima da escala podem ser persistidos. A validação de tipo do TypeScript não valida dados recebidos em tempo de execução.\",\n  \"estrategia_de_correcao\": \"Adicionar validação no modelo para aceitar somente inteiros entre 1 e 5, preservando o zero explicitamente reconhecido pelo desafio existente. Rejeitar valores fora desse conjunto antes de gravá-los.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"models/feedback.ts\",\n      \"trecho_original\": \"        set (rating: number) {\\n          this.setDataValue('rating', rating)\\n          challengeUtils.solveIf(challenges.zeroStarsChallenge, () => {\\n            return Number(rating) === 0\\n          })\\n        }\",\n      \"trecho_corrigido\": \"        set (rating: number) {\\n          if (!Number.isInteger(rating) || (rating !== 0 && (rating < 1 || rating > 5))) {\\n            throw new Error('Invalid rating')\\n          }\\n          this.setDataValue('rating', rating)\\n          challengeUtils.solveIf(challenges.zeroStarsChallenge, () => {\\n            return Number(rating) === 0\\n          })\\n        }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação ocorre no setter do modelo, protegendo a persistência mesmo quando a entrada não passa por controles anteriores. Number.isInteger rejeita valores fracionários e não inteiros; os limites rejeitam avaliações negativas e acima de 5. O valor 0 continua aceito para preservar o comportamento do desafio zeroStarsChallenge.\",\n  \"limitacoes_da_correcao\": \"O intervalo de 1 a 5 foi inferido como a escala de avaliação usual, mantendo 0 como exceção funcional do desafio. Se a escala de negócio for diferente, os limites devem ser ajustados. A validação no modelo não substitui validação de entrada na API nem garante integridade de registros já persistidos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1440,
+  "tokens_saida": 493,
+  "latencia_s": 5.374,
+  "custo_usd": 0.000426,
+  "hash_prompt": "a2366d513b886230217b137d016cb87121a84606c7f10c4b0b712d6ac75d5e3c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1437
+}

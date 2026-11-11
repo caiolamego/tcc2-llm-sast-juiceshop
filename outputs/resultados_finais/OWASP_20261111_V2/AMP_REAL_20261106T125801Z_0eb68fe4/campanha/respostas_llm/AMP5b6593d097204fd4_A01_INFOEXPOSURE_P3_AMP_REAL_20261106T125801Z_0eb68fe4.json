@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações por listagem de diretórios (CWE-548) nas rotas /ftp, /.well-known, /encryptionkeys e /support/logs, causada pelo uso de serveIndex.\",\"causa_da_vulnerabilidade\":\"O middleware serveIndex gera páginas com nomes, metadados e links dos arquivos existentes nos diretórios servidos. Em especial, /encryptionkeys e /support/logs podem revelar conteúdo sensível; /ftp também expõe a estrutura do diretório.\",\"estrategia_de_correcao\":\"Remover somente os middlewares serveIndex das rotas de diretório, preservando os middlewares de download, controle de acesso e os arquivos públicos necessários.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\\n  app.use('/.well-known', express.static('.well-known'))\\n\\n  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\\n\\n  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  app.use('/ftp', (req: Request, res: Response, next: NextFunction) => next()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', express.static('.well-known'))\\n\\n  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\\n\\n  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"A remoção de serveIndex impede a geração de páginas de listagem e, portanto, evita a divulgação dos nomes e da estrutura dos arquivos. Os endpoints explícitos de arquivos permanecem inalterados, preservando downloads, o conteúdo de /.well-known e os controles de acesso existentes para logs.\",\"limitacoes_da_correcao\":\"O download direto por caminhos conhecidos continua possível, conforme o comportamento funcional existente. A correção não substitui controles de autorização ou validação implementados em servePublicFiles, serveQuarantineFiles, serveKeyFiles e serveLogFiles. O middleware vazio em /ftp mantém a rota-base sem gerar listagem; ele pode resultar em resposta posterior definida por outros middlewares ou em 404, dependendo do restante do arquivo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3195,
+  "tokens_saida": 837,
+  "latencia_s": 8.004,
+  "custo_usd": 0.001803,
+  "hash_prompt": "fba0c8f25f00768e2396323797bd301fa023cf31c094511e44f62d0556b85e7a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3192
+}

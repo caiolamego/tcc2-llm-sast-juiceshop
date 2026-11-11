@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"O teste mascara uma vulnerabilidade de XSS ao configurar o mock de DomSanitizer para tratar qualquer valor como HTML confiável, sem sanitização.\",\n  \"causa_da_vulnerabilidade\": \"O mock faz bypassSecurityTrustHtml retornar diretamente o argumento e faz sanitize retornar um objeto vazio. Assim, os testes não verificam que conteúdo derivado do JWT é sanitizado antes de ser renderizado como HTML; o teste de IP válido, inclusive, espera explicitamente que o valor seja marcado como HTML confiável.\",\n  \"estrategia_de_correcao\": \"Não é possível corrigir a vulnerabilidade de produção alterando este arquivo, pois ele é um arquivo de teste e as restrições proíbem alterar testes. A correção deve ser feita no componente de produção, removendo o uso de bypassSecurityTrustHtml para dados do JWT e exibindo o IP como texto ou usando sanitização apropriada.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"Marcar conteúdo derivado de uma fonte controlável como HTML confiável desativa as proteções do Angular e pode permitir execução de conteúdo injetado caso o valor seja interpretado como marcação. Alterar apenas o mock não corrigiria o comportamento de produção e violaria a restrição de não alterar arquivos de teste.\",\n  \"limitacoes_da_correcao\": \"Nenhuma edição foi proposta porque o único arquivo fornecido é um teste e não pode ser alterado conforme as restrições. É necessário fornecer o arquivo do componente de produção para aplicar e verificar a correção efetiva.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1421,
+  "tokens_saida": 339,
+  "latencia_s": 5.365,
+  "custo_usd": 0.000347,
+  "hash_prompt": "15582025ded5b54c81508487a5c20b621f70a4b6c0806f83a707dfb577a43239",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1418
+}

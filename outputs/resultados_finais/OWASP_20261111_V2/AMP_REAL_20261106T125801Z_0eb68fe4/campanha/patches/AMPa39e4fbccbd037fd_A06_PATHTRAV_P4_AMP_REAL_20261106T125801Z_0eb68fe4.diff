@@ -1,0 +1,13 @@
+diff --git a/routes/dataErasure.ts b/routes/dataErasure.ts
+index a8fea2cc5..c5ee8161f 100644
+--- a/routes/dataErasure.ts
++++ b/routes/dataErasure.ts
+@@ -102,7 +102,7 @@ router.post('/', (req: Request<Record<string, unknown>, Record<string, unknown>,
+ 
+       if (req.body.layout) {
+         const filePath: string = path.resolve(req.body.layout).toLowerCase()
+-        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))
++        const isForbiddenFile: boolean = (filePath !== path.resolve('dataErasureResult').toLowerCase())
+         if (!isForbiddenFile) {
+           res.render('dataErasureResult', {
+             ...req.body,

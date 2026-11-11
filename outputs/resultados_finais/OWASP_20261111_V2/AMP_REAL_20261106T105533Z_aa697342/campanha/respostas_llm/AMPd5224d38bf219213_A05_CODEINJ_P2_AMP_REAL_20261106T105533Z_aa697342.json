@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado no nome de usuário, agravado por compilação dinâmica de um template Pug contendo dados não escapados.\",\n  \"causa_da_vulnerabilidade\": \"O valor de username é inserido diretamente no texto-fonte do template por template.replace(/_username_/g, username) e, em seguida, esse texto é compilado com pug.compile(template). Assim, conteúdo controlado pelo usuário pode ser interpretado como sintaxe Pug ou HTML executável, em vez de ser tratado como dado. A avaliação de código via eval no ramo do desafio também permite execução de código, mas está condicionada ao desafio usernameXssChallenge estar habilitado.\",\n  \"estrategia_de_correcao\": \"Não interpolar o nome de usuário no texto-fonte do template. Compilar o template original e fornecer username como variável local, usando a sintaxe de interpolação escapada do Pug no arquivo de template. Isso mantém o nome como dado e preserva o escape HTML padrão do Pug.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/userProfile.ts\",\n      \"trecho_original\": \"    if (username) {\\n      template = template.replace(/_username_/g, username)\\n    }\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"routes/userProfile.ts\",\n      \"trecho_original\": \"      res.send(fn(user))\",\n      \"trecho_corrigido\": \"      res.send(fn({ ...user, username }))\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A alteração impede que o conteúdo de username seja incorporado ao código-fonte Pug antes da compilação. Ao passá-lo como dado à função compilada, o Pug aplica o escape HTML padrão à interpolação escapada do template, evitando que marcação fornecida pelo usuário seja interpretada como HTML ou JavaScript. A passagem de username explicitamente também preserva o valor calculado pelo fluxo existente.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que views/userProfile.pug use uma interpolação escapada para o nome de usuário, como #{username}, e não uma interpolação não escapada, como !{username}. O conteúdo desse arquivo não foi fornecido, portanto não é possível confirmar nem propor uma edição literal nele. O eval existente permanece no ramo condicionado ao desafio habilitado e deve ser tratado separadamente se esse código puder ser alcançado em produção.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1480,
+  "tokens_saida": 532,
+  "latencia_s": 6.084,
+  "custo_usd": 0.000451,
+  "hash_prompt": "b4ef28664ae220afc16ed06c17b52c5e359c1889ce73a737d8c94c7187f25185",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1477
+}

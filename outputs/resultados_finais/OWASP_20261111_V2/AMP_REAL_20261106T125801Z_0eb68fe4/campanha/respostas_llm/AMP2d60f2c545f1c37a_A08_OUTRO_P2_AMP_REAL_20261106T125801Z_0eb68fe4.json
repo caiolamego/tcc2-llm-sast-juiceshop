@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Escalonamento de privilégios na criação de usuários: o endpoint gerado automaticamente para User permite que um usuário não autorizado crie uma conta com privilégios administrativos, caso o modelo aceite o atributo correspondente (por exemplo, role ou isAdmin).\",\"causa_da_vulnerabilidade\":\"finale.initialize gera endpoints para os recursos listados em autoModels, incluindo /api/Users, sem uma autorização explícita para a criação de usuários. Além disso, o callback resource.create.send.before apenas cria a carteira e retorna context.continue; ele não restringe nem remove atributos privilegiados enviados pelo cliente. Assim, a criação automática pode aceitar propriedades de controle de acesso fornecidas na requisição.\",\"estrategia_de_correcao\":\"Adicionar uma verificação no hook de criação do recurso User para permitir a criação somente quando a requisição estiver autorizada e remover do corpo da requisição os atributos administrativos antes de o Finale persistir a instância. A alteração é limitada ao endpoint gerado de usuários e preserva a criação da carteira e o fluxo existente.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"    if (name === 'User') { // vuln-code-snippet neutral-line registerAdminChallenge\\n      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge\\n        WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\\n          console.log(err)\\n        })\\n        return context.continue // vuln-code-snippet neutral-line registerAdminChallenge\\n      }) // vuln-code-snippet neutral-line registerAdminChallenge\\n    } // vuln-code-snippet neutral-line registerAdminChallenge\",\"trecho_corrigido\":\"    if (name === 'User') { // vuln-code-snippet neutral-line registerAdminChallenge\\n      resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge\\n        if (!req.user || !req.user.isAdmin) {\\n          delete (req.body as { role?: unknown, isAdmin?: unknown }).role\\n          delete (req.body as { role?: unknown, isAdmin?: unknown }).isAdmin\\n        }\\n        WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {\\n          console.log(err)\\n        })\\n        return context.continue // vuln-code-snippet neutral-line registerAdminChallenge\\n      }) // vuln-code-snippet neutral-line registerAdminChallenge\\n    } // vuln-code-snippet neutral-line registerAdminChallenge\"}],\"justificativa_tecnica\":\"O hook executa antes da persistência da instância pelo Finale. Remover role e isAdmin do corpo para requisições não administrativas impede que um cliente comum atribua a si mesmo privilégios elevados durante o cadastro. Usuários administrativos mantêm o comportamento funcional existente, podendo enviar esses atributos quando autorizados. A criação da carteira e o retorno de context.continue permanecem inalterados.\",\"limitacoes_da_correcao\":\"A correção depende de req.user e req.user.isAdmin representarem corretamente a identidade e a autorização do solicitante; isso deve ser garantido pelo middleware de autenticação/autorização existente. Ela protege os atributos role e isAdmin explicitamente, mas outros campos futuros que concedam privilégios também deverão ser incluídos em uma lista de atributos protegidos. Como o trecho fornecido não mostra o modelo User nem a configuração completa de autenticação, a validação desses nomes de campos deve ser confirmada no restante do projeto.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2160,
+  "tokens_saida": 768,
+  "latencia_s": 9.443,
+  "custo_usd": 0.001461,
+  "hash_prompt": "2f89f9c56f578829d209e6d9d62553d891df597403a691201de532668652e587",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2157
+}

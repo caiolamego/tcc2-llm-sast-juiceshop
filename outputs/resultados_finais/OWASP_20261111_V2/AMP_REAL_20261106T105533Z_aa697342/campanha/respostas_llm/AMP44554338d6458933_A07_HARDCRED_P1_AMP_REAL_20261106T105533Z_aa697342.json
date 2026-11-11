@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Credenciais e dados sensíveis de usuários estão armazenados em texto simples no arquivo de dados, incluindo senhas, segredos TOTP, respostas de perguntas de segurança e dados de pagamento.\",\n  \"causa_da_vulnerabilidade\": \"O arquivo contém valores de autenticação e informações pessoais diretamente legíveis. Qualquer pessoa ou processo que obtenha acesso ao arquivo pode recuperar esses dados; senhas e respostas de segurança também podem ser reutilizadas para comprometer contas.\",\n  \"estrategia_de_correcao\": \"Não é possível corrigir com segurança apenas editando este trecho sem conhecer o formato de armazenamento e o código que o consome. Substituir os valores por hashes ou segredos cifrados arbitrários pode impedir a autenticação ou não oferecer proteção efetiva. A correção deve ser implementada no mecanismo de armazenamento: remover os segredos expostos, rotacioná-los e armazenar senhas com hash adaptativo e segredos recuperáveis cifrados com gestão adequada de chaves.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"O trecho fornecido não permite determinar um formato compatível para hashes de senha, cifragem de segredos ou migração dos usuários. Alterar valores isoladamente poderia quebrar o comportamento funcional sem garantir que a aplicação os interprete com segurança. Como os dados já foram expostos no arquivo, a simples remoção ou substituição no repositório não invalida credenciais previamente copiadas; é necessário rotacionar senhas, segredos TOTP e outros dados de autenticação afetados.\",\n  \"limitacoes_da_correcao\": \"Nenhuma edição segura e funcional pode ser proposta somente com o trecho apresentado. É necessário inspecionar o código de autenticação e carregamento dos dados, migrar o armazenamento, invalidar credenciais comprometidas e remover os valores sensíveis do histórico do repositório e de cópias acessíveis.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1583,
+  "tokens_saida": 412,
+  "latencia_s": 5.352,
+  "custo_usd": 0.000404,
+  "hash_prompt": "25f382c3a784f67595a6185d88d117ba77f99f639c7cef071c2792de460c0eb8",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1580
+}

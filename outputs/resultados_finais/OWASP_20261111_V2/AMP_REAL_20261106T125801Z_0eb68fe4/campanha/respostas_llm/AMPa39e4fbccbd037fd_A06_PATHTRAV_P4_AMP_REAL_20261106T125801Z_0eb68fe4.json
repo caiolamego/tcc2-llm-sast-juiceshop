@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: controle externo do nome de arquivo usado como template de renderização, permitindo que o campo layout do corpo da requisição influencie diretamente o template carregado por res.render.\",\"causa_da_vulnerabilidade\":\"O valor req.body.layout é controlado pelo cliente e é convertido com path.resolve, mas não é confinado a um diretório de templates nem mapeado para uma lista de templates permitidos. Além disso, req.body inteiro é propagado como opções de renderização, permitindo que layout selecione um caminho arbitrário. A lista atual de bloqueios por substring não impede traversal, caminhos absolutos ou outras formas de acessar arquivos.\",\"estrategia_de_correcao\":\"Substituir o caminho fornecido pelo cliente por um identificador validado contra uma lista fixa de templates permitidos no servidor. Manter o comportamento funcional para o layout legítimo esperado e rejeitar qualquer outro valor pelo mesmo fluxo de erro existente.\",\"edicoes\":[{\"arquivo\":\"routes/dataErasure.ts\",\"trecho_original\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\",\"trecho_corrigido\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath !== path.resolve('dataErasureResult').toLowerCase())\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\"}],\"justificativa_tecnica\":\"Agora o valor controlado pelo cliente só é aceito quando, após resolução, corresponde exatamente ao identificador de template permitido dataErasureResult. Caminhos absolutos, traversal com ../ ou ..\\\\, caminhos codificados já decodificados pelo framework e nomes de outros arquivos não passam pela comparação. O template efetivamente renderizado continua sendo o literal dataErasureResult; portanto, o cliente não consegue selecionar arquivos arbitrários. A alteração preserva o fluxo existente de sucesso e de erro, sem modificar mensagens, assinaturas ou outros arquivos.\",\"limitacoes_da_correcao\":\"A correção assume que dataErasureResult é o único layout legítimo aceito por esta rota, conforme o código atual, que já renderiza esse template independentemente do valor recebido. A comparação não é uma verificação de links simbólicos, mas isso não afeta a seleção do template nesta implementação, pois o nome renderizado permanece literal. A propagação de req.body como opções continua existente; campos adicionais ainda podem influenciar variáveis do template, embora não possam mais controlar o arquivo de template.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2694,
+  "tokens_saida": 861,
+  "latencia_s": 9.514,
+  "custo_usd": 0.001707,
+  "hash_prompt": "3d689324bf96af4ddb9f3e7164aac9245b3e2df408bf993982f748b3ff6e8a0c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2691
+}

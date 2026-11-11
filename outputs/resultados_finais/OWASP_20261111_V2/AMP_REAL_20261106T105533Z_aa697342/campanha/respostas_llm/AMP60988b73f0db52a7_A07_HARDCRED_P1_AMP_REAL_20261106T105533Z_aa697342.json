@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Bypass da allowlist de redirecionamento (open redirect).\",\n  \"causa_da_vulnerabilidade\": \"isRedirectAllowed verifica se a URL recebida contém uma URL permitida usando includes(). Uma URL externa pode incluir uma URL permitida como parte de seu caminho ou query string e, assim, ser aceita.\",\n  \"estrategia_de_correcao\": \"Analisar a URL recebida e comparar sua representação normalizada por igualdade exata com cada entrada da allowlist. Rejeitar valores que não sejam URLs válidas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\n      \"trecho_corrigido\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  try {\\n    const normalizedUrl = new URL(url).href\\n    for (const allowedUrl of redirectAllowlist) {\\n      allowed = allowed || normalizedUrl === new URL(allowedUrl).href\\n    }\\n  } catch {\\n    return false\\n  }\\n  return allowed\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação por igualdade da URL normalizada impede que uma URL externa seja aceita apenas por conter uma entrada permitida. A análise com URL também rejeita entradas malformadas. A allowlist e a assinatura da função permanecem inalteradas.\",\n  \"limitacoes_da_correcao\": \"A validação continua limitada às URLs cadastradas na allowlist; alterações futuras nessa lista devem ser revisadas. A normalização segue as regras da API URL do Node.js.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2976,
+  "tokens_saida": 417,
+  "latencia_s": 4.235,
+  "custo_usd": 0.000239,
+  "hash_prompt": "d9b2667621b932eff352d540dfa69a81eb837278f748fb86a7c0552f14fdb17c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2973,
+  "tokens_escrita_cache": 0
+}

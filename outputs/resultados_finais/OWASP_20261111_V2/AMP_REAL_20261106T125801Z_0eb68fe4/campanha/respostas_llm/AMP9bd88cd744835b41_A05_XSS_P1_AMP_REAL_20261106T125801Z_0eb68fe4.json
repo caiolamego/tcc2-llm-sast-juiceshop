@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado na exibição de comentários de feedback e possível XSS na exibição de e-mails de usuários.\",\"causa_da_vulnerabilidade\":\"O código usa DomSanitizer.bypassSecurityTrustHtml() com dados provenientes dos serviços, marcando conteúdo potencialmente controlado por usuários como HTML confiável e desativando a sanitização padrão do Angular.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e atribuir os valores originais aos campos. O Angular fará escape automático quando esses valores forem interpolados em bindings de texto, preservando o conteúdo visível sem permitir interpretação de HTML ou execução de scripts.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"        for (const user of this.userDataSource) {\\n          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`)\\n        }\",\"trecho_corrigido\":\"        for (const user of this.userDataSource) {\\n          user.email = user.email\\n        }\"},{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n        }\",\"trecho_corrigido\":\"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = feedback.comment\\n        }\"}],\"justificativa_tecnica\":\"bypassSecurityTrustHtml informa ao Angular que o valor é HTML confiável, impedindo a sanitização contextual. Como e-mail e comentário vêm de fontes externas e podem conter payloads HTML ou JavaScript, isso permite XSS quando os valores são renderizados. Atribuir os valores sem convertê-los em SafeHtml permite que o mecanismo padrão de sanitização e escape do Angular proteja a saída. A alteração é mínima e mantém os dados exibidos, embora remova a formatação HTML inserida no e-mail.\",\"limitacoes_da_correcao\":\"A classe visual confirmation/error anteriormente inserida no HTML do e-mail deixa de ser aplicada por este componente; isso é necessário para não confiar em HTML construído com dados externos. A segurança final também depende de os templates renderizarem esses campos com bindings normais de texto e não usarem bypassSecurityTrustHtml ou innerHTML em outro ponto.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1767,
+  "tokens_saida": 538,
+  "latencia_s": 6.218,
+  "custo_usd": 0.000681,
+  "hash_prompt": "80d4b68da138d70cf32f92654ceaf6ceb1eae19e7a10d705b324e64b436ab42b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1764,
+  "tokens_escrita_cache": 0
+}

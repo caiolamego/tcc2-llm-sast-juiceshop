@@ -1,0 +1,16 @@
+diff --git a/routes/dataExport.ts b/routes/dataExport.ts
+index ee3b4afcd..03000a8c4 100644
+--- a/routes/dataExport.ts
++++ b/routes/dataExport.ts
+@@ -30,9 +30,9 @@ export function dataExport () {
+         }
+ 
+         try {
+-          orders = await db.ordersCollection.find({ email: updatedEmail })
++          orders = await db.ordersCollection.find({ userId: loggedInUser.data.id })
+         } catch (error) {
+-          next(new Error(`Error retrieving orders for ${updatedEmail}`))
++          next(new Error(`Error retrieving orders for user ID ${loggedInUser.data.id}`))
+           return
+         }
+ 

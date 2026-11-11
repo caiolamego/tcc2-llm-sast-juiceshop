@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de SQL, incluindo possível UNION-based SQL injection, no parâmetro de busca q.\",\"causa_da_vulnerabilidade\":\"O valor controlado pelo usuário em req.query.q é interpolado diretamente na string SQL em models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`). A limitação de tamanho não impede que caracteres SQL alterem a estrutura da consulta.\",\"estrategia_de_correcao\":\"Substituir a interpolação direta por uma consulta parametrizada, usando um bind para o padrão de busca. O valor continua limitado a 200 caracteres e o comportamento de busca permanece equivalente.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"    models.sequelize.query('SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name', { replacements: { criteria: `%${criteria}%` } }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"O placeholder :criteria faz com que o Sequelize envie o valor como parâmetro de dados, e não como parte da sintaxe SQL. Assim, aspas, comentários, operadores e cláusulas UNION presentes em q não conseguem modificar a consulta. O padrão %...% é mantido no parâmetro, preservando a busca parcial por nome e descrição. A correção também mantém a filtragem por deletedAt, a ordenação e o restante do processamento da resposta.\",\"limitacoes_da_correcao\":\"A correção protege esta consulta contra injeção SQL por meio de q, mas não substitui validações gerais de entrada nem corrige possíveis vulnerabilidades em outras consultas ou componentes. O comportamento de curingas SQL existentes no valor pesquisado permanece o mesmo: caracteres como % e _ continuam tendo semântica de LIKE, embora não permitam alterar a estrutura da consulta.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1312,
+  "tokens_saida": 474,
+  "latencia_s": 6.006,
+  "custo_usd": 0.000897,
+  "hash_prompt": "b5ccbc8dd82b0c8e599de22461ce377df512af4357b3b1752c3edd3b4fa54ec0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1309
+}

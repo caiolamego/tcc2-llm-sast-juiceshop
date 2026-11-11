@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Divulgação da resposta do CAPTCHA na mesma resposta HTTP que apresenta o desafio (CWE-200).\",\n  \"causa_da_vulnerabilidade\": \"O objeto `captcha` inclui o campo `answer` e é enviado integralmente por `res.json(captcha)`. Assim, qualquer cliente que obtenha o desafio também recebe sua solução, tornando a verificação ineficaz. A resposta também não deve expor a solução por meio de campos auxiliares.\",\n  \"estrategia_de_correcao\": \"Manter a resposta armazenada exclusivamente no servidor e enviar ao cliente apenas o identificador e a expressão do CAPTCHA. Preservar a persistência da resposta para a verificação existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/captcha.ts\",\n      \"trecho_original\": \"    const captcha = {\\n      captchaId,\\n      captcha: expression,\\n      answer\\n    }\\n    const captchaInstance = CaptchaModel.build(captcha)\\n    await captchaInstance.save()\\n    res.json(captcha)\",\n      \"trecho_corrigido\": \"    const captcha = {\\n      captchaId,\\n      captcha: expression,\\n      answer\\n    }\\n    const captchaInstance = CaptchaModel.build(captcha)\\n    await captchaInstance.save()\\n    res.json({ captchaId, captcha: expression })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A resposta HTTP passa a conter somente os dados necessários para apresentar e identificar o desafio. O campo `answer` continua sendo salvo no modelo no servidor, permitindo que `verifyCaptcha` compare a resposta enviada pelo cliente com a solução armazenada, sem revelar a solução no endpoint de geração.\",\n  \"limitacoes_da_correcao\": \"Esta alteração corrige a exposição direta da resposta, mas não implementa limitação de tentativas nem invalidação ou expiração do CAPTCHA após uso. Esses controles dependem de requisitos e mecanismos adicionais; a verificação atual continua aceitando o mesmo CAPTCHA enquanto ele permanecer armazenado.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2227,
+  "tokens_saida": 435,
+  "latencia_s": 5.248,
+  "custo_usd": 0.000496,
+  "hash_prompt": "357d9c075c739a0869e6cd052c578dc2b298527fe845b87f16452f517b8fc314",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2224
+}

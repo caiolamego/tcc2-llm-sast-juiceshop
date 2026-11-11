@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Acesso não autorizado e alteração não autorizada de pedidos por ausência de controle de autorização nos endpoints allOrders e toggleDeliveryStatus.\",\"causa_da_vulnerabilidade\":\"As funções allOrders e toggleDeliveryStatus não verificam se a requisição está autenticada nem se o usuário possui permissão para consultar todos os pedidos ou alterar o pedido identificado por req.params.id. Assim, qualquer cliente que alcance essas rotas pode executar essas operações.\",\"estrategia_de_correcao\":\"Adicionar a mesma validação de autenticação já utilizada em orderHistory antes de executar cada operação protegida, mantendo as mensagens de erro e as assinaturas existentes. Para allOrders, exigir usuário autenticado; para toggleDeliveryStatus, exigir usuário autenticado e restringir a alteração ao pedido pertencente ao usuário autenticado.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const order = await ordersCollection.find()\\n    res.status(200).json({ status: 'success', data: order.reverse() })\\n  }\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.email && loggedInUser.data.id) {\\n      const order = await ordersCollection.find()\\n      res.status(200).json({ status: 'success', data: order.reverse() })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\"},{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.email && loggedInUser.data.id) {\\n      const deliveryStatus = !req.body.deliveryStatus\\n      const eta = deliveryStatus ? '0' : '1'\\n      await ordersCollection.update({ _id: req.params.id, email: loggedInUser.data.email }, { $set: { delivered: deliveryStatus, eta } })\\n      res.status(200).json({ status: 'success' })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\"}],\"justificativa_tecnica\":\"A validação impede que requisições sem um usuário autenticado obtenham a lista completa de pedidos ou alterem o status de entrega. No endpoint de alteração, o filtro inclui o email do usuário autenticado, fazendo com que a atualização só corresponda a um pedido pertencente a esse usuário; um identificador de pedido de outro usuário não será atualizado. A correção reutiliza o mecanismo de autenticação existente e altera somente os trechos necessários.\",\"limitacoes_da_correcao\":\"A solução pressupõe que o email armazenado nos pedidos corresponde ao email autenticado e que o token presente no cabeçalho Authorization é validado corretamente por authenticatedUsers. Ela também não introduz tratamento específico para erros de banco de dados nem altera eventuais controles de autorização aplicados por middleware externo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 998,
+  "tokens_saida": 818,
+  "latencia_s": 8.703,
+  "custo_usd": 0.001181,
+  "hash_prompt": "c3aa416292c2117959ff12edd26872f377df30b7654326ce0ca70b5879957eee",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

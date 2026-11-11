@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL no filtro da atualização de avaliações, permitindo que o cliente controle diretamente o valor usado em { _id: req.body.id }.\",\"causa_da_vulnerabilidade\":\"O código utiliza req.body.id sem validação ou normalização. Em determinadas configurações do Express, um atacante pode enviar um objeto MongoDB, como {\\\"$ne\\\":null}, fazendo com que o filtro deixe de corresponder a um único identificador e corresponda a múltiplos documentos. A opção multi: true amplia o alcance da atualização.\",\"estrategia_de_correcao\":\"Validar que req.body.id seja um identificador escalar válido antes de usá-lo no filtro, rejeitando entradas que sejam objetos ou operadores MongoDB. Como a implementação existente não define uma resposta específica para entrada inválida e as mensagens visíveis não devem ser alteradas, a correção deve impedir a operação e encaminhar o erro ao middleware existente.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\",\"trecho_corrigido\":\"    if (typeof req.body.id !== 'string' || !/^[a-f\\\\d]{24}$/i.test(req.body.id)) {\\n      return next(new Error('Invalid review id'))\\n    }\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\"}],\"justificativa_tecnica\":\"A verificação exige que id seja uma string com o formato de um ObjectId hexadecimal de 24 caracteres. Assim, objetos contendo operadores como $ne, $gt ou $in não chegam ao MongoDB como parte do filtro, eliminando a possibilidade de injeção por esse campo. O restante da operação, incluindo a atualização da mensagem e o comportamento para identificadores válidos, permanece inalterado.\",\"limitacoes_da_correcao\":\"A correção pressupõe que os identificadores de avaliações sejam ObjectIds representados por strings de 24 caracteres hexadecimais. Se o sistema aceitar outro formato legítimo de identificador, a validação deverá ser ajustada ao formato real. A correção também não altera a opção multi: true nem implementa autorização por proprietário; portanto, controles de autorização adicionais podem ser necessários para impedir a edição de avaliações de outros usuários.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1005,
+  "tokens_saida": 539,
+  "latencia_s": 7.606,
+  "custo_usd": 0.000848,
+  "hash_prompt": "e34d31701dd1791db504f90cdb2ddcb4b22a51acb4f3840bdb7b9a45cbecb7e2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

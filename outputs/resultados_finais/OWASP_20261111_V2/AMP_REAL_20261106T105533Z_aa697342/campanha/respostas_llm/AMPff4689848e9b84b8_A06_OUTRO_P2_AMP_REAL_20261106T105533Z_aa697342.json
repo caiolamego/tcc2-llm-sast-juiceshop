@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting persistente (stored XSS) no comentário do feedback, devido à sanitização insuficiente do conteúdo armazenado.\",\n  \"causa_da_vulnerabilidade\": \"Quando o desafio de XSS persistente está desativado, o setter usa security.sanitizeSecure(comment), que não é um sanitizador específico para HTML. O comentário pode conter marcação ou atributos executáveis que, se posteriormente renderizados como HTML sem escape contextual, podem executar código no navegador de quem visualizar o feedback.\",\n  \"estrategia_de_correcao\": \"Sanitizar o comentário com o sanitizador HTML existente em todos os casos, mantendo a lógica específica do desafio e sua detecção inalteradas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"models/feedback.ts\",\n      \"trecho_original\": \"          } else {\\n            sanitizedComment = security.sanitizeSecure(comment)\\n          }\",\n      \"trecho_corrigido\": \"          } else {\\n            sanitizedComment = security.sanitizeHtml(comment)\\n          }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O caminho normal passa a aplicar o sanitizador destinado a remover ou neutralizar conteúdo HTML perigoso antes de persistir o comentário. A ramificação do desafio permanece intacta, preservando seu comportamento funcional. Isso reduz o risco de conteúdo armazenado ser interpretado como marcação executável quando exibido.\",\n  \"limitacoes_da_correcao\": \"A sanitização na gravação não substitui a codificação contextual na saída. Os pontos que exibem comentários ainda devem escapar o conteúdo conforme o contexto de renderização; esta alteração também depende de security.sanitizeHtml estar corretamente configurado.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1069,
+  "tokens_saida": 365,
+  "latencia_s": 5.459,
+  "custo_usd": 0.000316,
+  "hash_prompt": "978100757763d26f64b42126b2643f4d51a63888703d296b24371e2f9dcbdb92",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1066
+}

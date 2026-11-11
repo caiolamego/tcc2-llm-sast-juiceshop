@@ -1,0 +1,24 @@
+diff --git a/routes/dataExport.ts b/routes/dataExport.ts
+index ee3b4afcd..feb13771b 100644
+--- a/routes/dataExport.ts
++++ b/routes/dataExport.ts
+@@ -19,7 +19,6 @@ export function dataExport () {
+       if (loggedInUser?.data?.email && loggedInUser.data.id) {
+         const username = loggedInUser.data.username
+         const email = loggedInUser.data.email
+-        const updatedEmail = email.replace(/[aeiou]/gi, '*')
+ 
+         let memories, orders, reviews
+         try {
+@@ -30,9 +29,9 @@ export function dataExport () {
+         }
+ 
+         try {
+-          orders = await db.ordersCollection.find({ email: updatedEmail })
++          orders = await db.ordersCollection.find({ email })
+         } catch (error) {
+-          next(new Error(`Error retrieving orders for ${updatedEmail}`))
++          next(new Error(`Error retrieving orders for ${email}`))
+           return
+         }
+ 

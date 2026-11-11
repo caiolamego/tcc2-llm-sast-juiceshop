@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) ao inserir o conteúdo das legendas diretamente dentro de um elemento <script>.\",\n  \"causa_da_vulnerabilidade\": \"O valor subs é lido de um arquivo de legendas configurável e concatenado sem escape no HTML de um elemento script. Conteúdo como </script><script>... pode encerrar o elemento e executar código no navegador.\",\n  \"estrategia_de_correcao\": \"Codificar as legendas como uma string JSON antes de inseri-las no elemento script. Escapar também os caracteres <, > e & na representação JSON impede que conteúdo controlado forme uma tag de fechamento de script, preservando o valor das legendas quando lido pelo cliente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/videoHandler.ts\",\n      \"trecho_original\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\n      \"trecho_corrigido\": \"      const safeSubs = JSON.stringify(subs).replace(/</g, '\\\\\\\\u003c').replace(/>/g, '\\\\\\\\u003e').replace(/&/g, '\\\\\\\\u0026')\\n      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + safeSubs.slice(1, -1) + '</script>')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"JSON.stringify escapa aspas e caracteres de controle, e o escape adicional de <, > e & impede que as legendas contenham uma sequência capaz de encerrar o elemento script ou formar markup. A remoção das aspas externas mantém o conteúdo textual do elemento compatível com o formato VTT esperado, sem alterar a assinatura das funções nem a estrutura da resposta.\",\n  \"limitacoes_da_correcao\": \"A correção protege a inserção das legendas neste elemento script. Outros pontos de renderização ou consumo das legendas devem continuar tratando o conteúdo de acordo com o contexto de saída; se o cliente interpretar o conteúdo como HTML, será necessária sanitização apropriada nesse sink.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2485,
+  "tokens_saida": 499,
+  "latencia_s": 5.803,
+  "custo_usd": 0.00056,
+  "hash_prompt": "60f22964c8d90716bfc5cd8b0d3eb4daad3bff1758b83168b14159e550454c22",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2482
+}

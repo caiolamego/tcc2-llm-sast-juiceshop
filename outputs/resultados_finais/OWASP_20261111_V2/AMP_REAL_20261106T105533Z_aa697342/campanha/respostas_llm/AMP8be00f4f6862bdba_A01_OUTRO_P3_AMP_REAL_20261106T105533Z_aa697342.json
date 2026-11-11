@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição pública do endpoint de métricas, que pode revelar informações operacionais da aplicação.\",\n  \"causa_da_vulnerabilidade\": \"A rota GET /metrics é registrada sem middleware de autorização explícito. O handler de métricas é acessível a qualquer cliente, salvo se houver uma restrição externa não mostrada no trecho.\",\n  \"estrategia_de_correcao\": \"Aplicar à rota de métricas o middleware de autorização já utilizado pela aplicação, preservando o handler e o método HTTP.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\",\n      \"trecho_corrigido\": \"app.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A autorização explícita impede que clientes não autorizados obtenham as métricas por essa rota, reduzindo a exposição de informações operacionais. A alteração é localizada e mantém o endpoint e sua resposta disponíveis para usuários autorizados.\",\n  \"limitacoes_da_correcao\": \"O trecho também registra /metrics anteriormente, antes do catch-all, sem middleware de autorização. Essa rota anterior pode continuar acessível publicamente e precisa ser protegida da mesma forma para que a correção seja efetiva. Não é possível confirmar, com o código fornecido, se há controles adicionais na infraestrutura ou quais permissões específicas devem acessar as métricas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3165,
+  "tokens_saida": 346,
+  "latencia_s": 4.579,
+  "custo_usd": 0.000569,
+  "hash_prompt": "a9afb0a20b1a17e5be2a98d803c067e16dc34e031cc50e2b690d36ff85348fad",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3162
+}

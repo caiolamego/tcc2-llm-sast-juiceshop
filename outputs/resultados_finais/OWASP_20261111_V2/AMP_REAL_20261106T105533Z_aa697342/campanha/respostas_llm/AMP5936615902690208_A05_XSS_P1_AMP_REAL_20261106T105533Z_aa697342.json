@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado por meio do conteúdo de legendas inserido diretamente em um elemento <script>.\",\n  \"causa_da_vulnerabilidade\": \"O conteúdo das legendas é obtido de um arquivo configurável e concatenado sem codificação no HTML retornado. Como o elemento é um script executável, uma legenda que contenha código JavaScript pode ser executada no navegador.\",\n  \"estrategia_de_correcao\": \"Codificar o conteúdo das legendas como entidades HTML antes de inseri-lo no documento, impedindo que caracteres fornecidos pelo conteúdo sejam interpretados como marcação ou código executável.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/videoHandler.ts\",\n      \"trecho_original\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\n      \"trecho_corrigido\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</script>')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A codificação transforma caracteres como < e > em entidades HTML, evitando que conteúdo de legenda seja interpretado como uma tag <script> adicional. A alteração é localizada e mantém o fluxo e a estrutura existentes.\",\n  \"limitacoes_da_correcao\": \"A codificação HTML pode alterar a representação do conteúdo VTT consumido pelo cliente. A correção impede a interpretação de marcação injetada no HTML, mas não substitui validação de formato e origem das legendas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1404,
+  "tokens_saida": 392,
+  "latencia_s": 4.647,
+  "custo_usd": 0.00021,
+  "hash_prompt": "43b982d7c7635f6d652908e76e17c5f583a480db8cae38c3949ef561c85166b5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1401,
+  "tokens_escrita_cache": 0
+}

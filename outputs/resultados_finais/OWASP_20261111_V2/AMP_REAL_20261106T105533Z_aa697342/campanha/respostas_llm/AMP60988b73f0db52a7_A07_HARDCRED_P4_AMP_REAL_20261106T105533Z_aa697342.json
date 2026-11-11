@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Chave HMAC hardcoded na função hmac, identificada pela regra Semgrep. O literal fixo pode ser extraído do código e usado para gerar HMACs válidos.\",\n  \"causa_da_vulnerabilidade\": \"A função hmac cria um HMAC-SHA-256 usando a string literal 'pa4qacea4VK9t9nGv7yZtwmj' como chave. Como o segredo está versionado junto com o código, qualquer pessoa com acesso ao código pode obtê-lo; se os HMACs forem usados para validar dados confiáveis, isso permite falsificá-los.\",\n  \"estrategia_de_correcao\": \"Obter a chave de uma variável de ambiente obrigatória e falhar na inicialização com uma mensagem genérica se ela não estiver configurada. Configurar o segredo fora do código e rotacioná-lo, considerando os dados ou tokens existentes que dependam da chave anterior.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\\nexport const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\",\n      \"trecho_corrigido\": \"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\\nconst hmacKey = process.env.HMAC_KEY\\nif (!hmacKey) throw new Error('Missing HMAC configuration')\\nexport const hmac = (data: string) => crypto.createHmac('sha256', hmacKey).update(data).digest('hex')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A chave deixa de estar embutida no código e passa a ser fornecida pelo ambiente de execução. A verificação obrigatória impede que a aplicação opere silenciosamente com uma chave previsível ou fallback hardcoded. O algoritmo, o formato do HMAC e a assinatura da função permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"É necessário configurar HMAC_KEY de forma segura em cada ambiente e restringir seu acesso. A troca da chave pode invalidar HMACs previamente gerados ou verificados; a compatibilidade e a rotação devem ser planejadas conforme os usos existentes. A alteração não corrige outros segredos hardcoded que possam existir no arquivo.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3652,
+  "tokens_saida": 558,
+  "latencia_s": 5.767,
+  "custo_usd": 0.000735,
+  "hash_prompt": "f486dafcec0b90954971e9247f14aaa6aaefdb7718d3a8d60740531fe396c920",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3649
+}

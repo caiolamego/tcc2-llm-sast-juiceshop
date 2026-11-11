@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Ausência de tratamento de exceções assíncronas nas funções de rota, permitindo que rejeições de DeliveryModel.findAll() ou DeliveryModel.findOne() escapem do fluxo da aplicação e possam causar respostas incorretas, vazamento de detalhes de erro ou indisponibilidade, dependendo da configuração do Express e do middleware de erros.\",\"causa_da_vulnerabilidade\":\"As funções retornadas são async e executam operações de banco de dados com await, mas não possuem try/catch nem encaminham rejeições para next. O parâmetro next existe, porém não é utilizado. Em versões/configurações que não propagam automaticamente rejeições de handlers async ao middleware de erro, uma exceção não tratada pode resultar em requisição pendente ou falha do processo.\",\"estrategia_de_correcao\":\"Adicionar blocos try/catch ao redor das operações assíncronas e encaminhar qualquer exceção ao middleware de erro existente por meio de next(error), preservando as respostas e o comportamento funcional dos caminhos de sucesso e de ausência de dados.\",\"edicoes\":[{\"arquivo\":\"routes/delivery.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const methods = await DeliveryModel.findAll()\\n    if (methods) {\\n      const sendMethods = []\\n      for (const method of methods) {\\n        sendMethods.push({\\n          id: method.id,\\n          name: method.name,\\n          price: security.isDeluxe(req) ? method.deluxePrice : method.price,\\n          eta: method.eta,\\n          icon: method.icon\\n        })\\n      }\\n      res.status(200).json({ status: 'success', data: sendMethods })\\n    } else {\\n      res.status(400).json({ status: 'error' })\\n    }\\n  }\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    try {\\n      const methods = await DeliveryModel.findAll()\\n      if (methods) {\\n        const sendMethods = []\\n        for (const method of methods) {\\n          sendMethods.push({\\n            id: method.id,\\n            name: method.name,\\n            price: security.isDeluxe(req) ? method.deluxePrice : method.price,\\n            eta: method.eta,\\n            icon: method.icon\\n          })\\n        }\\n        res.status(200).json({ status: 'success', data: sendMethods })\\n      } else {\\n        res.status(400).json({ status: 'error' })\\n      }\\n    } catch (error) {\\n      next(error)\\n    }\\n  }\"},{\"arquivo\":\"routes/delivery.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\\n    if (method != null) {\\n      const sendMethod = {\\n        id: method.id,\\n        name: method.name,\\n        price: security.isDeluxe(req) ? method.deluxePrice : method.price,\\n        eta: method.eta,\\n        icon: method.icon\\n      }\\n      res.status(200).json({ status: 'success', data: sendMethod })\\n    } else {\\n      res.status(400).json({ status: 'error' })\\n    }\\n  }\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    try {\\n      const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\\n      if (method != null) {\\n        const sendMethod = {\\n          id: method.id,\\n          name: method.name,\\n          price: security.isDeluxe(req) ? method.deluxePrice : method.price,\\n          eta: method.eta,\\n          icon: method.icon\\n        }\\n        res.status(200).json({ status: 'success', data: sendMethod })\\n      } else {\\n        res.status(400).json({ status: 'error' })\\n      }\\n    } catch (error) {\\n      next(error)\\n    }\\n  }\"}],\"justificativa_tecnica\":\"Toda rejeição síncrona ou assíncrona ocorrida durante a consulta ao banco ou durante a construção da resposta passa a ser capturada e encaminhada ao middleware centralizado de tratamento de erros do Express. Assim, a rota não deixa Promises rejeitadas sem tratamento, não mantém a requisição indefinidamente e evita que erros internos sejam expostos diretamente ao cliente. As respostas existentes para sucesso e ausência de método permanecem inalteradas.\",\"limitacoes_da_correcao\":\"A correção depende da existência e do correto funcionamento de um middleware de tratamento de erros registrado pela aplicação. Ela não corrige falhas internas do banco de dados, problemas de disponibilidade ou outras vulnerabilidades presentes em componentes não mostrados. Também não altera o código de status ou o formato das respostas de erro já produzidas pelo middleware central.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 998,
+  "tokens_saida": 1119,
+  "latencia_s": 11.757,
+  "custo_usd": 0.001542,
+  "hash_prompt": "04d327f83d122d8e6c23026636477fcd0e661a29761fc936b3f0022acb0bd7a2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Controle de acesso insuficiente em escrita de documento (CWE-639): as atualizações da avaliação são selecionadas apenas pelo _id fornecido pelo cliente, sem escopo ou verificação de autorização por objeto.\",\n  \"causa_da_vulnerabilidade\": \"O código usa `id` de `req.body` para localizar a avaliação e, nas duas escritas, filtra somente por `{ _id: id }`. A autenticação confirma a identidade do usuário, mas não verifica se ele tem autorização para alterar a avaliação indicada. A checagem de `likedBy` impede uma segunda curtida do mesmo usuário em condições normais, mas não estabelece propriedade ou permissão sobre o documento.\",\n  \"estrategia_de_correcao\": \"Preservar a funcionalidade de curtida, mas incluir na seleção de cada escrita uma condição que só corresponda à avaliação se o usuário autenticado ainda não estiver em `likedBy`. Assim, a autorização é aplicada atomicamente na própria operação de escrita, usando a identidade obtida da sessão validada pelo servidor.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/likeProductReviews.ts\",\n      \"trecho_original\": \"      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\",\n      \"trecho_corrigido\": \"      const authorizationFilter = { _id: id, likedBy: { $ne: user.data.email } }\\n      const updateResult = await db.reviewsCollection.update(\\n        authorizationFilter,\\n        { $inc: { likesCount: 1 } }\\n      )\\n      if (updateResult.modifiedCount === 0) {\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\"\n    },\n    {\n      \"arquivo\": \"routes/likeProductReviews.ts\",\n      \"trecho_original\": \"        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\",\n      \"trecho_corrigido\": \"        const result = await db.reviewsCollection.update(\\n          authorizationFilter,\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O filtro de escrita combina o identificador solicitado com uma condição baseada no usuário autenticado, em vez de confiar apenas no identificador controlado pelo cliente. A condição é reavaliada pelo banco em cada atualização, evitando que uma avaliação já curtida pelo usuário seja alterada por uma requisição concorrente após a leitura inicial. A segunda escrita também usa o mesmo filtro, impedindo que a atualização de `likedBy` seja aplicada a um documento que deixou de satisfazer a condição. A resposta de erro existente para uma operação não autorizada é preservada.\",\n  \"limitacoes_da_correcao\": \"O código fornecido não define um campo de proprietário nem uma regra que restrinja curtidas ao dono da avaliação; portanto, a correção aplica a regra de negócio inferível da rota: um usuário autenticado pode curtir avaliações, mas não pode repetir a curtida. A verificação de `modifiedCount` pressupõe que `db.reviewsCollection.update` retorne o resultado padrão do driver MongoDB. Se a aplicação usar uma versão ou wrapper com formato diferente, esse campo deve ser ajustado ao contrato real. A correção não substitui testes de concorrência e de autorização com usuários distintos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1981,
+  "tokens_saida": 764,
+  "latencia_s": 8.783,
+  "custo_usd": 0.00063,
+  "hash_prompt": "4ec71305ce7071f42b657c27971e06f64635d5a6ea776f9ad66d27a5dca4dc85",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1978
+}

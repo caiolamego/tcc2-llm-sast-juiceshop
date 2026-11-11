@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de nomes e metadados de arquivos por listagem de diretórios em /ftp, /support/logs e /encryptionkeys (CWE-548).\",\n  \"causa_da_vulnerabilidade\": \"O middleware serveIndex está habilitado nessas rotas e gera páginas com o conteúdo dos diretórios. Em particular, a listagem de /support/logs pode revelar nomes de arquivos de log e a de /encryptionkeys pode revelar a estrutura dos arquivos de chaves.\",\n  \"estrategia_de_correcao\": \"Remover apenas os middlewares serveIndex das rotas afetadas, mantendo os middlewares de entrega de arquivos e os demais controles existentes. Assim, os arquivos continuam acessíveis pelas rotas diretas, mas os diretórios deixam de ser enumeráveis.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\",\n      \"trecho_corrigido\": \"  /* /ftp file download */\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles())\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles())\"\n    },\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\",\n      \"trecho_corrigido\": \"  /* /encryptionkeys file access */\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\"\n    },\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\n      \"trecho_corrigido\": \"  /* /logs file access */\\n  app.use('/support/logs', verify.accessControlChallenges())\\n  app.use('/support/logs/:file', serveLogFiles())\"\n    }\n  ],\n  \"justificativa_tecnica\": \"serveIndex é o componente que produz a listagem; removê-lo impede a enumeração dos nomes e metadados sem remover as rotas de acesso direto aos arquivos. A rota de logs mantém o middleware de verificação de controle de acesso e o handler de arquivos. A alteração é restrita às listagens identificadas.\",\n  \"limitacoes_da_correcao\": \"Os arquivos continuam acessíveis por URL direta conforme os handlers e controles existentes; esta correção não altera nem valida as permissões desses handlers. A listagem de /.well-known permanece habilitada por não estar incluída no alerta indicado e pode ser avaliada separadamente conforme o conteúdo público dessa pasta.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3154,
+  "tokens_saida": 801,
+  "latencia_s": 6.661,
+  "custo_usd": 0.000795,
+  "hash_prompt": "b0255caf57c2ebfb5739742c5622ef85b61d10915a98caae646bf5f198367d9b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3151
+}

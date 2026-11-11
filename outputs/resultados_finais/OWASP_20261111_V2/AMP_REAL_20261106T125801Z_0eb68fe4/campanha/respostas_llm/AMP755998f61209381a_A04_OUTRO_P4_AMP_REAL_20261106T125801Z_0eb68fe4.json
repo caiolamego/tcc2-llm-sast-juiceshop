@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Detecção de um token JWT literal embutido no teste, contendo uma assinatura criptográfica fixa. Embora esteja em um arquivo de teste e não represente necessariamente um segredo de produção, o literal é identificado como possível material criptográfico hard-coded pela regra do Semgrep.\",\"causa_da_vulnerabilidade\":\"O teste usa diretamente um JWT completo e assinado como valor de entrada em localStorage. A presença de três segmentos no formato JWT, incluindo uma assinatura fixa, faz o analisador classificá-lo como token potencialmente sensível ou chave criptográfica codificada no código-fonte.\",\"estrategia_de_correcao\":\"Substituir o JWT literal por um token JWT de teste montado em tempo de execução, usando cabeçalho e payload codificados em Base64URL e uma assinatura não fixa gerada com aleatoriedade criptograficamente segura. O teste continua exercitando o parsing do payload sem manter um token assinado hard-coded no repositório.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"    it('should set Last-Login IP from JWT as trusted HTML', () => {\\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')\\n    })\",\"trecho_corrigido\":\"    it('should set Last-Login IP from JWT as trusted HTML', () => {\\n        const encode = (value: string) => btoa(value).replace(/=/g, '').replace(/\\\\\\\\+/g, '-').replace(/\\\\\\\\//g, '_')\\n        const token = `${encode('{\\\"alg\\\":\\\"HS256\\\",\\\"typ\\\":\\\"JWT\\\"}')}.${encode('{\\\"data\\\":{\\\"lastLoginIp\\\":\\\"1.2.3.4\\\"}}')}.${encode(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))}`\\n        localStorage.setItem('token', token)\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')\\n    })\"}],\"justificativa_tecnica\":\"A correção remove do código-fonte o JWT completo e sua assinatura fixa, eliminando o padrão que representa um token potencialmente reutilizável ou segredo hard-coded. O componente continua recebendo um valor no formato JWT com o mesmo cabeçalho e payload, preservando o objetivo funcional do teste. A assinatura aleatória não é usada para autenticação real pelo teste; ela apenas mantém a estrutura sintática esperada sem introduzir material criptográfico persistente no repositório.\",\"limitacoes_da_correcao\":\"O teste continua usando um token artificial e não valida a autenticidade da assinatura, pois o componente aparentemente apenas decodifica o payload. A geração depende da disponibilidade de btoa e crypto.getRandomValues no ambiente de teste. Essa alteração não substitui o gerenciamento seguro de chaves em código de produção; caso o componente deva validar assinaturas, o teste deverá usar uma chave de teste gerada em tempo de execução e uma biblioteca de JWT apropriada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1969,
+  "tokens_saida": 771,
+  "latencia_s": 8.855,
+  "custo_usd": 0.001417,
+  "hash_prompt": "e1daaf68fec3cc133ef6853e6031d0fcabdbc65508789d3e54cc9523140a5fb8",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1966
+}

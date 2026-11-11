@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de propriedades sensíveis do usuário por seleção arbitrária de campos via parâmetro `fields`.\",\n  \"causa_da_vulnerabilidade\": \"Os nomes fornecidos em `fields` são usados diretamente para ler propriedades de `user.data` e incluí-las na resposta. Isso permite solicitar campos que deveriam permanecer privados, como `password` ou `passwordHash`.\",\n  \"estrategia_de_correcao\": \"Restringir os campos selecionáveis a uma lista explícita de propriedades públicas já retornadas pelo endpoint quando `fields` não é informado. Ignorar qualquer campo fora dessa lista.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/currentUser.ts\",\n      \"trecho_original\": \"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\n      \"trecho_corrigido\": \"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A lista de permissões mantém a seleção de campos públicos e impede que parâmetros controlados pelo cliente exponham propriedades sensíveis de `user.data`. O comportamento padrão e a resposta para campos públicos permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A lista permitida precisa ser atualizada caso o endpoint passe a oferecer novos campos públicos. A correção protege a seleção de campos nesta rota; não avalia outras rotas que possam expor dados sensíveis.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1017,
+  "tokens_saida": 476,
+  "latencia_s": 5.168,
+  "custo_usd": 0.00034,
+  "hash_prompt": "f9cdcf45d71cad70fa0561b54af17e90e30bdd3335326b8e71519572992e0077",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

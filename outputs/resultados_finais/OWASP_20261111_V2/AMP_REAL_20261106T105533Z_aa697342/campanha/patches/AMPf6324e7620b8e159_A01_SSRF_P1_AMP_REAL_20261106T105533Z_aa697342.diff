@@ -1,0 +1,35 @@
+diff --git a/routes/profileImageUrlUpload.ts b/routes/profileImageUrlUpload.ts
+index 55184083e..b9a00a8f4 100644
+--- a/routes/profileImageUrlUpload.ts
++++ b/routes/profileImageUrlUpload.ts
+@@ -4,6 +4,8 @@
+  */
+ 
+ import fs from 'node:fs'
++import { isIP } from 'node:net'
++import { lookup } from 'node:dns/promises'
+ import { Readable } from 'node:stream'
+ import { finished } from 'node:stream/promises'
+ import { type Request, type Response, type NextFunction } from 'express'
+@@ -21,7 +23,20 @@ export function profileImageUrlUpload () {
+       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
+       if (loggedInUser) {
+         try {
+-          const response = await fetch(url)
++          const parsedUrl = new URL(url)
++          if (!['http:', 'https:'].includes(parsedUrl.protocol) || parsedUrl.username || parsedUrl.password) {
++            throw new Error('url returned a non-OK status code or an empty body')
++          }
++          const addresses = isIP(parsedUrl.hostname) ? [{ address: parsedUrl.hostname }] : await lookup(parsedUrl.hostname, { all: true })
++          if (addresses.length === 0 || addresses.some(({ address }) => {
++            const normalizedAddress = address.toLowerCase().replace(/^::ffff:/, '')
++            return isIP(normalizedAddress) === 4
++              ? normalizedAddress.split('.').map(Number)[0] === 10 || normalizedAddress.split('.').map(Number)[0] === 127 || normalizedAddress.split('.').map(Number)[0] === 0 || normalizedAddress.split('.').map(Number)[0] >= 224 || (normalizedAddress.split('.').map(Number)[0] === 169 && normalizedAddress.split('.').map(Number)[1] === 254) || (normalizedAddress.split('.').map(Number)[0] === 172 && normalizedAddress.split('.').map(Number)[1] >= 16 && normalizedAddress.split('.').map(Number)[1] <= 31) || (normalizedAddress.split('.').map(Number)[0] === 192 && normalizedAddress.split('.').map(Number)[1] === 168)
++              : normalizedAddress === '::' || normalizedAddress === '::1' || normalizedAddress.startsWith('fc') || normalizedAddress.startsWith('fd') || normalizedAddress.startsWith('fe8') || normalizedAddress.startsWith('fe9') || normalizedAddress.startsWith('fea') || normalizedAddress.startsWith('feb')
++          })) {
++            throw new Error('url returned a non-OK status code or an empty body')
++          }
++          const response = await fetch(parsedUrl, { redirect: 'error' })
+           if (!response.ok || !response.body) {
+             throw new Error('url returned a non-OK status code or an empty body')
+           }

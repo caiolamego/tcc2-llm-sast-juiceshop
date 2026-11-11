@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL por meio do operador JavaScript `$where` na consulta de pedidos.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário `id` é interpolado diretamente em uma string JavaScript executada pelo MongoDB: `db.ordersCollection.find({ $where: `this.orderId === '${id}'` })`. A sanitização aplicada quando o desafio não está habilitado não é uma defesa segura contra injeção; além disso, quando o desafio de XSS está habilitado, o valor é apenas truncado. Um valor especialmente construído pode escapar da expressão e alterar a lógica executada pelo `$where`.\",\n  \"estrategia_de_correcao\": \"Remover a expressão `$where` e consultar `orderId` por igualdade usando o filtro nativo do MongoDB. Isso mantém a busca pelo identificador sem executar JavaScript no banco.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/trackOrder.ts\",\n      \"trecho_original\": \"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\n      \"trecho_corrigido\": \"    db.ordersCollection.find({ orderId: id }).then((order: any) => {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta por igualdade trata `id` como dado, não como código JavaScript, impedindo que caracteres fornecidos pelo usuário alterem a expressão executada no banco. A alteração preserva o fluxo existente de processamento dos resultados e a resposta da rota, sem depender de sanitização para proteger a consulta.\",\n  \"limitacoes_da_correcao\": \"A correção elimina a execução de código JavaScript na consulta. Não avalia outras vulnerabilidades da rota, como o desafio de XSS refletido ou a exposição de pedidos que possa decorrer de identificadores previsíveis.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 949,
+  "tokens_saida": 413,
+  "latencia_s": 5.321,
+  "custo_usd": 0.000301,
+  "hash_prompt": "3019cadaf8fbb64a9d2d548da3650e91e877d0e51631d9da1f70478bcfeea970",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

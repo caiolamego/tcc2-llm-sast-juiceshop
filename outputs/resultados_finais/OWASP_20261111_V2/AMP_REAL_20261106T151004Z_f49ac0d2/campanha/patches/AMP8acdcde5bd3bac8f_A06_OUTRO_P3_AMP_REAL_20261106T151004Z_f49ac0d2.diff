@@ -1,0 +1,23 @@
+diff --git a/routes/deluxe.ts b/routes/deluxe.ts
+index ca190ad89..462c5d1a7 100644
+--- a/routes/deluxe.ts
++++ b/routes/deluxe.ts
+@@ -29,14 +29,15 @@ export function upgradeToDeluxe () {
+         } else {
+           await WalletModel.decrement({ balance: 49 }, { where: { UserId: req.body.UserId } })
+         }
+-      }
+-
+-      if (req.body.paymentMode === 'card') {
++      } else if (req.body.paymentMode === 'card') {
+         const card = await CardModel.findOne({ where: { id: req.body.paymentId, UserId: req.body.UserId } })
+         if ((card == null) || card.expYear < new Date().getFullYear() || (card.expYear === new Date().getFullYear() && card.expMonth - 1 < new Date().getMonth())) {
+           res.status(400).json({ status: 'error', error: 'Invalid Card' })
+           return
+         }
++      } else {
++        res.status(400).json({ status: 'error', error: 'Something went wrong. Please try again!' })
++        return
+       }
+ 
+       try {

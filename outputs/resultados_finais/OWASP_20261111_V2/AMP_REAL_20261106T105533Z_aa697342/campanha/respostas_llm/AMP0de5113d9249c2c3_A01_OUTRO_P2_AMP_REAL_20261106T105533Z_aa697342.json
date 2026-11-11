@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A função allOrders expõe o histórico completo de pedidos sem autenticação ou autorização, permitindo acesso não autorizado a dados de pedidos.\",\n  \"causa_da_vulnerabilidade\": \"A rota retorna todos os documentos de ordersCollection por meio de ordersCollection.find() sem verificar a identidade do solicitante nem seus privilégios. Assim, qualquer cliente que consiga acessar essa rota recebe os pedidos de todos os usuários.\",\n  \"estrategia_de_correcao\": \"Restringir allOrders a usuários autenticados e autorizados, verificando a identidade e a permissão administrativa antes de consultar ou retornar os pedidos. O trecho fornecido não define como identificar administradores; portanto, não é possível propor uma verificação de autorização concreta sem presumir um campo ou mecanismo inexistente.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"A consulta sem filtro em allOrders retorna dados de todos os usuários, constituindo uma falha de controle de acesso em nível de objeto. A correção exige uma verificação de autorização confiável antes da consulta; adicionar uma condição baseada em dados não apresentados no código poderia ser ineficaz ou quebrar o comportamento funcional.\",\n  \"limitacoes_da_correcao\": \"Nenhuma edição foi proposta porque o código fornecido não informa como verificar autenticação e privilégios administrativos para allOrders. A rota permanece vulnerável até que essa verificação seja implementada usando o mecanismo de autorização existente na aplicação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 998,
+  "tokens_saida": 311,
+  "latencia_s": 4.403,
+  "custo_usd": 0.000255,
+  "hash_prompt": "acd30a06d956b617ed4c591cd48fc7af8de6de32c551fa543bee9849527f5ad7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

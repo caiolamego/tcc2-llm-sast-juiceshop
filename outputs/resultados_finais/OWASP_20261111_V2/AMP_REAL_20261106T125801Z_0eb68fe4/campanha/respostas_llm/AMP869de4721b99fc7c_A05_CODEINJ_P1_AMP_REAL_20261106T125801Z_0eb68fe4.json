@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de eval() para calcular uma expressão matemática, introduzindo execução dinâmica de código e risco de injeção de código.\",\"causa_da_vulnerabilidade\":\"A expressão é construída com valores aparentemente controlados, mas é avaliada por eval(), que executa qualquer JavaScript contido na string em vez de realizar apenas uma operação aritmética restrita.\",\"estrategia_de_correcao\":\"Substituir eval() por cálculo explícito dos operadores permitidos, preservando a geração da expressão e o resultado funcional do CAPTCHA.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\"trecho_corrigido\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const firstResult = firstOperator === '*' ? firstTerm * secondTerm : firstOperator === '+' ? firstTerm + secondTerm : firstTerm - secondTerm\\n    const answer = (secondOperator === '*' ? firstResult * thirdTerm : secondOperator === '+' ? firstResult + thirdTerm : firstResult - thirdTerm).toString()\"}],\"justificativa_tecnica\":\"A correção elimina completamente a execução dinâmica de JavaScript. O cálculo usa somente os três operadores já permitidos (*, + e -), mantendo a mesma expressão exibida e o comportamento de avaliação sequencial produzido pelo eval() original. Nenhum identificador existente, mensagem, assinatura ou outro arquivo é alterado.\",\"limitacoes_da_correcao\":\"A correção mantém a semântica original de avaliação da expressão da esquerda para a direita, que pode diferir da precedência matemática convencional quando há multiplicação combinada com adição ou subtração. Isso preserva o comportamento existente, mas não corrige essa característica funcional.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 920,
+  "tokens_saida": 423,
+  "latencia_s": 5.787,
+  "custo_usd": 0.000692,
+  "hash_prompt": "4c106381b25102eb4741216ac19d24dbc34a6b63f32f52025cac355e297fa66c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

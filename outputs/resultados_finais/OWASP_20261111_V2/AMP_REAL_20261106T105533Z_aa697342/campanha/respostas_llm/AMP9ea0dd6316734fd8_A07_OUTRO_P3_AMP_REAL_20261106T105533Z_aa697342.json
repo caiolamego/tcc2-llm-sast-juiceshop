@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A troca de senha pode ocorrer sem verificar a senha atual, permitindo que alguém com uma sessão autenticada altere a senha sem comprovar novamente a identidade.\",\n  \"causa_da_vulnerabilidade\": \"A comparação da senha atual com o hash armazenado está condicionada a `currentPassword` ser informado. Quando o valor está ausente ou vazio, a verificação é ignorada e a atualização prossegue.\",\n  \"estrategia_de_correcao\": \"Rejeitar a solicitação quando a senha atual estiver ausente e, quando presente, exigir que seu hash corresponda ao hash armazenado antes de atualizar a senha. Manter a mensagem de erro existente para senha atual incorreta.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/changePassword.ts\",\n      \"trecho_original\": \"    if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\",\n      \"trecho_corrigido\": \"    if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A condição passa a falhar tanto quando a senha atual não é fornecida quanto quando não corresponde ao hash armazenado. Assim, a atualização só prossegue após a verificação da credencial, sem alterar a mensagem existente nem o restante do fluxo.\",\n  \"limitacoes_da_correcao\": \"Esta alteração protege o fluxo de troca de senha mostrado. Não implementa limitação de tentativas nem avalia fluxos independentes de recuperação de senha.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1518,
+  "tokens_saida": 388,
+  "latencia_s": 5.066,
+  "custo_usd": 0.000384,
+  "hash_prompt": "6e2890d1aa4e94155825e15d1f8d4388dd222d9675d38f8b1795a3ea510871e0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1515
+}

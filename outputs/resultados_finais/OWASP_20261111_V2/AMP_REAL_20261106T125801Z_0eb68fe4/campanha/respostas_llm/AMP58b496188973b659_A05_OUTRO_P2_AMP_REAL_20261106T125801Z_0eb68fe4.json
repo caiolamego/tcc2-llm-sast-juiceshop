@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de código NoSQL/JavaScript por meio do operador MongoDB $where, permitindo que a entrada controlada pelo usuário seja incorporada a uma expressão JavaScript executada pelo banco de dados.\",\"causa_da_vulnerabilidade\":\"O valor de req.params.id é concatenado diretamente na string da expressão $where em `'$where: 'this.product == ' + id'`. Quando o desafio está habilitado, id permanece como texto truncado, mas não é validado nem parametrizado. Assim, um atacante pode fornecer uma expressão JavaScript adicional, potencialmente incluindo chamadas como sleep(), que será avaliada pelo MongoDB.\",\"estrategia_de_correcao\":\"Substituir a expressão JavaScript dinâmica baseada em $where por uma consulta MongoDB normal usando igualdade no campo product. O identificador deve ser convertido para número e validado antes da consulta, rejeitando parâmetros que não representem um número válido.\",\"edicoes\":[{\"arquivo\":\"routes/showProductReviews.ts\",\"trecho_original\":\"    // Truncate id to avoid unintentional RCE\\n    const id = !utils.isChallengeEnabled(challenges.noSqlCommandChallenge) ? Number(req.params.id) : utils.trunc(req.params.id, 40)\\n\\n    // Measure how long the query takes, to check if there was a nosql dos attack\\n    const t0 = new Date().getTime()\\n\\n    db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\",\"trecho_corrigido\":\"    // Truncate id to avoid unintentional RCE\\n    const id = Number(req.params.id)\\n    if (!Number.isFinite(id)) {\\n      return res.status(400).json({ error: 'Wrong Params' })\\n    }\\n\\n    // Measure how long the query takes, to check if there was a nosql dos attack\\n    const t0 = new Date().getTime()\\n\\n    db.reviewsCollection.find({ product: id }).then((reviews: Review[]) => {\"}],\"justificativa_tecnica\":\"A consulta deixa de usar $where, portanto nenhum JavaScript derivado da requisição é interpretado pelo MongoDB. A conversão para Number e a validação com Number.isFinite garantem que apenas identificadores numéricos sejam usados na igualdade do campo product. O comportamento funcional esperado para IDs numéricos é preservado, enquanto entradas malformadas retornam a mesma mensagem e status de erro já utilizados no tratamento da consulta.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o campo product é armazenado como número, como indicado pelo uso original de Number(req.params.id). Ela remove a execução de JavaScript e o vetor de NoSQL injection nessa consulta, mas não corrige eventuais vulnerabilidades semelhantes em outros arquivos ou consultas. O mecanismo de medição do tempo permanece, embora a consulta não execute mais a função sleep injetada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1103,
+  "tokens_saida": 623,
+  "latencia_s": 7.727,
+  "custo_usd": 0.001023,
+  "hash_prompt": "525e8f6dcd3a04f81dbc6add1fd225238aeb215b72f73dc8d0ebfdc70f045d78",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1100
+}

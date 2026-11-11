@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção de código no template Pug (SSTI), que permite execução de JavaScript controlado pelo usuário durante a compilação ou renderização do template.\",\n  \"causa_da_vulnerabilidade\": \"O valor de username é inserido diretamente no texto-fonte Pug por template.replace(/_username_/g, username) e, em seguida, esse texto é compilado com pug.compile(template). A barra invertida adicionada no ramo comum não neutraliza a sintaxe do Pug. Assim, um nome de usuário especialmente construído pode alterar o template e fazer com que código seja executado no servidor.\",\n  \"estrategia_de_correcao\": \"Escapar o username para o contexto de texto do Pug antes de inseri-lo no template, sem alterar o fluxo funcional existente. A codificação de entidades HTML impede que o valor fornecido pelo usuário introduza delimitadores ou marcação interpretável pelo template.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/userProfile.ts\",\n      \"trecho_original\": \"    } else {\\n      username = '\\\\\\\\' + username\\n    }\\n\\n    const themeKey = config.get<string>('application.theme') as keyof typeof themes\",\n      \"trecho_corrigido\": \"    } else {\\n      username = '\\\\\\\\' + username\\n    }\\n\\n    username = entities.encode(username)\\n\\n    const themeKey = config.get<string>('application.theme') as keyof typeof themes\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A codificação é aplicada antes da substituição de _username_ no fonte Pug, de modo que caracteres especiais fornecidos no nome não possam formar sintaxe executável do template. O valor continua sendo exibido como texto, enquanto a compilação e renderização do template permanecem inalteradas. A alteração é localizada e não modifica assinaturas, mensagens ou identificadores existentes.\",\n  \"limitacoes_da_correcao\": \"A correção protege a inserção de username no template. Ela não revisa outros valores interpolados nem a política CSP, que podem exigir avaliação independente. Também pressupõe que o username seja usado em contexto de texto HTML no template; se for usado em atributo, JavaScript ou outro contexto, deve-se aplicar codificação específica para esse contexto.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1480,
+  "tokens_saida": 492,
+  "latencia_s": 5.594,
+  "custo_usd": 0.000261,
+  "hash_prompt": "b4ef28664ae220afc16ed06c17b52c5e359c1889ce73a737d8c94c7187f25185",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1477,
+  "tokens_escrita_cache": 0
+}

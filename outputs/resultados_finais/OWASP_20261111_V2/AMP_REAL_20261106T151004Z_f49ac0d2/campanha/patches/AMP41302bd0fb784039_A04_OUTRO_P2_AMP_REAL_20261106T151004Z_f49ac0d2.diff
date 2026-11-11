@@ -1,0 +1,28 @@
+diff --git a/lib/insecurity.ts b/lib/insecurity.ts
+index 4a60a901b..67c70bfb0 100644
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -131,11 +131,19 @@ export const redirectAllowlist = new Set([
+ ])
+ 
+ export const isRedirectAllowed = (url: string) => {
+-  let allowed = false
+-  for (const allowedUrl of redirectAllowlist) {
+-    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge
++  try {
++    const redirectUrl = new URL(url)
++    for (const allowedUrl of redirectAllowlist) {
++      const allowedOrigin = new URL(allowedUrl).origin
++      if (redirectUrl.origin === allowedOrigin) {
++        return true
++      }
++    }
++  } catch {
++    // Se a URL for inválida, não permitir
++    return false
+   }
+-  return allowed
++  return false
+ }
+ // vuln-code-snippet end redirectCryptoCurrencyChallenge redirectChallenge
+ 

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) no conteúdo da descrição dos produtos, causado pelo bypass da sanitização HTML do Angular.\",\n  \"causa_da_vulnerabilidade\": \"A função trustProductDescription aplica bypassSecurityTrustHtml diretamente a product.description, que vem dos dados dos produtos. Isso marca o conteúdo como HTML confiável sem sanitizá-lo. Se um atacante conseguir controlar ou influenciar essa descrição, markup malicioso poderá ser interpretado pelo navegador. O campo searchValue também usa o mesmo bypass para um parâmetro de consulta controlável pelo usuário.\",\n  \"estrategia_de_correcao\": \"Remover os bypasses e manter os valores como strings. Os bindings HTML do Angular sanitizam conteúdo não confiável automaticamente, preservando formatação permitida e removendo conteúdo perigoso. Para o termo de busca, manter o valor como texto e deixar a interpolação do template escapar caracteres especiais.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/search-result/search-result.component.ts\",\n      \"trecho_original\": \"import { DomSanitizer, type SafeHtml } from '@angular/platform-browser'\",\n      \"trecho_corrigido\": \"import { DomSanitizer } from '@angular/platform-browser'\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/search-result/search-result.component.ts\",\n      \"trecho_original\": \"  public searchValue?: SafeHtml\",\n      \"trecho_corrigido\": \"  public searchValue?: string\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/search-result/search-result.component.ts\",\n      \"trecho_original\": \"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\",\n      \"trecho_corrigido\": \"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    // Keep product descriptions as strings so Angular sanitizes them at the HTML binding.\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/search-result/search-result.component.ts\",\n      \"trecho_original\": \"      this.searchValue = this.sanitizer.bypassSecurityTrustHtml(queryParam) // vuln-code-snippet vuln-line localXssChallenge xssBonusChallenge\",\n      \"trecho_corrigido\": \"      this.searchValue = queryParam\"\n    }\n  ],\n  \"justificativa_tecnica\": \"bypassSecurityTrustHtml desativa a sanitização contextual do Angular e não deve ser usado com descrições de produtos ou parâmetros de consulta potencialmente controláveis. Mantendo as descrições como strings, o binding [innerHTML] do Angular aplica sua sanitização padrão, que remove construções perigosas e preserva markup seguro. O termo de busca permanece uma string; quando exibido por interpolação Angular, é escapado como texto. A alteração mantém a exibição dos dados e a formatação HTML segura das descrições sem confiar automaticamente em conteúdo externo.\",\n  \"limitacoes_da_correcao\": \"A sanitização padrão do Angular permite markup considerado seguro, mas pode remover elementos ou atributos que a aplicação eventualmente espere exibir. A correção pressupõe que o template use bindings Angular normais, como [innerHTML] para descrições e interpolação para searchValue, sem outro sink inseguro ou bypass. A função trustProductDescription permanece sem transformação para minimizar alterações; pode ser removida em uma alteração separada se não houver dependências externas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3523,
+  "tokens_saida": 826,
+  "latencia_s": 7.053,
+  "custo_usd": 0.000853,
+  "hash_prompt": "f22f7413c337a9cfab2fa22c4579195294f9788109704dcc51ac8f2707f8575a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3520
+}

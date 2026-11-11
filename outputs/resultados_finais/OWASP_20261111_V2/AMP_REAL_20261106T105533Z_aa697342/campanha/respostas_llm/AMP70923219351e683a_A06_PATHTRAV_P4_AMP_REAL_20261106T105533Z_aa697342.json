@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de caminho (CWE-73) na seleção do template de resultado, com possibilidade de leitura local de arquivos pelo mecanismo de renderização.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo cliente em req.body.layout é resolvido como caminho e passado indiretamente ao res.render. A verificação atual apenas procura algumas substrings proibidas, não confina o caminho ao diretório de templates e pode ser contornada com outros caminhos ou nomes. Além disso, o corpo inteiro da requisição é propagado como opções de renderização.\",\n  \"estrategia_de_correcao\": \"Aceitar somente identificadores de layout conhecidos por meio de uma lista fixa no servidor e passar ao res.render apenas o layout validado, sem propagar req.body como opções. Para valores não reconhecidos, seguir o caminho de erro já existente para arquivo não permitido.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\\n      }\",\n      \"trecho_corrigido\": \"      if (req.body.layout) {\\n        const allowedLayouts = new Set(['dataErasureResult'])\\n        if (allowedLayouts.has(req.body.layout)) {\\n          res.render('dataErasureResult', {\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\\n        res.render('dataErasureResult', {\\n          ...themeVars\\n        })\\n      }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A lista fixa impede que a entrada determine um caminho arbitrário: somente o identificador literal dataErasureResult é aceito, e o nome efetivamente renderizado continua sendo constante. Remover o spread de req.body também impede que propriedades fornecidas pelo cliente sejam interpretadas como opções do mecanismo de templates. Os dados de tema e o fluxo de resposta existentes são preservados.\",\n  \"limitacoes_da_correcao\": \"A lista permite apenas o template dataErasureResult; se outros layouts legítimos precisarem ser selecionáveis, devem ser adicionados explicitamente à lista após confirmação de que são templates permitidos. A correção não altera a autorização da solicitação de apagamento nem outros aspectos do fluxo.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2694,
+  "tokens_saida": 818,
+  "latencia_s": 6.928,
+  "custo_usd": 0.000746,
+  "hash_prompt": "7a6bfc9fda1150b8f4ef750d268fa570ef5f447203011c5ebf4c029bd982a5c3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2691
+}

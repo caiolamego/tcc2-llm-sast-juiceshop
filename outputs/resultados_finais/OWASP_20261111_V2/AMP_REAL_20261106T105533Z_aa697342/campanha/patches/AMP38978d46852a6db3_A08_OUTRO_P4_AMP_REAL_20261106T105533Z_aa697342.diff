@@ -1,0 +1,16 @@
+diff --git a/lib/insecurity.ts b/lib/insecurity.ts
+index 4a60a901b..0650c4490 100644
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -109,7 +109,10 @@ export const discountFromCoupon = (coupon?: string) => {
+     const validity = parts[0]
+     if (utils.toMMMYY(new Date()) === validity) {
+       const discount = parts[1]
+-      return parseInt(discount)
++      const parsedDiscount = parseInt(discount)
++      if (generateCoupon(parsedDiscount) === coupon) {
++        return parsedDiscount
++      }
+     }
+   }
+ }

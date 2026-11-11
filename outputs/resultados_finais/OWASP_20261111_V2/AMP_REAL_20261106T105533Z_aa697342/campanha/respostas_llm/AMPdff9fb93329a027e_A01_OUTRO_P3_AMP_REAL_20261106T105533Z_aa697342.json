@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de uma string de formato construída dinamicamente na chamada a console.error, permitindo que caracteres de formatação presentes em `name` alterem a mensagem registrada.\",\n  \"causa_da_vulnerabilidade\": \"A concatenação `'Error in timed startup function: ' + name` é passada como primeiro argumento de console.error. O valor `name` pode conter especificadores de formato, que são interpretados pelo mecanismo de formatação do console.\",\n  \"estrategia_de_correcao\": \"Manter a mensagem e os argumentos registrados, mas usar uma string de formato constante e passar `name` como argumento separado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"      console.error('Error in timed startup function: ' + name, err)\",\n      \"trecho_corrigido\": \"      console.error('Error in timed startup function: %s', name, err)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A string de formato agora é literal e constante. O valor de `name` é tratado como dado, não como instrução de formatação, e `err` continua sendo registrado. A mensagem resultante preserva o texto e o nome da função.\",\n  \"limitacoes_da_correcao\": \"A alteração impede a interpretação de especificadores de formato em `name` nessa chamada. Não valida nem restringe o conteúdo de `name`, pois isso não é necessário para corrigir este problema.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3131,
+  "tokens_saida": 322,
+  "latencia_s": 4.396,
+  "custo_usd": 0.000552,
+  "hash_prompt": "ea9ae2a59ea2b8f4c6485065e4dbdf0a754e9f933e1b74f72332dbedad8b3379",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3128
+}

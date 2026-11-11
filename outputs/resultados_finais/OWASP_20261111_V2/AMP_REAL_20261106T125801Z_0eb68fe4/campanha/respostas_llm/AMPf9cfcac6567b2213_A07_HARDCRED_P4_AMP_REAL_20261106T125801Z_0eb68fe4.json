@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Chave HMAC hardcoded em `hmac`, conforme CWE-798. O segredo literal usado para gerar HMAC está armazenado no código-fonte.\",\"causa_da_vulnerabilidade\":\"A função `crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj')` utiliza uma chave fixa embutida no arquivo. Qualquer pessoa com acesso ao código, artefato distribuído ou repositório pode recuperar a chave e produzir HMACs válidos.\",\"estrategia_de_correcao\":\"Obter a chave por variável de ambiente obrigatória, falhando durante a inicialização quando ela não estiver configurada, sem adicionar um fallback hardcoded e sem alterar a assinatura ou o comportamento da função quando a configuração estiver presente.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\",\"trecho_corrigido\":\"const hmacKey = process.env.HMAC_KEY\\nif (!hmacKey) throw new Error('Missing HMAC configuration')\\nexport const hmac = (data: string) => crypto.createHmac('sha256', hmacKey).update(data).digest('hex')\"}],\"justificativa_tecnica\":\"A chave deixa de existir no código-fonte e passa a ser fornecida por configuração externa, impedindo sua exposição por inspeção do repositório ou do bundle. A validação obrigatória evita que a aplicação opere com uma chave previsível ou ausente. Quando `HMAC_KEY` contém a chave operacional correta, a função continua usando SHA-256, recebendo a mesma entrada e retornando o mesmo formato hexadecimal, preservando o contrato funcional da API.\",\"limitacoes_da_correcao\":\"A variável de ambiente ainda precisa ser protegida, possuir entropia adequada, ter permissões restritas e ser gerenciada por um mecanismo seguro de secrets. A chave antiga deve ser considerada comprometida e rotacionada; valores HMAC previamente gerados com ela podem exigir migração ou invalidação. A mensagem de erro adicionada é apenas de configuração e não revela o segredo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3652,
+  "tokens_saida": 492,
+  "latencia_s": 6.124,
+  "custo_usd": 0.001503,
+  "hash_prompt": "bf6fcbb02c8dd183bc48cd23126e2a0d2d11ec8e3069cfa3ae448c85b361557d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3649
+}

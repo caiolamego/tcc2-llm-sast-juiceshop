@@ -1,0 +1,16 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..c377ef8f3 100644
+--- a/server.ts
++++ b/server.ts
+@@ -201,7 +201,10 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+ 
+   /* Remove duplicate slashes from URL which allowed bypassing subsequent filters */
+   app.use((req: Request, res: Response, next: NextFunction) => {
+-    req.url = req.url.replace(/[/]+/g, '/')
++    if (req.path.includes('//')) {
++      res.sendStatus(400)
++      return
++    }
+     next()
+   })
+ 

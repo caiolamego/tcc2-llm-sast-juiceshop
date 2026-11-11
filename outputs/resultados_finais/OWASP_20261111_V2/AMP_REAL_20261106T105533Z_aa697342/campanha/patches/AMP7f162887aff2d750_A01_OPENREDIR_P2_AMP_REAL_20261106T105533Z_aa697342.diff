@@ -1,0 +1,28 @@
+diff --git a/routes/redirect.ts b/routes/redirect.ts
+index 6b4a03da2..50328af08 100644
+--- a/routes/redirect.ts
++++ b/routes/redirect.ts
+@@ -13,7 +13,22 @@ import * as utils from '../lib/utils'
+ export function performRedirect () {
+   return ({ query }: Request, res: Response, next: NextFunction) => {
+     const toUrl: string = query.to as string
+-    if (security.isRedirectAllowed(toUrl)) {
++    let isSafeTarget = false
++    if (typeof query.to === 'string') {
++      try {
++        const target = new URL(toUrl, 'http://localhost')
++        isSafeTarget = target.origin === 'http://localhost' || security.redirectAllowlist.some((allowedUrl) => {
++          try {
++            return target.origin === new URL(allowedUrl).origin
++          } catch {
++            return false
++          }
++        })
++      } catch {
++        isSafeTarget = false
++      }
++    }
++    if (isSafeTarget && security.isRedirectAllowed(toUrl)) {
+       challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })
+       challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })
+       res.redirect(toUrl)

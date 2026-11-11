@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (Insecure Direct Object Reference) na atualização de itens da cesta, permitindo manipular o BasketId de outro usuário.\",\"causa_da_vulnerabilidade\":\"A função quantityCheckBeforeBasketItemUpdate valida apenas a quantidade e registra o desafio quando o BasketId informado difere do usuário autenticado, mas não bloqueia a requisição. Além disso, o item é localizado somente pelo id, sem verificar se pertence à cesta do usuário autenticado.\",\"estrategia_de_correcao\":\"Bloquear a atualização quando o BasketId informado não pertence ao usuário autenticado, retornando o mesmo status e mensagem já utilizados na validação de adição. A alteração é limitada ao middleware de atualização.\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\\n      if (req.body.quantity) {\",\"trecho_corrigido\":\"      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\\n      if (user && req.body.BasketId && req.body.BasketId !== 'undefined' && Number(user.bid) != Number(req.body.BasketId)) { // eslint-disable-line eqeqeq\\n        res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n      } else if (req.body.quantity) {\"}],\"justificativa_tecnica\":\"A validação agora impede que um usuário autenticado atualize um item usando um BasketId diferente do seu. A comparação numérica preserva o comportamento da validação existente em addBasketItem, incluindo valores representados como strings. O fluxo original de verificação de quantidade e tratamento de erros permanece inalterado para requisições válidas.\",\"limitacoes_da_correcao\":\"A correção valida o BasketId fornecido no corpo da requisição. Caso o endpoint permita atualização sem BasketId, a autorização efetiva ainda depende de outras camadas ou do comportamento do controlador responsável pela atualização. Não foram alteradas as demais operações de leitura ou exclusão de itens.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1490,
+  "tokens_saida": 489,
+  "latencia_s": 6.811,
+  "custo_usd": 0.000959,
+  "hash_prompt": "4899d778eebb5048214fd9915af8eaa3c0507fa964f5f3ad6a654cff04bf9ce9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1487
+}

@@ -1,0 +1,31 @@
+diff --git a/routes/likeProductReviews.ts b/routes/likeProductReviews.ts
+index a8d120fc1..200396e26 100644
+--- a/routes/likeProductReviews.ts
++++ b/routes/likeProductReviews.ts
+@@ -34,7 +34,7 @@ export function likeProductReviews () {
+ 
+       await db.reviewsCollection.update(
+         { _id: id },
+-        { $inc: { likesCount: 1 } }
++        { $inc: { likesCount: 1 }, $push: { likedBy: user.data.email } }
+       )
+ 
+       // Artificial wait for timing attack challenge
+@@ -42,16 +42,11 @@ export function likeProductReviews () {
+       try {
+         const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })
+         const updatedLikedBy = updatedReview.likedBy
+-        updatedLikedBy.push(user.data.email)
+ 
+         const count = updatedLikedBy.filter(email => email === user.data.email).length
+         challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)
+ 
+-        const result = await db.reviewsCollection.update(
+-          { _id: id },
+-          { $set: { likedBy: updatedLikedBy } }
+-        )
+-        res.json(result)
++        res.json({ modifiedCount: 1 })
+       } catch (err) {
+         res.status(500).json(err)
+       }

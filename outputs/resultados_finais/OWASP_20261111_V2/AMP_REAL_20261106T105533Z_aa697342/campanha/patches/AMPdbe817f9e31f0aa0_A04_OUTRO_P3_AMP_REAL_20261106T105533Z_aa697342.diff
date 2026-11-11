@@ -1,0 +1,15 @@
+diff --git a/frontend/src/app/app.guard.spec.ts b/frontend/src/app/app.guard.spec.ts
+index aa8aee756..46429c04f 100644
+--- a/frontend/src/app/app.guard.spec.ts
++++ b/frontend/src/app/app.guard.spec.ts
+@@ -43,7 +43,9 @@ describe('LoginGuard', () => {
+     it('returns payload from decoding a valid JWT', () => {
+         const guard = TestBed.inject(LoginGuard)
+ 
+-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
++        const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
++        const payload = btoa(JSON.stringify({ sub: '1234567890', name: 'John Doe', iat: 1516239022 })).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
++        localStorage.setItem('token', `${header}.${payload}.test-signature`)
+         expect(guard.tokenDecode()).toEqual({
+             sub: '1234567890',
+             name: 'John Doe',

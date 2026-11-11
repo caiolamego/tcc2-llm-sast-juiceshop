@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de diretório (path traversal) ao servir arquivos de log.\",\n  \"causa_da_vulnerabilidade\": \"A validação rejeita apenas nomes que contenham barra normal (/). Ela não bloqueia barras invertidas, segmentos de travessia como '..' sem barra, nem verifica se o caminho resolvido permanece dentro do diretório logs. Assim, a entrada pode apontar para arquivos fora desse diretório.\",\n  \"estrategia_de_correcao\": \"Resolver o caminho solicitado e o diretório de logs para caminhos absolutos, e permitir o envio somente quando o caminho resolvido estiver estritamente dentro do diretório de logs. Manter a resposta de erro existente para caminhos não permitidos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/logfileServer.ts\",\n      \"trecho_original\": \"    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('logs/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\n      \"trecho_corrigido\": \"    const file = params.file\\n    const logsDirectory = path.resolve('logs')\\n    const filePath = path.resolve(logsDirectory, file)\\n\\n    if (filePath.startsWith(`${logsDirectory}${path.sep}`)) {\\n      res.sendFile(filePath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A resolução canônica do caminho antes de servi-lo elimina segmentos '..' e trata separadores conforme a plataforma. A verificação com o separador ao final impede que caminhos com prefixo semelhante ao diretório de logs, mas fora dele, sejam aceitos. O comportamento de servir arquivos dentro de logs e a mensagem de erro existente são preservados.\",\n  \"limitacoes_da_correcao\": \"A validação garante que o caminho lexical resolvido esteja dentro de logs, mas não impede que links simbólicos existentes dentro desse diretório apontem para arquivos externos. Se logs puder conter links simbólicos não confiáveis, será necessário validar também o destino real do arquivo.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 661,
+  "tokens_saida": 498,
+  "latencia_s": 6.146,
+  "custo_usd": 0.000315,
+  "hash_prompt": "8dbc21bb2a8da825197884955ee4a8207abf4f3bf97d0f7e2fc2d51fbdd0d7d1",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

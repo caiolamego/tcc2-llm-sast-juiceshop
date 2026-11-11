@@ -1,0 +1,20 @@
+diff --git a/routes/orderHistory.ts b/routes/orderHistory.ts
+index e5ef300d6..146497860 100644
+--- a/routes/orderHistory.ts
++++ b/routes/orderHistory.ts
+@@ -24,8 +24,13 @@ export function orderHistory () {
+ 
+ export function allOrders () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+-    const order = await ordersCollection.find()
+-    res.status(200).json({ status: 'success', data: order.reverse() })
++    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))
++    if (loggedInUser?.data?.email && loggedInUser.data.id) {
++      const order = await ordersCollection.find()
++      res.status(200).json({ status: 'success', data: order.reverse() })
++    } else {
++      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
++    }
+   }
+ }
+ 

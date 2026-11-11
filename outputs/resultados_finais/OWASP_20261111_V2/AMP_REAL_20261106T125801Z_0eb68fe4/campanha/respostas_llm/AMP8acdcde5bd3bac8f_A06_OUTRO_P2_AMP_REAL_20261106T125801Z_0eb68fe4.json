@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Escalonamento horizontal de privilégios: o endpoint aceita o UserId fornecido pelo cliente e permite que um usuário autenticado transforme outra conta de cliente em membro deluxe, além de cobrar a carteira dessa outra conta.\",\"causa_da_vulnerabilidade\":\"A consulta inicial usa req.body.UserId como identidade do usuário-alvo, sem verificar que ele corresponde ao usuário autenticado na requisição. O mesmo valor controlado pelo cliente é reutilizado nas consultas e na atualização da conta.\",\"estrategia_de_correcao\":\"Obter o identificador do usuário autenticado a partir do token da requisição e usá-lo para localizar a conta, mantendo req.body.UserId apenas para compatibilidade da interface e sem alterar mensagens, assinaturas ou o fluxo restante.\",\"edicoes\":[{\"arquivo\":\"routes/deluxe.ts\",\"trecho_original\":\"    try {\\n      const user = await UserModel.findOne({ where: { id: req.body.UserId, role: security.roles.customer } })\",\"trecho_corrigido\":\"    try {\\n      const authenticatedUser = security.authenticatedUsers.from(req)\\n      const user = await UserModel.findOne({ where: { id: authenticatedUser?.id, role: security.roles.customer } })\"}],\"justificativa_tecnica\":\"O identificador usado para selecionar a conta passa a ser derivado do contexto autenticado, e não de um campo controlado pelo cliente. Assim, um atacante não consegue escolher o UserId de outra conta para alterar sua role, definir seu deluxeToken ou debitar sua carteira. A checagem de role customer existente continua impedindo a conversão de contas que já não sejam clientes. O operador opcional também faz com que uma requisição sem usuário autenticado não encontre uma conta válida, preservando a resposta de erro existente.\",\"limitacoes_da_correcao\":\"A correção pressupõe que security.authenticatedUsers.from(req) seja a API existente para recuperar o usuário autenticado e que o objeto retornado contenha id. Ela corrige a troca de identidade, mas não trata outras questões independentes do fluxo, como atomicidade entre débito e atualização da conta, validação explícita de paymentMode ou possíveis condições de corrida no saldo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1426,
+  "tokens_saida": 465,
+  "latencia_s": 6.592,
+  "custo_usd": 0.000914,
+  "hash_prompt": "7317409a3b37b64763c6961ff4c9a12f4cb8313a78cf2ff612294c07139bd288",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1423
+}

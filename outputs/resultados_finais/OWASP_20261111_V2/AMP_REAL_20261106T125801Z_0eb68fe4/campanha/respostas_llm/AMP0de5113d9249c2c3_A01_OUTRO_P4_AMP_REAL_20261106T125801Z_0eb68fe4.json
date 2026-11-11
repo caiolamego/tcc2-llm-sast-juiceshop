@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-863 (Incorrect Authorization): a autorização da consulta ao histórico de pedidos é baseada em um e-mail mascarado, que não é uma identidade única e pode colidir com o e-mail de outro usuário.\",\"causa_da_vulnerabilidade\":\"O código obtém o e-mail do usuário autenticado, substitui todas as vogais por asteriscos e usa o resultado como seletor em ordersCollection.find({ email: updatedEmail }). Usuários com e-mails diferentes podem produzir o mesmo valor mascarado; assim, a consulta pode retornar pedidos pertencentes a outra identidade.\",\"estrategia_de_correcao\":\"Usar a identidade única validada pelo servidor, já disponível em loggedInUser.data.id, como critério de autorização da consulta. O seletor deve restringir os pedidos ao identificador do usuário autenticado, sem depender do e-mail mascarado.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ email: updatedEmail })\",\"trecho_corrigido\":\"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ userId: loggedInUser.data.id })\"}],\"justificativa_tecnica\":\"A consulta passa a ser limitada ao identificador único do usuário autenticado, obtido no servidor, eliminando colisões causadas pelo mascaramento do e-mail e impedindo que a seleção de pedidos dependa de um atributo não único. A alteração é mínima e preserva a resposta, o fluxo da rota e as mensagens existentes. Ela pressupõe que os documentos de pedidos armazenem o proprietário no campo userId, conforme a identidade loggedInUser.data.id.\",\"limitacoes_da_correcao\":\"A correção depende de ordersCollection utilizar userId como campo de proprietário e de esse campo ser preenchido corretamente nos pedidos existentes. Se o esquema real usar outro nome para a identidade do proprietário, o seletor deverá usar esse nome. As funções allOrders e toggleDeliveryStatus continuam sem verificação de autorização neste trecho; elas devem ser protegidas por controles apropriados caso sejam acessíveis a usuários não autorizados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1845,
+  "tokens_saida": 490,
+  "latencia_s": 7.081,
+  "custo_usd": 0.001049,
+  "hash_prompt": "5498476896243c09fd667cabf69a2861eab32851972740d44e4326c210c65bf3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1842
+}

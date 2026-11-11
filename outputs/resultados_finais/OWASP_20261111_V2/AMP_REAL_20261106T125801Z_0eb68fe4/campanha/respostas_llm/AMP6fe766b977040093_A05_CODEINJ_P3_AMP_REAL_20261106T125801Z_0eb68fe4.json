@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-95 (Eval Injection): o nome de usuário armazenado é interpretado como código JavaScript por meio de eval().\",\"causa_da_vulnerabilidade\":\"O valor de username pode ser controlado por um usuário e, quando corresponde ao padrão #{...}, é passado diretamente para eval(), permitindo execução arbitrária de código no processo Node.js.\",\"estrategia_de_correcao\":\"Remover a avaliação dinâmica e tratar o conteúdo entre #{...} como texto literal, preservando o fluxo existente de renderização e o comportamento de fallback para valores não avaliados.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\",\"trecho_corrigido\":\"      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = code\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\"}],\"justificativa_tecnica\":\"A entrada deixa de ser enviada a qualquer interpretador de JavaScript. O conteúdo de #{...} passa a ser apenas uma string, eliminando a possibilidade de execução de comandos, acesso a objetos internos ou efeitos colaterais durante a geração do perfil. A alteração é mínima, mantém os identificadores, mensagens, estrutura de tratamento de erro e fluxo funcional do endpoint, além de preservar a marcação de desafio existente.\",\"limitacoes_da_correcao\":\"O comportamento intencional do desafio que dependia da execução de expressões JavaScript deixa de ocorrer; isso é necessário para eliminar a vulnerabilidade. A correção não altera outras possíveis superfícies de injeção presentes em templates, CSP ou dados de perfil que não estejam relacionadas ao eval().\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2784,
+  "tokens_saida": 452,
+  "latencia_s": 6.272,
+  "custo_usd": 0.001238,
+  "hash_prompt": "a28ced1646df97df46ff58a17df842a842b4b7ba2f3ec2ea4f8c75e01b817954",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2781
+}

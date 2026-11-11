@@ -1,0 +1,13 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..df93cf1d2 100644
+--- a/server.ts
++++ b/server.ts
+@@ -426,7 +426,7 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+   app.put('/api/BasketItems/:id', security.appendUserId(), utils.asyncHandler(basketItems.quantityCheckBeforeBasketItemUpdate()))
+   app.post('/api/BasketItems', security.appendUserId(), utils.asyncHandler(basketItems.quantityCheckBeforeBasketItemAddition()), utils.asyncHandler(basketItems.addBasketItem()))
+   /* Accounting users are allowed to check and update quantities */
+-  app.delete('/api/Quantitys/:id', security.denyAll())
++  app.delete('/api/Quantitys/:id', security.isAccounting(), IpFilter(['123.456.789'], { mode: 'allow' }))
+   app.post('/api/Quantitys', security.denyAll())
+   app.use('/api/Quantitys/:id', security.isAccounting(), IpFilter(['123.456.789'], { mode: 'allow' }))
+   /* Feedbacks: Do not allow changes of existing feedback */

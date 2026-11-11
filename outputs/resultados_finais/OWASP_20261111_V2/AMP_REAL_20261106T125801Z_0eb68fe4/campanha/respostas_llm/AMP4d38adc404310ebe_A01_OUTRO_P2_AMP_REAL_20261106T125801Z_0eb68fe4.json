@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de eval() para calcular uma expressão CAPTCHA, introduzindo execução dinâmica de código e uma vulnerabilidade de code injection caso a expressão venha a ser influenciada por entrada não confiável.\",\"causa_da_vulnerabilidade\":\"A construção eval(expression) interpreta o conteúdo de expression como código JavaScript. Embora os valores atuais sejam gerados internamente, o uso de um interpretador dinâmico é desnecessário e cria uma superfície de execução de código caso a origem ou composição desses valores seja alterada ou comprometida futuramente.\",\"estrategia_de_correcao\":\"Substituir eval() por cálculo explícito dos três termos e dos dois operadores permitidos, preservando a geração da expressão e o resultado funcional do CAPTCHA.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\"trecho_corrigido\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const calculate = (left: number, operator: string, right: number) => operator === '*' ? left * right : operator === '+' ? left + right : left - right\\n    const answer = calculate(calculate(firstTerm, firstOperator, secondTerm), secondOperator, thirdTerm).toString()\"}],\"justificativa_tecnica\":\"A correção elimina completamente a interpretação de código JavaScript. O cálculo ocorre somente por meio de uma função com operadores explicitamente permitidos ('*', '+' e '-'), usando os valores numéricos já gerados. Assim, mesmo que os valores ou operadores sejam futuramente influenciados por entrada externa, eles não serão executados como código. A expressão exibida e o comportamento matemático permanecem equivalentes ao uso anterior de eval() para esses operadores.\",\"limitacoes_da_correcao\":\"A correção remove o risco de execução de código associado a eval(), mas não altera outras propriedades do CAPTCHA, como previsibilidade de Math.random(), ausência de expiração ou controles contra automação. Além disso, a função assume que qualquer operador diferente de '*' ou '+' representa '-', exatamente conforme os operadores atualmente gerados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1028,
+  "tokens_saida": 492,
+  "latencia_s": 5.98,
+  "custo_usd": 0.000611,
+  "hash_prompt": "623a908c703412145ca1ee983567dc43cac62b00c2aebabbd66a0f29089f22b3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1025,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,13 @@
+diff --git a/routes/captcha.ts b/routes/captcha.ts
+index d874df7bb..987a6908c 100644
+--- a/routes/captcha.ts
++++ b/routes/captcha.ts
+@@ -28,7 +28,7 @@ export function captchas () {
+     }
+     const captchaInstance = CaptchaModel.build(captcha)
+     await captchaInstance.save()
+-    res.json(captcha)
++    res.json({ captchaId, captcha: expression })
+   }
+ }
+ 

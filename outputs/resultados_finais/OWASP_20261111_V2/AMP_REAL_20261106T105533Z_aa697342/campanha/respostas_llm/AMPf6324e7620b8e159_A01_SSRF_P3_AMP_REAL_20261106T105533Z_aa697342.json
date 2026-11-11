@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Server-Side Request Forgery (SSRF), CWE-918, na obtenção da imagem de perfil.\",\n  \"causa_da_vulnerabilidade\": \"A URL controlada pela requisição é passada diretamente a fetch. Não há restrição de protocolo ou destino, e o comportamento padrão de fetch segue redirecionamentos, permitindo que a aplicação acesse serviços internos ou destinos não pretendidos.\",\n  \"estrategia_de_correcao\": \"Validar a URL antes da requisição, aceitar somente HTTP e HTTPS e rejeitar endereços IP literais não globais. Desabilitar redirecionamentos automáticos para impedir que um destino inicialmente permitido redirecione a requisição para outro endereço. URLs inválidas ou recusadas seguem pelo tratamento de erro já existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/profileImageUrlUpload.ts\",\n      \"trecho_original\": \"          const response = await fetch(url)\\n\",\n      \"trecho_corrigido\": \"          const parsedUrl = new URL(url)\\n          if (!['http:', 'https:'].includes(parsedUrl.protocol) || (parsedUrl.hostname.startsWith('[') || /^\\\\d+(\\\\.\\\\d+){3}$/.test(parsedUrl.hostname)) && !utils.isPublicIpAddress(parsedUrl.hostname.replace(/^\\\\[|\\\\]$/g, ''))) {\\n            throw new Error('url returned a non-OK status code or an empty body')\\n          }\\n          const response = await fetch(parsedUrl, { redirect: 'error' })\\n\"\n    }\n  ],\n  \"justificativa_tecnica\": \"La validación limita los esquemas a HTTP y HTTPS, rechaza direcciones IP literales que utils.isPublicIpAddress identifica como no públicas y evita que fetch siga redirecciones. El uso de URL también rechaza entradas mal formadas mediante una excepción, que se procesa en el catch existente. La respuesta, la escritura del archivo y el tratamiento de errores permanecen sin cambios.\",\n  \"limitacoes_da_correcao\": \"La validación de IP literal no evita DNS rebinding ni dominios que resuelvan a direcciones internas. Además, la corrección depende de que utils.isPublicIpAddress exista y clasifique correctamente IPv4 e IPv6; si no está disponible, debe usarse una validación equivalente ya presente en el proyecto. Para destinos arbitrarios, se recomienda resolver y validar todos los registros A/AAAA y conectar al IP validado, además de aplicar controles de salida de red.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2024,
+  "tokens_saida": 540,
+  "latencia_s": 5.857,
+  "custo_usd": 0.000523,
+  "hash_prompt": "294062526395a7106367e05016f30b01b6d86cc6a48dc2ef49c363b999633783",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2021
+}

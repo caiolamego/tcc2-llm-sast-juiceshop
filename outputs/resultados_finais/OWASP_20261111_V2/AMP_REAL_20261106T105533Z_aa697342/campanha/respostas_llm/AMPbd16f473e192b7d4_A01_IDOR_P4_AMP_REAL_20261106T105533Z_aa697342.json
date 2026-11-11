@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível IDOR (CWE-639) ao selecionar a cesta pelo identificador recebido na rota sem restringir a consulta ao usuário autenticado. A cesta encontrada é usada para concluir o pedido e remover seus itens.\",\n  \"causa_da_vulnerabilidade\": \"A consulta `BasketModel.findOne` filtra somente por `req.params.id`. Embora a identidade autenticada seja obtida depois, ela não é usada para verificar a propriedade da cesta antes de processá-la. Assim, conhecer ou obter o ID de outra cesta pode permitir que um usuário autenticado tente finalizar o pedido dessa cesta.\",\n  \"estrategia_de_correcao\": \"Restringir a busca da cesta ao usuário autenticado, usando a identidade validada pelo servidor como parte do escopo da consulta. A edição abaixo pressupõe que o modelo BasketModel associa a cesta ao usuário pelo campo UserId, conforme o uso de UserId no restante desta rota.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"    const id = req.params.id\\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\n      \"trecho_corrigido\": \"    const id = req.params.id\\n    const customer = security.authenticatedUsers.from(req)\\n    const userId = customer?.data?.id\\n    BasketModel.findOne({ where: { id, UserId: userId }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta passa a exigir simultaneamente o ID solicitado e o UserId derivado da identidade autenticada no servidor. Portanto, uma cesta pertencente a outro usuário não será carregada nem processada por esta rota. A resposta e o fluxo para a cesta legítima permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A correção depende de `customer.data.id` ser o identificador confiável do usuário e de `BasketModel` usar `UserId` como chave de propriedade. Esses nomes e a associação devem ser confirmados no modelo e na implementação de authenticatedUsers. Se a identidade não estiver disponível, a consulta não deve permitir acesso a uma cesta sem escopo; também é necessário confirmar que administradores ou outros fluxos legítimos não têm uma regra de acesso distinta.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3908,
+  "tokens_saida": 524,
+  "latencia_s": 5.885,
+  "custo_usd": 0.00075,
+  "hash_prompt": "5d3a498729bea0e36a0dd11cffdec1a72cf87540d614567c79eec81d0161d841",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3905
+}

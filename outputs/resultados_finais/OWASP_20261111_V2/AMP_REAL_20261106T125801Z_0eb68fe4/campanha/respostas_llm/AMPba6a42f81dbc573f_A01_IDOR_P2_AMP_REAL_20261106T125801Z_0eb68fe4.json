@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (Insecure Direct Object Reference) na atualização de itens da cesta: a rota permite alterar um BasketItem sem validar que ele pertence à cesta do usuário autenticado.\",\"causa_da_vulnerabilidade\":\"Em quantityCheckBeforeBasketItemUpdate, o item é buscado apenas por req.params.id. Embora exista uma verificação relacionada a req.body.BasketId para o desafio, ela apenas registra a exploração e não bloqueia a requisição. Além disso, a validação de quantidade usa o ProductId do item encontrado, mas não valida a propriedade da cesta antes de permitir o prosseguimento.\",\"estrategia_de_correcao\":\"Após localizar o item, validar que o usuário autenticado é proprietário da cesta associada ao item. Em caso de divergência, responder com status 401 e a mesma mensagem de erro já utilizada para BasketId inválido. A validação deve ocorrer antes de qualquer chamada a next().\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"      const item = await BasketItemModel.findOne({ where: { id: req.params.id } })\\n      const user = security.authenticatedUsers.from(req)\\n      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\\n      if (req.body.quantity) {\",\"trecho_corrigido\":\"      const item = await BasketItemModel.findOne({ where: { id: req.params.id } })\\n      const user = security.authenticatedUsers.from(req)\\n      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\\n      if (user && item && Number(user.bid) != Number(item.BasketId)) { // eslint-disable-line eqeqeq\\n        res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n      } else if (req.body.quantity) {\"}],\"justificativa_tecnica\":\"A autorização passa a ser baseada no BasketId persistido no BasketItem identificado pelo parâmetro, e não em um BasketId controlado pelo cliente. Assim, um usuário autenticado não consegue prosseguir para next() e para a atualização de um item pertencente a outra cesta. A comparação numérica preserva a tolerância existente entre representações string e numérica dos IDs, sem alterar mensagens ou assinaturas.\",\"limitacoes_da_correcao\":\"A correção cobre a atualização de quantidade neste middleware. Outras rotas que criem, atualizem ou removam BasketItems devem possuir validação equivalente de propriedade; esta alteração isolada não corrige possíveis falhas de autorização em outros endpoints. Usuários não autenticados continuam sujeitos ao comportamento das camadas de autenticação e autorização da rota.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1598,
+  "tokens_saida": 617,
+  "latencia_s": 6.533,
+  "custo_usd": 0.000773,
+  "hash_prompt": "07f38bd586bea7d5571b700652139693807d65caaf0dddfe4f82494284912208",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1595,
+  "tokens_escrita_cache": 0
+}

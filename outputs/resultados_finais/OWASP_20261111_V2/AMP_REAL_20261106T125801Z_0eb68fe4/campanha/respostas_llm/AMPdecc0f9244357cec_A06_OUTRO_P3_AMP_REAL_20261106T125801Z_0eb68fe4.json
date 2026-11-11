@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Validação insuficiente da quantidade antes da verificação de estoque e da persistência do item. Valores não inteiros, não positivos, ausentes ou com coerção numérica inesperada podem passar pela condição baseada apenas no limite superior.\",\"causa_da_vulnerabilidade\":\"A função quantityCheck verifica somente se o estoque é maior ou igual à quantidade e se o limite por usuário não foi excedido. Não valida explicitamente que quantity seja um número inteiro seguro e estritamente positivo.\",\"estrategia_de_correcao\":\"Adicionar validação explícita de quantidade antes das comparações de limite e estoque, rejeitando valores que não sejam inteiros seguros ou que sejam menores ou iguais a zero. Para preservar o fluxo de erro existente sem alterar mensagens, lançar um erro quando a entrada for inválida, permitindo que o middleware existente encaminhe a falha.\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"async function quantityCheck (req: Request, res: Response, next: NextFunction, id: number, quantity: number) {\\n  const product = await QuantityModel.findOne({ where: { ProductId: id } })\",\"trecho_corrigido\":\"async function quantityCheck (req: Request, res: Response, next: NextFunction, id: number, quantity: number) {\\n  if (!Number.isSafeInteger(quantity) || quantity <= 0) {\\n    throw new Error('Invalid quantity')\\n  }\\n\\n  const product = await QuantityModel.findOne({ where: { ProductId: id } })\"}],\"justificativa_tecnica\":\"Number.isSafeInteger impede valores fracionários, NaN, Infinity, strings coercíveis e inteiros fora do intervalo seguro. A condição quantity <= 0 rejeita zero e valores negativos, evitando que a verificação de estoque seja satisfeita por quantidades inválidas e impedindo a persistência de itens com quantidade não positiva. A alteração ocorre no ponto comum usado antes da adição e da atualização, mantendo as regras existentes de limite por usuário, estoque e usuário deluxe.\",\"limitacoes_da_correcao\":\"A correção valida a quantidade no fluxo desta função, mas não substitui validações em outras rotas ou operações que possam persistir BasketItem diretamente. Também não resolve condições de corrida entre a consulta de estoque e a persistência; a reserva ou decremento de estoque deve ser protegido por transação ou mecanismo atômico caso essa garantia seja necessária. A mensagem da nova exceção é interna e pode ser transformada pelo middleware global de erros.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1975,
+  "tokens_saida": 535,
+  "latencia_s": 7.529,
+  "custo_usd": 0.001136,
+  "hash_prompt": "eafd07d12d748544625a1630612a111316b366cbe1e032e68ee266eb06c4ecf8",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1972
+}

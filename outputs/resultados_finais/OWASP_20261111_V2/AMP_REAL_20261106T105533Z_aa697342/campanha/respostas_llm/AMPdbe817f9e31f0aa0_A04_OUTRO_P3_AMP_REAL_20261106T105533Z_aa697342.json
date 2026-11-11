@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Token JWT literal detectado no teste, contendo uma assinatura gerada com uma chave de teste conhecida.\",\n  \"causa_da_vulnerabilidade\": \"O teste armazena um JWT completo e fixo no código-fonte. Embora seja dado de teste, a assinatura pode ser interpretada como uso de uma chave criptográfica embutida e o token pode ser reutilizado inadvertidamente fora do teste.\",\n  \"estrategia_de_correcao\": \"Montar o JWT de teste em tempo de execução, preservando o payload esperado e evitando manter no arquivo o token completo detectado pelo Semgrep. A alteração fica restrita ao teste existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/app.guard.spec.ts\",\n      \"trecho_original\": \"        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')\",\n      \"trecho_corrigido\": \"        const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).replace(/=/g, '').replace(/\\\\+/g, '-').replace(/\\\\//g, '_')\\n        const payload = btoa(JSON.stringify({ sub: '1234567890', name: 'John Doe', iat: 1516239022 })).replace(/=/g, '').replace(/\\\\+/g, '-').replace(/\\\\//g, '_')\\n        localStorage.setItem('token', `${header}.${payload}.test-signature`)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O teste verifica apenas a decodificação do payload e não valida a assinatura criptográfica. Gerar as partes de cabeçalho e payload em tempo de execução mantém o resultado esperado de tokenDecode() sem incluir no código o JWT completo sinalizado. A assinatura fictícia não é usada como chave nem como credencial de produção.\",\n  \"limitacoes_da_correcao\": \"Esta alteração trata o alerta no arquivo de teste; não substitui validação de assinatura JWT no servidor nem a gestão segura de chaves de produção. O teste continua verificando somente a decodificação do payload.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2889,
+  "tokens_saida": 553,
+  "latencia_s": 6.273,
+  "custo_usd": 0.000638,
+  "hash_prompt": "6e9f8b8efa2470a2db6d782f804c70afd193e05c631d6d71c16e63f7f498c0a3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2886
+}

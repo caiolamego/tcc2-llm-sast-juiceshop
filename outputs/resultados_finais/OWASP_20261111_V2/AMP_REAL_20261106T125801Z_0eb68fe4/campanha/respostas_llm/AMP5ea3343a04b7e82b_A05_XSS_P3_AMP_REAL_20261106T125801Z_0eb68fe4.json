@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de bypassSecurityTrustHtml para renderizar um valor derivado de dados externos como HTML, desativando a sanitização contextual do Angular e possibilitando XSS caso orderId contenha markup ou atributos maliciosos.\",\"causa_da_vulnerabilidade\":\"O valor results.data[0].orderId é interpolado em uma string HTML e marcado como confiável por meio de bypassSecurityTrustHtml, sem necessidade funcional de permitir HTML não sanitizado.\",\"estrategia_de_correcao\":\"Remover o bypass e armazenar o orderId como texto simples. A interpolação Angular no template continuará aplicando escaping contextual, preservando a exibição do identificador sem interpretar conteúdo controlado externamente como HTML.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"import { DomSanitizer } from '@angular/platform-browser'\\n\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"  private readonly sanitizer = inject(DomSanitizer)\\n\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n\",\"trecho_corrigido\":\"      this.results.orderNo = results.data[0].orderId\\n\"}],\"justificativa_tecnica\":\"A remoção de DomSanitizer e de bypassSecurityTrustHtml elimina o sink que desativa a proteção do Angular. O valor passa a ser tratado como dado textual; quando usado por interpolação no template, caracteres como <, > e aspas são escapados pelo Angular, impedindo a execução de markup ou scripts. A alteração é mínima e mantém a exibição do número do pedido, embora a marcação <code> deixe de ser gerada programaticamente.\",\"limitacoes_da_correcao\":\"A correção pressupõe que orderNo seja exibido por interpolação ou outro binding textual seguro no template. Se o template exigir especificamente formatação de código, ela deve ser aplicada estaticamente no template, por exemplo com um elemento code envolvendo a interpolação, sem usar bypassSecurityTrustHtml. Não foram alterados arquivos de teste nem o template, que não foi fornecido.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2247,
+  "tokens_saida": 501,
+  "latencia_s": 5.519,
+  "custo_usd": 0.001163,
+  "hash_prompt": "4a99a05138083b309dca96598aefa07e33329ba4882d800211aaac98f13ffa13",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2244
+}

@@ -1,0 +1,15 @@
+diff --git a/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts b/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+index 7aeba4eb0..ba897d20c 100644
+--- a/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
++++ b/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+@@ -69,7 +69,9 @@ describe('LastLoginIpComponent', () => {
+     })
+ 
+     it('should set Last-Login IP from JWT as trusted HTML', () => {
+-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')
++        const encode = (value: string) => btoa(value).replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_')
++        const token = `${encode('{"alg":"HS256","typ":"JWT"}')}.${encode('{"data":{"lastLoginIp":"1.2.3.4"}}')}.${encode(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))}`
++        localStorage.setItem('token', token)
+         component.ngOnInit()
+         expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')
+     })

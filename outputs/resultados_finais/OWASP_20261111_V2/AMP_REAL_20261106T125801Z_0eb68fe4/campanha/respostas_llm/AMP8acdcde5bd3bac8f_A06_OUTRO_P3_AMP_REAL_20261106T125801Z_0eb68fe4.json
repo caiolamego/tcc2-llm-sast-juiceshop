@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Escalonamento indevido de privilégio por modo de pagamento ausente ou desconhecido. A atualização do usuário para deluxe ocorre mesmo quando paymentMode não é wallet nem card.\",\"causa_da_vulnerabilidade\":\"Os modos de pagamento são validados em dois ifs independentes, sem uma rejeição explícita para valores ausentes ou não suportados. Assim, a execução alcança user.update sem passar por qualquer pré-condição de pagamento.\",\"estrategia_de_correcao\":\"Adicionar uma validação explícita imediatamente antes do processamento dos modos, rejeitando qualquer paymentMode diferente de wallet ou card com a mesma resposta de erro já utilizada para falhas de requisição. Os modos válidos permanecem com o comportamento existente.\",\"edicoes\":[{\"arquivo\":\"routes/deluxe.ts\",\"trecho_original\":\"      if (req.body.paymentMode === 'wallet') {\\n        const wallet = await WalletModel.findOne({ where: { UserId: req.body.UserId } })\",\"trecho_corrigido\":\"      if (req.body.paymentMode !== 'wallet' && req.body.paymentMode !== 'card') {\\n        res.status(400).json({ status: 'error', error: 'Something went wrong. Please try again!' })\\n        return\\n      }\\n      if (req.body.paymentMode === 'wallet') {\\n        const wallet = await WalletModel.findOne({ where: { UserId: req.body.UserId } })\"}],\"justificativa_tecnica\":\"A validação torna paymentMode obrigatório dentro do conjunto fechado de modos suportados antes que qualquer atualização de role possa ocorrer. Valores ausentes, strings desconhecidas, objetos e outros tipos não passam pela condição e recebem resposta de erro. As condições existentes para wallet e card continuam inalteradas, preservando o fluxo funcional para entradas válidas.\",\"limitacoes_da_correcao\":\"A correção impede o bypass por modo inválido, mas não torna a cobrança e a alteração de role atômicas. Persistem limitações existentes relacionadas a concorrência, como múltiplas requisições simultâneas e possível inconsistência entre débito e atualização do usuário; isso exigiria transação e regras adicionais fora do ajuste mínimo solicitado.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1822,
+  "tokens_saida": 464,
+  "latencia_s": 5.935,
+  "custo_usd": 0.001012,
+  "hash_prompt": "91706d785b22e3d36f7887353cd8506e2e91b1a7a848d8180db78dea4e6438f6",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1819
+}

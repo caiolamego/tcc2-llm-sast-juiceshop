@@ -66,6 +66,8 @@ def construir(report, entrada):
     colunas = list(COL_ROW)
     if getattr(entrada,'classificacao_owasp',None):
         colunas += ['owasp_2025_original','owasp_classificacao_metodo']
+    if any('tentativa_id_original' in l for l in entrada.linhas):
+        colunas += ['tentativa_id_original']
     if entrada.contrato and entrada.contrato.get('schema_versao') in ('3.0','4.0','5.0'):
         colunas += ['politica_validacao','cache_validacao','tempos_medicao','selecao_testes','etapas_validacao']
         if (entrada.contrato['schema_versao']=='4.0' or entrada.contrato['schema_versao']=='5.0' and entrada.contrato.get('contrato_validacao_versao')=='4.0'):colunas+=['cobertura_funcional','cobertura_detalhada']

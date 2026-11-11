@@ -1,0 +1,13 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..5c029f3e1 100644
+--- a/server.ts
++++ b/server.ts
+@@ -266,7 +266,7 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+ 
+   // vuln-code-snippet start directoryListingChallenge accessLogDisclosureChallenge
+   /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge
+-  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge
++  app.use('/ftp', serveIndexMiddleware) // vuln-code-snippet vuln-line directoryListingChallenge
+   app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge
+   app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge
+ 

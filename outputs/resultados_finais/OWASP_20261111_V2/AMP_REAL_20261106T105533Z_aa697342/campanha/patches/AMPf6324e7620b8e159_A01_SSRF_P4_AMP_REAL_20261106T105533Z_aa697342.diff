@@ -1,0 +1,46 @@
+diff --git a/routes/profileImageUrlUpload.ts b/routes/profileImageUrlUpload.ts
+index 55184083e..53dac0373 100644
+--- a/routes/profileImageUrlUpload.ts
++++ b/routes/profileImageUrlUpload.ts
+@@ -4,6 +4,8 @@
+  */
+ 
+ import fs from 'node:fs'
++import { isIP } from 'node:net'
++import { lookup } from 'node:dns/promises'
+ import { Readable } from 'node:stream'
+ import { finished } from 'node:stream/promises'
+ import { type Request, type Response, type NextFunction } from 'express'
+@@ -21,7 +23,31 @@ export function profileImageUrlUpload () {
+       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
+       if (loggedInUser) {
+         try {
+-          const response = await fetch(url)
++          const parsedUrl = new URL(url)
++          if (!['http:', 'https:'].includes(parsedUrl.protocol) || !parsedUrl.hostname || parsedUrl.hostname === 'localhost' || parsedUrl.hostname.endsWith('.localhost')) {
++            throw new Error('url returned a non-OK status code or an empty body')
++          }
++          const addresses = isIP(parsedUrl.hostname) ? [{ address: parsedUrl.hostname }] : await lookup(parsedUrl.hostname, { all: true, verbatim: true })
++          if (addresses.length === 0 || addresses.some(({ address }) => {
++            const normalizedAddress = address.toLowerCase().split('%')[0]
++            if (isIP(normalizedAddress) === 4) {
++              const octets = normalizedAddress.split('.').map(Number)
++              return octets[0] === 0 || octets[0] === 10 || octets[0] === 127 || (octets[0] === 169 && octets[1] === 254) || (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) || (octets[0] === 192 && octets[1] === 168) || octets[0] >= 224
++            }
++            if (isIP(normalizedAddress) === 6) {
++              const mappedAddress = normalizedAddress.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/)?.[1]
++              if (mappedAddress) {
++                const octets = mappedAddress.split('.').map(Number)
++                return octets[0] === 0 || octets[0] === 10 || octets[0] === 127 || (octets[0] === 169 && octets[1] === 254) || (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) || (octets[0] === 192 && octets[1] === 168) || octets[0] >= 224
++              }
++              const firstGroup = parseInt(normalizedAddress.split(':')[0] || '0', 16)
++              return normalizedAddress === '::' || normalizedAddress === '::1' || (firstGroup & 0xfe00) === 0xfc00 || (firstGroup & 0xffc0) === 0xfe80 || (firstGroup & 0xff00) === 0xff00
++            }
++            return true
++          })) {
++            throw new Error('url returned a non-OK status code or an empty body')
++          }
++          const response = await fetch(parsedUrl, { redirect: 'error' })
+           if (!response.ok || !response.body) {
+             throw new Error('url returned a non-OK status code or an empty body')
+           }

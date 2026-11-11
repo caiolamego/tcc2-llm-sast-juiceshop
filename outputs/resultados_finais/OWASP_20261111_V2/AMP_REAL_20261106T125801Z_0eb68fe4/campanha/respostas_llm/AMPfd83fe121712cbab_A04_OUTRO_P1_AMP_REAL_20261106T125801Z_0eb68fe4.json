@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal e possível escrita arbitrária de arquivos durante a criação dos arquivos de checksum.\",\"causa_da_vulnerabilidade\":\"A tarefa `checksum` itera sobre qualquer entrada retornada por `fs.readdirSync('dist/')` e concatena o nome diretamente em caminhos usados por `readFileSync` e `grunt.file.write`. Se `dist/` contiver uma entrada simbólica ou um nome manipulado que resolva fora do diretório esperado, o processo pode ler arquivos arbitrários e escrever o checksum em local indevido.\",\"estrategia_de_correcao\":\"Restringir a operação a arquivos regulares localizados diretamente em `dist/`, resolvendo o caminho absoluto e verificando que ele permanece dentro do diretório permitido antes da leitura e da escrita.\",\"edicoes\":[{\"arquivo\":\"Gruntfile.js\",\"trecho_original\":\"    fs.readdirSync('dist/').forEach(file => {\\n      const buffer = fs.readFileSync('dist/' + file)\\n      const md5 = crypto.createHash('md5')\\n      md5.update(buffer)\\n      const md5Hash = md5.digest('hex')\\n      const md5FileName = 'dist/' + file + '.md5'\\n      grunt.file.write(md5FileName, md5Hash)\",\"trecho_corrigido\":\"    fs.readdirSync('dist/').forEach(file => {\\n      const filePath = require('node:path').resolve('dist', file)\\n      const distPath = require('node:path').resolve('dist')\\n      if (!filePath.startsWith(distPath + require('node:path').sep) || !fs.statSync(filePath).isFile()) {\\n        return\\n      }\\n      const buffer = fs.readFileSync(filePath)\\n      const md5 = crypto.createHash('md5')\\n      md5.update(buffer)\\n      const md5FileName = 'dist/' + file + '.md5'\\n      grunt.file.write(md5FileName, md5Hash)\"}],\"justificativa_tecnica\":\"A validação impede que entradas que não sejam arquivos regulares diretamente dentro de `dist/` sejam processadas. O uso de `path.resolve` e da separação de diretórios do sistema evita que nomes contendo componentes de caminho escapem do diretório permitido. O comportamento normal para os artefatos regulares existentes em `dist/` permanece inalterado.\",\"limitacoes_da_correcao\":\"A proteção cobre a tarefa de checksum neste arquivo e rejeita links simbólicos, diretórios e entradas fora do diretório `dist/`. Ela não valida a integridade ou autenticidade dos arquivos empacotados nem substitui controles de permissões do sistema de arquivos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1229,
+  "tokens_saida": 582,
+  "latencia_s": 6.757,
+  "custo_usd": 0.001006,
+  "hash_prompt": "ff7a033d09d49875924334362204ae16bf6492e30557ea035fb6760c2f29e642",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1226
+}

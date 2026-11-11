@@ -1,0 +1,442 @@
+{
+  "passou": false,
+  "tier_falha": "T2",
+  "duracao_s": 25.37758384499466,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2",
+  "tier_falha_marcador": "T2",
+  "tier_falha_criterio": "T2",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+  ],
+  "testes_falhos_f_criterio": [
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 10.28,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_vpyr5ap2/video/primeira.xml",
+        "test/api/promotion-video.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 3.52,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /promotion\n  ✔ GET promotion video page is publicly accessible (170.209292ms)\n  ✔ GET promotion video page contains embedded video (30.228791ms)\n  ✔ GET promotion video page contains subtitles as <script> (20.085833ms)\n✔ /promotion (668.756917ms)\n▶ /video\n  ✔ GET promotion video is publicly accessible (18.149333ms)\n✔ /video (18.394875ms)\nℹ tests 4\nℹ suites 2\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3285.248626\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 6.298869252997974,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_vpyr5ap2/video_parser/primeira.xml",
+        "test/server/tcc_coverage_video_subtitles.unit.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 3.09,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+      ],
+      "testes_falhos_novos": [
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "ail 4\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1182.252501\n\n✖ failing tests:\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:2429\n✖ renders the real template and adds two timed cues to the visible subtitle track (124.18625ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n  + []\n  - [\n  -   [\n  -     1.25,\n  -     3.75,\n  -     'First subtitle'\n  -   ],\n  -   [\n  -     5.5,\n  -     7,\n  -     'Second subtitle'\n  -   ]\n  - ]\n  \n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:40:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Test.start (node:internal/test_runner/test:1015:17)\n      at node:internal/test_runner/test:1531:71\n      at node:internal/per_context/primordials:466:82\n      at new Promise (<anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:435:3)\n      at node:internal/per_context/primordials:466:9\n      at Array.map (<anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: [],\n    expected: [ [ 1.25, 3.75, 'First subtitle' ], [ 5.5, 7, 'Second subtitle' ] ],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:3058\n✖ preserves multiline SRT content and comma timestamps (26.523916ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:46:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:3723\n✖ rejects invalid timestamps instead of constructing misleading cues (11.892084ms)\n  AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:59:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:3954\n✖ rejects an ambiguous cue with more than one arrow separator (9.474125ms)\n  AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:63:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    operator: 'throws',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 7.374997949227691e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "views/promotionVideo.pug"
+    ],
+    "grupos": [
+      "video",
+      "video_parser"
+    ],
+    "dominios": [
+      "api",
+      "servidor"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 10.28
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "video",
+      "status": "executada",
+      "duracao_s": 3.52
+    },
+    {
+      "tier": "T2",
+      "grupo": "video_parser",
+      "status": "executada",
+      "duracao_s": 3.09
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api",
+      "servidor"
+    ],
+    "grupos_selecionados": [
+      "video",
+      "video_parser"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 10.28
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "video",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video",
+            "arquivo": "test/api/promotion-video.test.ts",
+            "nome": "/promotion > GET promotion video page contains embedded video",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains subtitles as <script>",
+            "arquivo": "test/api/promotion-video.test.ts",
+            "nome": "/promotion > GET promotion video page contains subtitles as <script>",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/promotion-video.test.ts :: /promotion > GET promotion video page is publicly accessible",
+            "arquivo": "test/api/promotion-video.test.ts",
+            "nome": "/promotion > GET promotion video page is publicly accessible",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/promotion-video.test.ts :: /video > GET promotion video is publicly accessible",
+            "arquivo": "test/api/promotion-video.test.ts",
+            "nome": "/video > GET promotion video is publicly accessible",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains subtitles as <script>",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page is publicly accessible",
+          "test/api/promotion-video.test.ts :: /video > GET promotion video is publicly accessible"
+        ],
+        "esperados": [
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains subtitles as <script>",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page is publicly accessible",
+          "test/api/promotion-video.test.ts :: /video > GET promotion video is publicly accessible"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains subtitles as <script>",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page is publicly accessible",
+          "test/api/promotion-video.test.ts :: /video > GET promotion video is publicly accessible"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 3.52,
+        "espera_api_s": 6.298869252997974,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_vpyr5ap2/video/primeira.xml",
+            "test/api/promotion-video.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 3.52,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /promotion\n  ✔ GET promotion video page is publicly accessible (170.209292ms)\n  ✔ GET promotion video page contains embedded video (30.228791ms)\n  ✔ GET promotion video page contains subtitles as <script> (20.085833ms)\n✔ /promotion (668.756917ms)\n▶ /video\n  ✔ GET promotion video is publicly accessible (18.149333ms)\n✔ /video (18.394875ms)\nℹ tests 4\nℹ suites 2\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3285.248626\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/promotion\" time=\"0.668757\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"GET promotion video page is publicly accessible\" time=\"0.170209\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/promotion-video.test.ts\"/>\n\t\t<testcase name=\"GET promotion video page contains embedded video\" time=\"0.030229\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/promotion-video.test.ts\"/>\n\t\t<testcase name=\"GET promotion video page contains subtitles as &lt;script>\" time=\"0.020086\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/promotion-video.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/video\" time=\"0.018395\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"GET promotion video is publicly accessible\" time=\"0.018149\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/promotion-video.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 4 -->\n\t<!-- suites 2 -->\n\t<!-- pass 4 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 3285.248626 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "video_parser",
+        "dominio": "servidor",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track",
+            "estado": "falhou"
+          }
+        ],
+        "falhos": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "falhos_novos": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "falhos_novos_observados": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 3.09,
+        "espera_api_s": 7.374997949227691e-06,
+        "resultado": {
+          "tier": "T2",
+          "comando": [
+            "node",
+            "--import",
+            "./test/server/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_vpyr5ap2/video_parser/primeira.xml",
+            "test/server/tcc_coverage_video_subtitles.unit.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 3.09,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "ail 4\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1182.252501\n\n✖ failing tests:\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:2429\n✖ renders the real template and adds two timed cues to the visible subtitle track (124.18625ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n  + []\n  - [\n  -   [\n  -     1.25,\n  -     3.75,\n  -     'First subtitle'\n  -   ],\n  -   [\n  -     5.5,\n  -     7,\n  -     'Second subtitle'\n  -   ]\n  - ]\n  \n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:40:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Test.start (node:internal/test_runner/test:1015:17)\n      at node:internal/test_runner/test:1531:71\n      at node:internal/per_context/primordials:466:82\n      at new Promise (<anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:435:3)\n      at node:internal/per_context/primordials:466:9\n      at Array.map (<anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: [],\n    expected: [ [ 1.25, 3.75, 'First subtitle' ], [ 5.5, 7, 'Second subtitle' ] ],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:3058\n✖ preserves multiline SRT content and comma timestamps (26.523916ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:46:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:3723\n✖ rejects invalid timestamps instead of constructing misleading cues (11.892084ms)\n  AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:59:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:3954\n✖ rejects an ambiguous cue with more than one arrow separator (9.474125ms)\n  AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:63:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    operator: 'throws',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC rendered subtitle parser contracts\" time=\"0.204188\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"4\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"renders the real template and adds two timed cues to the visible subtitle track\" time=\"0.124186\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;+ []&#10;- [&#10;-   [&#10;-     1.25,&#10;-     3.75,&#10;-     'First subtitle'&#10;-   ],&#10;-   [&#10;-     5.5,&#10;-     7,&#10;-     'Second subtitle'&#10;-   ]&#10;- ]&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;+ []&#10;- [&#10;-   [&#10;-     1.25,&#10;-     3.75,&#10;-     'First subtitle'&#10;-   ],&#10;-   [&#10;-     5.5,&#10;-     7,&#10;-     'Second subtitle'&#10;-   ]&#10;- ]\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ []\n- [\n-   [\n-     1.25,\n-     3.75,\n-     'First subtitle'\n-   ],\n-   [\n-     5.5,\n-     7,\n-     'Second subtitle'\n-   ]\n- ]\n\n    at new Promise (&lt;anonymous>)\n    at Array.map (&lt;anonymous>) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n  + []\n  - [\n  -   [\n  -     1.25,\n  -     3.75,\n  -     'First subtitle'\n  -   ],\n  -   [\n  -     5.5,\n  -     7,\n  -     'Second subtitle'\n  -   ]\n  - ]\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts:40:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Test.start (node:internal/test_runner/test:1015:17)\n      at node:internal/test_runner/test:1531:71\n      at node:internal/per_context/primordials:466:82\n      at new Promise (&lt;anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:435:3)\n      at node:internal/per_context/primordials:466:9\n      at Array.map (&lt;anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: [],\n    expected: [ [Array], [Array] ],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"preserves multiline SRT content and comma timestamps\" time=\"0.026524\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0 !== 1\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts:46:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"converts hours and minutes when parsing timestamps\" time=\"0.015385\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\"/>\n\t\t<testcase name=\"rejects invalid timestamps instead of constructing misleading cues\" time=\"0.011892\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Missing expected exception.\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Missing expected exception.\">\n[Error [ERR_TEST_FAILURE]: Missing expected exception.] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts:59:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    operator: 'throws',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects an ambiguous cue with more than one arrow separator\" time=\"0.009474\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Missing expected exception.\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Missing expected exception.\">\n[Error [ERR_TEST_FAILURE]: Missing expected exception.] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts:63:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    operator: 'throws',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"creates no cues for empty subtitle data\" time=\"0.014528\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 6 -->\n\t<!-- suites 1 -->\n\t<!-- pass 2 -->\n\t<!-- fail 4 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1182.252501 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC rendered subtitle parser contracts\" time=\"0.174995\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"4\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"renders the real template and adds two timed cues to the visible subtitle track\" time=\"0.110897\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;+ []&#10;- [&#10;-   [&#10;-     1.25,&#10;-     3.75,&#10;-     'First subtitle'&#10;-   ],&#10;-   [&#10;-     5.5,&#10;-     7,&#10;-     'Second subtitle'&#10;-   ]&#10;- ]&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;+ []&#10;- [&#10;-   [&#10;-     1.25,&#10;-     3.75,&#10;-     'First subtitle'&#10;-   ],&#10;-   [&#10;-     5.5,&#10;-     7,&#10;-     'Second subtitle'&#10;-   ]&#10;- ]\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ []\n- [\n-   [\n-     1.25,\n-     3.75,\n-     'First subtitle'\n-   ],\n-   [\n-     5.5,\n-     7,\n-     'Second subtitle'\n-   ]\n- ]\n\n    at new Promise (&lt;anonymous>)\n    at Array.map (&lt;anonymous>) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n  + []\n  - [\n  -   [\n  -     1.25,\n  -     3.75,\n  -     'First subtitle'\n  -   ],\n  -   [\n  -     5.5,\n  -     7,\n  -     'Second subtitle'\n  -   ]\n  - ]\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts:40:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Test.start (node:internal/test_runner/test:1015:17)\n      at node:internal/test_runner/test:1531:71\n      at node:internal/per_context/primordials:466:82\n      at new Promise (&lt;anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:435:3)\n      at node:internal/per_context/primordials:466:9\n      at Array.map (&lt;anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: [],\n    expected: [ [Array], [Array] ],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"preserves multiline SRT content and comma timestamps\" time=\"0.016657\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0 !== 1\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts:46:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"converts hours and minutes when parsing timestamps\" time=\"0.016104\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\"/>\n\t\t<testcase name=\"rejects invalid timestamps instead of constructing misleading cues\" time=\"0.009019\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Missing expected exception.\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Missing expected exception.\">\n[Error [ERR_TEST_FAILURE]: Missing expected exception.] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts:59:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    operator: 'throws',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects an ambiguous cue with more than one arrow separator\" time=\"0.007099\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Missing expected exception.\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Missing expected exception.\">\n[Error [ERR_TEST_FAILURE]: Missing expected exception.] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts:63:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    operator: 'throws',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"creates no cues for empty subtitle data\" time=\"0.013592\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_video_subtitles.unit.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 6 -->\n\t<!-- suites 1 -->\n\t<!-- pass 2 -->\n\t<!-- fail 4 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1334.285959 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Divulgação de logs de acesso por meio do endpoint /support/logs/:file.\",\"causa_da_vulnerabilidade\":\"A aplicação expõe arquivos de log diretamente por uma rota acessível após apenas o middleware verify.accessControlChallenges(), permitindo que um usuário obtenha registros potencialmente contendo URLs, cabeçalhos, endereços IP e outros dados sensíveis.\",\"estrategia_de_correcao\":\"Remover a rota que serve arquivos de log externamente, mantendo o middleware de controle de acesso existente para não alterar outras proteções ou fluxos da aplicação.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n\",\"trecho_corrigido\":\"  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n\"}],\"justificativa_tecnica\":\"Sem uma rota HTTP que invoque serveLogFiles(), os arquivos de log deixam de ser diretamente recuperáveis por requisições externas. Isso elimina a superfície de divulgação de logs e preserva o restante da configuração, incluindo o middleware de controle de acesso e a geração interna dos logs.\",\"limitacoes_da_correcao\":\"A correção impede o acesso HTTP por essa rota, mas não altera permissões do sistema de arquivos nem outros possíveis mecanismos de exposição dos diretórios de logs. Esses arquivos ainda devem possuir permissões restritivas e não ser publicados por outra rota ou servidor.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2105,
+  "tokens_saida": 340,
+  "latencia_s": 5.657,
+  "custo_usd": 0.000934,
+  "hash_prompt": "fb322bb919d076148c856f5bcc353560b1605c30b826d63b32f7dfe0d0885d67",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2102
+}

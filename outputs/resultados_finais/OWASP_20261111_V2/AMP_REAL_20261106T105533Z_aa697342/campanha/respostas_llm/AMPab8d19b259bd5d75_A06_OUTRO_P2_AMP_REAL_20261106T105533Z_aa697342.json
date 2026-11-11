@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"IDOR (Insecure Direct Object Reference) na finalização de pedidos: o identificador da cesta fornecido na URL é usado sem verificar que a cesta pertence ao usuário autenticado.\",\n  \"causa_da_vulnerabilidade\": \"placeOrder consulta BasketModel apenas pelo id recebido em req.params.id e prossegue com a criação do pedido, a baixa de estoque e a limpeza dos itens sem validar a propriedade da cesta. Além disso, a operação de pagamento e o crédito de pontos usam req.body.UserId, um valor controlado pelo cliente, em vez da identidade autenticada.\",\n  \"estrategia_de_correcao\": \"Restringir a consulta da cesta ao usuário autenticado, usando o identificador do usuário obtido da sessão/autenticação. Usar essa mesma identidade confiável para operações de carteira, sem confiar em req.body.UserId. Para requisições sem usuário autenticado, não permitir a finalização por esta rota.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"    const id = req.params.id\\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\n      \"trecho_corrigido\": \"    const id = req.params.id\\n    const customer = security.authenticatedUsers.from(req)\\n    const userId = customer?.data?.id\\n    if (userId == null) {\\n      next(new Error(`Basket with id=${id} does not exist.`))\\n      return\\n    }\\n    BasketModel.findOne({ where: { id, UserId: userId }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"\n    },\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"          const customer = security.authenticatedUsers.from(req)\\n          const email = customer ? customer.data ? customer.data.email : '' : ''\",\n      \"trecho_corrigido\": \"          const email = customer ? customer.data ? customer.data.email : '' : ''\"\n    },\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"          if (req.body.UserId) {\\n            if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {\\n              const wallet = await WalletModel.findOne({ where: { UserId: req.body.UserId } })\\n              if ((wallet != null) && wallet.balance >= totalPrice) {\\n                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: req.body.UserId } })\\n              } else {\\n                next(new Error('Insufficient wallet balance.'))\\n                return\\n              }\\n            }\\n            try {\\n              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: req.body.UserId } })\",\n      \"trecho_corrigido\": \"          if (userId != null) {\\n            if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {\\n              const wallet = await WalletModel.findOne({ where: { UserId: userId } })\\n              if ((wallet != null) && wallet.balance >= totalPrice) {\\n                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: userId } })\\n              } else {\\n                next(new Error('Insufficient wallet balance.'))\\n                return\\n              }\\n            }\\n            try {\\n              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: userId } })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A condição UserId: userId faz com que a busca só retorne uma cesta pertencente à identidade autenticada; conhecer ou adivinhar o ID de outra cesta deixa de ser suficiente para finalizar seu pedido. A identidade é obtida do contexto de autenticação e reutilizada nas operações de carteira, impedindo que o cliente escolha a conta debitada ou creditada por meio de req.body.UserId. A rejeição antes da consulta também impede que uma requisição sem identidade autenticada prossiga com a finalização.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que customer.data.id corresponde ao campo UserId usado pelo modelo BasketModel e pelas operações de carteira. Se a aplicação usa outro identificador ou permite pedidos de convidados, a associação deve ser adaptada ao modelo de autenticação e à política de autorização correspondente. A mensagem de erro existente é mantida; a resposta HTTP apropriada depende do middleware de tratamento de erros.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3045,
+  "tokens_saida": 995,
+  "latencia_s": 9.708,
+  "custo_usd": 0.000528,
+  "hash_prompt": "8a4364c87143814313f8d61243fc64f15b8295e3294fe7a6ac21d245cc935cd9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 3042,
+  "tokens_escrita_cache": 0
+}

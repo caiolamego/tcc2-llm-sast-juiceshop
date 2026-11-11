@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Mass assignment nos endpoints gerados automaticamente pelo Finale, permitindo que atributos graváveis do modelo sejam determinados diretamente pela entrada do cliente.\",\"causa_da_vulnerabilidade\":\"O recurso Finale é criado para cada modelo com endpoints de escrita e sem uma restrição explícita de campos permitidos. Assim, atributos sensíveis ou de controle, caso sejam aceitos pelo modelo, podem ser enviados pelo cliente e persistidos.\",\"estrategia_de_correcao\":\"Restringir os atributos aceitos pelos recursos gerados usando uma lista explícita de campos permitidos para cada modelo, preservando os campos atualmente expostos e excluindo atributos de identidade, propriedade, privilégio e outros campos não destinados à escrita pelo cliente.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  for (const { name, exclude, model, include } of autoModels) {\\n    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include\\n    })\",\"trecho_corrigido\":\"  for (const { name, exclude, model, include } of autoModels) {\\n    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      fields: exclude,\\n      pagination: false,\\n      include\\n    })\"}],\"justificativa_tecnica\":\"A alteração limita os atributos processados pelo Finale à configuração fornecida em `exclude`. Como essa configuração atualmente contém apenas os campos explicitamente excluídos do modelo User e listas vazias nos demais modelos, a mudança proposta não fornece uma allowlist real e, portanto, não corrige de forma segura o mass assignment. Para uma correção efetiva, cada recurso deve possuir uma lista explícita de campos graváveis, separada da lista de atributos excluídos da resposta. O trecho acima representa a menor alteração estrutural possível, mas não é suficiente sem essa configuração adequada; por isso, a implementação deve ser complementada com listas de campos permitidos por modelo conforme o esquema real.\",\"limitacoes_da_correcao\":\"O trecho fornecido não contém os atributos dos modelos nem as regras de negócio necessárias para determinar quais campos são legitimamente graváveis. Além disso, usar `exclude` como `fields` pode bloquear campos válidos ou permitir campos sensíveis quando a lista de exclusão estiver vazia. É necessário definir e revisar uma allowlist de escrita por recurso, incluindo autorização por proprietário e testes para campos como papel, saldo, identificador de usuário e propriedades inesperadas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2875,
+  "tokens_saida": 570,
+  "latencia_s": 7.743,
+  "custo_usd": 0.001403,
+  "hash_prompt": "2637ff379659f5dc0da32efb7c42cd17c47b4e7d56e27af640ecb4bea2b53830",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2872
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso não autorizado a cestas de outros usuários ao adicionar itens (IDOR/Broken Access Control).\",\n  \"causa_da_vulnerabilidade\": \"A validação compara o BasketId informado com a cesta do usuário autenticado, mas, quando há divergência, apenas envia uma resposta 401 e continua a execução. Assim, o item ainda pode ser salvo na cesta indicada pelo cliente.\",\n  \"estrategia_de_correcao\": \"Encerrar o fluxo imediatamente após enviar a resposta 401, impedindo a criação do item quando o BasketId não pertence ao usuário autenticado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/basketItems.ts\",\n      \"trecho_original\": \"    if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq\\n      res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n    } else {\",\n      \"trecho_corrigido\": \"    if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq\\n      return res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n    } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O retorno encerra o handler após a resposta de erro, evitando que a execução alcance BasketItemModel.build e save. A validação existente e o comportamento para requisições autorizadas permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A correção impede a gravação após a divergência detectada, mas não altera a validação existente para requisições sem usuário autenticado nem outros fluxos de autorização.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1490,
+  "tokens_saida": 419,
+  "latencia_s": 4.694,
+  "custo_usd": 0.000225,
+  "hash_prompt": "185d2652dc9d311a8b81d772dcf5357bb793c0f63cb893bea0b9afaca23d8b14",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1487,
+  "tokens_escrita_cache": 0
+}

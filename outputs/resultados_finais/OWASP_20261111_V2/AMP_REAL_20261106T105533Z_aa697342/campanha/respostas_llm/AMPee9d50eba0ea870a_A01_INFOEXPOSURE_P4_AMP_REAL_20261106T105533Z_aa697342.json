@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de informações por listagem de diretório (CWE-548) na rota /ftp.\",\n  \"causa_da_vulnerabilidade\": \"A rota /ftp usa serveIndex('ftp', { icons: true }), que gera uma página com os nomes e metadados dos arquivos e diretórios existentes. A rota está exposta sem uma verificação de autorização anterior à listagem.\",\n  \"estrategia_de_correcao\": \"Remover apenas o middleware serveIndex da rota /ftp, mantendo o middleware de arquivos existente para preservar o acesso direto aos arquivos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\",\n      \"trecho_corrigido\": \"  app.use('/ftp', serveIndexMiddleware) // vuln-code-snippet vuln-line directoryListingChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem serveIndex, uma requisição ao caminho /ftp não produz a página que enumera o conteúdo do diretório. A rota seguinte, app.use('/ftp(?!/quarantine)/:file', servePublicFiles()), permanece inalterada, preservando o acesso direto aos arquivos públicos. A listagem de /support/logs não foi alterada porque há um middleware de controle de acesso associado a essa rota e não é o alerta indicado.\",\n  \"limitacoes_da_correcao\": \"Os arquivos servidos pela rota /ftp continuam acessíveis por URL direta; esta alteração remove a enumeração do diretório, mas não restringe downloads individuais. Deve-se confirmar que os arquivos disponibilizados nessa rota são intencionalmente públicos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3330,
+  "tokens_saida": 382,
+  "latencia_s": 4.624,
+  "custo_usd": 0.000607,
+  "hash_prompt": "bd3b42455b54d8a6a0ca5da42537e05b93a28e0208364bda979e01514bf93ac2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3327
+}

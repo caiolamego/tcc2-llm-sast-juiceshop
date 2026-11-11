@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) ao exibir os dados exportados.\",\n  \"causa_da_vulnerabilidade\": \"O conteúdo retornado pelo serviço é atribuído a `userData` e escrito diretamente em um novo documento HTML com `document.write`. Se esse conteúdo contiver marcação ou scripts controlados por um atacante, o navegador poderá executá-los na origem da aplicação.\",\n  \"estrategia_de_correcao\": \"Exibir os dados exportados como texto, em vez de interpretá-los como HTML, usando `textContent` no documento recém-aberto.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/data-export/data-export.component.ts\",\n      \"trecho_original\": \"        window.open('', '_blank', 'width=500')?.document.write(this.userData)\",\n      \"trecho_corrigido\": \"        const exportWindow = window.open('', '_blank', 'width=500')\\n        if (exportWindow) {\\n          exportWindow.document.body.textContent = this.userData\\n        }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A propriedade `textContent` insere o valor como texto e não interpreta tags HTML nem executa scripts, eliminando o sink de XSS. A verificação da janela mantém o tratamento seguro caso o navegador bloqueie a abertura de uma nova janela.\",\n  \"limitacoes_da_correcao\": \"O conteúdo exportado deixa de ser renderizado como HTML e passa a ser apresentado literalmente como texto. A correção protege este ponto de exibição; outros usos de dados não confiáveis devem ser avaliados separadamente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1392,
+  "tokens_saida": 354,
+  "latencia_s": 4.855,
+  "custo_usd": 0.000351,
+  "hash_prompt": "2cba0f438944f97066c915c5eade2f95a1fbb8b1b7d983eef08618acd7b3a2af",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1389
+}

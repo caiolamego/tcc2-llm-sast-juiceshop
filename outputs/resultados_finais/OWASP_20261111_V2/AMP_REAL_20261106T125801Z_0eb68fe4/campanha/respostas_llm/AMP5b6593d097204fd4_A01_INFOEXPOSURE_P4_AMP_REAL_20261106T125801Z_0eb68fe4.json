@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações por listagem de diretórios (CWE-548) nas rotas /ftp, /.well-known, /encryptionkeys e /support/logs, especialmente na linha 277, devido ao uso de serveIndex.\",\"causa_da_vulnerabilidade\":\"O middleware serveIndex gera páginas de índice contendo nomes, metadados e links para arquivos dos diretórios configurados. Essas rotas são registradas sem uma restrição de autorização equivalente para a própria listagem, permitindo que um cliente remoto enumere o conteúdo dos diretórios.\",\"estrategia_de_correcao\":\"Remover somente os middlewares serveIndex das rotas de listagem, preservando os middlewares de entrega de arquivos e, portanto, o acesso direto aos recursos necessários. A alteração mínima aplica-se às quatro rotas que habilitam listagem no trecho fornecido.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n\",\"trecho_corrigido\":\"  app.use('/ftp', (req: Request, res: Response, next: NextFunction) => next()) // vuln-code-snippet vuln-line directoryListingChallenge\\n\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\\n\",\"trecho_corrigido\":\"  app.use('/.well-known', (req: Request, res: Response, next: NextFunction) => next())\\n\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n\",\"trecho_corrigido\":\"  app.use('/encryptionkeys', (req: Request, res: Response, next: NextFunction) => next())\\n\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n\",\"trecho_corrigido\":\"  app.use('/support/logs', (req: Request, res: Response, next: NextFunction) => next()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n\"}],\"justificativa_tecnica\":\"A remoção de serveIndex impede a geração da página de índice e, consequentemente, a enumeração de nomes e metadados por requisições ao diretório. O middleware neutro mantém a cadeia e o comportamento de roteamento sem alterar identificadores, mensagens ou assinaturas existentes. Os handlers de arquivos, como servePublicFiles, serveKeyFiles, serveLogFiles e express.static, permanecem inalterados, preservando downloads por caminho direto. A correção também evita deixar a listagem implicitamente habilitada em diretórios potencialmente sensíveis, como logs e chaves.\",\"limitacoes_da_correcao\":\"O conteúdo dos arquivos ainda pode permanecer acessível quando o cliente conhece a URL direta; remover a listagem não substitui controles de autorização ou validação de acesso aos arquivos. A análise foi limitada ao trecho fornecido; outras chamadas a serveIndex no restante de server.ts ou em outros arquivos devem ser verificadas. O middleware neutro é usado para manter a estrutura da rota, embora possa ser removido em uma alteração posterior caso não haja necessidade de preservar essa cadeia explicitamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3303,
+  "tokens_saida": 751,
+  "latencia_s": 9.4,
+  "custo_usd": 0.001727,
+  "hash_prompt": "069edfc94ad128684620ddc5420712df0397c2c5b32b1be607e7199f5b56142a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3300
+}

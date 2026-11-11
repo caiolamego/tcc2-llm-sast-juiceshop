@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A consulta de getDeliveryMethod usa req.params.id diretamente para localizar um método de entrega, sem escopo de proprietário. Contudo, os métodos de entrega aparentam ser dados públicos compartilhados, não recursos pertencentes a usuários; o alerta, isoladamente, não comprova uma vulnerabilidade IDOR.\",\n  \"causa_da_vulnerabilidade\": \"A construção sinalizada é DeliveryModel.findOne({ where: { id: req.params.id } }), que seleciona um registro pelo identificador fornecido na requisição. Não há no trecho informação de que esses registros tenham proprietário ou devam ser restritos por usuário. Adicionar um filtro de proprietário sem conhecer o modelo e a regra de negócio poderia impedir o acesso legítimo aos métodos de entrega.\",\n  \"estrategia_de_correcao\": \"Não alterar o código com base apenas no padrão sinalizado. Preservar a consulta e o comportamento existentes até confirmar que métodos de entrega são recursos privados e identificar a identidade confiável e o campo de proprietário aplicáveis. Se forem privados, aplicar autorização por objeto ou escopo do usuário autenticado no servidor.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"O código retorna dados de um método de entrega selecionado por ID, mas não demonstra que o recurso pertença a um usuário nem que sua leitura exija autorização individual. Métodos de entrega normalmente são opções compartilhadas da aplicação. Portanto, não é possível justificar tecnicamente um filtro de proprietário neste arquivo sem evidência adicional; fazê-lo poderia quebrar o acesso legítimo. A correção apropriada depende de verificar o modelo, a rota e a regra de acesso no restante do repositório.\",\n  \"limitacoes_da_correcao\": \"Nenhuma alteração foi proposta porque o alerta estático não comprova IDOR e o trecho não fornece a semântica de propriedade necessária para uma correção segura. Verifique se a rota é pública ou protegida e se DeliveryModel possui proprietário; caso exista restrição por usuário, teste acesso entre usuários distintos e aplique a autorização correspondente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1862,
+  "tokens_saida": 435,
+  "latencia_s": 5.21,
+  "custo_usd": 0.00045,
+  "hash_prompt": "44d746a7ea4dd4504275dd921c5fc8560de6dfbcf20969e38689a15f85328b67",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1859
+}

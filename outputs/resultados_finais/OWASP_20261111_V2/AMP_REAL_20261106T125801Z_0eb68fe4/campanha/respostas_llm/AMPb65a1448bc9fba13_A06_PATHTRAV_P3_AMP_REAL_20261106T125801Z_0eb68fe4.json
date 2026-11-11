@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: o parâmetro controlado pelo usuário é usado diretamente em res.sendFile, permitindo traversal de caminho e leitura arbitrária de arquivos.\",\"causa_da_vulnerabilidade\":\"A validação apenas rejeita barras normais, mas não confina o caminho resolvido à raiz logs/. Sequências como ..\\\\ em sistemas Windows, caminhos absolutos ou outras formas de traversal podem escapar do diretório esperado.\",\"estrategia_de_correcao\":\"Resolver a raiz logs/ e o caminho solicitado, comparar o caminho relativo resultante com a raiz e rejeitar qualquer caminho fora dela antes de chamar res.sendFile.\",\"edicoes\":[{\"arquivo\":\"routes/logfileServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('logs/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const root = path.resolve('logs/')\\n    const target = path.resolve(root, file)\\n    const relative = path.relative(root, target)\\n    const isWithinRoot = relative !== '' && relative !== '..' &&\\n      !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative)\\n\\n    if (!file.includes('/') && isWithinRoot) {\\n      res.sendFile(target)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"path.resolve normaliza segmentos .., mas não impede que o resultado saia da raiz. A comparação com path.relative detecta caminhos que resultam fora de logs/, incluindo traversal com separadores nativos e caminhos absolutos. A validação existente e a mensagem de erro foram preservadas, assim como a chamada a res.sendFile para arquivos legítimos.\",\"limitacoes_da_correcao\":\"A correção confina o caminho lexical à raiz, mas não resolve links simbólicos; um arquivo dentro de logs/ que seja um link para fora ainda pode expor outro caminho. Se links simbólicos forem possíveis ou não confiáveis, deve-se resolver o caminho real com fs.realpath e comparar novamente com a raiz real. Autorização de acesso aos arquivos continua sendo responsabilidade de outra camada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1724,
+  "tokens_saida": 502,
+  "latencia_s": 6.834,
+  "custo_usd": 0.001033,
+  "hash_prompt": "8436b3dcd1277aa64b258fceb20f2f6c9ba9b31eca661910dbfeeb19339b8fcc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1721
+}

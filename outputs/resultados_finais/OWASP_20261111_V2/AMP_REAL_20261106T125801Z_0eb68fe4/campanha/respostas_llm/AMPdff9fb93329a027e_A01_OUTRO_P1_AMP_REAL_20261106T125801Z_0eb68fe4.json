@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Configuração permissiva de CORS, permitindo requisições de qualquer origem.\",\"causa_da_vulnerabilidade\":\"O middleware cors() é aplicado globalmente sem uma política explícita de origem, resultando em Access-Control-Allow-Origin permissivo e potencial exposição de endpoints a origens não confiáveis.\",\"estrategia_de_correcao\":\"Restringir CORS às origens configuradas pela aplicação, mantendo o tratamento de requisições OPTIONS e o restante do comportamento funcional.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* Bludgeon solution for possible CORS problems: Allow everything! */\\n  app.options('*', cors())\\n  app.use(cors())\",\"trecho_corrigido\":\"  /* Bludgeon solution for possible CORS problems: Allow everything! */\\n  app.options('*', cors({ origin: config.get<string[]>('application.cors.origins') }))\\n  app.use(cors({ origin: config.get<string[]>('application.cors.origins') }))\"}],\"justificativa_tecnica\":\"CORS não é um mecanismo de autenticação, mas uma política aplicada pelos navegadores que controla quais origens podem ler respostas da API. A configuração atual aceita qualquer origem, ampliando desnecessariamente a superfície de ataque, especialmente para endpoints que usam cookies ou outros mecanismos de credenciais. A alteração mantém o middleware e seus métodos, mas faz com que apenas as origens explicitamente configuradas sejam autorizadas.\",\"limitacoes_da_correcao\":\"A correção pressupõe que application.cors.origins exista na configuração e seja uma lista de origens confiáveis. Se essa configuração não estiver definida ou estiver vazia, as requisições cross-origin poderão deixar de funcionar, exigindo a inclusão das origens legítimas na configuração. Isso não substitui autenticação, autorização, proteção CSRF ou validação de origem no servidor.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1723,
+  "tokens_saida": 400,
+  "latencia_s": 5.93,
+  "custo_usd": 0.000911,
+  "hash_prompt": "29dc7d42da506c9709a9bbdbd037851710210fe817666631854fe007efec0641",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1720
+}

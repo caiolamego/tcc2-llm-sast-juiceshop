@@ -1,0 +1,23 @@
+diff --git a/routes/userProfile.ts b/routes/userProfile.ts
+index af2c10895..f9b94cac5 100644
+--- a/routes/userProfile.ts
++++ b/routes/userProfile.ts
+@@ -69,9 +69,6 @@ export function getUserProfile () {
+     const themeKey = config.get<string>('application.theme') as keyof typeof themes
+     const theme = themes[themeKey] || themes['bluegrey-lightgreen']
+ 
+-    if (username) {
+-      template = template.replace(/_username_/g, username)
+-    }
+     template = template.replace(/_emailHash_/g, security.hash(user?.email))
+     template = template.replace(/_title_/g, entities.encode(config.get<string>('application.name')))
+     template = template.replace(/_favicon_/g, favicon())
+@@ -95,7 +92,7 @@ export function getUserProfile () {
+         'Content-Security-Policy': CSP
+       })
+ 
+-      res.send(fn(user))
++      res.send(fn({ ...user, username }))
+     } catch (err) {
+       next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
+     }

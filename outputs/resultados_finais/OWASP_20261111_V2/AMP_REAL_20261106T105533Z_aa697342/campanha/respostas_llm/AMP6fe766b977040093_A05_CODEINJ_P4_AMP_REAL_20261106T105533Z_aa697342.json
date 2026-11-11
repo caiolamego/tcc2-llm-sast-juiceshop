@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção de código (CWE-95) no processamento do nome de usuário: o valor do usuário é executado por eval.\",\n  \"causa_da_vulnerabilidade\": \"Quando o desafio usernameXssChallenge está habilitado e o nome de usuário corresponde ao padrão /#{(.*)}/, o conteúdo entre #{ e } é extraído e passado diretamente a eval(code). O nome de usuário pode ser controlado por um usuário, permitindo que texto fornecido externamente seja interpretado como JavaScript no processo da aplicação.\",\n  \"estrategia_de_correcao\": \"Remover a avaliação dinâmica e tratar o conteúdo do nome de usuário como dado literal. Manter a condição e o fluxo existentes, mas não executar o conteúdo extraído.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/userProfile.ts\",\n      \"trecho_original\": \"      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\",\n      \"trecho_corrigido\": \"      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = code\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A alteração elimina a passagem de dados controláveis a eval, portanto o conteúdo do nome de usuário deixa de ser interpretado como código JavaScript. O conteúdo extraído continua sendo usado como valor de username, preservando o fluxo funcional sem executar instruções fornecidas pelo usuário.\",\n  \"limitacoes_da_correcao\": \"O ramo do desafio deixa de avaliar expressões JavaScript e passa a exibir o conteúdo interno de #{...} literalmente. Isso é necessário para remover a execução de código; a correção não altera outros aspectos do tratamento ou da renderização do perfil.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2892,
+  "tokens_saida": 479,
+  "latencia_s": 5.431,
+  "custo_usd": 0.000601,
+  "hash_prompt": "ac96a66c7b3f48cb16d74a776f3e8904166dfcc128bab149ce66c233949d0c5a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2889
+}

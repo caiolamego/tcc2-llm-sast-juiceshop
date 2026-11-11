@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Chave privada RSA de assinatura JWT embutida no código-fonte, permitindo que qualquer pessoa com acesso ao repositório possa assinar tokens válidos.\",\n  \"causa_da_vulnerabilidade\": \"A chave privada usada por authorize e deluxeToken está definida como um literal no arquivo. A chave pública é carregada de arquivo, mas isso não protege a chave privada hard-coded.\",\n  \"estrategia_de_correcao\": \"Carregar a chave privada de uma variável de ambiente obrigatória e falhar na inicialização se ela não estiver configurada. Remover o valor embutido; fornecer a chave por configuração externa protegida e rotacioná-la, pois a chave atual deve ser considerada comprometida.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"const privateKey = '-----BEGIN RSA PRIVATE KEY-----\\\\r\\\\nMIICXAIBAAKBgQDNwqLEe9wgTXCbC7+RPdDbBbeqjdbs4kOPOIGzqLpXvJXlxxW8iMz0EaM4BKUqYsIa+ndv3NAn2RxCd5ubVdJJcX43zO6Ko0TFEZx/65gY3BE0O6syCEmUP4qbSd6exou/F+WTISzbQ5FBVPVmhnYhG/kpwt/cIxK5iUn5hm+4tQIDAQABAoGBAI+8xiPoOrA+KMnG/T4jJsG6TsHQcDHvJi7o1IKC/hnIXha0atTX5AUkRRce95qSfvKFweXdJXSQ0JMGJyfuXgU6dI0TcseFRfewXAa/ssxAC+iUVR6KUMh1PE2wXLitfeI6JLvVtrBYswm2I7CtY0q8n5AGimHWVXJPLfGV7m0BAkEA+fqFt2LXbLtyg6wZyxMA/cnmt5Nt3U2dAu77MzFJvibANUNHE4HPLZxjGNXN+a6m0K6TD4kDdh5HfUYLWWRBYQJBANK3carmulBwqzcDBjsJ0YrIONBpCAsXxk8idXb8jL9aNIg15Wumm2enqqObahDHB5jnGOLmbasizvSVqypfM9UCQCQl8xIqy+YgURXzXCN+kwUgHinrutZms87Jyi+D8Br8NY0+Nlf+zHvXAomD2W5CsEK7C+8SLBr3k/TsnRWHJuECQHFE9RA2OP8WoaLPuGCyFXaxzICThSRZYluVnWkZtxsBhW2W8z1b8PvWUE7kMy7TnkzeJS2LSnaNHoyxi7IaPQUCQCwWU4U+v4lD7uYBw00Ga/xt+7+UqFPlPVdz1yyr4q24Zxaw0LgmuEvgU5dycq8N7JxjTubX0MIRR+G9fmDBBl8=\\\\r\\\\n-----END RSA PRIVATE KEY-----'\",\n      \"trecho_corrigido\": \"const privateKey = process.env.JWT_PRIVATE_KEY\\nif (!privateKey) throw new Error('Missing JWT signing configuration')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A chave privada deixa de estar versionada no código e passa a ser fornecida pelo ambiente de execução. A verificação explícita impede que a aplicação inicie com uma configuração ausente, em vez de recorrer a uma chave previsível ou embutida. O tipo string permanece compatível com os usos existentes em jwt.sign e crypto.createHmac, sem alterar assinaturas ou contratos das funções.\",\n  \"limitacoes_da_correcao\": \"A implantação precisa configurar JWT_PRIVATE_KEY com uma chave RSA válida e protegê-la no mecanismo de configuração ou cofre de segredos. A chave anteriormente exposta deve ser revogada e substituída; tokens assinados com ela podem deixar de ser aceitos após a rotação. A variável de ambiente, por si só, não substitui controles operacionais de acesso, armazenamento e rotação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3569,
+  "tokens_saida": 989,
+  "latencia_s": 8.838,
+  "custo_usd": 0.000941,
+  "hash_prompt": "a532c2a1dc085dac5b34f413492fa489aedd582a7846a3f89daa3e6479f10f0b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3566
+}

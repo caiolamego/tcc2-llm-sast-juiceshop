@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição potencial de informações operacionais pelo endpoint público GET /metrics (CWE-200).\",\n  \"causa_da_vulnerabilidade\": \"O endpoint é registrado com app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) sem middleware de autorização explícito. A rota anterior de /metrics também não possui autorização, portanto a definição posterior não restringe o acesso.\",\n  \"estrategia_de_correcao\": \"Adicionar o middleware de autorização existente security.isAuthorized() à rota de métricas, preservando o handler e o restante do comportamento para usuários autorizados.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\",\n      \"trecho_corrigido\": \"app.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A rota instrumentada no trecho vulnerável passa a exigir a autorização fornecida por security.isAuthorized() antes de executar o handler de métricas. Assim, requisições não autorizadas não recebem os dados expostos pelo endpoint, enquanto o handler e a resposta para usuários autorizados permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"O trecho também registra /metrics anteriormente, antes da rota corrigida. Como o Express atende a primeira rota correspondente, essa definição anterior pode continuar servindo métricas sem autorização e precisa ser protegida ou removida para que a correção seja efetiva. Ela não foi alterada porque a edição mínima solicitada deve corresponder ao trecho vulnerável identificado; a implementação deve verificar e corrigir também esse registro anterior.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3273,
+  "tokens_saida": 388,
+  "latencia_s": 5.042,
+  "custo_usd": 0.000603,
+  "hash_prompt": "6b5ed9c3921132865be3c19b87045f39bc656dd63fb57171b857d2655956d99c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3270
+}

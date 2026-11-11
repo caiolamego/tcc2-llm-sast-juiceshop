@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção de SQL no fluxo de autenticação.\",\n  \"causa_da_vulnerabilidade\": \"O email recebido da requisição é interpolado diretamente na consulta SQL. Um valor malicioso pode alterar a lógica da consulta e contornar a verificação de credenciais. A senha também é interpolada, embora seu valor seja produzido por hash.\",\n  \"estrategia_de_correcao\": \"Substituir os valores interpolados por parâmetros vinculados da consulta, mantendo a mesma consulta, modelo de resultado e comportamento de autenticação.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/login.ts\",\n      \"trecho_original\": \"    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\",\n      \"trecho_corrigido\": \"    models.sequelize.query('SELECT * FROM Users WHERE email = :email AND password = :password AND deletedAt IS NULL', { replacements: { email: req.body.email || '', password: security.hash(req.body.password || '') }, model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Os parâmetros nomeados são enviados separadamente do texto SQL e tratados como valores, não como sintaxe executável. Assim, entradas contendo aspas ou operadores SQL não conseguem modificar a condição de autenticação. O hash da senha e os demais critérios da consulta permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A alteração corrige a injeção nesta consulta de login; não avalia outras consultas ou possíveis vulnerabilidades no tratamento de autenticação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1744,
+  "tokens_saida": 409,
+  "latencia_s": 4.751,
+  "custo_usd": 0.000422,
+  "hash_prompt": "314d98fe822c3f740d89de19d756a0146823d69b6fdbf1fbb2c6036cd420dce0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1741
+}

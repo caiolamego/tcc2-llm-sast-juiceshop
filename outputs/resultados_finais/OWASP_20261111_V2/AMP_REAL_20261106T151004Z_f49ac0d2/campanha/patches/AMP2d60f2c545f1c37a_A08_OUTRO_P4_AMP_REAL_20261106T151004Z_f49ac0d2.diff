@@ -1,0 +1,14 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..580967be6 100644
+--- a/server.ts
++++ b/server.ts
+@@ -503,7 +503,8 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+       endpoints: [`/api/${name}s`, `/api/${name}s/:id`],
+       excludeAttributes: exclude,
+       pagination: false,
+-      include
++      include,
++      writeAttributes: name === 'User' ? ['email', 'username', 'firstName', 'lastName', 'password'] : undefined
+     })
+ 
+     // create a wallet when a new user is registered using API

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL (CWE-943) na atualização de avaliações: o identificador controlado pelo cliente é usado diretamente como filtro de uma atualização que pode afetar vários documentos.\",\n  \"causa_da_vulnerabilidade\": \"A consulta usa `{ _id: req.body.id }` sem validar que `req.body.id` é um valor escalar do tipo esperado. Um objeto enviado no corpo pode ser interpretado pelo MongoDB como sintaxe de consulta, em vez de um identificador literal. Além disso, a opção `multi: true` permite atualizar todos os documentos correspondentes ao filtro.\",\n  \"estrategia_de_correcao\": \"Aceitar somente um identificador escalar em formato string e restringir a operação a um único documento. Rejeitar entradas de outro tipo antes de construir o filtro, preservando a atualização para identificadores válidos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/updateProductReviews.ts\",\n      \"trecho_original\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\",\n      \"trecho_corrigido\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    if (typeof req.body.id !== 'string') return res.status(400).end()\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: false } // vuln-code-snippet vuln-line noSqlReviewsChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A verificação de tipo impede que objetos contendo operadores NoSQL sejam usados como filtro; o seletor é construído com o campo conhecido `_id` e um valor string. Desativar a atualização múltipla limita a operação a um documento, evitando que um filtro amplo altere vários registros. A atualização e a resposta existentes permanecem para entradas válidas.\",\n  \"limitacoes_da_correcao\": \"A validação de tipo não confirma que a string corresponde ao formato ou a um registro válido de `_id`; isso depende do esquema e do driver usados pela aplicação. A correção também não verifica se o usuário autenticado está autorizado a editar a avaliação selecionada. Se a autorização por proprietário for necessária, o filtro deve incluir essa condição usando a identidade autenticada.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2401,
+  "tokens_saida": 615,
+  "latencia_s": 5.928,
+  "custo_usd": 0.000608,
+  "hash_prompt": "1232722027b6ba6ea672319080b987a256f6d7ac4accabd32fc0aebaee15c649",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2398
+}

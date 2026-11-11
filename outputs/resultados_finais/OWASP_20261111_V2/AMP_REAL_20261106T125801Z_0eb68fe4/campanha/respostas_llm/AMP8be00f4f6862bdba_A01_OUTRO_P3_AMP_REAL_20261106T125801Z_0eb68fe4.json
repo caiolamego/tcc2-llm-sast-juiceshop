@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição potencial de informações sensíveis por meio do endpoint público de métricas em /metrics (CWE-200).\",\"causa_da_vulnerabilidade\":\"A rota é registrada sem middleware explícito de autorização, permitindo que qualquer cliente alcance o handler metrics.serveMetrics().\",\"estrategia_de_correcao\":\"Adicionar o middleware de autorização existente security.isAuthorized() à rota de métricas, preservando o handler e o restante do comportamento da aplicação.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\",\"trecho_corrigido\":\"app.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\"}],\"justificativa_tecnica\":\"A autorização é aplicada antes da execução do handler de métricas, impedindo o acesso de clientes não autenticados ou não autorizados e reduzindo a exposição de dados operacionais. A alteração é mínima e mantém o endpoint, o formato da resposta e o handler existentes para usuários autorizados.\",\"limitacoes_da_correcao\":\"A efetividade depende da implementação de security.isAuthorized() e da configuração correta da autenticação. A alteração protege a rota registrada no trecho indicado; outras rotas ou mecanismos que exponham as mesmas métricas devem ser avaliados separadamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3165,
+  "tokens_saida": 299,
+  "latencia_s": 4.597,
+  "custo_usd": 0.00115,
+  "hash_prompt": "652d846ed9e8aff6709cdc98e8aea0dd11b01f5754acafb1a6ee681bf00d352e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3162
+}

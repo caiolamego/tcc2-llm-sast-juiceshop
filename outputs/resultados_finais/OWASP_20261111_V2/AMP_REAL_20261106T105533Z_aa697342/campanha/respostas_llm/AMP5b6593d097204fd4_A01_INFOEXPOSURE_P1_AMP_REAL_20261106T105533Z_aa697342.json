@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição não autorizada de arquivos e listagem de diretórios em /ftp e /support/logs.\",\n  \"causa_da_vulnerabilidade\": \"As rotas de listagem e download de /ftp são registradas sem controle de acesso. Em /support/logs, o middleware de controle de acesso é registrado depois do middleware de listagem, permitindo que a listagem seja servida antes da verificação; além disso, a rota de arquivos de log não passa por esse controle.\",\n  \"estrategia_de_correcao\": \"Aplicar o middleware de controle de acesso antes da listagem e do download em /ftp e /support/logs, preservando os caminhos e os middlewares de serviço existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\",\n      \"trecho_corrigido\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', verify.accessControlChallenges())\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', verify.accessControlChallenges(), servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\"\n    },\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\n      \"trecho_corrigido\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs/:file', verify.accessControlChallenges(), serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O Express executa os middlewares na ordem em que são registrados. A verificação agora ocorre antes da geração da listagem e também antes do envio de arquivos de log e de arquivos públicos em /ftp, impedindo que essas rotas divulguem conteúdo sem passar pelo controle de acesso. A rota de quarentena permanece inalterada.\",\n  \"limitacoes_da_correcao\": \"A correção depende de verify.accessControlChallenges() aplicar a política de autorização apropriada a cada requisição. O trecho fornecido não permite avaliar a configuração dessa política nem outros caminhos de acesso aos mesmos arquivos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1972,
+  "tokens_saida": 809,
+  "latencia_s": 7.001,
+  "custo_usd": 0.000651,
+  "hash_prompt": "91fdf112c0483afb2b2fbb5d2026bff7e61a9f7d1e6a2eb86c9472710a233538",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1969
+}

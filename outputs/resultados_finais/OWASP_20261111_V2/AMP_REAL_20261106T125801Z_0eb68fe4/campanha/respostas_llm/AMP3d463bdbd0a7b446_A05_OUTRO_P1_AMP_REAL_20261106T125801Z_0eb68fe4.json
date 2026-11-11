@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL no filtro da atualização de avaliações, permitindo que valores controlados pelo cliente em req.body.id sejam interpretados como operadores ou estruturas de consulta pelo MongoDB.\",\"causa_da_vulnerabilidade\":\"O valor req.body.id é usado diretamente no filtro { _id: req.body.id } sem validação de tipo ou formato. Assim, um atacante pode enviar um objeto NoSQL em vez de um identificador escalar e alterar múltiplos documentos.\",\"estrategia_de_correcao\":\"Validar que req.body.id é uma string antes de usá-lo no filtro e rejeitar requisições com tipo inválido, preservando a atualização existente para identificadores válidos.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\",\"trecho_corrigido\":\"    if (typeof req.body.id !== 'string') {\\n      return res.status(400).json({ error: 'Invalid review id' })\\n    }\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\"}],\"justificativa_tecnica\":\"A validação impede que objetos, arrays ou operadores MongoDB sejam usados como valor de _id. Como o filtro continua usando a mesma string válida e a operação update permanece inalterada, o comportamento funcional para requisições legítimas é preservado, enquanto entradas capazes de provocar seleção ampla de documentos são rejeitadas antes de alcançar o banco.\",\"limitacoes_da_correcao\":\"A correção valida apenas o tipo do identificador. Caso o formato esperado de _id seja mais restritivo, como ObjectId hexadecimal, uma validação adicional específica do esquema poderia ser aplicada. A mensagem de erro adicionada é uma resposta técnica nova para entradas inválidas; não foram alteradas mensagens existentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 897,
+  "tokens_saida": 443,
+  "latencia_s": 5.284,
+  "custo_usd": 0.000711,
+  "hash_prompt": "bc7e77d9ad2b7d791ea17547fc1aaadb305c4d0afb11d6951d14df6b26f5e028",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

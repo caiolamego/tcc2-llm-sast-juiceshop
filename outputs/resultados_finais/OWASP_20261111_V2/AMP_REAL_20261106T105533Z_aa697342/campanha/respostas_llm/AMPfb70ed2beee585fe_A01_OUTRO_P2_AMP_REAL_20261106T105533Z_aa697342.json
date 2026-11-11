@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso indevido a dados de outros usuários (IDOR/BOLA) na exportação de memórias.\",\n  \"causa_da_vulnerabilidade\": \"A consulta de memórias usa `req.body.UserId`, um identificador controlado pelo cliente, em vez do ID do usuário autenticado. Assim, um usuário pode alterar o valor enviado no corpo da requisição e solicitar memórias associadas a outra conta.\",\n  \"estrategia_de_correcao\": \"Vincular a consulta de memórias ao ID obtido da sessão autenticada (`loggedInUser.data.id`), sem confiar no identificador fornecido pelo cliente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/dataExport.ts\",\n      \"trecho_original\": \"          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })\",\n      \"trecho_corrigido\": \"          memories = await MemoryModel.findAll({ where: { UserId: loggedInUser.data.id } })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O ID usado para filtrar as memórias passa a vir do usuário autenticado, cuja identidade é obtida no servidor, e não de um campo manipulável da requisição. Portanto, modificar `req.body.UserId` deixa de permitir consultar memórias de outra conta. A alteração preserva o fluxo e o formato da exportação para o usuário autenticado.\",\n  \"limitacoes_da_correcao\": \"A correção trata a autorização da consulta de memórias. Não avalia outras possíveis questões no endpoint, como a confiança no cabeçalho `Host` ao construir URLs ou a consistência dos filtros usados nas consultas de pedidos e avaliações.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1435,
+  "tokens_saida": 372,
+  "latencia_s": 4.299,
+  "custo_usd": 0.000365,
+  "hash_prompt": "b115d7660be603c045563081b9167048b7278e0bcd625e88403ced03470eb48d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1432
+}

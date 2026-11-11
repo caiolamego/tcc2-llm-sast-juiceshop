@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Zip Slip (path traversal) no upload e extração de arquivos ZIP, permitindo gravar arquivos fora de uploads/complaints.\",\"causa_da_vulnerabilidade\":\"O caminho fornecido por entry.path é concatenado diretamente ao diretório de destino. A verificação absolutePath.includes(path.resolve('.')) não valida que o caminho esteja contido no diretório permitido e também não impede entradas com componentes .. ou caminhos absolutos.\",\"estrategia_de_correcao\":\"Normalizar e validar cada caminho de entrada contra o diretório-base usando path.relative, rejeitando caminhos absolutos e qualquer caminho que escape do diretório de uploads. Usar o caminho absoluto validado também como destino da escrita.\",\"edicoes\":[{\"arquivo\":\"routes/fileUpload.ts\",\"trecho_original\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve('uploads/complaints/' + fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.includes(path.resolve('.'))) {\\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  const uploadDirectory = path.resolve('uploads/complaints')\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve(uploadDirectory, fileName)\\n    const relativePath = path.relative(uploadDirectory, absolutePath)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (relativePath !== '' && !relativePath.startsWith('..' + path.sep) && relativePath !== '..' && !path.isAbsolute(relativePath)) {\\n      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"path.resolve(uploadDirectory, fileName) normaliza a entrada. path.relative determina se o destino está dentro do diretório permitido: caminhos que começam com .., equivalem a .. ou permanecem absolutos são rejeitados. A escrita usa o caminho validado, eliminando a possibilidade de traversal por entradas ZIP como ../../arquivo ou caminhos absolutos. O restante do fluxo, mensagens, identificadores e assinaturas permanece inalterado.\",\"limitacoes_da_correcao\":\"A correção impede traversal de caminho, mas não impõe limites de tamanho, quantidade de entradas, compressão ou tipos de arquivo no ZIP. Links simbólicos ou comportamentos específicos do sistema de arquivos podem exigir controles adicionais caso sejam aceitos pelo extrator e pelo ambiente operacional.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1931,
+  "tokens_saida": 638,
+  "latencia_s": 8.165,
+  "custo_usd": 0.001248,
+  "hash_prompt": "6f7cf6cd695f7477746dd6fbd6b6af2438e7f2fb87e03685ee8ff87ab8c9dafd",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1928
+}

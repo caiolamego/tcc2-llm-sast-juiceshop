@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Divulgação de logs de acesso por meio da listagem e do download de arquivos em /support/logs.\",\"causa_da_vulnerabilidade\":\"O middleware de controle de acesso está comentado/desabilitado, permitindo que a listagem do diretório e o acesso a /support/logs/:file ocorram sem autenticação ou autorização.\",\"estrategia_de_correcao\":\"Reativar o middleware verify.accessControlChallenges() antes da listagem e do download dos logs, alterando somente a linha atualmente desabilitada.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges())\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"A linha de controle de acesso já existe e está posicionada antes da rota de download, portanto a correção mínima é reativá-la removendo apenas o marcador que a desabilita. Assim, tanto a listagem quanto o acesso aos arquivos subsequentes ficam sujeitos ao middleware, impedindo a exposição não autorizada dos logs sem modificar o fluxo funcional ou os identificadores existentes.\",\"limitacoes_da_correcao\":\"A eficácia depende da implementação correta de verify.accessControlChallenges() e das configurações de autenticação/autorização associadas. A correção cobre as rotas mostradas; não é possível avaliar outras formas de exposição dos logs fora do trecho fornecido.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2017,
+  "tokens_saida": 490,
+  "latencia_s": 6.219,
+  "custo_usd": 0.001092,
+  "hash_prompt": "31ef8f7be9f9744d96a176caed12d5719a83425604ba3297dec9cb7c016d8004",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2014
+}

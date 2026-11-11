@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Divulgação da resposta do CAPTCHA na mesma resposta HTTP que entrega o desafio (CWE-200), permitindo que qualquer cliente obtenha a solução sem resolvê-lo.\",\n  \"causa_da_vulnerabilidade\": \"O objeto enviado por `res.json(captcha)` inclui o campo `answer`, que contém a solução calculada no servidor.\",\n  \"estrategia_de_correcao\": \"Retirar `answer` da resposta pública, mantendo-o no registro persistido no servidor para que `verifyCaptcha` continue validando a resposta enviada pelo cliente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/captcha.ts\",\n      \"trecho_original\": \"    const captcha = {\\n      captchaId,\\n      captcha: expression,\\n      answer\\n    }\\n    const captchaInstance = CaptchaModel.build(captcha)\\n    await captchaInstance.save()\\n    res.json(captcha)\",\n      \"trecho_corrigido\": \"    const captcha = {\\n      captchaId,\\n      captcha: expression,\\n      answer\\n    }\\n    const captchaInstance = CaptchaModel.build(captcha)\\n    await captchaInstance.save()\\n    res.json({ captchaId, captcha: expression })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A solução permanece armazenada no servidor e disponível para a verificação existente, mas deixa de ser serializada na resposta do endpoint que fornece o desafio. A resposta mantém os campos necessários para identificar e apresentar o CAPTCHA, sem expor `answer`.\",\n  \"limitacoes_da_correcao\": \"Esta alteração corrige a exposição direta da solução. Não implementa limites de tentativas, expiração ou prevenção de reutilização do CAPTCHA; esses controles dependem de requisitos e mecanismos adicionais.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2119,
+  "tokens_saida": 380,
+  "latencia_s": 4.573,
+  "custo_usd": 0.000455,
+  "hash_prompt": "fefa34e984aa2034a11a189b0b68a109639083f6b648619e9c456130c5d7c4a4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2116
+}

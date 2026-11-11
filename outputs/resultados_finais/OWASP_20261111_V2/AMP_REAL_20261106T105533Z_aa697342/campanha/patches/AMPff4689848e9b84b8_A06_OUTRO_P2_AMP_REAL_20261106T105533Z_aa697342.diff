@@ -1,0 +1,13 @@
+diff --git a/models/feedback.ts b/models/feedback.ts
+index 4790dbf00..0f8969fd2 100644
+--- a/models/feedback.ts
++++ b/models/feedback.ts
+@@ -49,7 +49,7 @@ const FeedbackModelInit = (sequelize: Sequelize) => {
+               )
+             })
+           } else {
+-            sanitizedComment = security.sanitizeSecure(comment)
++            sanitizedComment = security.sanitizeHtml(comment)
+           }
+           this.setDataValue('comment', sanitizedComment)
+         }

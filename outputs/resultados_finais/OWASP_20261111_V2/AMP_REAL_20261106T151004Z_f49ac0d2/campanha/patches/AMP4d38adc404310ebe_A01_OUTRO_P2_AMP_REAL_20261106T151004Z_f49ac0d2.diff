@@ -1,0 +1,23 @@
+diff --git a/routes/captcha.ts b/routes/captcha.ts
+index d874df7bb..4ac95f379 100644
+--- a/routes/captcha.ts
++++ b/routes/captcha.ts
+@@ -19,7 +19,17 @@ export function captchas () {
+     const secondOperator = operators[Math.floor((Math.random() * 3))]
+ 
+     const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()
+-    const answer = eval(expression).toString() // eslint-disable-line no-eval
++    function calculate(a: number, op: string, b: number): number {
++      switch (op) {
++        case '*': return a * b
++        case '+': return a + b
++        case '-': return a - b
++        default: throw new Error('Invalid operator')
++      }
++    }
++    const intermediate = calculate(firstTerm, firstOperator, secondTerm)
++    const result = calculate(intermediate, secondOperator, thirdTerm)
++    const answer = result.toString() // eslint-disable-line no-eval
+ 
+     const captcha = {
+       captchaId,

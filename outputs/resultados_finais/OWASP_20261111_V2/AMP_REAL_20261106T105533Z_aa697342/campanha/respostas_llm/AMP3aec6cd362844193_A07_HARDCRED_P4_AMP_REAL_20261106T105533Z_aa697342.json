@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Credencial criptográfica hard-coded usada para assinar tokens JWT. O código também contém uma chave privada RSA literal, usada por `authorize` para assinar tokens e por `deluxeToken` como chave HMAC.\",\n  \"causa_da_vulnerabilidade\": \"A chave privada RSA está armazenada diretamente no código-fonte e a chave HMAC de `deluxeToken` também é um literal. Quem obtiver acesso ao repositório ou ao artefato pode recuperar essas credenciais. A chave privada permite assinar tokens aceitos pela chave pública correspondente; a chave HMAC permite forjar tokens deluxe.\",\n  \"estrategia_de_correcao\": \"Carregar a chave privada e o segredo HMAC de configuração externa obrigatória, sem valores de fallback embutidos, e falhar na inicialização se estiverem ausentes. Manter os algoritmos e os contratos das funções existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"const privateKey = '-----BEGIN RSA PRIVATE KEY-----\\\\r\\\\nMIICXAIBAAKBgQDNwqLEe9wgTXCbC7+RPdDbBbeqjdbs4kOPOIGzqLpXvJXlxxW8iMz0EaM4BKUqYsIa+ndv3NAn2RxCd5ubVdJJcX43zO6Ko0TFEZx/65gY3BE0O6syCEmUP4qbSd6exou/F+WTISzbQ5FBVPVmhnYhG/kpwt/cIxK5iUn5hm+4tQIDAQABAoGBAI+8xiPoOrA+KMnG/T4jJsG6TsHQcDHvJi7o1IKC/hnIXha0atTX5AUkRRce95qSfvKFweXdJXSQ0JMGJyfuXgU6dI0TcseFRfewXAa/ssxAC+iUVR6KUMh1PE2wXLitfeI6JLvVtrBYswm2I7CtY0q8n5AGimHWVXJPLfGV7m0BAkEA+fqFt2LXbLtyg6wZyxMA/cnmt5Nt3U2dAu77MzFJvibANUNHE4HPLZxjGNXN+a6m0K6TD4kDdh5HfUYLWWRBYQJBANK3carmulBwqzcDBjsJ0YrIONBpCAsXxk8idXb8jL9aNIg15Wumm2enqqObahDHB5jnGOLmbasizvSVqypfM9UCQCQl8xIqy+YgURXzXCN+kwUgHinrutZms87Jyi+D8Br8NY0+Nlf+zHvXAomD2W5CsEK7C+8SLBr3k/TsnRWHJuECQHFE9RA2OP8WoaLPuGCyFXaxzICThSRZYluVnWkZtxsBhW2W8z1b8PvWUE7kMy7TnkzeJS2LSnaNHoyxi7IaPQUCQCwWU4U+v4lD7uYBw00Ga/xt+7+UqFPlPVdz1yyr4q24Zxaw0LgmuEvgU5dycq8N7JxjTubX0MIRR+G9fmDBBl8=\\\\r\\\\n-----END RSA PRIVATE KEY-----'\",\n      \"trecho_corrigido\": \"const privateKey = process.env.JWT_PRIVATE_KEY\\nif (!privateKey) throw new Error('Missing JWT signing configuration')\\nconst deluxeTokenSecret = process.env.DELUXE_TOKEN_SECRET\\nif (!deluxeTokenSecret) throw new Error('Missing deluxe token configuration')\"\n    },\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', privateKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\",\n      \"trecho_corrigido\": \"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', deluxeTokenSecret)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A chave privada e o segredo HMAC deixam de estar versionados no código e passam a ser fornecidos pelo ambiente de execução. A ausência de configuração causa falha explícita na inicialização, em vez de recorrer a uma credencial previsível ou embutida. `authorize` continua assinando com RS256 e `deluxeToken` continua usando HMAC-SHA-256, preservando os contratos funcionais. A chave pública de verificação permanece pública, como esperado para esse esquema.\",\n  \"limitacoes_da_correcao\": \"É necessário configurar `JWT_PRIVATE_KEY` e `DELUXE_TOKEN_SECRET` em um mecanismo seguro de gestão de segredos. A chave privada e o segredo anteriormente expostos devem ser considerados comprometidos: gere novos valores, atualize os verificadores e planeje a invalidação ou migração de tokens existentes. Variáveis de ambiente, por si só, não garantem armazenamento seguro nem rotação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3677,
+  "tokens_saida": 1207,
+  "latencia_s": 10.435,
+  "custo_usd": 0.001063,
+  "hash_prompt": "d5fe137b077924c3b526150979127c005907fc78a6c18ae6799c15d0c771b929",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3674
+}

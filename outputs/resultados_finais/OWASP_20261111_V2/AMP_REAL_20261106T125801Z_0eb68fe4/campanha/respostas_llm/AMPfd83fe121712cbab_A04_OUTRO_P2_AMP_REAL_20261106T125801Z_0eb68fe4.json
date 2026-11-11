@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Inclusão de arquivos sensíveis no artefato de distribuição, especialmente o diretório `encryptionkeys/**`, que pode conter chaves privadas ou outros segredos usados pela aplicação.\",\"causa_da_vulnerabilidade\":\"A configuração da tarefa `compress` inclui explicitamente `encryptionkeys/**` na lista de arquivos empacotados. Assim, qualquer chave armazenada nesse diretório é copiada para o arquivo distribuído, tornando-a acessível a qualquer pessoa que obtenha o pacote.\",\"estrategia_de_correcao\":\"Remover `encryptionkeys/**` da lista de arquivos incluídos no pacote. Essa é a alteração mínima necessária e preserva os demais arquivos e o comportamento da tarefa de empacotamento.\",\"edicoes\":[{\"arquivo\":\"Gruntfile.js\",\"trecho_original\":\"              'encryptionkeys/**',\\n              'frontend/dist/frontend/**',\",\"trecho_corrigido\":\"              'frontend/dist/frontend/**',\"}],\"justificativa_tecnica\":\"O diretório `encryptionkeys` não será mais incluído no artefato gerado por `compress`, impedindo a distribuição acidental de chaves privadas e reduzindo o risco de comprometimento de dados protegidos, falsificação de tokens ou descriptografia de informações. A alteração não modifica a lógica de execução nem os nomes de identificadores e afeta somente o conteúdo empacotado.\",\"limitacoes_da_correcao\":\"A correção impede a inclusão dessas chaves no pacote, mas não remove chaves que já existam no repositório, no sistema de arquivos ou em artefatos previamente gerados. Chaves potencialmente expostas devem ser revogadas e rotacionadas, e os artefatos comprometidos devem ser removidos ou substituídos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1337,
+  "tokens_saida": 376,
+  "latencia_s": 4.41,
+  "custo_usd": 0.000785,
+  "hash_prompt": "9c983f6bba25a7eec942f014f110b7527cf160da347bf7510ddf5480d09060c4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1334
+}

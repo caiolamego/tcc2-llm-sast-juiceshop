@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open redirect na validação de URLs, causado por correspondência parcial com `String.includes`.\",\"causa_da_vulnerabilidade\":\"A função `isRedirectAllowed` considera uma URL permitida quando ela contém qualquer URL da allowlist como substring. Assim, uma URL controlada pelo atacante, como `https://github.com/juice-shop/juice-shop.evil.example`, pode conter uma entrada válida e ser aceita, apesar de apontar para outro destino.\",\"estrategia_de_correcao\":\"Comparar a URL recebida com os valores da allowlist por igualdade exata, substituindo a correspondência parcial por `Set.has`.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\"trecho_corrigido\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url === allowedUrl // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\"}],\"justificativa_tecnica\":\"A comparação por igualdade exige que a URL fornecida seja exatamente uma das URLs previamente autorizadas, impedindo que domínios, caminhos ou parâmetros controlados pelo atacante sejam anexados a uma entrada válida para contornar a allowlist. A alteração preserva a assinatura, os identificadores, as mensagens e o fluxo funcional da função, modificando apenas a condição vulnerável.\",\"limitacoes_da_correcao\":\"A correção trata a URL como uma string exata. Variações legítimas de normalização, como diferenças de esquema, porta, codificação ou barra final, continuarão sendo rejeitadas. Isso é mais restritivo e seguro, mas, caso sejam necessárias, devem ser tratadas explicitamente com parsing e regras específicas; não há validação adicional de contexto sobre como o valor será usado pelo redirecionamento.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3084,
+  "tokens_saida": 464,
+  "latencia_s": 6.54,
+  "custo_usd": 0.000619,
+  "hash_prompt": "328fc340aab6b2110e7d818d06d4562f25ac7ac50def691d00b8609035e5f70a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 3081,
+  "tokens_escrita_cache": 0
+}

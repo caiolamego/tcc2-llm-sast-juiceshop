@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição da resposta do CAPTCHA na resposta HTTP, permitindo que qualquer cliente obtenha diretamente o valor necessário para passar pela verificação.\",\"causa_da_vulnerabilidade\":\"O objeto completo `captcha`, incluindo o campo sensível `answer`, é enviado por `res.json(captcha)`. A verificação posterior compara a resposta fornecida pelo cliente com esse valor armazenado no servidor.\",\"estrategia_de_correcao\":\"Manter a resposta exclusivamente no servidor e retornar apenas o identificador e a expressão do CAPTCHA. O cliente continuará recebendo os dados necessários para exibir o desafio, mas não a solução.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    res.json(captcha)\",\"trecho_corrigido\":\"    res.json({ captchaId, captcha: expression })\"}],\"justificativa_tecnica\":\"A resposta deixa de incluir `answer`, eliminando a divulgação direta da solução e preservando o contrato funcional necessário para o cliente apresentar o CAPTCHA e enviar `captchaId` e a resposta informada pelo usuário à rota de verificação. A solução permanece armazenada no servidor por meio de `CaptchaModel`.\",\"limitacoes_da_correcao\":\"Esta alteração corrige a exposição da resposta, mas não implementa controles adicionais de expiração, uso único, limitação de tentativas ou proteção contra abuso. Esses controles podem ser necessários para impedir reutilização ou tentativas automatizadas, dependendo do comportamento e da configuração das rotas de verificação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2119,
+  "tokens_saida": 314,
+  "latencia_s": 4.763,
+  "custo_usd": 0.000906,
+  "hash_prompt": "35578d7cfffd7ea25ef59f43fff3bb6811a8d47aea36ab4189183e1cea204e49",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2116
+}

@@ -1,0 +1,16 @@
+diff --git a/lib/codingChallenges.ts b/lib/codingChallenges.ts
+index 10dccf6f3..02e25d38a 100644
+--- a/lib/codingChallenges.ts
++++ b/lib/codingChallenges.ts
+@@ -73,9 +73,9 @@ function getCodingChallengeFromFileContent (source: string, challengeKey: string
+   const vulnLines = []
+   const neutralLines = []
+   for (let i = 0; i < lines.length; i++) {
+-    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {
++    if (/vuln-code-snippet vuln-line/.test(lines[i]) && lines[i].includes(challengeKey)) {
+       vulnLines.push(i + 1)
+-    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {
++    } else if (/vuln-code-snippet neutral-line/.test(lines[i]) && lines[i].includes(challengeKey)) {
+       neutralLines.push(i + 1)
+     }
+   }

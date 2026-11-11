@@ -1,0 +1,28 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..8431e8705 100644
+--- a/server.ts
++++ b/server.ts
+@@ -406,15 +406,15 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+   app.post('/api/Feedbacks', verify.captchaBypassChallenge())
+   /* User registration challenge verifications before finale takes over */
+   app.post('/api/Users', (req: Request, res: Response, next: NextFunction) => {
+-    if (req.body.email !== undefined && req.body.password !== undefined && req.body.passwordRepeat !== undefined) {
+-      if (req.body.email.length !== 0 && req.body.password.length !== 0) {
+-        req.body.email = req.body.email.trim()
+-        req.body.password = req.body.password.trim()
+-        req.body.passwordRepeat = req.body.passwordRepeat.trim()
+-      } else {
+-        res.status(400).send(res.__('Invalid email/password cannot be empty'))
+-      }
++    if (req.body.email === undefined || req.body.password === undefined || req.body.passwordRepeat === undefined) {
++      return res.status(400).send(res.__('Invalid email/password cannot be empty'))
++    }
++    if (req.body.email.length === 0 || req.body.password.length === 0) {
++      return res.status(400).send(res.__('Invalid email/password cannot be empty'))
+     }
++    req.body.email = req.body.email.trim()
++    req.body.password = req.body.password.trim()
++    req.body.passwordRepeat = req.body.passwordRepeat.trim()
+     next()
+   })
+   app.post('/api/Users', verify.registerAdminChallenge())

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de propriedade remota (remote-property injection) ao usar valores controlados pelo usuário para acessar dinamicamente propriedades de user.data. Isso pode permitir acesso a propriedades não destinadas à resposta, incluindo password ou propriedades herdadas do protótipo.\",\"causa_da_vulnerabilidade\":\"O parâmetro req.query.fields é dividido e cada valor é usado diretamente em user?.data[field as keyof typeof user.data] e baseUser[field]. A entrada não é restringida a uma lista explícita de campos permitidos.\",\"estrategia_de_correcao\":\"Restringir os campos solicitados a uma allowlist dos campos públicos suportados pela resposta. O acesso dinâmico continuará sendo usado apenas após a validação contra essa lista, impedindo acesso a password, propriedades herdadas ou outros campos internos.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\"trecho_corrigido\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"}],\"justificativa_tecnica\":\"A allowlist garante que somente os quatro campos públicos já retornados no comportamento padrão possam ser selecionados pelo cliente. Valores como password, __proto__, constructor e prototype deixam de ser aceitos, eliminando o acesso arbitrário a propriedades do objeto e preservando a funcionalidade de seleção de campos públicos. Nenhuma mensagem, assinatura, identificador existente ou outro arquivo foi alterado.\",\"limitacoes_da_correcao\":\"A correção protege este endpoint contra seleção arbitrária de propriedades, mas não substitui uma revisão geral do modelo de autorização e da estrutura de user.data. Campos públicos adicionais, se futuramente necessários, deverão ser incluídos explicitamente na allowlist e avaliados quanto à sensibilidade.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1539,
+  "tokens_saida": 536,
+  "latencia_s": 6.431,
+  "custo_usd": 0.001028,
+  "hash_prompt": "d3c67bf55386acf19e5df670ca2d78d660185d6993aa555c206b321b1ebef1da",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1536
+}

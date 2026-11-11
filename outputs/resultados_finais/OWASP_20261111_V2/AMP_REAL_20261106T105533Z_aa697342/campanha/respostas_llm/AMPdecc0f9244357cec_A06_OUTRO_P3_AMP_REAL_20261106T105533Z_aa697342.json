@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A validação de quantidade aceita valores inválidos, como zero, números negativos, frações e valores não numéricos, porque verifica apenas o limite por usuário e se o estoque é suficiente.\",\n  \"causa_da_vulnerabilidade\": \"Em quantityCheck, a quantidade recebida não é validada como número inteiro positivo antes das comparações. Valores como 0 ou negativos podem satisfazer product.quantity >= quantity e permitir que a operação prossiga.\",\n  \"estrategia_de_correcao\": \"Antes das verificações de limite e estoque, exigir que quantity seja um inteiro seguro e maior que zero. Para quantidades inválidas, responder com HTTP 400 sem alterar as mensagens existentes para os demais casos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/basketItems.ts\",\n      \"trecho_original\": \"async function quantityCheck (req: Request, res: Response, next: NextFunction, id: number, quantity: number) {\\n  const product = await QuantityModel.findOne({ where: { ProductId: id } })\",\n      \"trecho_corrigido\": \"async function quantityCheck (req: Request, res: Response, next: NextFunction, id: number, quantity: number) {\\n  if (!Number.isSafeInteger(quantity) || quantity <= 0) {\\n    res.status(400).json({ error: 'Invalid quantity' })\\n    return\\n  }\\n\\n  const product = await QuantityModel.findOne({ where: { ProductId: id } })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação rejeita quantidade ausente ou não numérica, frações, valores fora da faixa de inteiros seguros, zero e números negativos antes de consultar o produto ou chamar next(). Quantidades inteiras positivas continuam sujeitas às verificações existentes de limite por usuário e disponibilidade em estoque.\",\n  \"limitacoes_da_correcao\": \"A validação pressupõe que quantity chega como número; strings numéricas também serão rejeitadas, evitando coerção implícita. A verificação não torna a reserva de estoque atômica, portanto operações concorrentes ainda podem exigir controle transacional.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1975,
+  "tokens_saida": 468,
+  "latencia_s": 5.269,
+  "custo_usd": 0.000481,
+  "hash_prompt": "a86d7ddd23815caae69b9a5823f472cbdf60e9a1233d4e1031dac352675f1e18",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1972
+}

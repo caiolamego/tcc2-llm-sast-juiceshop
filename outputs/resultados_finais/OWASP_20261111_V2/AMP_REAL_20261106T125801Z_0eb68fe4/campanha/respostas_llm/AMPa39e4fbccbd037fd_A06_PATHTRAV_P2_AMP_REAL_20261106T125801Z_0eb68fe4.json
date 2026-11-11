@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Local File Read/Path Traversal (LFR) no parâmetro `layout`, permitindo que o atacante controle o arquivo de template usado por `res.render`.\",\"causa_da_vulnerabilidade\":\"O código aceita `req.body.layout` diretamente, transforma-o em caminho absoluto com `path.resolve` e o utiliza indiretamente em `res.render('dataErasureResult', ...)` por meio do mecanismo de renderização. A validação existente apenas procura algumas substrings proibidas (`ftp`, `ctf.key` e `encryptionkeys`), não restringe o caminho a um diretório ou conjunto de templates permitido e pode ser contornada com outros caminhos e representações.\",\"estrategia_de_correcao\":\"Remover o uso controlável pelo usuário como caminho de template. O parâmetro `layout` deve continuar sendo aceito no corpo da requisição para preservar o fluxo funcional, mas a renderização deve usar exclusivamente o template fixo `dataErasureResult`, tanto no callback quanto no caminho sem callback.\",\"edicoes\":[{\"arquivo\":\"routes/dataErasure.ts\",\"trecho_original\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\\n      }\",\"trecho_corrigido\":\"      if (req.body.layout) {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        }, (error, html) => {\\n          if (!html || error) {\\n            next(new Error(error.message))\\n          } else {\\n            const sendlfrResponse: string = html.slice(0, 100) + '......'\\n            res.send(sendlfrResponse)\\n            challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n          }\\n        })\\n      } else {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\\n      }\"}],\"justificativa_tecnica\":\"A correção elimina o fluxo em que entrada controlada pelo atacante é convertida em caminho e usada para selecionar um recurso de renderização. O template agora é sempre o nome literal `dataErasureResult`, impedindo traversal e leitura de arquivos arbitrários independentemente de codificações, separadores ou nomes alternativos. O comportamento funcional de renderizar o resultado e, quando `layout` está presente, enviar apenas o trecho inicial e resolver o desafio é preservado.\",\"limitacoes_da_correcao\":\"A correção trata a vulnerabilidade de seleção arbitrária de template neste endpoint. Ela não substitui validações gerais de autenticação, autorização, CSRF ou sanitização de outros campos; esses controles devem ser avaliados separadamente. O import `path` pode permanecer sem uso conforme a restrição de alteração mínima, embora ferramentas de lint possam sinalizá-lo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1655,
+  "tokens_saida": 820,
+  "latencia_s": 9.211,
+  "custo_usd": 0.001018,
+  "hash_prompt": "e702c8e1f36b0defd53e17b667f7a5c8139eb2e3a921d08820b1a4c8f25244a2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1652,
+  "tokens_escrita_cache": 0
+}

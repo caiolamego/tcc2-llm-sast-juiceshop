@@ -1,0 +1,18 @@
+diff --git a/lib/codingChallenges.ts b/lib/codingChallenges.ts
+index 10dccf6f3..3857057bb 100644
+--- a/lib/codingChallenges.ts
++++ b/lib/codingChallenges.ts
+@@ -56,7 +56,12 @@ function getCodeChallengesFromFile (file: FileMatch) {
+ }
+ 
+ function getCodingChallengeFromFileContent (source: string, challengeKey: string) {
+-  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${challengeKey}([^])*vuln-code-snippet end.*${challengeKey}`)
++  function escapeRegExp(string: string) {
++  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
++}
++
++const escapedChallengeKey = escapeRegExp(challengeKey);
++const snippets = source.match(new RegExp(`[/#]{0,2} vuln-code-snippet start.*${escapedChallengeKey}([^])*vuln-code-snippet end.*${escapedChallengeKey}`));
+   if (snippets == null) {
+     throw new BrokenBoundary('Broken code snippet boundaries for: ' + challengeKey)
+   }

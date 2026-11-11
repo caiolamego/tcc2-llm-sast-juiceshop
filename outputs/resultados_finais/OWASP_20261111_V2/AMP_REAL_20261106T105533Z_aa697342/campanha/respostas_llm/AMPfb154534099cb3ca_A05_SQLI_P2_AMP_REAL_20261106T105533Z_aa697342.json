@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção de SQL na autenticação (SQL injection), que pode permitir contornar a verificação de credenciais e acessar contas sem a senha legítima.\",\n  \"causa_da_vulnerabilidade\": \"O código interpola diretamente req.body.email na consulta SQL. Embora a senha seja transformada por security.hash, o email permanece controlado pelo cliente e pode conter sintaxe SQL que altere a condição WHERE.\",\n  \"estrategia_de_correcao\": \"Substituir a interpolação de valores fornecidos pelo usuário por parâmetros vinculados do Sequelize, mantendo a consulta, os campos selecionados e o comportamento de autenticação existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/login.ts\",\n      \"trecho_original\": \"    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\",\n      \"trecho_corrigido\": \"    models.sequelize.query('SELECT * FROM Users WHERE email = :email AND password = :password AND deletedAt IS NULL', {\\n      replacements: {\\n        email: req.body.email || '',\\n        password: security.hash(req.body.password || '')\\n      },\\n      model: UserModel,\\n      plain: true\\n    }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Os parâmetros nomeados são enviados separadamente da instrução SQL e tratados pelo Sequelize como valores, não como sintaxe executável. Assim, caracteres especiais ou trechos SQL no email não conseguem modificar a estrutura da consulta. O hash da senha e as condições existentes são preservados, mantendo o fluxo funcional de autenticação.\",\n  \"limitacoes_da_correcao\": \"A alteração protege esta consulta contra injeção por seus valores interpolados. Não avalia outros possíveis pontos de injeção no sistema nem substitui controles adicionais, como validação de entrada, limitação de tentativas e autenticação multifator.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1852,
+  "tokens_saida": 476,
+  "latencia_s": 5.977,
+  "custo_usd": 0.000469,
+  "hash_prompt": "096cd6e8a559fd66b69c7200ee4e89d10a1d8a25233dad65893979ba8de96899",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1849
+}

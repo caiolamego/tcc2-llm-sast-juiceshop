@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path Traversal / Local File Inclusion no parâmetro layout, permitindo que um atacante controle o template usado por res.render().\",\"causa_da_vulnerabilidade\":\"O valor controlado por req.body.layout é convertido diretamente em caminho absoluto com path.resolve() e passado a res.render() sem restringi-lo a um diretório permitido. A verificação apenas procura substrings específicas (ftp, ctf.key e encryptionkeys), não valida que o caminho esteja dentro do diretório de templates e pode ser contornada com outros caminhos.\",\"estrategia_de_correcao\":\"Restringir o caminho resolvido a um diretório fixo e permitido de templates, rejeitando qualquer caminho que não seja descendente desse diretório. O caminho relativo deve ser normalizado antes da validação e somente o caminho validado deve ser usado no render.\",\"edicoes\":[{\"arquivo\":\"routes/dataErasure.ts\",\"trecho_original\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\",\"trecho_corrigido\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const templatesPath: string = path.resolve('views').toLowerCase() + path.sep\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys') || !filePath.startsWith(templatesPath))\\n        if (!isForbiddenFile) {\\n          res.render(filePath, {\"}],\"justificativa_tecnica\":\"path.resolve() normaliza sequências como ../, e a comparação startsWith() contra o diretório permitido, incluindo o separador final, impede que o caminho escape de views ou corresponda apenas a um prefixo semelhante, como views2. O render passa a utilizar somente o caminho validado, eliminando o controle arbitrário do template pelo cliente. As verificações existentes são preservadas e o restante do fluxo não é alterado.\",\"limitacoes_da_correcao\":\"A correção pressupõe que os templates permitidos estejam no diretório views, conforme a configuração padrão do Express. Ela não substitui controles de autorização nem impede alterações maliciosas nos próprios arquivos do servidor. A validação permanece dependente do sistema de arquivos e da configuração de diretório de templates; se a aplicação configurar outro diretório, esse caminho deverá ser ajustado.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1655,
+  "tokens_saida": 574,
+  "latencia_s": 7.574,
+  "custo_usd": 0.001102,
+  "hash_prompt": "e702c8e1f36b0defd53e17b667f7a5c8139eb2e3a921d08820b1a4c8f25244a2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1652
+}

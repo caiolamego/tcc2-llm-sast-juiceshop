@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Acesso não autorizado e alteração indevida de pedidos por ausência de autorização adequada nas rotas allOrders e toggleDeliveryStatus. Qualquer requisição que alcance essas funções pode consultar todos os pedidos ou alterar o status de entrega de um pedido arbitrário.\",\"causa_da_vulnerabilidade\":\"As funções allOrders e toggleDeliveryStatus não validam a identidade nem as permissões do usuário autenticado. A rota de alteração também aceita req.params.id diretamente sem verificar se o pedido pertence ao usuário autorizado ou se ele possui privilégio administrativo.\",\"estrategia_de_correcao\":\"Aplicar a mesma validação de autenticação já usada em orderHistory antes de executar operações privilegiadas, bloqueando a requisição com a mensagem de erro existente quando não houver usuário autenticado. Para preservar o comportamento funcional esperado de administração, exigir que o usuário autenticado tenha role de administrador nas operações de listar todos os pedidos e alterar o status de entrega.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const order = await ordersCollection.find()\\n    res.status(200).json({ status: 'success', data: order.reverse() })\\n  }\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.role === 'admin') {\\n      const order = await ordersCollection.find()\\n      res.status(200).json({ status: 'success', data: order.reverse() })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\"},{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.role === 'admin') {\\n      const deliveryStatus = !req.body.deliveryStatus\\n      const eta = deliveryStatus ? '0' : '1'\\n      await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n      res.status(200).json({ status: 'success' })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\"}],\"justificativa_tecnica\":\"As operações administrativas deixam de ser executadas quando não existe uma sessão autenticada com role admin. A validação ocorre antes da consulta ou atualização no banco, impedindo enumeração de pedidos e adulteração arbitrária por usuários não autorizados, sem modificar assinaturas, mensagens de erro ou o comportamento para administradores.\",\"limitacoes_da_correcao\":\"A correção pressupõe que loggedInUser.data.role seja a fonte confiável e use exatamente o valor 'admin'. Ela não adiciona validação de formato do identificador do pedido nem tratamento explícito de exceções do banco. A segurança também depende da integridade do mecanismo authenticatedUsers e da configuração correta das rotas e do armazenamento de sessões.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 890,
+  "tokens_saida": 814,
+  "latencia_s": 9.805,
+  "custo_usd": 0.001155,
+  "hash_prompt": "41d6c86bbdfd2b1f7c409e54fc3e30ee16d62b8b4ce177ac50b0baf38051c661",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Não é possível identificar uma vulnerabilidade de produção no arquivo fornecido: ele é um arquivo de teste e não contém a implementação do componente.\",\n  \"causa_da_vulnerabilidade\": \"O teste verifica que o valor `lastLoginIp` extraído de um JWT é passado a `bypassSecurityTrustHtml`. Se esse valor for controlável por um atacante, confiar nele como HTML pode permitir XSS. Porém, a implementação que realiza essa operação não está incluída; alterar apenas este teste não corrige a vulnerabilidade e as restrições proíbem alterar arquivos de teste.\",\n  \"estrategia_de_correcao\": \"Não propor uma edição neste arquivo. Para corrigir a vulnerabilidade, é necessário alterar o arquivo de implementação do componente: tratar o IP como texto não confiável, validar ou escapar o valor e evitar `bypassSecurityTrustHtml` para conteúdo derivado do JWT. Solicitar o arquivo de implementação para fornecer uma correção precisa.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"O arquivo informado contém somente configuração e casos de teste. A chamada ao sanitizer é simulada e a expectativa explícita de HTML confiável não executa nem corrige o comportamento real da aplicação. Modificar o teste violaria a restrição de não alterar arquivos de teste; modificar apenas o mock também não protegeria usuários em produção.\",\n  \"limitacoes_da_correcao\": \"A correção não pode ser aplicada com segurança sem o código de `frontend/src/app/last-login-ip/last-login-ip.component.ts` (ou do arquivo que renderiza o IP).\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1313,
+  "tokens_saida": 346,
+  "latencia_s": 5.34,
+  "custo_usd": 0.000186,
+  "hash_prompt": "7a84e179120a3d97a1c07214bfe383ba3197f90014a7dfbd9ee50466780ac962",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1310,
+  "tokens_escrita_cache": 0
+}

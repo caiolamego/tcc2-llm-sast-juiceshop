@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-639: bypass de autorização horizontal (IDOR), pois a atualização de uma avaliação é selecionada apenas pelo _id fornecido pelo cliente, sem restringir o documento ao usuário autenticado ou verificar sua propriedade.\",\"causa_da_vulnerabilidade\":\"A consulta usada em db.reviewsCollection.update contém somente { _id: req.body.id }. Embora a identidade do usuário seja obtida da sessão, ela não participa da seleção nem de uma verificação de autorização antes da escrita. Assim, um usuário autenticado que conheça o ID de outra avaliação pode alterar sua mensagem.\",\"estrategia_de_correcao\":\"Restringir a atualização ao documento identificado pelo ID recebido e cujo autor corresponda ao e-mail do usuário autenticado no servidor. Quando não houver usuário autenticado, usar uma condição que não corresponda a nenhum documento, preservando a autorização no servidor e evitando confiar em dados enviados pelo cliente.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\",\"trecho_corrigido\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id, author: user?.data?.email ?? null }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\"}],\"justificativa_tecnica\":\"A operação de escrita passa a localizar simultaneamente o ID solicitado e o autor derivado da sessão autenticada. Portanto, conhecer ou controlar req.body.id não permite atualizar avaliações pertencentes a outro usuário. Para usuários sem identidade autenticada, author: null não corresponde a avaliações normais com autor, negando a operação sem alterar a assinatura ou o formato da resposta. A alteração é mínima e mantém a atualização legítima de avaliações do próprio usuário.\",\"limitacoes_da_correcao\":\"A correção assume que o campo author da avaliação armazena o e-mail do usuário autenticado, conforme indicado pela verificação existente em forgedReviewChallenge. Ela não implementa regras adicionais para administradores, caso a aplicação devesse permitir que administradores alterassem avaliações de terceiros; nesse caso, seria necessário aplicar uma autorização baseada no papel confiável da sessão. Também depende de a camada de autenticação fornecer user.data.email de forma confiável.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1867,
+  "tokens_saida": 509,
+  "latencia_s": 6.858,
+  "custo_usd": 0.001077,
+  "hash_prompt": "4fa86a97e0dd0ddcbfe5c012eb1776822d2c820083593c63aa711103e5089d79",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1864
+}

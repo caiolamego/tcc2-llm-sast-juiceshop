@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de campos arbitrários do objeto do usuário, incluindo password e passwordHash, por meio do parâmetro de consulta fields.\",\"causa_da_vulnerabilidade\":\"O código aceita qualquer nome de propriedade fornecido pelo cliente e copia diretamente o valor correspondente de user.data para a resposta, sem uma lista de permissões de campos autorizados.\",\"estrategia_de_correcao\":\"Restringir os campos retornáveis a uma lista explícita de campos seguros, preservando o comportamento padrão e a possibilidade de solicitar campos permitidos.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\"trecho_corrigido\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"}],\"justificativa_tecnica\":\"A vulnerabilidade é uma falha de controle de acesso a propriedades (mass assignment/data exposure): o cliente controlava o nome da propriedade lida de user.data. Com a allowlist, campos sensíveis como password e passwordHash não podem ser incluídos na resposta, mesmo quando solicitados explicitamente. Os campos padrão e os campos públicos anteriormente suportados continuam funcionando.\",\"limitacoes_da_correcao\":\"A correção protege este endpoint apenas contra a exposição de propriedades não autorizadas via fields. Ela não altera outros endpoints, a estrutura dos dados armazenados ou a lógica de autenticação. Campos públicos adicionais eventualmente necessários deverão ser incluídos explicitamente na allowlist.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1017,
+  "tokens_saida": 473,
+  "latencia_s": 5.21,
+  "custo_usd": 0.000771,
+  "hash_prompt": "a83b82627720016e78e35ac50fd64e2e57d17a4cf239b32d9c8c92f31b1709f9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

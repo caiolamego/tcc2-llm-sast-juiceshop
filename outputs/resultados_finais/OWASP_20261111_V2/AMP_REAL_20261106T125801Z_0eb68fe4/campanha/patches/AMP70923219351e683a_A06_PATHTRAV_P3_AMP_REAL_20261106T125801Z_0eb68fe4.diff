@@ -1,0 +1,29 @@
+diff --git a/routes/dataErasure.ts b/routes/dataErasure.ts
+index a8fea2cc5..edca3b8ab 100644
+--- a/routes/dataErasure.ts
++++ b/routes/dataErasure.ts
+@@ -103,9 +103,12 @@ router.post('/', (req: Request<Record<string, unknown>, Record<string, unknown>,
+       if (req.body.layout) {
+         const filePath: string = path.resolve(req.body.layout).toLowerCase()
+         const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))
+-        if (!isForbiddenFile) {
++        const isInvalidLayout: boolean = path.isAbsolute(req.body.layout) || req.body.layout.includes('/') || req.body.layout.includes('\\') || req.body.layout.includes('..')
++        if (!isForbiddenFile && !isInvalidLayout) {
+           res.render('dataErasureResult', {
+-            ...req.body,
++            layout: req.body.layout,
++            email: req.body.email,
++            securityAnswer: req.body.securityAnswer,
+             ...themeVars
+           }, (error, html) => {
+             if (!html || error) {
+@@ -121,7 +124,8 @@ router.post('/', (req: Request<Record<string, unknown>, Record<string, unknown>,
+         }
+       } else {
+         res.render('dataErasureResult', {
+-          ...req.body,
++          email: req.body.email,
++          securityAnswer: req.body.securityAnswer,
+           ...themeVars
+         })
+       }
