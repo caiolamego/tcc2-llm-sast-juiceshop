@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de objeto no parâmetro de consulta MongoDB devido ao uso direto do valor 'id' do corpo da requisição sem validação ou sanitização.\",\"causa_da_vulnerabilidade\":\"O código utiliza diretamente o valor 'id' recebido em req.body.id como filtro na consulta MongoDB (findOne e update) sem qualquer validação ou sanitização. Isso permite que um atacante envie um objeto malicioso em vez de uma string ou ObjectId, possibilitando injeção de consulta (NoSQL Injection).\",\"estrategia_de_correcao\":\"Validar e sanitizar o parâmetro 'id' para garantir que seja um ObjectId válido antes de usá-lo nas consultas ao banco de dados. Caso o 'id' não seja válido, retornar erro apropriado. Isso impede que objetos maliciosos sejam usados como filtro nas consultas MongoDB.\",\"edicoes\":[{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"    const id = req.body.id\\n    const user = security.authenticatedUsers.from(req)\\n    if (!user) {\\n      return res.status(401).json({ error: 'Unauthorized' })\\n    }\\n\\n    try {\\n      const review = await db.reviewsCollection.findOne({ _id: id })\",\"trecho_corrigido\":\"    const id = req.body.id\\n    const user = security.authenticatedUsers.from(req)\\n    if (!user) {\\n      return res.status(401).json({ error: 'Unauthorized' })\\n    }\\n\\n    // Validação do id para evitar injeção de consulta\\n    if (typeof id !== 'string' || !id.match(/^[a-fA-F0-9]{24}$/)) {\\n      return res.status(400).json({ error: 'Wrong Params' })\\n    }\\n\\n    try {\\n      const review = await db.reviewsCollection.findOne({ _id: id })\"}] ,\"justificativa_tecnica\":\"MongoDB utiliza objetos para consultas, e se um objeto malicioso for passado como filtro, pode alterar a consulta e permitir acesso ou modificação indevida dos dados. Validar que 'id' é uma string hexadecimal de 24 caracteres (formato padrão de ObjectId) impede que objetos ou strings maliciosas sejam usadas, mitigando a injeção de consulta.\",\"limitacoes_da_correcao\":\"A validação assume que os IDs são strings no formato ObjectId hexadecimal de 24 caracteres. Se o banco usar outro formato de ID, a validação precisaria ser ajustada. A correção não impede ataques se houver outras vulnerabilidades relacionadas a autenticação ou autorização.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1121,
+  "tokens_saida": 555,
+  "latencia_s": 6.028,
+  "custo_usd": 0.001336,
+  "hash_prompt": "66b665a32c863c1ef11aed361941c9b2acd6fb445d4db25c9685de73cf915982",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

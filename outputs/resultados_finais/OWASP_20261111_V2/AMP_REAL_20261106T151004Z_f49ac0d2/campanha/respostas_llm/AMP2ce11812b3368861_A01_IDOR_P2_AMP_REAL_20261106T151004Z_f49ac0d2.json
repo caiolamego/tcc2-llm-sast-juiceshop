@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Falta de controle de autorização na função toggleDeliveryStatus, permitindo que qualquer usuário altere o status de entrega de qualquer pedido.\",\"causa_da_vulnerabilidade\":\"A função toggleDeliveryStatus não verifica se o usuário está autenticado ou autorizado para alterar o status de entrega do pedido identificado por req.params.id. Isso permite que qualquer requisição, autenticada ou não, modifique dados sensíveis.\",\"estrategia_de_correcao\":\"Adicionar verificação de autenticação e autorização na função toggleDeliveryStatus para garantir que apenas usuários autenticados e autorizados possam alterar o status de entrega dos pedidos.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"export function toggleDeliveryStatus () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\\n}\",\"trecho_corrigido\":\"export function toggleDeliveryStatus () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (!loggedInUser) {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n      return\\n    }\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\\n}\"}],\"justificativa_tecnica\":\"Ao adicionar a verificação da existência do usuário autenticado antes de permitir a alteração do status de entrega, impedimos que usuários não autenticados ou não autorizados modifiquem dados sensíveis. Isso mitiga a vulnerabilidade de controle de acesso inadequado, garantindo que apenas usuários autenticados possam executar essa ação.\",\"limitacoes_da_correcao\":\"A correção verifica apenas se o usuário está autenticado, mas não implementa uma autorização granular para verificar se o usuário tem permissão para alterar o pedido específico. Dependendo do requisito, pode ser necessário implementar verificações adicionais para garantir que o usuário só possa alterar seus próprios pedidos ou que apenas administradores possam alterar qualquer pedido.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1001,
+  "tokens_saida": 555,
+  "latencia_s": 5.205,
+  "custo_usd": 0.001288,
+  "hash_prompt": "96db2885b11336bf2cba30cde2d5836186260f117093a9e7ba60771a604fa983",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

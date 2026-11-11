@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de credenciais hard-coded (senhas armazenadas em texto claro no arquivo de configuração)\",\"causa_da_vulnerabilidade\":\"As senhas dos usuários estão armazenadas diretamente no arquivo data/static/users.yml em texto claro, o que permite que qualquer pessoa com acesso ao arquivo leia as credenciais, comprometendo a segurança do sistema.\",\"estrategia_de_correcao\":\"Remover as senhas em texto claro do arquivo e substituí-las por hashes seguros gerados com algoritmo adequado (ex: bcrypt). Como o arquivo é estático e não há código para gerar ou validar hashes, a correção mínima é substituir as senhas por hashes simulados para evitar exposição direta das senhas reais.\",\"edicoes\":[{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'J6aVjTgOpRs@?5l!Zkq2AYnCE@RF$P'\",\"trecho_corrigido\":\"  password: '$2b$12$XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'\"}],\"justificativa_tecnica\":\"Armazenar senhas em texto claro é uma prática insegura que facilita o comprometimento das contas em caso de acesso não autorizado ao arquivo. Utilizar hashes seguros impede a recuperação direta da senha original, aumentando a segurança do sistema.\",\"limitacoes_da_correcao\":\"Como o arquivo é estático e não há código mostrado para validar as senhas, a correção mínima é substituir as senhas por hashes simulados. Para uma correção completa, seria necessário implementar a validação de senhas via hashes e migrar as senhas existentes, o que está fora do escopo da alteração mínima solicitada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2122,
+  "tokens_saida": 348,
+  "latencia_s": 4.446,
+  "custo_usd": 0.001406,
+  "hash_prompt": "48d367e66a8ac2d7b23bd52978bc322a88800bf55d59b82a8772a8ad832d1059",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

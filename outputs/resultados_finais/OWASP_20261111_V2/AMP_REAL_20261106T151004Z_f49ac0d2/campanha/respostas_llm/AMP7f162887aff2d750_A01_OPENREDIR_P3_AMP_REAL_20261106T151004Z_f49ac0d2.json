@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open Redirect (CWE-601) devido ao redirecionamento para URLs fornecidas pelo usuário sem validação adequada.\",\"causa_da_vulnerabilidade\":\"O código redireciona diretamente para a URL passada pelo parâmetro de consulta 'to' sem garantir que a URL seja segura e permitida, permitindo redirecionamentos para sites maliciosos.\",\"estrategia_de_correcao\":\"Implementar uma validação rigorosa da URL de destino usando o construtor URL para analisar a URL e comparar seu protocolo e hostname com uma lista explícita de domínios permitidos. O redirecionamento só deve ocorrer se a URL for estritamente permitida, rejeitando URLs com userinfo, protocolos não seguros ou domínios não autorizados.\",\"edicoes\":[{\"arquivo\":\"routes/redirect.ts\",\"trecho_original\":\"    if (security.isRedirectAllowed(toUrl)) {\\n      challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })\\n      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\\n      res.redirect(toUrl)\\n    } else {\",\"trecho_corrigido\":\"    try {\\n      const url = new URL(toUrl)\\n      const allowedHosts = new Set(security.redirectAllowlist.map(u => new URL(u).hostname))\\n      const isAllowed = url.protocol === 'https:' && url.username === '' && url.password === '' && allowedHosts.has(url.hostname)\\n      if (isAllowed) {\\n        challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279eae6' })\\n        challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\\n        res.redirect(toUrl)\\n      } else {\\n        res.status(406)\\n        next(new Error('Unrecognized target URL for redirect: ' + toUrl))\\n      }\\n    } catch {\\n      res.status(406)\\n      next(new Error('Unrecognized target URL for redirect: ' + toUrl))\\n    }\"}],\"justificativa_tecnica\":\"A validação anterior usava uma função 'security.isRedirectAllowed' que não garantia uma validação segura contra URLs maliciosas. Ao usar o construtor URL para analisar a URL de destino e comparar explicitamente o protocolo, userinfo e hostname com uma lista de domínios permitidos, evitamos redirecionamentos para sites não autorizados, mitigando a vulnerabilidade de Open Redirect.\",\"limitacoes_da_correcao\":\"A correção depende da lista 'security.redirectAllowlist' conter URLs válidas e seguras. URLs relativas ou com formatos incomuns podem ser rejeitadas. A validação assume que a lista de domínios permitidos está corretamente mantida e atualizada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1800,
+  "tokens_saida": 797,
+  "latencia_s": 7.208,
+  "custo_usd": 0.001995,
+  "hash_prompt": "8c57b9c338ebb6c242145f484b1f56b5414f95ac569bc7079c98affc2e32904e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

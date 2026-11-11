@@ -1,0 +1,43 @@
+diff --git a/routes/profileImageUrlUpload.ts b/routes/profileImageUrlUpload.ts
+index 55184083e..b98380b44 100644
+--- a/routes/profileImageUrlUpload.ts
++++ b/routes/profileImageUrlUpload.ts
+@@ -21,7 +21,37 @@ export function profileImageUrlUpload () {
+       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
+       if (loggedInUser) {
+         try {
+-          const response = await fetch(url)
++          const parsedUrl = new URL(url)
++          if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
++            throw new Error('Invalid protocol')
++          }
++          const net = await import('node:net')
++          const dns = await import('node:dns/promises')
++
++          // Resolve hostname para IPs
++          const addresses = await dns.lookup(parsedUrl.hostname, { all: true })
++
++          // Função para verificar se IP é interno
++          function isInternalIp(ip: string) {
++            return net.isIP(ip) && (
++              ip.startsWith('10.') ||
++              ip.startsWith('172.') && (parseInt(ip.split('.')[1]) >= 16 && parseInt(ip.split('.')[1]) <= 31) ||
++              ip.startsWith('192.168.') ||
++              ip === '127.0.0.1' ||
++              ip === '0.0.0.0' ||
++              ip.startsWith('169.254.') ||
++              ip === '::1' ||
++              ip.startsWith('fe80:') ||
++              ip.startsWith('fc00:') ||
++              ip.startsWith('fd00:')
++            )
++          }
++
++          if (addresses.some(addr => isInternalIp(addr.address))) {
++            throw new Error('Internal IP addresses are not allowed')
++          }
++
++          const response = await fetch(url, { redirect: 'error' })
+           if (!response.ok || !response.body) {
+             throw new Error('url returned a non-OK status code or an empty body')
+           }

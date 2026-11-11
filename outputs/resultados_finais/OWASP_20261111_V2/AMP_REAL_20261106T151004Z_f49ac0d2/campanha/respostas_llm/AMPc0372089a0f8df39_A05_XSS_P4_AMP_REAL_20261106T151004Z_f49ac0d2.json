@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site Scripting (XSS) devido ao uso de conteúdo não escapado em template Pug.\",\"causa_da_vulnerabilidade\":\"O template Pug utiliza a sintaxe '!{...}' para inserir conteúdo no elemento <script#subtitle> sem escapar, permitindo que dados externos possam ser interpretados como código HTML/JavaScript no navegador.\",\"estrategia_de_correcao\":\"Substituir a interpolação não escapada '!{...}' por interpolação escapada '#{...}' para garantir que o conteúdo seja tratado como texto e não como código executável, prevenindo a execução de scripts maliciosos.\",\"edicoes\":[{\"arquivo\":\"views/promotionVideo.pug\",\"trecho_original\":\"        script#subtitle.\\n\\n\",\"trecho_corrigido\":\"        script#subtitle\\n          #{subtitle}\"}],\"justificativa_tecnica\":\"Em Pug, a interpolação '!{...}' insere conteúdo sem escapar, o que pode permitir a execução de scripts maliciosos se o conteúdo for controlado externamente. Ao usar '#{...}', o conteúdo é automaticamente escapado, convertendo caracteres especiais em entidades HTML, prevenindo a execução de código malicioso e mitigando a vulnerabilidade XSS.\",\"limitacoes_da_correcao\":\"A correção assume que o conteúdo inserido em 'subtitle' é texto simples ou já sanitizado. Se o conteúdo precisar conter HTML legítimo, será necessário implementar uma sanitização adequada antes da inserção. Além disso, a correção não protege contra outras possíveis fontes de XSS fora deste trecho específico.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2836,
+  "tokens_saida": 326,
+  "latencia_s": 3.897,
+  "custo_usd": 0.00108,
+  "hash_prompt": "cb35e01d9db537eb49578c9f300c4cf97fcae3e9bec7c5e3d580b4c1246399fa",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

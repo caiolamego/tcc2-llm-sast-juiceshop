@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção remota de propriedade via acesso dinâmico a propriedades do objeto com entrada do usuário (remote property injection).\",\"causa_da_vulnerabilidade\":\"O código utiliza acesso dinâmico a propriedades do objeto 'user.data' com base em valores fornecidos pelo usuário através do parâmetro 'fields' da query string, usando a notação de colchetes (user?.data[field]). Isso permite que um atacante especifique propriedades arbitrárias, incluindo propriedades do protótipo, potencialmente expondo dados sensíveis ou causando comportamento inesperado.\",\"estrategia_de_correcao\":\"Validar estritamente os campos permitidos antes de acessar as propriedades do objeto. Em vez de acessar diretamente com o valor do usuário, verificar se o campo solicitado está em uma lista branca de campos permitidos para exposição. Somente campos explicitamente permitidos serão retornados.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\",\"trecho_corrigido\":\"          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\"}],\"justificativa_tecnica\":\"Ao restringir os campos que podem ser acessados dinamicamente a uma lista explícita de campos permitidos, evitamos que um atacante especifique propriedades arbitrárias, incluindo propriedades do protótipo, mitigando a vulnerabilidade de injeção remota de propriedade. Isso mantém o comportamento funcional esperado, permitindo que o usuário solicite apenas campos seguros e conhecidos.\",\"limitacoes_da_correcao\":\"A correção depende da manutenção da lista branca de campos permitidos atualizada conforme o modelo de dados evolui. Campos adicionais que se deseje expor precisarão ser adicionados explicitamente à lista. A validação não impede que um atacante solicite campos não existentes, mas estes simplesmente não serão retornados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 1650,
+  "tokens_saida": 486,
+  "latencia_s": 5.684,
+  "custo_usd": 0.001438,
+  "hash_prompt": "c2890734ec18684c24738b86b26b778937302d96a188f47467b97d00f59a8b2b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

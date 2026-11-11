@@ -1,0 +1,442 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 25.367458971006272,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 8.85,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_4u5vi850/contratos_legitimos/primeira.xml",
+        "test/api/tcc_coverage_contratos_legitimos.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 5.57,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ TCC legitimate behaviour contracts\n  ✔ lets the author edit their own review (46.486ms)\n  ✔ answers an error without a location to a redirect without target (27.833167ms)\n  ✔ stores the image of a public URL as the profile image (57.09875ms)\n✔ TCC legitimate behaviour contracts (1055.506917ms)\nℹ tests 3\nℹ suites 1\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5197.157128\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 5.957997927907854e-06,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_4u5vi850/redirect/primeira.xml",
+        "test/api/redirect.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 4.63,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /redirect\n  ✔ GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter (47.045125ms)\n  ✔ GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter (38.173583ms)\n  ✔ GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter (14.651667ms)\n  ✔ GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter (11.71525ms)\n  ✔ GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter (11.69075ms)\n  ✔ GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter (10.515584ms)\n  ✔ GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter (8.400625ms)\n  ✔ GET error message with information leakage when calling /redirect without query parameter (17.534083ms)\n  ✔ GET error message with information leakage when calling /redirect with unrecognized query parameter (12.248792ms)\n  ✔ GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target (20.330292ms)\n  ✔ GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string (18.753ms)\n✔ /redirect (872.819584ms)\nℹ tests 11\nℹ suites 1\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4288.245377\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 2.2500025806948543e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/redirect.ts"
+    ],
+    "grupos": [
+      "contratos_legitimos",
+      "redirect"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 8.85
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "contratos_legitimos",
+      "status": "executada",
+      "duracao_s": 5.57
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "redirect",
+      "status": "executada",
+      "duracao_s": 4.63
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "contratos_legitimos",
+      "redirect"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 8.85
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "contratos_legitimos",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+            "arquivo": "tests/functional/juice_shop/contratos_legitimos.test.ts",
+            "nome": "TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+            "arquivo": "tests/functional/juice_shop/contratos_legitimos.test.ts",
+            "nome": "TCC legitimate behaviour contracts > lets the author edit their own review",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image",
+            "arquivo": "tests/functional/juice_shop/contratos_legitimos.test.ts",
+            "nome": "TCC legitimate behaviour contracts > stores the image of a public URL as the profile image",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 5.57,
+        "espera_api_s": 5.957997927907854e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_4u5vi850/contratos_legitimos/primeira.xml",
+            "test/api/tcc_coverage_contratos_legitimos.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 5.57,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ TCC legitimate behaviour contracts\n  ✔ lets the author edit their own review (46.486ms)\n  ✔ answers an error without a location to a redirect without target (27.833167ms)\n  ✔ stores the image of a public URL as the profile image (57.09875ms)\n✔ TCC legitimate behaviour contracts (1055.506917ms)\nℹ tests 3\nℹ suites 1\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5197.157128\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC legitimate behaviour contracts\" time=\"1.055507\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"lets the author edit their own review\" time=\"0.046486\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/tcc_coverage_contratos_legitimos.test.ts\"/>\n\t\t<testcase name=\"answers an error without a location to a redirect without target\" time=\"0.027833\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/tcc_coverage_contratos_legitimos.test.ts\"/>\n\t\t<testcase name=\"stores the image of a public URL as the profile image\" time=\"0.057099\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/tcc_coverage_contratos_legitimos.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 3 -->\n\t<!-- suites 1 -->\n\t<!-- pass 3 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5197.157128 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "redirect",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET error message with information leakage when calling /redirect without query parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string",
+            "arquivo": "test/api/redirect.test.ts",
+            "nome": "/redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/redirect.test.ts :: /redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+        ],
+        "esperados": [
+          "test/api/redirect.test.ts :: /redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/redirect.test.ts :: /redirect > GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect with unrecognized query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter",
+          "test/api/redirect.test.ts :: /redirect > GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/redirect.test.ts :: /redirect > GET error message with information leakage when calling /redirect without query parameter"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 4.63,
+        "espera_api_s": 2.2500025806948543e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_4u5vi850/redirect/primeira.xml",
+            "test/api/redirect.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 4.63,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /redirect\n  ✔ GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as \"to\" parameter (47.045125ms)\n  ✔ GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as \"to\" parameter (38.173583ms)\n  ✔ GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as \"to\" parameter (14.651667ms)\n  ✔ GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as \"to\" parameter (11.71525ms)\n  ✔ GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as \"to\" parameter (11.69075ms)\n  ✔ GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as \"to\" parameter (10.515584ms)\n  ✔ GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as \"to\" parameter (8.400625ms)\n  ✔ GET error message with information leakage when calling /redirect without query parameter (17.534083ms)\n  ✔ GET error message with information leakage when calling /redirect with unrecognized query parameter (12.248792ms)\n  ✔ GET error message hinting at allowlist validation when calling /redirect with an unrecognized \"to\" target (20.330292ms)\n  ✔ GET redirected to target URL in \"to\" parameter when a allow-listed URL is part of the query string (18.753ms)\n✔ /redirect (872.819584ms)\nℹ tests 11\nℹ suites 1\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4288.245377\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/redirect\" time=\"0.872820\" disabled=\"0\" errors=\"0\" tests=\"11\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET redirected to https://github.com/juice-shop/juice-shop when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.047045\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.038174\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to http://shop.spreadshirt.com/juiceshop when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.014652\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to http://shop.spreadshirt.de/juiceshop when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.011715\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to https://www.stickeryou.com/products/owasp-juice-shop/794 when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.011691\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.010516\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6 when this URL is passed as &amp;quot;to&amp;quot; parameter\" time=\"0.008401\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET error message with information leakage when calling /redirect without query parameter\" time=\"0.017534\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET error message with information leakage when calling /redirect with unrecognized query parameter\" time=\"0.012249\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET error message hinting at allowlist validation when calling /redirect with an unrecognized &amp;quot;to&amp;quot; target\" time=\"0.020330\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t\t<testcase name=\"GET redirected to target URL in &amp;quot;to&amp;quot; parameter when a allow-listed URL is part of the query string\" time=\"0.018753\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/redirect.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 11 -->\n\t<!-- suites 1 -->\n\t<!-- pass 11 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 4288.245377 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

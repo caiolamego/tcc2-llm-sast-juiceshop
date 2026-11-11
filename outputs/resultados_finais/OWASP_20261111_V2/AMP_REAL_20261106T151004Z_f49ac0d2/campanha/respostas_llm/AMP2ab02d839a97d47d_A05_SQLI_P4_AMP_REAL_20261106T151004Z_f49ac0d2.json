@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection via concatenação direta de entrada do usuário em consulta SQL.\",\"causa_da_vulnerabilidade\":\"O código concatena diretamente o parâmetro 'criteria' da query string na string da consulta SQL sem usar parâmetros preparados ou sanitização adequada, permitindo que um atacante injete comandos SQL maliciosos.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas do Sequelize para passar o valor do parâmetro 'criteria' como um parâmetro separado, evitando a concatenação direta e prevenindo a injeção de SQL.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"models.sequelize.query(\\n      `SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name`,\\n      { replacements: { criteria: `%${criteria}%` }, type: models.sequelize.QueryTypes.SELECT }\\n    ) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"Ao usar consultas parametrizadas com 'replacements' do Sequelize, o valor do parâmetro é tratado como dado e não como parte da instrução SQL, eliminando a possibilidade de injeção de comandos SQL maliciosos. Isso mantém a funcionalidade original de busca por critérios parciais, mas de forma segura.\",\"limitacoes_da_correcao\":\"A correção assume que o Sequelize está configurado para suportar consultas parametrizadas com 'replacements'. Caso haja limitações específicas do banco de dados ou do driver, ajustes adicionais podem ser necessários. A correção não altera a lógica da consulta nem o formato do resultado, apenas a forma de passagem do parâmetro.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2735,
+  "tokens_saida": 405,
+  "latencia_s": 3.892,
+  "custo_usd": 0.001166,
+  "hash_prompt": "93ceee613ad507c77d564fa2a542e2ea9fd9cfbd31956b8c4faac5d1ff6f2ba9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Condição de corrida na atualização concorrente do contador de likes e da lista likedBy em reviews.\",\"causa_da_vulnerabilidade\":\"O código realiza uma atualização parcial do contador de likes (likesCount) antes de uma espera assíncrona (sleep), e depois busca o documento atualizado para modificar a lista likedBy e atualizar novamente. Como essas operações não são atômicas e não há sincronização, múltiplas requisições concorrentes podem causar inconsistências, como múltiplos incrementos do contador sem atualização correta da lista likedBy, permitindo que um usuário curta múltiplas vezes a mesma review.\",\"estrategia_de_correcao\":\"Realizar a atualização do contador de likes e da lista likedBy em uma única operação atômica no banco de dados, utilizando um operador de atualização que incrementa likesCount e adiciona o email do usuário ao array likedBy somente se ele ainda não estiver presente. Isso evita condições de corrida e garante a integridade dos dados.\",\"edicoes\":[{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\",\"trecho_corrigido\":\"      const result = await db.reviewsCollection.updateOne(\\n        { _id: id, likedBy: { $ne: user.data.email } },\\n        { $inc: { likesCount: 1 }, $push: { likedBy: user.data.email } }\\n      )\\n\\n      if (result.modifiedCount === 0) {\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\"},{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n        updatedLikedBy.push(user.data.email)\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\\n        res.json(result)\\n      } catch (err) {\\n        res.status(500).json(err)\\n      }\",\"trecho_corrigido\":\"      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        res.json({ modifiedCount: 1 })\\n      } catch (err) {\\n        res.status(500).json(err)\\n      }\"}],\"justificativa_tecnica\":\"Ao combinar a verificação e atualização do contador de likes e da lista likedBy em uma única operação atômica no banco de dados (updateOne com filtro e operadores $inc e $push), eliminamos a janela de condição de corrida entre múltiplas requisições concorrentes. O filtro { likedBy: { $ne: user.data.email } } garante que o usuário não possa curtir a mesma review mais de uma vez, e a operação só modifica o documento se essa condição for verdadeira. Assim, a integridade dos dados é mantida mesmo sob alta concorrência.\",\"limitacoes_da_correcao\":\"A correção depende do suporte do banco de dados para operações atômicas com filtros e operadores de atualização combinados. Caso o banco não suporte, pode ser necessário implementar mecanismos adicionais, como transações ou bloqueios externos. Além disso, a resposta JSON foi ajustada para refletir o resultado da operação atômica, o que pode impactar clientes que esperam o formato anterior.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1642,
+  "tokens_saida": 889,
+  "latencia_s": 11.124,
+  "custo_usd": 0.002079,
+  "hash_prompt": "603462615aeb684fe5e915b9435b8ccb8b5c212d0190a54e7466b16ed5c28021",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

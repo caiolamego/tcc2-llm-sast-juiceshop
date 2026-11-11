@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações sensíveis por meio de listagem de diretórios habilitada em rotas que podem conter arquivos confidenciais.\",\"causa_da_vulnerabilidade\":\"O uso do middleware 'serveIndex' em diretórios como '/ftp' e '/support/logs' permite que qualquer usuário acesse a listagem completa dos arquivos presentes nesses diretórios, sem qualquer controle de acesso ou filtragem, expondo informações potencialmente sensíveis.\",\"estrategia_de_correcao\":\"Desabilitar a listagem de diretórios removendo o middleware 'serveIndex' das rotas vulneráveis, mantendo apenas o middleware que serve os arquivos estáticos para permitir o download direto dos arquivos quando o caminho exato for conhecido. Isso evita a exposição da estrutura e nomes dos arquivos, mitigando a divulgação de informações.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\",\"trecho_corrigido\":\"app.use('/ftp', express.static('ftp')) // vuln-code-snippet vuln-line directoryListingChallenge\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"app.use('/support/logs', express.static('logs')) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"Ao remover o middleware 'serveIndex', que gera a listagem dos arquivos no diretório, e substituir por 'express.static', que apenas serve os arquivos quando o caminho exato é conhecido, evita-se a exposição da estrutura e nomes dos arquivos presentes nos diretórios '/ftp' e '/support/logs'. Isso impede que usuários não autorizados obtenham informações sensíveis apenas navegando pelas URLs, mitigando a vulnerabilidade CWE-548.\",\"limitacoes_da_correcao\":\"A correção impede a listagem dos arquivos, mas não restringe o acesso direto a arquivos específicos se o caminho for conhecido. Para maior segurança, recomenda-se implementar controles de acesso adicionais nas rotas que servem arquivos estáticos, especialmente para diretórios sensíveis. Além disso, se a listagem for necessária para funcionalidades legítimas, deve-se implementar autenticação e filtragem adequada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3306,
+  "tokens_saida": 499,
+  "latencia_s": 5.361,
+  "custo_usd": 0.001545,
+  "hash_prompt": "35d9844c823c91a15629aab197c6f1f54ce4683dad96fddc68101ef99f594156",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

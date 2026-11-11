@@ -1,0 +1,552 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 31.596077722999325,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 12.21,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_yj3nm99b/basket/primeira.xml",
+        "test/api/basket.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 6.34,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /rest/basket/:id\n  ✔ GET existing basket by id is not allowed via public API (19.384458ms)\n  ✔ GET empty basket when requesting non-existing basket id (52.706ms)\n  ✔ GET existing basket with contained products by id (55.32975ms)\n  ✔ GET basket should accept forged JWTs (40.18025ms)\n✔ /rest/basket/:id (1015.066959ms)\n▶ /api/Baskets\n  ✔ POST new basket is not part of API (20.88ms)\n  ✔ GET all baskets is not part of API (17.355333ms)\n✔ /api/Baskets (38.847084ms)\n▶ /api/Baskets/:id\n  ✔ GET existing basket is not part of API (20.285916ms)\n  ✔ PUT update existing basket is not part of API (18.349208ms)\n  ✔ DELETE existing basket is not part of API (42.113042ms)\n✔ /api/Baskets/:id (81.948583ms)\n▶ /rest/basket/:id\n  ✔ GET existing basket of another user (124.302792ms)\n✔ /rest/basket/:id (124.806625ms)\n▶ /rest/basket/:id/checkout\n  ✔ POST placing an order for a basket is not allowed via public API (6.475459ms)\n  ✔ POST placing an order for an existing basket returns orderId (298.733667ms)\n  ✔ POST placing an order for a non-existing basket fails (32.719792ms)\n  ✔ POST placing an order for a basket with a negative total cost is possible (54.773875ms)\n  ✔ POST placing an order for a basket with 99% discount is possible (80.308958ms)\n  ▶ error cases\n    ✔ should return 500 if QuantityModel.findOne fails during checkout (71.913167ms)\n    ✔ should return 500 if WalletModel.findOne fails during checkout (83.608291ms)\n    ✔ should return 500 if ordersCollection.insert fails during checkout (66.76625ms)\n  ✔ error cases (222.770125ms)\n✔ /rest/basket/:id/checkout (696.466376ms)\n▶ /rest/basket/:id/coupon/:coupon\n  ✔ PUT apply valid coupon to existing basket (20.878791ms)\n  ✔ PUT apply invalid coupon is not accepted (24.269167ms)\n  ✔ PUT apply outdated coupon is not accepted (22.615375ms)\n  ✔ PUT apply valid coupon to non-existing basket throws error (18.37275ms)\n✔ /rest/basket/:id/coupon/:coupon (86.827708ms)\nℹ tests 22\nℹ suites 7\nℹ pass 22\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5896.044919\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 5.333997251000255e-06,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_yj3nm99b/campaign_discount/primeira.xml",
+        "test/api/tcc_coverage_campaign_discount.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 8.6,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ TCC campaign discount contracts\n  ✔ applies the campaign discount to the persisted order total (407.443834ms)\n  ✔ does not discount a campaign with a mismatched date (138.265583ms)\n  ✔ does not discount an unknown campaign (159.862458ms)\n  ✔ preserves the normal total without campaign data (139.066375ms)\n✔ TCC campaign discount contracts (3940.710127ms)\nℹ tests 4\nℹ suites 1\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 8279.468296\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 1.3750031939707696e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/order.ts"
+    ],
+    "grupos": [
+      "basket",
+      "campaign_discount"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 12.21
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "basket",
+      "status": "executada",
+      "duracao_s": 6.34
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "campaign_discount",
+      "status": "executada",
+      "duracao_s": 8.6
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "basket",
+      "campaign_discount"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 12.21
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "basket",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets > GET all baskets is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets > POST new basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > DELETE existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > GET existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > PUT update existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET basket should accept forged JWTs",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET empty basket when requesting non-existing basket id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket by id is not allowed via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket of another user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket with contained products by id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "esperados": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 6.34,
+        "espera_api_s": 5.333997251000255e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_yj3nm99b/basket/primeira.xml",
+            "test/api/basket.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 6.34,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /rest/basket/:id\n  ✔ GET existing basket by id is not allowed via public API (19.384458ms)\n  ✔ GET empty basket when requesting non-existing basket id (52.706ms)\n  ✔ GET existing basket with contained products by id (55.32975ms)\n  ✔ GET basket should accept forged JWTs (40.18025ms)\n✔ /rest/basket/:id (1015.066959ms)\n▶ /api/Baskets\n  ✔ POST new basket is not part of API (20.88ms)\n  ✔ GET all baskets is not part of API (17.355333ms)\n✔ /api/Baskets (38.847084ms)\n▶ /api/Baskets/:id\n  ✔ GET existing basket is not part of API (20.285916ms)\n  ✔ PUT update existing basket is not part of API (18.349208ms)\n  ✔ DELETE existing basket is not part of API (42.113042ms)\n✔ /api/Baskets/:id (81.948583ms)\n▶ /rest/basket/:id\n  ✔ GET existing basket of another user (124.302792ms)\n✔ /rest/basket/:id (124.806625ms)\n▶ /rest/basket/:id/checkout\n  ✔ POST placing an order for a basket is not allowed via public API (6.475459ms)\n  ✔ POST placing an order for an existing basket returns orderId (298.733667ms)\n  ✔ POST placing an order for a non-existing basket fails (32.719792ms)\n  ✔ POST placing an order for a basket with a negative total cost is possible (54.773875ms)\n  ✔ POST placing an order for a basket with 99% discount is possible (80.308958ms)\n  ▶ error cases\n    ✔ should return 500 if QuantityModel.findOne fails during checkout (71.913167ms)\n    ✔ should return 500 if WalletModel.findOne fails during checkout (83.608291ms)\n    ✔ should return 500 if ordersCollection.insert fails during checkout (66.76625ms)\n  ✔ error cases (222.770125ms)\n✔ /rest/basket/:id/checkout (696.466376ms)\n▶ /rest/basket/:id/coupon/:coupon\n  ✔ PUT apply valid coupon to existing basket (20.878791ms)\n  ✔ PUT apply invalid coupon is not accepted (24.269167ms)\n  ✔ PUT apply outdated coupon is not accepted (22.615375ms)\n  ✔ PUT apply valid coupon to non-existing basket throws error (18.37275ms)\n✔ /rest/basket/:id/coupon/:coupon (86.827708ms)\nℹ tests 22\nℹ suites 7\nℹ pass 22\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5896.044919\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/basket/:id\" time=\"1.015067\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET existing basket by id is not allowed via public API\" time=\"0.019384\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET empty basket when requesting non-existing basket id\" time=\"0.052706\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET existing basket with contained products by id\" time=\"0.055330\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET basket should accept forged JWTs\" time=\"0.040180\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets\" time=\"0.038847\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"POST new basket is not part of API\" time=\"0.020880\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET all baskets is not part of API\" time=\"0.017355\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets/:id\" time=\"0.081949\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET existing basket is not part of API\" time=\"0.020286\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT update existing basket is not part of API\" time=\"0.018349\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"DELETE existing basket is not part of API\" time=\"0.042113\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id\" time=\"0.124807\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET existing basket of another user\" time=\"0.124303\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/checkout\" time=\"0.696466\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"POST placing an order for a basket is not allowed via public API\" time=\"0.006475\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for an existing basket returns orderId\" time=\"0.298734\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a non-existing basket fails\" time=\"0.032720\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a basket with a negative total cost is possible\" time=\"0.054774\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a basket with 99% discount is possible\" time=\"0.080309\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testsuite name=\"error cases\" time=\"0.222770\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"should return 500 if QuantityModel.findOne fails during checkout\" time=\"0.071913\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if WalletModel.findOne fails during checkout\" time=\"0.083608\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if ordersCollection.insert fails during checkout\" time=\"0.066766\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/coupon/:coupon\" time=\"0.086828\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"PUT apply valid coupon to existing basket\" time=\"0.020879\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply invalid coupon is not accepted\" time=\"0.024269\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply outdated coupon is not accepted\" time=\"0.022615\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply valid coupon to non-existing basket throws error\" time=\"0.018373\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 22 -->\n\t<!-- suites 7 -->\n\t<!-- pass 22 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5896.044919 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "campaign_discount",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+            "arquivo": "tests/functional/juice_shop/campaign_discount.test.ts",
+            "nome": "TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+            "arquivo": "tests/functional/juice_shop/campaign_discount.test.ts",
+            "nome": "TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+            "arquivo": "tests/functional/juice_shop/campaign_discount.test.ts",
+            "nome": "TCC campaign discount contracts > does not discount an unknown campaign",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data",
+            "arquivo": "tests/functional/juice_shop/campaign_discount.test.ts",
+            "nome": "TCC campaign discount contracts > preserves the normal total without campaign data",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 8.6,
+        "espera_api_s": 1.3750031939707696e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_yj3nm99b/campaign_discount/primeira.xml",
+            "test/api/tcc_coverage_campaign_discount.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 8.6,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ TCC campaign discount contracts\n  ✔ applies the campaign discount to the persisted order total (407.443834ms)\n  ✔ does not discount a campaign with a mismatched date (138.265583ms)\n  ✔ does not discount an unknown campaign (159.862458ms)\n  ✔ preserves the normal total without campaign data (139.066375ms)\n✔ TCC campaign discount contracts (3940.710127ms)\nℹ tests 4\nℹ suites 1\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 8279.468296\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC campaign discount contracts\" time=\"3.940710\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"applies the campaign discount to the persisted order total\" time=\"0.407444\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_campaign_discount.test.ts\"/>\n\t\t<testcase name=\"does not discount a campaign with a mismatched date\" time=\"0.138266\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_campaign_discount.test.ts\"/>\n\t\t<testcase name=\"does not discount an unknown campaign\" time=\"0.159862\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_campaign_discount.test.ts\"/>\n\t\t<testcase name=\"preserves the normal total without campaign data\" time=\"0.139066\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_campaign_discount.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 4 -->\n\t<!-- suites 1 -->\n\t<!-- pass 4 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 8279.468296 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

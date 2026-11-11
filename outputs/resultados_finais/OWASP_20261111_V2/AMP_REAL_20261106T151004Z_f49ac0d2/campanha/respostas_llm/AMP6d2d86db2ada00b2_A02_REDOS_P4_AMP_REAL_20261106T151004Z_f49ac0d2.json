@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de expressão regular dinâmica com entrada não sanitizada (challengeKey) que pode levar a uma vulnerabilidade de ReDoS (Regular Expression Denial of Service).\",\"causa_da_vulnerabilidade\":\"O código constrói uma expressão regular usando new RegExp com um padrão que inclui diretamente o valor da variável challengeKey, que pode conter caracteres especiais de regex. Isso permite que um atacante manipule o conteúdo de challengeKey para criar padrões regex complexos que causam alto consumo de CPU e bloqueio do event loop.\",\"estrategia_de_correcao\":\"Escapar todos os caracteres especiais da variável challengeKey antes de inseri-la na expressão regular para garantir que ela seja interpretada como texto literal e não como parte da sintaxe regex. Isso evita que entradas maliciosas causem backtracking excessivo e ReDoS.\",\"edicoes\":[{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\",\"trecho_corrigido\":\"const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n    const escapedChallengeKey = escapeRegex(challengeKey)\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\"}],\"justificativa_tecnica\":\"Escapando os caracteres especiais da variável challengeKey antes de usá-la na construção da expressão regular, garantimos que o padrão seja tratado como texto literal. Isso elimina a possibilidade de um atacante inserir padrões regex maliciosos que causariam backtracking excessivo e bloqueio do event loop, mitigando a vulnerabilidade de ReDoS.\",\"limitacoes_da_correcao\":\"A correção assume que challengeKey não precisa ser interpretado como um padrão regex, mas sim como texto literal. Se futuramente for necessário suportar padrões regex dinâmicos, será necessário implementar validação e sanitização mais robusta ou usar bibliotecas específicas para evitar ReDoS.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3045,
+  "tokens_saida": 556,
+  "latencia_s": 5.727,
+  "custo_usd": 0.001532,
+  "hash_prompt": "1217bb37b41660768abfa1c9c56a5fcece766195525f6c5e868721009668f425",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

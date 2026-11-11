@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade XXE (XML External Entity) devido à habilitação de substituição de entidades e carregamento de entidades externas no parser XML.\",\"causa_da_vulnerabilidade\":\"O código ativa as opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD, que permitem a substituição de entidades e o carregamento de entidades externas, possibilitando ataques XXE que podem levar à divulgação de arquivos locais ou execução de código malicioso.\",\"estrategia_de_correcao\":\"Remover as opções que habilitam a substituição de entidades e o carregamento de entidades externas (XML_PARSE_NOENT e XML_PARSE_DTDLOAD) para desabilitar o processamento de entidades externas, mitigando a vulnerabilidade XXE.\",\"edicoes\":[{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\"trecho_corrigido\":\"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"}],\"justificativa_tecnica\":\"As opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD são responsáveis por habilitar a substituição de entidades e o carregamento de entidades externas, que são vetores comuns para ataques XXE. Removendo essas opções, o parser XML não processará entidades externas, prevenindo a exploração da vulnerabilidade sem impactar outras funcionalidades do parser.\",\"limitacoes_da_correcao\":\"A correção desabilita intencionalmente o processamento de entidades externas, o que pode afetar funcionalidades legítimas que dependem do carregamento de entidades externas ou DTDs. Caso o processamento dessas entidades seja necessário para funcionalidades específicas, será preciso implementar validações adicionais ou mecanismos seguros para lidar com essas entidades.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 1026,
+  "tokens_saida": 395,
+  "latencia_s": 5.304,
+  "custo_usd": 0.001042,
+  "hash_prompt": "2f7aa079e8c78ad3c0763ea6f10dedfb808fc064b54a85fdb091d323215da3d4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

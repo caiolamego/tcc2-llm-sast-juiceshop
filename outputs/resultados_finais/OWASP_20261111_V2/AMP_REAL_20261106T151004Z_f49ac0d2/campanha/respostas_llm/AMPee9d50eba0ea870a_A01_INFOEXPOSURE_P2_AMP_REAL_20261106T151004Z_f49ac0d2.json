@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição indevida de diretórios sensíveis via listagem e acesso sem autenticação adequada, especificamente nos endpoints '/ftp' e '/support/logs'.\",\"causa_da_vulnerabilidade\":\"O código permite navegação e download de arquivos nos diretórios '/ftp' e '/support/logs' usando middleware de listagem de diretórios (serveIndex) e acesso direto a arquivos, sem aplicar controles de acesso robustos ou autenticação antes dessas rotas. Embora haja uma chamada a 'verify.accessControlChallenges()' para '/support/logs', ela é aplicada após o middleware de listagem, o que pode permitir acesso não autorizado. Para '/ftp', não há nenhum middleware de autenticação ou autorização aplicado, permitindo acesso irrestrito.\",\"estrategia_de_correcao\":\"Aplicar o middleware de controle de acesso 'verify.accessControlChallenges()' antes dos middlewares que expõem listagem e acesso a arquivos nos diretórios '/ftp' e '/support/logs', garantindo que somente usuários autorizados possam acessar essas rotas sensíveis.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\",\"trecho_corrigido\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', verify.accessControlChallenges(), servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n\\n  /* Swagger documentation for B2B v2 endpoints */\",\"trecho_corrigido\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs/:file', verify.accessControlChallenges(), serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n\\n  /* Swagger documentation for B2B v2 endpoints */\"}],\"justificativa_tecnica\":\"Ao aplicar o middleware 'verify.accessControlChallenges()' antes dos middlewares que expõem listagem e acesso a arquivos, garantimos que qualquer requisição para esses recursos sensíveis seja autenticada e autorizada previamente. Isso impede que usuários não autorizados possam navegar ou baixar arquivos confidenciais, mitigando a exposição indevida de dados e possíveis ataques de enumeração ou vazamento de informações.\",\"limitacoes_da_correcao\":\"A correção depende da implementação correta e robusta do middleware 'verify.accessControlChallenges()'. Se este middleware não realizar autenticação e autorização adequadas, a vulnerabilidade pode persistir. Além disso, a correção não restringe o acesso a '/ftp/quarantine/:file', que permanece sem controle explícito, o que pode requerer revisão adicional dependendo dos requisitos de segurança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2110,
+  "tokens_saida": 939,
+  "latencia_s": 7.324,
+  "custo_usd": 0.002346,
+  "hash_prompt": "a55c9bbae2ca1dcf094c0d8389166f51da35ad105b91295149b23a6be85a3278",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição da resposta correta do CAPTCHA na resposta JSON enviada ao cliente.\",\"causa_da_vulnerabilidade\":\"O código envia tanto a expressão do CAPTCHA quanto a resposta correta no objeto JSON retornado ao cliente, permitindo que o usuário veja a solução e contorne a verificação.\",\"estrategia_de_correcao\":\"Remover o campo 'answer' da resposta JSON enviada ao cliente, mantendo a resposta correta armazenada apenas no servidor para validação posterior.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const captcha = {\\n      captchaId,\\n      captcha: expression,\\n      answer\\n    }\",\"trecho_corrigido\":\"    const captcha = {\\n      captchaId,\\n      captcha: expression\\n    }\"}],\"justificativa_tecnica\":\"Ao não enviar a resposta correta do CAPTCHA para o cliente, evita-se que usuários mal-intencionados obtenham a solução diretamente, garantindo que a validação ocorra exclusivamente no servidor, aumentando a segurança do mecanismo de CAPTCHA.\",\"limitacoes_da_correcao\":\"Esta correção não impede ataques de força bruta ou reutilização do CAPTCHA, que devem ser mitigados por outras camadas, como limitação de tentativas e expiração dos CAPTCHAs gerados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 2122,
+  "tokens_saida": 264,
+  "latencia_s": 12.891,
+  "custo_usd": 0.001271,
+  "hash_prompt": "65366577fd0f853c3f64005247fceac20de072a6f13c8fb633a1e8cbc1dd6c17",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

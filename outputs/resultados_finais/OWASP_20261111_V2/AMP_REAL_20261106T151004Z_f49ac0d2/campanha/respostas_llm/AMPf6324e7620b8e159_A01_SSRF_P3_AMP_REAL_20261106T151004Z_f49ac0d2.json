@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Server-Side Request Forgery (SSRF)\",\"causa_da_vulnerabilidade\":\"O código aceita uma URL arbitrária do usuário e realiza uma requisição fetch diretamente para essa URL sem validação adequada do esquema, host ou endereço IP, permitindo que um atacante faça o servidor realizar requisições para destinos internos ou não autorizados.\",\"estrategia_de_correcao\":\"Validar a URL recebida para garantir que o esquema seja HTTP ou HTTPS, que o host não seja um endereço IP interno ou reservado (como loopback, redes privadas, link-local, etc.) e que não haja redirecionamentos automáticos no fetch. Caso a URL não passe na validação, rejeitar a requisição com erro apropriado.\",\"edicoes\":[{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"          const response = await fetch(url)\",\"trecho_corrigido\":\"          const parsedUrl = new URL(url)\\n          if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {\\n            throw new Error('Invalid protocol')\\n          }\\n          const net = await import('node:net')\\n          const dns = await import('node:dns/promises')\\n\\n          // Resolve hostname para IPs\\n          const addresses = await dns.lookup(parsedUrl.hostname, { all: true })\\n\\n          // Função para verificar se IP é interno\\n          function isInternalIp(ip: string) {\\n            return net.isIP(ip) && (\\n              ip.startsWith('10.') ||\\n              ip.startsWith('172.') && (parseInt(ip.split('.')[1]) >= 16 && parseInt(ip.split('.')[1]) <= 31) ||\\n              ip.startsWith('192.168.') ||\\n              ip === '127.0.0.1' ||\\n              ip === '0.0.0.0' ||\\n              ip.startsWith('169.254.') ||\\n              ip === '::1' ||\\n              ip.startsWith('fe80:') ||\\n              ip.startsWith('fc00:') ||\\n              ip.startsWith('fd00:')\\n            )\\n          }\\n\\n          if (addresses.some(addr => isInternalIp(addr.address))) {\\n            throw new Error('Internal IP addresses are not allowed')\\n          }\\n\\n          const response = await fetch(url, { redirect: 'error' })\"}],\"justificativa_tecnica\":\"A validação da URL impede que o servidor realize requisições para endereços internos ou não autorizados, mitigando a vulnerabilidade SSRF. A restrição do esquema para HTTP/HTTPS evita protocolos perigosos como file://. A desativação de redirecionamentos automáticos impede que a validação seja contornada via redirecionamentos para destinos internos.\",\"limitacoes_da_correcao\":\"A validação baseia-se na resolução DNS e na verificação dos IPs retornados, mas pode não cobrir todos os casos de DNS rebinding sofisticados. Além disso, a lista de IPs internos pode precisar ser atualizada conforme o ambiente. A validação pode rejeitar URLs legítimas que resolvam para IPs internos autorizados, caso existam.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2027,
+  "tokens_saida": 685,
+  "latencia_s": 7.228,
+  "custo_usd": 0.001907,
+  "hash_prompt": "f6f2258880e84a7afca52e43330dede5c23099c6ccb8c114bc524045dba8012a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

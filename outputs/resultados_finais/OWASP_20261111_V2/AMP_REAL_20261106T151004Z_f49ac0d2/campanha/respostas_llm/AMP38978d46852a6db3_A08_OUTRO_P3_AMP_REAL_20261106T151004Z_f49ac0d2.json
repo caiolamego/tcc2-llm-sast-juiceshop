@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de dados codificados em Z85 sem verificação de integridade ou autenticidade, permitindo possível manipulação de cupons de desconto.\",\"causa_da_vulnerabilidade\":\"A função discountFromCoupon decodifica um cupom codificado em Z85 e valida apenas o formato do texto decodificado, sem verificar assinatura ou qualquer mecanismo de autenticação, permitindo que um atacante crie cupons falsificados com descontos arbitrários.\",\"estrategia_de_correcao\":\"Adicionar uma assinatura HMAC ao cupom gerado e verificar essa assinatura na função discountFromCoupon para garantir a integridade e autenticidade do cupom antes de aceitar o desconto.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const generateCoupon = (discount: number, date = new Date()) => {\\n  const coupon = utils.toMMMYY(date) + '-' + discount\\n  return z85.encode(coupon)\\n}\\n\\nexport const discountFromCoupon = (coupon?: string) => {\\n  if (!coupon) {\\n    return undefined\\n  }\\n  const decoded = z85.decode(coupon)\\n  if (decoded && (hasValidFormat(decoded.toString()) != null)) {\\n    const parts = decoded.toString().split('-')\\n    const validity = parts[0]\\n    if (utils.toMMMYY(new Date()) === validity) {\\n      const discount = parts[1]\\n      return parseInt(discount)\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"const couponSecret = 'aVerySecretKeyForCouponHMAC'\\n\\nexport const generateCoupon = (discount: number, date = new Date()) => {\\n  const couponData = utils.toMMMYY(date) + '-' + discount\\n  const hmac = crypto.createHmac('sha256', couponSecret).update(couponData).digest('hex')\\n  const fullCoupon = couponData + '-' + hmac\\n  return z85.encode(fullCoupon)\\n}\\n\\nexport const discountFromCoupon = (coupon?: string) => {\\n  if (!coupon) {\\n    return undefined\\n  }\\n  const decoded = z85.decode(coupon)\\n  if (decoded) {\\n    const decodedStr = decoded.toString()\\n    const parts = decodedStr.split('-')\\n    if (parts.length !== 3) {\\n      return undefined\\n    }\\n    const validity = parts[0]\\n    const discount = parts[1]\\n    const hmacReceived = parts[2]\\n    const couponData = validity + '-' + discount\\n    const hmacCalculated = crypto.createHmac('sha256', couponSecret).update(couponData).digest('hex')\\n    if (hmacReceived !== hmacCalculated) {\\n      return undefined\\n    }\\n    if (hasValidFormat(validity + '-' + discount) != null && utils.toMMMYY(new Date()) === validity) {\\n      return parseInt(discount)\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"A correção adiciona um HMAC SHA-256 ao cupom gerado, usando uma chave secreta conhecida apenas pelo servidor, garantindo que qualquer cupom recebido possa ser verificado quanto à sua integridade e autenticidade. Isso impede que atacantes criem cupons falsificados ou alterem cupons existentes para obter descontos indevidos. A validação do formato e da validade temporal do cupom é mantida, mas agora é complementada pela verificação da assinatura HMAC.\",\"limitacoes_da_correcao\":\"A chave secreta para o HMAC está armazenada no código, o que pode ser melhorado movendo-a para uma variável de ambiente segura. Além disso, cupons antigos com formato antigo sem assinatura não serão mais aceitos, podendo impactar usuários com cupons legados. A solução assume que o algoritmo HMAC e a chave permanecem seguros e não comprometidos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 3472,
+  "tokens_saida": 831,
+  "latencia_s": 6.693,
+  "custo_usd": 0.002142,
+  "hash_prompt": "92e3f27b3d7588e7d59781587de1759de61ba3df259d73b981ae43f8fde15e37",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de decodificação Z85 para validar e extrair desconto de cupom sem verificação de integridade ou autenticidade dos dados.\",\"causa_da_vulnerabilidade\":\"O código decodifica o cupom usando Z85, que é apenas uma codificação, não uma assinatura ou mecanismo de autenticação. A validação feita é apenas de formato, sem garantir que o cupom não foi adulterado, permitindo que um atacante crie cupons falsos com descontos arbitrários.\",\"estrategia_de_correcao\":\"Adicionar uma assinatura HMAC ao cupom para garantir sua integridade e autenticidade. O cupom deve conter o valor original e a assinatura, e a função de desconto deve verificar a assinatura antes de aceitar o desconto.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const generateCoupon = (discount: number, date = new Date()) => {\\n  const coupon = utils.toMMMYY(date) + '-' + discount\\n  return z85.encode(coupon)\\n}\\n\\nexport const discountFromCoupon = (coupon?: string) => {\\n  if (!coupon) {\\n    return undefined\\n  }\\n  const decoded = z85.decode(coupon)\\n  if (decoded && (hasValidFormat(decoded.toString()) != null)) {\\n    const parts = decoded.toString().split('-')\\n    const validity = parts[0]\\n    if (utils.toMMMYY(new Date()) === validity) {\\n      const discount = parts[1]\\n      return parseInt(discount)\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"const couponSecret = 'a_secure_secret_key_for_hmac';\\n\\nexport const generateCoupon = (discount: number, date = new Date()) => {\\n  const couponData = utils.toMMMYY(date) + '-' + discount\\n  const hmac = crypto.createHmac('sha256', couponSecret).update(couponData).digest('hex')\\n  const fullCoupon = couponData + '-' + hmac\\n  return z85.encode(fullCoupon)\\n}\\n\\nexport const discountFromCoupon = (coupon?: string) => {\\n  if (!coupon) {\\n    return undefined\\n  }\\n  const decoded = z85.decode(coupon)\\n  if (decoded) {\\n    const decodedStr = decoded.toString()\\n    const parts = decodedStr.split('-')\\n    if(parts.length !== 3) {\\n      return undefined\\n    }\\n    const validity = parts[0]\\n    const discount = parts[1]\\n    const hmac = parts[2]\\n    const couponData = validity + '-' + discount\\n    const expectedHmac = crypto.createHmac('sha256', couponSecret).update(couponData).digest('hex')\\n    if(hmac !== expectedHmac) {\\n      return undefined\\n    }\\n    if (utils.toMMMYY(new Date()) === validity && hasValidFormat(couponData) != null) {\\n      return parseInt(discount)\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"A adição de uma assinatura HMAC baseada em uma chave secreta garante que o cupom não possa ser adulterado sem que a assinatura se torne inválida. Isso impede que atacantes criem ou modifiquem cupons arbitrariamente, mitigando a vulnerabilidade de integridade e autenticidade dos dados.\",\"limitacoes_da_correcao\":\"A correção depende da proteção da chave secreta usada para gerar o HMAC. Se a chave for exposta, a segurança do sistema será comprometida. Além disso, cupons antigos com formato antigo não serão mais válidos, podendo exigir migração ou invalidação dos cupons existentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 3580,
+  "tokens_saida": 791,
+  "latencia_s": 9.111,
+  "custo_usd": 0.002698,
+  "hash_prompt": "804074344c7f48abbcd00c7a6bd40bc28b86ae1d23d373ddf3589f04cd41ba70",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

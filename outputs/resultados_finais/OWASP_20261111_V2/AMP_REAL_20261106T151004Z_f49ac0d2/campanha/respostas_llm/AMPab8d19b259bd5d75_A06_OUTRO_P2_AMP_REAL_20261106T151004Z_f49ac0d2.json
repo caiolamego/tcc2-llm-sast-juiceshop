@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de código e manipulação de desconto via parâmetro 'couponData' não validado corretamente, permitindo aplicação de descontos indevidos.\",\"causa_da_vulnerabilidade\":\"O código decodifica e interpreta o parâmetro 'couponData' enviado pelo cliente, que é um base64 contendo um código de cupom e uma data, e aplica o desconto se a data coincidir com a data válida da campanha. Porém, não há validação adequada da data, permitindo que um atacante envie uma data arbitrária para obter descontos indevidos, inclusive negativos ou muito altos.\",\"estrategia_de_correcao\":\"Adicionar validação rigorosa para garantir que a data do cupom não seja futura (não maior que a data atual) e que o desconto não seja negativo ou excessivamente alto. Além disso, garantir que o desconto aplicado seja sempre um valor positivo e razoável, evitando descontos negativos que possam resultar em lucro indevido para o atacante.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"  if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq\\n    challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n    return campaign.discount\\n  }\",\"trecho_corrigido\":\"  if (campaign && couponDate == campaign.validOn && couponDate <= new Date().getTime() && campaign.discount > 0 && campaign.discount <= 100) { // eslint-disable-line eqeqeq\\n    challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n    return campaign.discount\\n  }\"}],\"justificativa_tecnica\":\"Ao adicionar a condição 'couponDate <= new Date().getTime()', garantimos que o cupom não possa ser usado com uma data futura, evitando manipulação do relógio para obter descontos indevidos. Também limitamos o desconto para valores positivos e até 100%, prevenindo descontos negativos ou excessivamente altos que poderiam ser explorados para lucro indevido. Isso mitiga a vulnerabilidade de manipulação do parâmetro 'couponData' enviado pelo cliente.\",\"limitacoes_da_correcao\":\"A correção depende da integridade dos dados do lado do cliente e da sincronização do relógio do servidor. Se o servidor estiver com o relógio incorreto, pode rejeitar cupons válidos. Além disso, a validação é baseada em datas fixas e percentuais definidos no código, o que pode limitar a flexibilidade para futuras campanhas dinâmicas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3048,
+  "tokens_saida": 540,
+  "latencia_s": 4.803,
+  "custo_usd": 0.001238,
+  "hash_prompt": "bc2aeeb7576a8e3c482d4cd97b6f9ad81e7204f9e1d7739c43ed3ebefa156ed5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2816,
+  "tokens_escrita_cache": 0
+}

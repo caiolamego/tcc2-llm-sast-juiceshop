@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade de Path Traversal na função videoPath e getSubsFromFile, permitindo leitura arbitrária de arquivos.\",\"causa_da_vulnerabilidade\":\"As funções videoPath e getSubsFromFile constroem caminhos de arquivo concatenando diretamente valores configuráveis (application.promotion.video e application.promotion.subtitles) após extrair o nome do arquivo com utils.extractFilename, porém essa função pode não impedir completamente caracteres de path traversal (como '../'), permitindo que um atacante manipule a configuração para acessar arquivos fora do diretório esperado.\",\"estrategia_de_correcao\":\"Adicionar validação rigorosa para garantir que os nomes de arquivos extraídos não contenham caracteres ou padrões que permitam path traversal, rejeitando ou sanitizando entradas suspeitas antes de construir o caminho completo do arquivo.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"function getSubsFromFile () {\\n  const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\\n  return data.toString()\\n}\",\"trecho_corrigido\":\"function getSubsFromFile () {\\n  const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'\\n  const safeSubtitles = utils.extractFilename(subtitles)\\n  if (safeSubtitles.includes('..') || safeSubtitles.includes('/') || safeSubtitles.includes('\\\\\\\\')) {\\n    throw new Error('Invalid subtitles filename')\\n  }\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + safeSubtitles, 'utf8')\\n  return data.toString()\\n}\"},{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"function videoPath () {\\n  if (config.get<string>('application.promotion.video') !== null) {\\n    const video = utils.extractFilename(config.get<string>('application.promotion.video'))\\n    return 'frontend/dist/frontend/assets/public/videos/' + video\\n  }\\n  return 'frontend/dist/frontend/assets/public/videos/owasp_promo.mp4'\\n}\",\"trecho_corrigido\":\"function videoPath () {\\n  const videoConfig = config.get<string>('application.promotion.video')\\n  if (videoConfig !== null) {\\n    const video = utils.extractFilename(videoConfig)\\n    if (video.includes('..') || video.includes('/') || video.includes('\\\\\\\\')) {\\n      throw new Error('Invalid video filename')\\n    }\\n    return 'frontend/dist/frontend/assets/public/videos/' + video\\n  }\\n  return 'frontend/dist/frontend/assets/public/videos/owasp_promo.mp4'\\n}\"}],\"justificativa_tecnica\":\"A validação explícita dos nomes de arquivos para rejeitar padrões de path traversal (como '..', '/' ou '\\\\\\\\') impede que um atacante manipule a configuração para acessar arquivos fora do diretório permitido. Isso elimina a possibilidade de leitura arbitrária de arquivos, mitigando a vulnerabilidade de path traversal.\",\"limitacoes_da_correcao\":\"A correção depende da função utils.extractFilename e da validação adicional para garantir segurança; se utils.extractFilename for alterada ou insuficiente, a validação pode falhar. Além disso, a validação simples pode não cobrir todos os casos complexos de path traversal em sistemas de arquivos diferentes ou codificações especiais.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1515,
+  "tokens_saida": 724,
+  "latencia_s": 6.376,
+  "custo_usd": 0.00138,
+  "hash_prompt": "a201aec0358e334b07687c8a103f1a30e4242a1254890a56330515513f1f5e68",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1280,
+  "tokens_escrita_cache": 0
+}

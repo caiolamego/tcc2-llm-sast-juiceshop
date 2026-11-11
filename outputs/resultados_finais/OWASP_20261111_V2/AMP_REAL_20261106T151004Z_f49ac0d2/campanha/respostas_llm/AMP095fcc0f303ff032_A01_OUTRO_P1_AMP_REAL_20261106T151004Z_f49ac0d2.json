@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Bypass de rate limiting devido ao uso inseguro do cabeçalho 'X-Forwarded-For' para identificação do cliente.\",\"causa_da_vulnerabilidade\":\"A função 'keyGenerator' do middleware de rate limiting utiliza o valor do cabeçalho 'X-Forwarded-For' para identificar o cliente, porém esse cabeçalho pode ser facilmente forjado por um atacante, permitindo que ele contorne o limite de requisições imposto.\",\"estrategia_de_correcao\":\"Modificar a função 'keyGenerator' para utilizar o endereço IP real do cliente fornecido pelo Express (objeto 'ip'), que é confiável quando 'trust proxy' está habilitado, ignorando o cabeçalho 'X-Forwarded-For'.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.enable('trust proxy')\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\",\"trecho_corrigido\":\"  app.enable('trust proxy')\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ ip }: { ip: any }) { return ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\"}],\"justificativa_tecnica\":\"O cabeçalho 'X-Forwarded-For' pode ser manipulado por clientes maliciosos para mascarar seu endereço IP real, permitindo que eles evitem o controle de taxa baseado nesse cabeçalho. Ao usar o endereço IP fornecido pelo Express (objeto 'ip'), que leva em conta a configuração 'trust proxy', garantimos que o IP usado para rate limiting seja confiável e não manipulável pelo cliente, prevenindo o bypass do limite de requisições.\",\"limitacoes_da_correcao\":\"Esta correção assume que o servidor está corretamente configurado para confiar apenas em proxies confiáveis via 'trust proxy'. Se a configuração de proxy não for segura, o endereço IP ainda pode ser falsificado. Além disso, em ambientes sem proxies reversos configurados corretamente, o endereço IP pode não refletir o cliente real.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2107,
+  "tokens_saida": 526,
+  "latencia_s": 8.114,
+  "custo_usd": 0.001684,
+  "hash_prompt": "5b0a8ceb573d7648e94024f88accbef561bbc293b07aa4c885534b2f789a7bec",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de expressão regular (Regular Expression Injection) na função getCodingChallengeFromFileContent devido ao uso direto do parâmetro challengeKey em uma expressão regular sem sanitização.\",\"causa_da_vulnerabilidade\":\"O parâmetro challengeKey, que pode conter caracteres especiais de expressões regulares, é inserido diretamente na construção da regex sem escape, permitindo que um atacante manipule a regex para causar comportamento inesperado, como DoS por regex maliciosa.\",\"estrategia_de_correcao\":\"Sanitizar o parâmetro challengeKey escapando caracteres especiais antes de inseri-lo nas expressões regulares para evitar que caracteres especiais sejam interpretados como parte da regex.\",\"edicoes\":[{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${challengeKey}([^])*vuln-code-snippet end.*${challengeKey}`)\",\"trecho_corrigido\":\"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  function escapeRegExp(string: string) {\\n    return string.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  }\\n  const escapedChallengeKey = escapeRegExp(challengeKey)\\n  const snippets = source.match(new RegExp(`[/#]{0,2} vuln-code-snippet start.*${escapedChallengeKey}([^])*vuln-code-snippet end.*${escapedChallengeKey}`))\"},{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\\n  }\",\"trecho_corrigido\":\"  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\\n  }\"}],\"justificativa_tecnica\":\"Escapando os caracteres especiais do challengeKey antes de inseri-lo nas expressões regulares, impedimos que entradas maliciosas manipulem a regex, evitando ataques de injeção de regex que podem causar falhas ou DoS. A função escapeRegExp é uma prática padrão para sanitizar strings usadas em regex dinâmicas.\",\"limitacoes_da_correcao\":\"A correção assume que challengeKey é uma string arbitrária e não valida seu conteúdo além do escape para regex. Se challengeKey for controlado por usuários externos, outras validações podem ser necessárias. A correção não altera a lógica funcional, apenas protege contra injeção de regex.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1759,
+  "tokens_saida": 714,
+  "latencia_s": 6.934,
+  "custo_usd": 0.001846,
+  "hash_prompt": "76892afe687c13ac682653cf412dcf6c1427ea316e6164cdadc903508d85914c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

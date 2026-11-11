@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de código e manipulação indevida de dados via campo 'couponData' no corpo da requisição, permitindo aplicação de descontos não autorizados.\",\"causa_da_vulnerabilidade\":\"O código decodifica e interpreta diretamente o campo 'couponData' enviado pelo cliente, sem validação adequada, para aplicar descontos baseados em campanhas. Isso permite que um atacante envie dados manipulados para obter descontos indevidos, pois o valor do desconto é extraído diretamente do input do usuário sem verificação segura.\",\"estrategia_de_correcao\":\"Remover a lógica que aceita e processa o campo 'couponData' enviado pelo cliente para aplicar descontos. Em vez disso, confiar apenas no cupom armazenado no carrinho (basket.coupon) e validar descontos apenas com base em dados confiáveis do servidor.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"  } else if (req.body.couponData) {\\n    const couponData = Buffer.from(req.body.couponData, 'base64').toString().split('-')\\n    const couponCode = couponData[0]\\n    const couponDate = Number(couponData[1])\\n    const campaign = campaigns[couponCode as keyof typeof campaigns]\\n\\n    if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq\\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n      return campaign.discount\\n    }\\n  }\",\"trecho_corrigido\":\"  }\"}],\"justificativa_tecnica\":\"Ao eliminar o processamento do campo 'couponData' enviado pelo cliente, a aplicação deixa de aceitar dados manipulados externamente para cálculo de descontos, evitando que usuários mal-intencionados obtenham descontos indevidos. A validação e aplicação de descontos passam a depender exclusivamente de dados confiáveis do servidor, garantindo integridade e segurança na lógica de descontos.\",\"limitacoes_da_correcao\":\"A correção remove a funcionalidade que permitia aplicar descontos via 'couponData' enviado pelo cliente, o que pode impactar fluxos legítimos que dependiam dessa funcionalidade. Caso seja necessário manter essa funcionalidade, deve-se implementar validações rigorosas e autenticação dos dados recebidos para evitar manipulação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3048,
+  "tokens_saida": 484,
+  "latencia_s": 5.332,
+  "custo_usd": 0.001418,
+  "hash_prompt": "bc2aeeb7576a8e3c482d4cd97b6f9ad81e7204f9e1d7739c43ed3ebefa156ed5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

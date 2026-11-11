@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key (IDOR) na consulta do cesto de compras pelo ID sem escopo de proprietário.\",\"causa_da_vulnerabilidade\":\"A consulta ao modelo BasketModel é feita apenas pelo ID recebido na requisição, sem verificar se o cesto pertence ao usuário autenticado, permitindo que um usuário acesse cestos de outros usuários se souber o ID.\",\"estrategia_de_correcao\":\"Adicionar o escopo do usuário autenticado na consulta ao banco, incluindo a condição que o campo bid do cesto deve ser igual ao bid do usuário autenticado, garantindo que o usuário só acesse seu próprio cesto.\",\"edicoes\":[{\"arquivo\":\"routes/basket.ts\",\"trecho_original\":\"      const id = req.params.id\\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"      const id = req.params.id\\n      const user = security.authenticatedUsers.from(req)\\n      const basket = await BasketModel.findOne({ where: { id, bid: user?.bid }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"}],\"justificativa_tecnica\":\"A correção restringe a consulta do cesto para garantir que o usuário autenticado só possa acessar seu próprio cesto, mitigando a vulnerabilidade de IDOR. A verificação é feita no banco de dados, evitando exposição de dados de outros usuários.\",\"limitacoes_da_correcao\":\"Assume que o campo 'bid' no BasketModel representa o proprietário do cesto e que o método 'security.authenticatedUsers.from(req)' retorna corretamente o usuário autenticado com seu 'bid'. Se houver casos de usuários com múltiplos cestos ou permissões especiais, a lógica pode precisar ser ajustada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1741,
+  "tokens_saida": 395,
+  "latencia_s": 4.032,
+  "custo_usd": 0.001328,
+  "hash_prompt": "399e9d103850d99c0829affc1c6815319bcc370de74cbedbf26c999574ced207",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

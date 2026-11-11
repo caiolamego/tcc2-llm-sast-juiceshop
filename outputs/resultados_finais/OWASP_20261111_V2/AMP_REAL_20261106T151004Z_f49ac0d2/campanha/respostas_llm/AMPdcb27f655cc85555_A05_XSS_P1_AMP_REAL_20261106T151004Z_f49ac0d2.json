@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) ao usar document.write com dados não sanitizados do usuário.\",\"causa_da_vulnerabilidade\":\"O código usa window.open seguido de document.write para inserir diretamente o conteúdo retornado pelo servidor (data.userData) sem qualquer sanitização ou escape, permitindo que scripts maliciosos possam ser executados no contexto da página aberta.\",\"estrategia_de_correcao\":\"Substituir o uso de document.write por uma abordagem segura que não execute scripts embutidos. Uma forma simples é criar um Blob com o conteúdo e abrir uma URL segura para esse Blob, evitando a execução de scripts maliciosos.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"        window.open('', '_blank', 'width=500')?.document.write(this.userData)\",\"trecho_corrigido\":\"        const blob = new Blob([this.userData], { type: 'text/html' })\\n        const url = URL.createObjectURL(blob)\\n        window.open(url, '_blank', 'width=500')\"}],\"justificativa_tecnica\":\"O uso de document.write com dados não confiáveis permite a execução de scripts maliciosos, caracterizando uma vulnerabilidade XSS. Ao criar um Blob e abrir uma URL para ele, o conteúdo é exibido como um documento estático, sem execução de scripts embutidos, mitigando o risco de XSS.\",\"limitacoes_da_correcao\":\"Esta correção assume que o conteúdo em this.userData é HTML válido e que a abertura em nova janela com Blob é suportada pelo navegador do usuário. Navegadores muito antigos podem não suportar essa abordagem. Além disso, se o conteúdo precisar de scripts legítimos para funcionar, eles não serão executados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1395,
+  "tokens_saida": 372,
+  "latencia_s": 4.567,
+  "custo_usd": 0.001153,
+  "hash_prompt": "1f37d0a0eb3a01ca987596c6d22a352d6cd3551119a695a370e51513605cc3a2",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

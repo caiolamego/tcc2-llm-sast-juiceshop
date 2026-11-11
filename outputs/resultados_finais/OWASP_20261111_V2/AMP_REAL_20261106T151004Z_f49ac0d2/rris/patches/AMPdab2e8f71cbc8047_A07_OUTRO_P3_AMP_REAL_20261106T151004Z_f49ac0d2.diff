@@ -1,0 +1,18 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..662a53aee 100644
+--- a/server.ts
++++ b/server.ts
+@@ -339,11 +339,11 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+ 
+   // vuln-code-snippet start resetPasswordMortyChallenge
+   /* Rate limiting */
+-  app.enable('trust proxy')
++  app.set('trust proxy', ['127.0.0.1', '::1'])
+   app.use('/rest/user/reset-password', rateLimit({
+     windowMs: 5 * 60 * 1000,
+     max: 100,
+-    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge
++    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge
+   }))
+   // vuln-code-snippet end resetPasswordMortyChallenge
+ 

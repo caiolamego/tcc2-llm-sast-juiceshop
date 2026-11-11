@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de token JWT codificado diretamente no código fonte de teste, expondo um segredo criptográfico (chave ou token) que pode ser explorado ou copiado indevidamente.\",\"causa_da_vulnerabilidade\":\"O código contém tokens JWT hard-coded (codificados diretamente) nas chamadas a localStorage.setItem dentro dos testes, especificamente na linha 78, o que expõe um segredo criptográfico embutido no código fonte, contrariando boas práticas de segurança.\",\"estrategia_de_correcao\":\"Remover os tokens JWT hard-coded do código de teste e substituí-los por mocks ou valores simulados que não contenham segredos reais. Como o arquivo é um teste, deve-se usar um token JWT fictício que não represente um segredo real, evitando expor dados sensíveis no código.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\",\"trecho_corrigido\":\"localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.fakeSignature')\"}],\"justificativa_tecnica\":\"A substituição do token JWT real por um token fictício com assinatura inválida ('fakeSignature') elimina a exposição de um segredo criptográfico real no código fonte, mitigando o risco de vazamento de chaves ou tokens sensíveis. Como o arquivo é um teste, o token não precisa ser válido para a aplicação, apenas para simular o comportamento esperado, mantendo a integridade dos testes sem comprometer a segurança.\",\"limitacoes_da_correcao\":\"A correção não valida a assinatura do token JWT, pois o token agora possui uma assinatura falsa. Isso é aceitável em testes unitários que não dependem da validação da assinatura JWT. Se testes futuros precisarem validar a assinatura, será necessário implementar mocks ou mecanismos adequados para simular a validação sem expor segredos reais.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1972,
+  "tokens_saida": 535,
+  "latencia_s": 4.692,
+  "custo_usd": 0.001645,
+  "hash_prompt": "9d8002c29d015dff49f8cdc77ee78e56827c65f2ecafdfbbf48abc968b6f586c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

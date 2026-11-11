@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path Traversal (Directory Traversal)\",\"causa_da_vulnerabilidade\":\"O código permite que o parâmetro 'file' seja usado diretamente em path.resolve sem validação adequada para impedir que o usuário acesse arquivos fora do diretório 'encryptionkeys/'. A única verificação é se 'file' contém '/', mas isso não impede o uso de '\\\\\\\\' (barra invertida) em sistemas Windows ou sequências como '../' que podem ser interpretadas para navegar para diretórios superiores.\",\"estrategia_de_correcao\":\"Adicionar uma validação que normalize o caminho e verifique se o arquivo resolvido está dentro do diretório 'encryptionkeys/'. Isso impede que caminhos relativos escapem do diretório permitido, mitigando a vulnerabilidade de path traversal.\",\"edicoes\":[{\"arquivo\":\"routes/keyServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\",\"trecho_corrigido\":\"    const basePath = path.resolve('encryptionkeys/')\\n    const resolvedPath = path.resolve(basePath, file)\\n    if (resolvedPath.startsWith(basePath + path.sep)) {\\n      res.sendFile(resolvedPath)\\n    } else {\"}],\"justificativa_tecnica\":\"Ao resolver o caminho absoluto do arquivo solicitado e verificar se ele começa com o caminho absoluto do diretório base 'encryptionkeys/', garantimos que o arquivo está dentro do diretório permitido. Isso impede que um atacante use sequências como '../' para acessar arquivos fora do diretório, eliminando a vulnerabilidade de path traversal.\",\"limitacoes_da_correcao\":\"A correção assume que o sistema de arquivos utiliza separadores padrão e que o método startsWith é suficiente para validar o caminho. Em sistemas com links simbólicos ou configurações especiais, pode ser necessário um controle adicional. Além disso, nomes de arquivos contendo caracteres especiais ou codificados podem precisar de validação extra.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 773,
+  "tokens_saida": 412,
+  "latencia_s": 7.494,
+  "custo_usd": 0.000968,
+  "hash_prompt": "ea64295606508251cb8d466c41160e2d1d42a96a824f508242ef742b9b4923b9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

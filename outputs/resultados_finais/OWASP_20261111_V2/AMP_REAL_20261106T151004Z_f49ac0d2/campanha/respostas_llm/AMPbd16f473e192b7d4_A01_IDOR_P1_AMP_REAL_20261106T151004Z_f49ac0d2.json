@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de dados não confiáveis na geração do nome do arquivo PDF, permitindo path traversal ou criação de arquivos arbitrários.\",\"causa_da_vulnerabilidade\":\"O nome do arquivo PDF é construído diretamente com dados derivados do email do usuário (hash do email) e uma string aleatória, mas não há validação ou sanitização adequada do valor usado para criar o caminho do arquivo. Isso pode permitir que um atacante manipule o parâmetro 'id' para influenciar o caminho do arquivo, levando a vulnerabilidades de path traversal ou sobrescrita de arquivos.\",\"estrategia_de_correcao\":\"Sanitizar o nome do arquivo PDF para garantir que ele não contenha caracteres ou sequências que possam ser usadas para path traversal ou criação de arquivos fora do diretório esperado. Utilizar uma função para normalizar e restringir o caminho do arquivo dentro do diretório 'ftp/'.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"          const pdfFile = `order_${orderId}.pdf`\\n          const { default: PDFDocument } = await import('pdfkit')\\n          const doc = new PDFDocument()\\n          const date = new Date().toJSON().slice(0, 10)\\n          const fileWriter = doc.pipe(fs.createWriteStream(path.join('ftp/', pdfFile)))\",\"trecho_corrigido\":\"          const pdfFile = `order_${orderId}.pdf`\\n          const safePdfFile = path.basename(pdfFile)\\n          const { default: PDFDocument } = await import('pdfkit')\\n          const doc = new PDFDocument()\\n          const date = new Date().toJSON().slice(0, 10)\\n          const fileWriter = doc.pipe(fs.createWriteStream(path.join('ftp/', safePdfFile)))\"}],\"justificativa_tecnica\":\"A vulnerabilidade ocorre porque o nome do arquivo PDF é construído dinamicamente e usado diretamente para criar um arquivo no sistema de arquivos, sem validação. Ao usar path.basename, garantimos que o nome do arquivo não contenha diretórios ou caracteres que possam causar path traversal, restringindo a criação do arquivo ao diretório 'ftp/'. Isso previne que um atacante manipule o caminho do arquivo para sobrescrever arquivos arbitrários ou acessar arquivos sensíveis.\",\"limitacoes_da_correcao\":\"A correção assume que o valor 'orderId' gerado pela função hash e randomHexString é seguro e não contém caracteres maliciosos. Caso outras partes do código possam influenciar o nome do arquivo, validações adicionais podem ser necessárias. Além disso, a correção não impede ataques se o diretório 'ftp/' não estiver protegido adequadamente no sistema de arquivos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2940,
+  "tokens_saida": 560,
+  "latencia_s": 5.766,
+  "custo_usd": 0.002072,
+  "hash_prompt": "c58b81541b65740a3ae8d757d799a2eaa5cc2642dd7b65a5a00413fd3e1364c7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}
