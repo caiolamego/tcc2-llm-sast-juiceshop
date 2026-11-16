@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de dados sensíveis via parâmetro 'fields' na query string, permitindo que usuários autenticados requisitem campos arbitrários do objeto de usuário, incluindo potencialmente dados sensíveis como 'password' ou 'passwordHash'.\",\"causa_da_vulnerabilidade\":\"O código permite que o cliente especifique arbitrariamente quais campos do objeto 'user.data' serão retornados, sem validação ou restrição, possibilitando o vazamento de informações sensíveis.\",\"estrategia_de_correcao\":\"Restringir os campos que podem ser solicitados via parâmetro 'fields' a uma lista branca de campos permitidos, ignorando quaisquer campos não autorizados, evitando assim o vazamento de dados sensíveis.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\"trecho_corrigido\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"}],\"justificativa_tecnica\":\"Ao limitar os campos que podem ser retornados a uma lista explícita de campos permitidos, evitamos que dados sensíveis como senhas ou hashes sejam expostos inadvertidamente. Essa abordagem mantém a funcionalidade original de permitir a seleção de campos, mas com segurança reforçada.\",\"limitacoes_da_correcao\":\"A correção depende da manutenção da lista branca de campos permitidos; caso novos campos seguros sejam adicionados, a lista deve ser atualizada. Campos sensíveis devem ser sempre excluídos dessa lista para evitar vazamentos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1020,
+  "tokens_saida": 478,
+  "latencia_s": 3.184,
+  "custo_usd": 0.001173,
+  "hash_prompt": "092178182ffc78d8028467fc1eb4307335edcebc583a2f5a4229ef297ef93e88",
+  "do_cache": false
+}

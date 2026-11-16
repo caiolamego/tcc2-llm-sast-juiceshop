@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (Insecure Direct Object Reference) na atualização de itens da cesta: a função quantityCheckBeforeBasketItemUpdate consulta o item apenas pelo id fornecido em req.params.id, sem verificar se ele pertence à cesta do usuário autenticado.\",\"causa_da_vulnerabilidade\":\"A construção `BasketItemModel.findOne({ where: { id: req.params.id } })` aceita diretamente um identificador controlado pelo cliente e não inclui uma condição de autorização baseada no usuário ou na cesta associada. Além disso, a validação existente de BasketId ocorre apenas para detectar o desafio e não impede a continuação da requisição.\",\"estrategia_de_correcao\":\"Restringir a consulta do item ao identificador informado e à cesta pertencente ao usuário autenticado. Quando houver usuário autenticado, a consulta deve exigir que BasketId seja igual ao bid do usuário; caso contrário, manter a consulta existente para preservar o comportamento funcional de fluxos não autenticados.\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"      const item = await BasketItemModel.findOne({ where: { id: req.params.id } })\\n      const user = security.authenticatedUsers.from(req)\",\"trecho_corrigido\":\"      const user = security.authenticatedUsers.from(req)\\n      const item = await BasketItemModel.findOne({ where: user ? { id: req.params.id, BasketId: user.bid } : { id: req.params.id } })\"}],\"justificativa_tecnica\":\"A consulta passa a retornar um item somente quando seu id corresponde ao parâmetro e, para usuários autenticados, sua BasketId corresponde à cesta do usuário. Assim, um atacante não consegue selecionar um item pertencente à cesta de outro usuário apenas alterando req.params.id. Se o item não pertencer à cesta autorizada, a consulta retorna null e o fluxo existente lança 'No such item found!', impedindo a validação e a continuação da atualização. A alteração é mínima e não modifica mensagens, assinaturas ou identificadores existentes.\",\"limitacoes_da_correcao\":\"A correção protege especificamente o caminho de atualização tratado por esta função. A autorização final também deve existir no handler que efetivamente persiste a atualização; se esse handler aceitar BasketId controlado pelo cliente sem validação, ele deverá aplicar a mesma restrição. Fluxos não autenticados continuam usando a consulta original, conforme o comportamento existente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1598,
+  "tokens_saida": 508,
+  "latencia_s": 5.91,
+  "custo_usd": 0.001009,
+  "hash_prompt": "07f38bd586bea7d5571b700652139693807d65caaf0dddfe4f82494284912208",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1595
+}

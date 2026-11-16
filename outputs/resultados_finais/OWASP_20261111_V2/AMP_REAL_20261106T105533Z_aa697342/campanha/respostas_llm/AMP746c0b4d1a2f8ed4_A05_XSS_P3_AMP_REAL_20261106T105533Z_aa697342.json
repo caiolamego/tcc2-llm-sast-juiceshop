@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"XSS armazenado/refletido na exibição de comentários de feedback, causado pelo uso de bypassSecurityTrustHtml em conteúdo que pode ser controlado por usuários.\",\n  \"causa_da_vulnerabilidade\": \"O comentário recebido por feedbackService.find() é interpolado diretamente em uma string HTML e passado a bypassSecurityTrustHtml, que instrui o Angular a não sanitizar o conteúdo. Um comentário malicioso pode, assim, inserir markup executável no conteúdo da galeria.\",\n  \"estrategia_de_correcao\": \"Sanitizar a string HTML com DomSanitizer.sanitize usando SecurityContext.HTML antes de entregá-la à galeria, sem usar qualquer método bypass. Manter a estrutura de apresentação existente e substituir conteúdo nulo por string vazia.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/about/about.component.ts\",\n      \"trecho_original\": \"import { DomSanitizer } from '@angular/platform-browser'\",\n      \"trecho_corrigido\": \"import { DomSanitizer, SecurityContext } from '@angular/platform-browser'\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/about/about.component.ts\",\n      \"trecho_original\": \"          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\n      \"trecho_corrigido\": \"          feedbacks[i].comment = this.sanitizer.sanitize(\\n            SecurityContext.HTML,\\n            feedbacks[i].comment\\n          ) ?? ''\"\n    }\n  ],\n  \"justificativa_tecnica\": \"SecurityContext.HTML aplica a sanitização contextual do Angular, removendo construções perigosas enquanto preserva markup permitido, como formatação segura. A alteração mantém a montagem do conteúdo e a exibição na galeria, mas deixa de marcar como confiável HTML derivado de feedbacks. O fallback para string vazia mantém o valor compatível com o uso existente caso a sanitização retorne null.\",\n  \"limitacoes_da_correcao\": \"A sanitização do Angular não substitui validação de conteúdo nem garante que todo markup permitido seja desejável para o produto. Deve-se verificar a renderização da galeria com comentários contendo HTML legítimo e entradas de teste como <script> e <img onerror>, confirmando que conteúdo perigoso não é executado.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2843,
+  "tokens_saida": 504,
+  "latencia_s": 5.515,
+  "custo_usd": 0.000607,
+  "hash_prompt": "15e45dc84c51209ab88c0ca9a37c7bc24083a0ee1500454e53184f6f2f7fcfb4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2840
+}

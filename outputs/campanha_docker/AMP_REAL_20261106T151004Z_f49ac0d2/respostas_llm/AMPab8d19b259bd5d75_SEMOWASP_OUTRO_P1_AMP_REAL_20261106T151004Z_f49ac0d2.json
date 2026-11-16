@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de código via campo couponData no cálculo de desconto, permitindo manipulação de descontos através de dados não validados.\",\"causa_da_vulnerabilidade\":\"O código decodifica e interpreta o campo couponData enviado pelo usuário sem validação adequada, permitindo que um atacante envie dados manipulados para obter descontos indevidos.\",\"estrategia_de_correcao\":\"Adicionar validação rigorosa para o campo couponData, garantindo que o formato e os valores estejam corretos e que o código do cupom exista no conjunto de campanhas definidas antes de aplicar o desconto.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"  } else if (req.body.couponData) {\\n    const couponData = Buffer.from(req.body.couponData, 'base64').toString().split('-')\\n    const couponCode = couponData[0]\\n    const couponDate = Number(couponData[1])\\n    const campaign = campaigns[couponCode as keyof typeof campaigns]\\n\\n    if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq\\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n      return campaign.discount\\n    }\\n  }\",\"trecho_corrigido\":\"  } else if (req.body.couponData) {\\n    try {\\n      const couponData = Buffer.from(req.body.couponData, 'base64').toString().split('-')\\n      if (couponData.length !== 2) {\\n        return 0\\n      }\\n      const couponCode = couponData[0]\\n      const couponDate = Number(couponData[1])\\n      if (!campaigns.hasOwnProperty(couponCode)) {\\n        return 0\\n      }\\n      const campaign = campaigns[couponCode as keyof typeof campaigns]\\n      if (campaign && couponDate === campaign.validOn) {\\n        challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n        return campaign.discount\\n      }\\n    } catch {\\n      return 0\\n    }\\n  }\"}],\"justificativa_tecnica\":\"A validação do campo couponData impede que dados maliciosos ou malformados sejam usados para manipular o cálculo de descontos, evitando exploração da lógica de descontos via injeção de dados. A verificação do formato, existência do código no objeto campaigns e uso do operador estrito garantem que apenas cupons válidos sejam aceitos.\",\"limitacoes_da_correcao\":\"A correção depende da integridade do objeto campaigns e da correta geração do campo couponData no cliente. Se o cliente enviar dados inválidos, o desconto será simplesmente ignorado, o que pode impactar a experiência do usuário se houver erros legítimos na geração do cupom.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2940,
+  "tokens_saida": 614,
+  "latencia_s": 6.027,
+  "custo_usd": 0.001314,
+  "hash_prompt": "c58b81541b65740a3ae8d757d799a2eaa5cc2642dd7b65a5a00413fd3e1364c7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2816,
+  "tokens_escrita_cache": 0
+}

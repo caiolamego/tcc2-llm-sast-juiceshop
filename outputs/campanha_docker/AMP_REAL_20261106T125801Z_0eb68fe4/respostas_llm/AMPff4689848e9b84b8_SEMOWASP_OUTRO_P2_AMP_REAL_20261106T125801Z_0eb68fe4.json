@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) persistente no campo de comentário quando o desafio persistedXssFeedbackChallenge está habilitado.\",\"causa_da_vulnerabilidade\":\"O setter usa security.sanitizeHtml(comment) nesse modo, permitindo que HTML potencialmente ativo seja persistido. Além disso, a lógica do desafio procura explicitamente uma carga com iframe e javascript, indicando que esse caminho preserva conteúdo executável. Como o comentário é armazenado e posteriormente renderizado, o payload pode ser executado no navegador de outros usuários.\",\"estrategia_de_correcao\":\"Aplicar sempre a sanitização segura existente, security.sanitizeSecure, ao comentário antes de persisti-lo, removendo a bifurcação que permite HTML ativo. A lógica de detecção do desafio é mantida sobre o valor sanitizado, preservando a estrutura e o comportamento funcional do modelo sem permitir a persistência de markup executável.\",\"edicoes\":[{\"arquivo\":\"models/feedback.ts\",\"trecho_original\":\"        set (comment: string) {\\n          let sanitizedComment: string\\n          if (utils.isChallengeEnabled(challenges.persistedXssFeedbackChallenge)) {\\n            sanitizedComment = security.sanitizeHtml(comment)\\n            challengeUtils.solveIf(challenges.persistedXssFeedbackChallenge, () => {\\n              return utils.contains(\\n                sanitizedComment,\\n                '<iframe src=\\\"javascript:alert(`xss`)\\\">' \\n              )\\n            })\\n          } else {\\n            sanitizedComment = security.sanitizeSecure(comment)\\n          }\\n          this.setDataValue('comment', sanitizedComment)\\n        }\",\"trecho_corrigido\":\"        set (comment: string) {\\n          let sanitizedComment: string\\n          if (utils.isChallengeEnabled(challenges.persistedXssFeedbackChallenge)) {\\n            sanitizedComment = security.sanitizeSecure(comment)\\n            challengeUtils.solveIf(challenges.persistedXssFeedbackChallenge, () => {\\n              return utils.contains(\\n                sanitizedComment,\\n                '<iframe src=\\\"javascript:alert(`xss`)\\\">' \\n              )\\n            })\\n          } else {\\n            sanitizedComment = security.sanitizeSecure(comment)\\n          }\\n          this.setDataValue('comment', sanitizedComment)\\n        }\"}],\"justificativa_tecnica\":\"security.sanitizeSecure é aplicado no caminho anteriormente vulnerável e remove ou neutraliza HTML e esquemas executáveis antes que o comentário seja salvo. Assim, o valor persistido não contém o payload XSS que poderia ser renderizado posteriormente no contexto de outros usuários. A alteração é mínima: somente substitui a sanitização permissiva no ramo do desafio, mantendo identificadores, mensagens, assinaturas e demais comportamentos.\",\"limitacoes_da_correcao\":\"A proteção pressupõe que security.sanitizeSecure seja corretamente implementada para neutralizar HTML, atributos e esquemas perigosos. Outros pontos da aplicação que renderizem comentários sem sanitização adicional ainda devem usar saída contextualmente segura; esta alteração protege especificamente a persistência realizada por este modelo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1069,
+  "tokens_saida": 639,
+  "latencia_s": 7.154,
+  "custo_usd": 0.001034,
+  "hash_prompt": "fd90dc4a49b9c92946533d47a8641730568613abf1f3eac599f01e5c7d21e782",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1066
+}

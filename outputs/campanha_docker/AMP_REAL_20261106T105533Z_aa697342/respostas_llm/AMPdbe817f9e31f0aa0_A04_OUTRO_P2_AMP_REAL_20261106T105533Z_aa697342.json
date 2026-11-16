@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Não há vulnerabilidade de segurança demonstrável no arquivo fornecido: ele contém apenas testes unitários de guards do Angular, não a implementação dos controles de acesso.\",\n  \"causa_da_vulnerabilidade\": \"O arquivo `frontend/src/app/app.guard.spec.ts` configura mocks e verifica resultados esperados. A decodificação de JWT e as decisões de autorização são delegadas às classes importadas de `./app.guard`, cuja implementação não foi fornecida. Os testes que simulam diferentes papéis não demonstram, por si só, uma falha explorável na aplicação.\",\n  \"estrategia_de_correcao\": \"Não alterar este arquivo. Para identificar e corrigir uma vulnerabilidade real, é necessário analisar a implementação em `frontend/src/app/app.guard.ts` e, especialmente, confirmar que a autorização é validada no servidor, pois guards do cliente não constituem uma barreira de segurança confiável.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"Modificar testes sem evidência de uma falha na implementação não corrige um controle de segurança e poderia apenas mudar as expectativas testadas. A autorização no frontend pode ser contornada por um atacante; portanto, a proteção efetiva de recursos e operações deve ser aplicada no backend, independentemente do resultado dos guards.\",\n  \"limitacoes_da_correcao\": \"Com o arquivo fornecido, não é possível determinar se os guards aceitam tokens forjados, confiam indevidamente em dados decodificados ou se os endpoints do servidor aplicam autorização. A implementação dos guards e os controles correspondentes no backend são necessários para propor uma correção específica.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2456,
+  "tokens_saida": 351,
+  "latencia_s": 4.422,
+  "custo_usd": 0.000482,
+  "hash_prompt": "9c7dd223ce9402622e28286028e84a6f91ca58b0d34a7db2c6193d981887b9b4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2453
+}

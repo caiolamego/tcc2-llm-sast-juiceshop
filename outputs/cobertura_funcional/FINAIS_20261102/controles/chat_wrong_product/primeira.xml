@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="TCC chat tool and SSE contracts" time="0.532076" disabled="0" errors="0" tests="9" failures="3" skipped="0" hostname="0aa8befcaf0a">
+		<testcase name="returns exactly the matching persisted reviews through the tool round trip" time="0.038675" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;    {&#10;+     id: 'tcc-review-unrelated',&#10;+     message: 'Unrelated review',&#10;+     product: 58&#10;-     id: 'tcc-review-first',&#10;-     message: 'First normal review',&#10;-     product: 57&#10;    },&#10;-   {&#10;-     id: 'tcc-review-second',&#10;-     message: 'Second normal review',&#10;-     product: 57&#10;-   }&#10;  ]&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;    {&#10;+     id: 'tcc-review-unrelated',&#10;+     message: 'Unrelated review',&#10;+     product: 58&#10;-     id: 'tcc-review-first',&#10;-     message: 'First normal review',&#10;-     product: 57&#10;    },&#10;-   {&#10;-     id: 'tcc-review-second',&#10;-     message: 'Second normal review',&#10;-     product: 57&#10;-   }&#10;  ]">
+Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
+    {
++     id: 'tcc-review-unrelated',
++     message: 'Unrelated review',
++     product: 58
+-     id: 'tcc-review-first',
+-     message: 'First normal review',
+-     product: 57
+    },
+-   {
+-     id: 'tcc-review-second',
+-     message: 'Second normal review',
+-     product: 57
+-   }
+  ]
+
+    at async Promise.all (index 0) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      {
+  +     id: 'tcc-review-unrelated',
+  +     message: 'Unrelated review',
+  +     product: 58
+  -     id: 'tcc-review-first',
+  -     message: 'First normal review',
+  -     product: 57
+      },
+  -   {
+  -     id: 'tcc-review-second',
+  -     message: 'Second normal review',
+  -     product: 57
+  -   }
+    ]
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts:76:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1533:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [Object] ],
+    expected: [ [Object], [Object] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="returns an empty review list for an unknown numeric product" time="0.014788" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts"/>
+		<testcase name="keeps reviews for a different product separate" time="0.011771" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;+ []&#10;- [&#10;-   'tcc-review-unrelated'&#10;- ]&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;+ []&#10;- [&#10;-   'tcc-review-unrelated'&#10;- ]">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ []
+- [
+-   'tcc-review-unrelated'
+- ]
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'tcc-review-unrelated'
+  - ]
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts:92:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'tcc-review-unrelated' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="normalizes a numeric string with leading zeroes before selecting reviews" time="0.013007" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;+   'tcc-review-unrelated'&#10;-   'tcc-review-first',&#10;-   'tcc-review-second'&#10;  ]&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;+   'tcc-review-unrelated'&#10;-   'tcc-review-first',&#10;-   'tcc-review-second'&#10;  ]">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   'tcc-review-unrelated'
+-   'tcc-review-first',
+-   'tcc-review-second'
+  ]
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'tcc-review-unrelated'
+  -   'tcc-review-first',
+  -   'tcc-review-second'
+    ]
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts:97:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'tcc-review-unrelated' ],
+    expected: [ 'tcc-review-first', 'tcc-review-second' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="keeps the product search tool functional" time="0.043647" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts"/>
+		<testcase name="reports an unauthenticated order lookup through the tool" time="0.011586" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts"/>
+		<testcase name="returns an owned order and rejects a different customer order" time="0.039734" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts"/>
+		<testcase name="keeps normal coupon generation functional" time="0.031902" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts"/>
+		<testcase name="finishes an SSE error response when the simulated provider fails" time="0.011098" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_chat_reviews.test.ts"/>
+	</testsuite>
+	<!-- tests 9 -->
+	<!-- suites 1 -->
+	<!-- pass 6 -->
+	<!-- fail 3 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 2023.727026 -->
+</testsuites>

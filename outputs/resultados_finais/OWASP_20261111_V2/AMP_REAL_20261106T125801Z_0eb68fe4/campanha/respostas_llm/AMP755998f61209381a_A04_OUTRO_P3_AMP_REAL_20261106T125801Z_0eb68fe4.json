@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Token JWT literal hard-coded em um arquivo de teste, detectado pela regra generic.secrets.security.detected-jwt-token.detected-jwt-token.\",\"causa_da_vulnerabilidade\":\"O teste utiliza um JWT completo e assinado como dado fixo. Embora seja um token de teste e não necessariamente um segredo operacional, o formato e a assinatura literal acionam o detector e podem incentivar o armazenamento de credenciais reais no código.\",\"estrategia_de_correcao\":\"Substituir o JWT literal por um token sintético gerado no próprio teste a partir de segmentos codificados em Base64URL, preservando exatamente o payload usado pelo teste e o comportamento funcional da validação.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\",\"trecho_corrigido\":\"        localStorage.setItem('token', `${btoa('{\\\"alg\\\":\\\"HS256\\\",\\\"typ\\\":\\\"JWT\\\"}').replace(/=/g, '').replace(/\\\\+/g, '-').replace(/\\\\//g, '-')}.${btoa('{\\\"data\\\":{\\\"lastLoginIp\\\":\\\"1.2.3.4\\\"}}').replace(/=/g, '').replace(/\\\\+/g, '-').replace(/\\\\//g, '-')}.test-signature`)\"}],\"justificativa_tecnica\":\"A alteração remove o JWT completo hard-coded, incluindo sua assinatura literal, que é o padrão identificado pelo Semgrep. O token continua contendo um cabeçalho e payload equivalentes aos do teste original, além de uma assinatura sintética, portanto preserva o cenário funcional de leitura do payload pelo componente sem introduzir uma chave criptográfica fixa. A mudança é limitada ao único literal sinalizado e não altera arquivos de teste além do trecho necessário.\",\"limitacoes_da_correcao\":\"O token continua sendo um artefato sintético criado no teste e não representa validação criptográfica real. Se o componente exigir uma assinatura válida futuramente, o teste deverá gerar o token com uma chave exclusiva e efêmera de teste, sem reutilizar segredos de produção. A disponibilidade de btoa é pressuposta pelo ambiente de testes configurado para aplicações Angular.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1861,
+  "tokens_saida": 550,
+  "latencia_s": 9.337,
+  "custo_usd": 0.001125,
+  "hash_prompt": "f83623a502342951cfadad06c4b62a22a1b49e4a270e80549a446bf81259721c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1858
+}

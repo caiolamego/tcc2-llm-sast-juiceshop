@@ -1,0 +1,19 @@
+rules:
+  - id: tcc.validation.security.client-campaign-date
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Data originada no corpo da requisicao comparada a validade da campanha.
+      Verificar se a elegibilidade usa relogio confiavel do servidor, nao apenas
+      a data declarada pelo cliente. Controle temporal externo exige revisao.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe: ['CWE-807: Reliance on Untrusted Inputs in a Security Decision']
+    mode: taint
+    pattern-sources:
+      - pattern: $REQ.body.$FIELD
+    pattern-sinks:
+      - pattern-either:
+          - pattern: $DATE == $CAMPAIGN.validOn
+          - pattern: $DATE === $CAMPAIGN.validOn

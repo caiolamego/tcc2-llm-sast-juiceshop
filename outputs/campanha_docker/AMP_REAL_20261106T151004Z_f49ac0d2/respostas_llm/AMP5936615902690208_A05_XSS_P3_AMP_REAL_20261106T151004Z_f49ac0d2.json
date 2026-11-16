@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site Scripting (XSS) ao inserir conteúdo não sanitizado dentro de uma tag <script> no HTML gerado.\",\"causa_da_vulnerabilidade\":\"O conteúdo da variável 'subs', que é lido de um arquivo externo e pode conter dados não confiáveis, é inserido diretamente dentro de uma tag <script> sem qualquer sanitização ou escape, permitindo a execução de scripts maliciosos no navegador do usuário.\",\"estrategia_de_correcao\":\"Substituir a inserção direta do conteúdo 'subs' dentro da tag <script> por uma abordagem segura que evita a execução de código JavaScript. Para isso, o conteúdo deve ser inserido como texto dentro de um elemento HTML (por exemplo, uma <script> com tipo 'application/json' ou um elemento <pre> ou <div> com texto escapado), ou então o conteúdo deve ser escapado adequadamente para ser seguro dentro do contexto do script. Aqui, a correção mínima é alterar o tipo da tag <script> para 'application/json' e inserir o conteúdo JSON stringificado, evitando execução de código.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"application/json\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + JSON.stringify(subs) + '</script>')\"}],\"justificativa_tecnica\":\"Inserir conteúdo arbitrário dentro de uma tag <script> com tipo 'text/vtt' permite que scripts maliciosos sejam executados se o conteúdo contiver código JavaScript. Alterando o tipo para 'application/json' e inserindo o conteúdo como uma string JSON escapada, o navegador não executa o conteúdo como código, prevenindo XSS. Essa abordagem mantém o conteúdo acessível para scripts que possam ler e interpretar o JSON, preservando a funcionalidade sem expor a aplicação a riscos de XSS.\",\"limitacoes_da_correcao\":\"Essa correção assume que o consumidor do conteúdo no cliente pode lidar com o conteúdo em formato JSON dentro da tag <script>. Se o cliente espera o conteúdo em formato 'text/vtt' para legendas, será necessário adaptar o cliente para interpretar o JSON e extrair o texto, o que pode requerer mudanças adicionais fora do escopo desta correção. Além disso, essa correção não valida ou sanitiza o conteúdo do arquivo de legendas, apenas evita a execução direta de scripts maliciosos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2488,
+  "tokens_saida": 567,
+  "latencia_s": 4.609,
+  "custo_usd": 0.001902,
+  "hash_prompt": "e4ca838da8b2688872b75c513f914990cc002add0cfa1f9253c040adc6731dd3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

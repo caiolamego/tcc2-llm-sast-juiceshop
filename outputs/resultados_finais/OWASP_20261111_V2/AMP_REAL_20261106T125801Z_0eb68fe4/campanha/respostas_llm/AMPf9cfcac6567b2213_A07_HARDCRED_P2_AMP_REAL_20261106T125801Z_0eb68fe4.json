@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open redirect na validação de URLs, causado por correspondência parcial com `String.includes`.\",\"causa_da_vulnerabilidade\":\"A função `isRedirectAllowed` considera permitida qualquer URL que contenha uma URL da allowlist como substring. Assim, uma URL controlada pelo atacante, como `https://github.com/juice-shop/juice-shop.attacker.example`, ou uma URL com a allowlist inserida em outro contexto, também é aceita, embora seu destino efetivo não seja o domínio ou recurso permitido.\",\"estrategia_de_correcao\":\"Substituir a comparação por substring por uma comparação exata da URL recebida com cada entrada da allowlist. Isso mantém a allowlist e a assinatura existentes, alterando somente a lógica vulnerável.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\"trecho_corrigido\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url === allowedUrl // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\"}],\"justificativa_tecnica\":\"A comparação estrita só retorna verdadeiro quando a URL inteira é exatamente uma entrada previamente autorizada. URLs que apenas contêm uma entrada permitida, mas apontam para outro host, caminho ou contexto, deixam de ser aceitas, impedindo o redirecionamento para destinos controlados pelo atacante. A alteração preserva a allowlist, o fluxo da função e sua assinatura.\",\"limitacoes_da_correcao\":\"A proteção depende de a URL ser comparada em sua forma canônica antes da validação. Variações semanticamente equivalentes, como diferenças de normalização ou codificação, não serão aceitas, o que pode exigir tratamento adicional caso sejam requisitos funcionais. A correção também não substitui validações de esquema e parsing caso a allowlist venha a aceitar padrões ou domínios em vez de URLs exatas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3084,
+  "tokens_saida": 489,
+  "latencia_s": 6.207,
+  "custo_usd": 0.000649,
+  "hash_prompt": "328fc340aab6b2110e7d818d06d4562f25ac7ac50def691d00b8609035e5f70a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 3081,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml com conteúdo não sanitizado, permitindo possível Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código concatena diretamente o comentário do usuário dentro de uma string HTML e depois utiliza 'this.sanitizer.bypassSecurityTrustHtml' para marcar o conteúdo como seguro sem realizar sanitização adequada. Isso permite que um atacante injete código HTML ou JavaScript malicioso dentro do comentário, que será renderizado no DOM.\",\"estrategia_de_correcao\":\"Remover o uso de 'bypassSecurityTrustHtml' para o comentário do usuário e exibir o texto do comentário como texto puro, evitando a interpretação de HTML malicioso. Em vez de inserir o comentário como HTML, deve-se usar interpolação segura no template para exibir o texto do comentário, garantindo que caracteres especiais sejam escapados automaticamente pelo Angular.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\"trecho_corrigido\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\\\"/g, '&quot;').replace(/'/g, '&#39;')\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          // Removido bypassSecurityTrustHtml para evitar XSS\\n          // feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n          //   feedbacks[i].comment\\n          // )\"}],\"justificativa_tecnica\":\"Ao escapar manualmente os caracteres especiais no comentário do usuário, impedimos que código HTML ou JavaScript malicioso seja interpretado pelo navegador. Além disso, removendo o uso de 'bypassSecurityTrustHtml', o Angular não irá confiar cegamente no conteúdo e evitará a execução de scripts maliciosos, mitigando a vulnerabilidade XSS.\",\"limitacoes_da_correcao\":\"A correção depende da correta exibição do comentário no template para que o conteúdo escapado seja renderizado como texto e não como HTML. Se o template espera um conteúdo HTML seguro, pode ser necessário ajustar o template para suportar essa mudança. Além disso, a sanitização manual pode não cobrir todos os casos complexos de injeção, mas é suficiente para os caracteres especiais mais comuns.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1886,
+  "tokens_saida": 611,
+  "latencia_s": 5.648,
+  "custo_usd": 0.001732,
+  "hash_prompt": "6a7076b8794c2cb254f0d58b55d9a9b2fcc1a97ef05fc2c46eb2b4406592aefe",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

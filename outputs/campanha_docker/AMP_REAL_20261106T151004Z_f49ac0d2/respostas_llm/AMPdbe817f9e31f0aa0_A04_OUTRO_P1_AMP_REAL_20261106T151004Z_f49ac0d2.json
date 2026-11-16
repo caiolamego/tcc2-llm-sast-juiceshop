@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Confiança excessiva na decodificação do JWT sem validação da assinatura, permitindo possível falsificação de tokens e escalonamento de privilégios.\",\"causa_da_vulnerabilidade\":\"O método tokenDecode() decodifica o JWT armazenado no localStorage sem verificar a assinatura do token, o que permite que um atacante crie um token falso com privilégios elevados que será aceito como válido.\",\"estrategia_de_correcao\":\"Implementar a validação da assinatura do JWT no método tokenDecode() para garantir que o token seja autêntico e não tenha sido adulterado. Isso pode ser feito utilizando uma biblioteca confiável para validação de JWT que verifica a assinatura com a chave secreta ou pública apropriada.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/app.guard.ts\",\"trecho_original\":\"tokenDecode () {\\n    const token = localStorage.getItem('token')\\n    if (!token) {\\n      return null\\n    }\\n    try {\\n      const base64Url = token.split('.')[1]\\n      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')\\n      return JSON.parse(window.atob(base64))\\n    } catch (err) {\\n      return null\\n    }\\n  }\",\"trecho_corrigido\":\"import jwt_decode from 'jwt-decode';\\nimport { JwtHelperService } from '@auth0/angular-jwt';\\n\\nprivate jwtHelper = new JwtHelperService();\\n\\n  tokenDecode () {\\n    const token = localStorage.getItem('token')\\n    if (!token) {\\n      return null\\n    }\\n    try {\\n      if (this.jwtHelper.isTokenExpired(token)) {\\n        return null\\n      }\\n      return jwt_decode(token)\\n    } catch (err) {\\n      return null\\n    }\\n  }\"}],\"justificativa_tecnica\":\"A decodificação simples do JWT sem validação da assinatura permite que tokens falsificados sejam aceitos, comprometendo a segurança da aplicação. Ao utilizar uma biblioteca confiável para validar a assinatura e verificar a expiração do token, garantimos que apenas tokens legítimos sejam aceitos, prevenindo escalonamento de privilégios e acesso não autorizado.\",\"limitacoes_da_correcao\":\"A correção depende da disponibilidade da chave secreta ou pública para validação da assinatura do JWT, que deve estar corretamente configurada no ambiente. Além disso, a inclusão de bibliotecas externas pode aumentar o tamanho do bundle e requerer manutenção adicional.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2351,
+  "tokens_saida": 535,
+  "latencia_s": 5.26,
+  "custo_usd": 0.001796,
+  "hash_prompt": "01af692f80f06a4c77d086941a8bb6643bfb1a408f05bb30a198bb7801ef4e1f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

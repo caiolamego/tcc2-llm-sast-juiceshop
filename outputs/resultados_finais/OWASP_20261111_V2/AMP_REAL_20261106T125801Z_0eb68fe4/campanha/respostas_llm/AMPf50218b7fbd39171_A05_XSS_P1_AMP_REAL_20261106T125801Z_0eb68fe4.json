@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal nos caminhos de vídeo e legendas configuráveis, permitindo que um valor de configuração contendo segmentos como ../ escape do diretório destinado aos arquivos públicos e leia arquivos arbitrários do sistema.\",\"causa_da_vulnerabilidade\":\"As funções videoPath e getSubsFromFile concatenam diretamente valores de configuração com o diretório base. Embora videoPath aplique utils.extractFilename ao vídeo, getSubsFromFile não aplica qualquer validação ou normalização restritiva ao nome das legendas.\",\"estrategia_de_correcao\":\"Validar o nome das legendas com o mesmo mecanismo de extração de nome já utilizado para o vídeo, garantindo que apenas o componente final do caminho seja usado antes da concatenação com o diretório permitido.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"function getSubsFromFile () {\\n  const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\\n  return data.toString()\\n}\",\"trecho_corrigido\":\"function getSubsFromFile () {\\n  const subtitles = utils.extractFilename(config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt')\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\\n  return data.toString()\\n}\"}],\"justificativa_tecnica\":\"utils.extractFilename já é utilizado no tratamento do vídeo e reduz o valor configurado ao nome do arquivo, removendo componentes de diretório que poderiam permitir traversal. Aplicar a mesma proteção às legendas impede que a concatenação resulte em acesso fora de frontend/dist/frontend/assets/public/videos, preservando o comportamento esperado para arquivos de legenda configurados por nome ou caminho.\",\"limitacoes_da_correcao\":\"A correção depende do comportamento seguro de utils.extractFilename. Ela não restringe necessariamente extensões, conteúdo ou links simbólicos; portanto, se o diretório permitido contiver links simbólicos para fora dele, ou se for necessário permitir somente arquivos .vtt, controles adicionais seriam necessários.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1404,
+  "tokens_saida": 465,
+  "latencia_s": 6.097,
+  "custo_usd": 0.000909,
+  "hash_prompt": "cde1b41fa8dd3ba810d749c2b058410b6cd31b11e7dc8a080545aed73cfa5cdc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1401
+}

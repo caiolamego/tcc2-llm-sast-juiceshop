@@ -1,0 +1,15 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..49750283a 100644
+--- a/server.ts
++++ b/server.ts
+@@ -506,6 +506,10 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+       include
+     })
+ 
++    if (name === 'User') {
++      app.use(`/api/${name}s`, security.isAuthorized())
++    }
++
+     // create a wallet when a new user is registered using API
+     if (name === 'User') { // vuln-code-snippet neutral-line registerAdminChallenge
+       resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge

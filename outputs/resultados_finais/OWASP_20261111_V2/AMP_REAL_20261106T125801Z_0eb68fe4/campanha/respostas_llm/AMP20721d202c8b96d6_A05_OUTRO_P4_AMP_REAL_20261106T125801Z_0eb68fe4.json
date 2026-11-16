@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL por uso de $where dinâmico, classificada como CWE-943. A consulta MongoDB executa JavaScript construído com entrada derivada de req.params.id.\",\"causa_da_vulnerabilidade\":\"O código concatena id diretamente na expressão JavaScript passada a $where: `this.orderId === '${id}'`. Mesmo com a truncagem existente, $where interpreta a string como código no MongoDB, em vez de tratá-la apenas como um valor.\",\"estrategia_de_correcao\":\"Substituir a consulta baseada em $where por um filtro declarativo tipado usando o campo conhecido orderId e o valor id, sem alterar o restante do fluxo ou as mensagens existentes.\",\"edicoes\":[{\"arquivo\":\"routes/trackOrder.ts\",\"trecho_original\":\"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\"trecho_corrigido\":\"    db.ordersCollection.find({ orderId: id }).then((order: any) => {\"}],\"justificativa_tecnica\":\"O filtro `{ orderId: id }` usa a API declarativa do MongoDB e trata id como valor do campo, não como código JavaScript. Assim, aspas, operadores e demais caracteres presentes no parâmetro não podem alterar a sintaxe da consulta nem provocar execução de JavaScript. O campo consultado e o fluxo de processamento do resultado permanecem os mesmos, preservando o comportamento esperado para IDs correspondentes.\",\"limitacoes_da_correcao\":\"A correção elimina a execução de JavaScript e a injeção associada ao $where, mas pressupõe que os documentos usem o campo orderId e que a igualdade declarativa tenha a mesma semântica esperada pela aplicação. A validação e a sanitização existentes continuam aplicáveis ao comportamento do desafio de XSS; elas não são usadas como mecanismo de segurança da consulta.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2336,
+  "tokens_saida": 410,
+  "latencia_s": 5.643,
+  "custo_usd": 0.001076,
+  "hash_prompt": "30df00022fe9cf05661f2ace59f533ed4fb0a3518d6e4cddf8311b125b754cfb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2333
+}

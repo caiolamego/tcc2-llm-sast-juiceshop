@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL via uso dinâmico do operador $where em consulta MongoDB, permitindo execução arbitrária de código JavaScript no banco.\",\"causa_da_vulnerabilidade\":\"O código monta dinamicamente uma consulta MongoDB usando o operador $where com uma string que concatena diretamente o parâmetro 'id' da requisição, permitindo que um atacante injete código JavaScript malicioso que será executado no banco.\",\"estrategia_de_correcao\":\"Substituir a consulta que utiliza $where por uma consulta tipada e segura que utiliza um filtro direto no campo 'product' com o valor 'id' devidamente validado e convertido para número, evitando a execução de código JavaScript no banco.\",\"edicoes\":[{\"arquivo\":\"routes/showProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\",\"trecho_corrigido\":\"    db.reviewsCollection.find({ product: id }).then((reviews: Review[]) => {\"}],\"justificativa_tecnica\":\"Ao substituir a consulta que utiliza $where por uma consulta que filtra diretamente pelo campo 'product' com um valor numérico, eliminamos a execução de código JavaScript no banco, mitigando a possibilidade de injeção de código malicioso. Essa abordagem utiliza o filtro padrão do MongoDB, que é seguro e não interpreta o valor como código, preservando a funcionalidade original.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'product' é do tipo numérico no banco de dados e que o parâmetro 'id' pode ser convertido corretamente para número. Caso o parâmetro 'id' contenha valores não numéricos ou o campo 'product' seja de outro tipo, a consulta pode não retornar resultados esperados. Além disso, a correção não trata casos em que o desafio 'noSqlCommandChallenge' está habilitado e o id é truncado como string, o que pode impactar a funcionalidade do desafio.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2493,
+  "tokens_saida": 424,
+  "latencia_s": 4.4,
+  "custo_usd": 0.0011,
+  "hash_prompt": "d7d83a9311028d7a9659e9264f383c47cf9c50858c576c8ccce5ddeaf053b941",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

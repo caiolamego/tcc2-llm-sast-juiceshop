@@ -1,0 +1,18 @@
+rules:
+  - id: tcc.captcha.security.answer-in-response
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      A resposta envia o CAPTCHA junto com sua resposta. Mantenha a solucao
+      exclusivamente no servidor e revise reutilizacao e limitacao de tentativas.
+    metadata:
+      category: security
+      cwe: ['CWE-200: Exposure of Sensitive Information to an Unauthorized Actor']
+      confidence: MEDIUM
+    pattern-either:
+      - pattern: '$RES.json({..., captcha: $CHALLENGE, answer: $ANSWER, ...})'
+      - patterns:
+          - pattern-inside: |
+              const $PAYLOAD = { ..., captcha: $CHALLENGE, answer: $ANSWER, ... };
+              ...
+          - pattern: $RES.json($PAYLOAD)

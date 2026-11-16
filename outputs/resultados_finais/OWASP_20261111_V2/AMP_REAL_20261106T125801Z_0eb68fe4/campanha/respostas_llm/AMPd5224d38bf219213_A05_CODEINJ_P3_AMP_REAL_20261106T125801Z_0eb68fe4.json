@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-95 (Eval Injection): execução de código JavaScript controlado pelo valor de username.\",\"causa_da_vulnerabilidade\":\"O conteúdo do username, que pode ter origem externa por meio do cadastro ou alteração do perfil, é extraído e passado diretamente a eval(). Isso permite que um atacante forneça uma expressão JavaScript arbitrária para execução no processo Node.js.\",\"estrategia_de_correcao\":\"Remover a avaliação dinâmica e preservar o comportamento seguro para usernames comuns, tratando o conteúdo entre #{...} como texto literal escapado, sem executá-lo.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\",\"trecho_corrigido\":\"      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = '\\\\\\\\' + username\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\"}],\"justificativa_tecnica\":\"A única operação perigosa é a chamada a eval(), que transforma dados do usuário em instruções executáveis. A alteração remove essa execução e mantém o username como conteúdo literal, prefixado com barra invertida como já ocorre no ramo seguro. Nenhum dado externo é mais interpretado como código JavaScript, eliminando a injeção de código no processo da aplicação. A estrutura, mensagens, identificadores, assinatura e demais comportamentos do arquivo permanecem inalterados.\",\"limitacoes_da_correcao\":\"O ramo de desafio usernameXssChallenge deixa de executar expressões intencionalmente, portanto o comportamento específico do desafio que dependia de eval() não é preservado. Essa limitação é necessária para eliminar a vulnerabilidade; a funcionalidade de exibição de usernames comuns permanece preservada. O bloco try/catch torna-se redundante, mas foi mantido para respeitar a alteração mínima solicitada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2785,
+  "tokens_saida": 490,
+  "latencia_s": 7.242,
+  "custo_usd": 0.001284,
+  "hash_prompt": "d2218c242316ff9c03d1edbebfdba1d90cf1eae8b68a9c445f5bd692b19c19e0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2782
+}

@@ -1,0 +1,336 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 26.502981956999065,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 7.97,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_ilbegx7p/profile_upload/primeira.xml",
+        "test/api/profile-image-upload.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 14.759999999999998,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension"
+      ],
+      "testes_falhos_novos": [
+        "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /profile/image/file\n  ✔ POST profile image file valid for JPG format (173.906766ms)\n  ✔ POST profile image file invalid type (65.410031ms)\n  ✔ POST profile image file forbidden for anonymous user (13.318534ms)\n  ✔ POST profile image file rejected for unrecognizable file content (48.519666ms)\n✔ /profile/image/file (1106.316373ms)\n▶ /profile/image/url\n  ✔ POST profile image URL valid for image available online (57.440432ms)\n  ✔ POST profile image URL redirects even for invalid image URL (457.121193ms)\n  ﹣ POST profile image URL forbidden for anonymous user (0.391242ms) # FIXME runs into \"socket hang up\"\n  ﹣ POST valid image with tampered content length (0.271386ms) # Fails on CI/CD pipeline\n✔ /profile/image/url (516.155236ms)\n▶ /profile/image/url (with local mock server)\n  ✔ POST with non-OK response falls back to storing URL as profile image (9.465405ms)\n  ✔ POST with empty-body response (204) falls back to storing URL as profile image (8.66161ms)\n  ✔ POST with valid response writes file and redirects to profile (8.277878ms)\n  ✖ POST with PNG URL extension saves file using PNG extension (9.304855ms)\n  ✔ POST with unrecognised URL extension defaults to JPG extension (11.015222ms)\n✖ /profile/image/url (with local mock server) (88.707958ms)\nℹ tests 13\nℹ suites 3\nℹ pass 10\nℹ fail 1\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 6143.184253\n\n✖ failing tests:\n\ntest at test/api/profile-image-upload.test.ts:2:7899\n✖ POST with PNG URL extension saves file using PNG extension (9.304855ms)\n  AssertionError [ERR_ASSERTION]: Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist\n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:229:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 3.601999196689576e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/profileImageUrlUpload.ts"
+    ],
+    "grupos": [
+      "profile_upload"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 7.97
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "profile_upload",
+      "status": "executada",
+      "duracao_s": 14.759999999999998
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "profile_upload"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 7.97
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "profile_upload",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file forbidden for anonymous user",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/file > POST profile image file forbidden for anonymous user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file invalid type",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/file > POST profile image file invalid type",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file rejected for unrecognizable file content",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/file > POST profile image file rejected for unrecognizable file content",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file valid for JPG format",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/file > POST profile image file valid for JPG format",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL forbidden for anonymous user",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url > POST profile image URL forbidden for anonymous user",
+            "estado": "ignorado"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL redirects even for invalid image URL",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url > POST profile image URL redirects even for invalid image URL",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url > POST profile image URL valid for image available online",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url > POST valid image with tampered content length",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url > POST valid image with tampered content length",
+            "estado": "ignorado"
+          }
+        ],
+        "falhos": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension"
+        ],
+        "falhos_novos": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension"
+        ],
+        "falhos_novos_observados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file invalid type",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file rejected for unrecognizable file content",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file valid for JPG format",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL redirects even for invalid image URL",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST valid image with tampered content length"
+        ],
+        "esperados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file invalid type",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file rejected for unrecognizable file content",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file valid for JPG format",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL redirects even for invalid image URL",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+        ],
+        "ignorados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST valid image with tampered content length"
+        ],
+        "executados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file invalid type",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file rejected for unrecognizable file content",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file valid for JPG format",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL redirects even for invalid image URL",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 14.759999999999998,
+        "espera_api_s": 3.601999196689576e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_ilbegx7p/profile_upload/primeira.xml",
+            "test/api/profile-image-upload.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 14.759999999999998,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /profile/image/file\n  ✔ POST profile image file valid for JPG format (173.906766ms)\n  ✔ POST profile image file invalid type (65.410031ms)\n  ✔ POST profile image file forbidden for anonymous user (13.318534ms)\n  ✔ POST profile image file rejected for unrecognizable file content (48.519666ms)\n✔ /profile/image/file (1106.316373ms)\n▶ /profile/image/url\n  ✔ POST profile image URL valid for image available online (57.440432ms)\n  ✔ POST profile image URL redirects even for invalid image URL (457.121193ms)\n  ﹣ POST profile image URL forbidden for anonymous user (0.391242ms) # FIXME runs into \"socket hang up\"\n  ﹣ POST valid image with tampered content length (0.271386ms) # Fails on CI/CD pipeline\n✔ /profile/image/url (516.155236ms)\n▶ /profile/image/url (with local mock server)\n  ✔ POST with non-OK response falls back to storing URL as profile image (9.465405ms)\n  ✔ POST with empty-body response (204) falls back to storing URL as profile image (8.66161ms)\n  ✔ POST with valid response writes file and redirects to profile (8.277878ms)\n  ✖ POST with PNG URL extension saves file using PNG extension (9.304855ms)\n  ✔ POST with unrecognised URL extension defaults to JPG extension (11.015222ms)\n✖ /profile/image/url (with local mock server) (88.707958ms)\nℹ tests 13\nℹ suites 3\nℹ pass 10\nℹ fail 1\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 6143.184253\n\n✖ failing tests:\n\ntest at test/api/profile-image-upload.test.ts:2:7899\n✖ POST with PNG URL extension saves file using PNG extension (9.304855ms)\n  AssertionError [ERR_ASSERTION]: Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist\n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:229:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/profile/image/file\" time=\"1.106316\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"POST profile image file valid for JPG format\" time=\"0.173907\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file invalid type\" time=\"0.065410\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file forbidden for anonymous user\" time=\"0.013319\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file rejected for unrecognizable file content\" time=\"0.048520\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/profile/image/url\" time=\"0.516155\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"2\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"POST profile image URL valid for image available online\" time=\"0.057440\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image URL redirects even for invalid image URL\" time=\"0.457121\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image URL forbidden for anonymous user\" time=\"0.000391\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"FIXME runs into &amp;quot;socket hang up&amp;quot;\"/>\n\t\t</testcase>\n\t\t<testcase name=\"POST valid image with tampered content length\" time=\"0.000271\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"Fails on CI/CD pipeline\"/>\n\t\t</testcase>\n\t</testsuite>\n\t<testsuite name=\"/profile/image/url (with local mock server)\" time=\"0.088708\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"POST with non-OK response falls back to storing URL as profile image\" time=\"0.009465\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST with empty-body response (204) falls back to storing URL as profile image\" time=\"0.008662\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST with valid response writes file and redirects to profile\" time=\"0.008278\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST with PNG URL extension saves file using PNG extension\" time=\"0.009305\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\" failure=\"Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist\">\n[Error [ERR_TEST_FAILURE]: Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/profile-image-upload.test.ts:229:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST with unrecognised URL extension defaults to JPG extension\" time=\"0.011015\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 13 -->\n\t<!-- suites 3 -->\n\t<!-- pass 10 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 2 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 6143.184253 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/profile/image/file\" time=\"2.750855\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"POST profile image file valid for JPG format\" time=\"0.261367\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file invalid type\" time=\"0.128843\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file forbidden for anonymous user\" time=\"0.018583\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file rejected for unrecognizable file content\" time=\"0.091319\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/profile/image/url\" time=\"0.270223\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"2\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"POST profile image URL valid for image available online\" time=\"0.118672\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image URL redirects even for invalid image URL\" time=\"0.149685\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image URL forbidden for anonymous user\" time=\"0.000479\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"FIXME runs into &amp;quot;socket hang up&amp;quot;\"/>\n\t\t</testcase>\n\t\t<testcase name=\"POST valid image with tampered content length\" time=\"0.000238\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"Fails on CI/CD pipeline\"/>\n\t\t</testcase>\n\t</testsuite>\n\t<testsuite name=\"/profile/image/url (with local mock server)\" time=\"0.171248\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"POST with non-OK response falls back to storing URL as profile image\" time=\"0.016752\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST with empty-body response (204) falls back to storing URL as profile image\" time=\"0.014230\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST with valid response writes file and redirects to profile\" time=\"0.013405\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST with PNG URL extension saves file using PNG extension\" time=\"0.014865\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\" failure=\"Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist\">\n[Error [ERR_TEST_FAILURE]: Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected file frontend/dist/frontend/assets/public/images/uploads/2.png to exist\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/profile-image-upload.test.ts:229:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST with unrecognised URL extension defaults to JPG extension\" time=\"0.019444\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/profile-image-upload.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 13 -->\n\t<!-- suites 3 -->\n\t<!-- pass 10 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 2 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 8442.062503 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

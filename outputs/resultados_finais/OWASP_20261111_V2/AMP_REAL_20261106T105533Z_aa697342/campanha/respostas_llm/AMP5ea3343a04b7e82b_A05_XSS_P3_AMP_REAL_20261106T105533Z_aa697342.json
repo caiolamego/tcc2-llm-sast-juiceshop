@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) por desativação da sanitização HTML do Angular ao exibir o número do pedido.\",\n  \"causa_da_vulnerabilidade\": \"O valor results.data[0].orderId pode ser controlado externamente e é interpolado em uma string HTML passada a bypassSecurityTrustHtml, que instrui o Angular a confiar no conteúdo sem sanitizá-lo.\",\n  \"estrategia_de_correcao\": \"Remover o bypass de confiança e manter a marcação <code> por meio do binding [innerHTML] do Angular, que aplica sanitização. Armazenar a string HTML sem convertê-la em um valor confiável.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/track-result/track-result.component.ts\",\n      \"trecho_original\": \"      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\",\n      \"trecho_corrigido\": \"      this.results.orderNo = `<code>${results.data[0].orderId}</code>`\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A remoção de bypassSecurityTrustHtml permite que o Angular sanitize o conteúdo quando results.orderNo é usado em um binding [innerHTML], preservando a formatação <code> e neutralizando markup perigoso fornecido no orderId. A propriedade sanitizer permanece inalterada para respeitar a alteração mínima.\",\n  \"limitacoes_da_correcao\": \"A sanitização depende de results.orderNo ser renderizado pelo template em um contexto HTML do Angular, como [innerHTML]. Se o template usar interpolação de texto, as tags <code> serão exibidas literalmente; o template não foi fornecido para confirmar o binding.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2247,
+  "tokens_saida": 387,
+  "latencia_s": 4.359,
+  "custo_usd": 0.000474,
+  "hash_prompt": "827654c2a3ab0e13ecdbe633aa480bf3369d343e77f58562ea05846c2bbc0132",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2244
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de diretórios (path traversal) na tarefa checksum, que pode permitir a leitura de arquivos fora de dist/ e a gravação de arquivos de checksum fora desse diretório.\",\n  \"causa_da_vulnerabilidade\": \"A tarefa percorre todas as entradas de dist/ e concatena seus nomes diretamente aos caminhos usados por readFileSync e write. Uma entrada simbólica pode apontar para um arquivo externo; além disso, nomes de entrada com componentes de caminho podem escapar de dist/.\",\n  \"estrategia_de_correcao\": \"Resolver os caminhos a partir de dist/, aceitar apenas arquivos regulares cujo caminho real permaneça dentro desse diretório e gravar o checksum no caminho validado. Ignorar entradas que não atendam a essas condições.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"Gruntfile.js\",\n      \"trecho_original\": \"    const fs = require('node:fs')\\n    const crypto = require('node:crypto')\\n    fs.readdirSync('dist/').forEach(file => {\\n      const buffer = fs.readFileSync('dist/' + file)\\n      const md5 = crypto.createHash('md5')\\n      md5.update(buffer)\\n      const md5Hash = md5.digest('hex')\\n      const md5FileName = 'dist/' + file + '.md5'\\n      grunt.file.write(md5FileName, md5Hash)\",\n      \"trecho_corrigido\": \"    const fs = require('node:fs')\\n    const path = require('node:path')\\n    const crypto = require('node:crypto')\\n    const distPath = path.resolve('dist/')\\n    fs.readdirSync(distPath).forEach(file => {\\n      const filePath = path.join(distPath, file)\\n      let realFilePath\\n      try {\\n        realFilePath = fs.realpathSync(filePath)\\n        const relativeFilePath = path.relative(distPath, realFilePath)\\n        if (relativeFilePath.startsWith('..' + path.sep) || relativeFilePath === '..' || path.isAbsolute(relativeFilePath) || !fs.statSync(realFilePath).isFile()) return\\n      } catch {\\n        return\\n      }\\n      const buffer = fs.readFileSync(realFilePath)\\n      const md5 = crypto.createHash('md5')\\n      md5.update(buffer)\\n      const md5Hash = md5.digest('hex')\\n      const md5FileName = filePath + '.md5'\\n      grunt.file.write(md5FileName, md5Hash)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação com realpathSync impede que links simbólicos levem a leitura para fora de dist/, e path.relative verifica que o destino canônico está contido no diretório permitido. A verificação de arquivo regular evita processar diretórios e outros tipos de entrada. O caminho de saída é construído a partir da entrada em dist/, sem concatenar um caminho arbitrário fornecido externamente. A geração de checksums para arquivos regulares do diretório mantém o comportamento esperado.\",\n  \"limitacoes_da_correcao\": \"A validação e a leitura não são atômicas; em um ambiente onde outro processo possa alterar dist/ simultaneamente, ainda existe uma janela de condição de corrida. A correção também não valida a integridade criptográfica dos artefatos: MD5 é mantido para preservar o comportamento existente e não deve ser considerado adequado para autenticação ou resistência a colisões.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1229,
+  "tokens_saida": 769,
+  "latencia_s": 9.479,
+  "custo_usd": 0.000538,
+  "hash_prompt": "ea328989831119630c94703a262576ee6f70386ce963cc83aa9c24eac9ddcf44",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1226
+}

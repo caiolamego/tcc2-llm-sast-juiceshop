@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de caminho (Path Injection) na função checksum ao ler arquivos do diretório 'dist/' sem validação adequada.\",\"causa_da_vulnerabilidade\":\"O código lê todos os arquivos do diretório 'dist/' e gera checksums para eles, mas não valida os nomes dos arquivos. Se um arquivo malicioso for criado com um nome contendo caracteres especiais ou caminhos relativos, pode causar comportamento inesperado ou exposição de arquivos não intencionais.\",\"estrategia_de_correcao\":\"Adicionar validação para garantir que apenas arquivos regulares dentro do diretório 'dist/' sejam processados, ignorando subdiretórios e arquivos com nomes suspeitos. Isso pode ser feito verificando se cada entrada é um arquivo regular antes de ler e processar.\",\"edicoes\":[{\"arquivo\":\"Gruntfile.js\",\"trecho_original\":\"grunt.registerTask('checksum', 'Create .md5 checksum files', function () {\\n    const fs = require('node:fs')\\n    const crypto = require('node:crypto')\\n    fs.readdirSync('dist/').forEach(file => {\\n      const buffer = fs.readFileSync('dist/' + file)\\n      const md5 = crypto.createHash('md5')\\n      md5.update(buffer)\\n      const md5Hash = md5.digest('hex')\\n      const md5FileName = 'dist/' + file + '.md5'\\n      grunt.file.write(md5FileName, md5Hash)\\n      grunt.log.write(`Checksum ${md5Hash} written to file ${md5FileName}.`).verbose.write('...').ok()\\n      grunt.log.writeln()\\n    })\\n  })\",\"trecho_corrigido\":\"grunt.registerTask('checksum', 'Create .md5 checksum files', function () {\\n    const fs = require('node:fs')\\n    const crypto = require('node:crypto')\\n    fs.readdirSync('dist/').forEach(file => {\\n      const filePath = 'dist/' + file\\n      if (!fs.statSync(filePath).isFile()) return\\n      const buffer = fs.readFileSync(filePath)\\n      const md5 = crypto.createHash('md5')\\n      md5.update(buffer)\\n      const md5Hash = md5.digest('hex')\\n      const md5FileName = filePath + '.md5'\\n      grunt.file.write(md5FileName, md5Hash)\\n      grunt.log.write(`Checksum ${md5Hash} written to file ${md5FileName}.`).verbose.write('...').ok()\\n      grunt.log.writeln()\\n    })\\n  })\"}],\"justificativa_tecnica\":\"A vulnerabilidade ocorre porque o código processa todos os arquivos listados em 'dist/' sem verificar se são arquivos regulares, o que pode permitir a manipulação de arquivos ou diretórios inesperados. Ao adicionar uma verificação com fs.statSync(filePath).isFile(), garantimos que apenas arquivos regulares sejam processados, mitigando riscos de path traversal ou processamento de arquivos não intencionais.\",\"limitacoes_da_correcao\":\"A correção assume que o diretório 'dist/' contém apenas arquivos que devem ser processados e que não há necessidade de processar arquivos em subdiretórios. Se houver arquivos relevantes em subdiretórios, a lógica precisaria ser adaptada para percorrer recursivamente com validação adequada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1232,
+  "tokens_saida": 723,
+  "latencia_s": 8.834,
+  "custo_usd": 0.00165,
+  "hash_prompt": "ae86c924e42bb78c7577652a2472b4fadeccd30649979483fd09639eed09dd9f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

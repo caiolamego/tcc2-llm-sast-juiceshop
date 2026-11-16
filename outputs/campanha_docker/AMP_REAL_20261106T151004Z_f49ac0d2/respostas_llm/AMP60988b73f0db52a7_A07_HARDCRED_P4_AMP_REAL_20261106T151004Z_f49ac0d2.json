@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de chave HMAC codificada diretamente no código-fonte (hardcoded key) na função deluxeToken.\",\"causa_da_vulnerabilidade\":\"A chave secreta usada para gerar o HMAC na função deluxeToken está codificada diretamente no código-fonte como a variável 'privateKey'. Isso expõe a chave a qualquer pessoa que tenha acesso ao código, facilitando ataques de falsificação de tokens.\",\"estrategia_de_correcao\":\"Remover a chave secreta hardcoded do código e carregá-la a partir de uma variável de ambiente. Caso a variável não esteja definida, lançar um erro para evitar execução insegura. Assim, a chave pode ser gerenciada externamente e protegida adequadamente.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"const privateKey = '-----BEGIN RSA PRIVATE KEY-----\\\\r\\\\nMIICXAIBAAKBgQDNwqLEe9wgTXCbC7+RPdDbBbeqjdbs4kOPOIGzqLpXvJXlxxW8iMz0EaM4BKUqYsIa+ndv3NAn2RxCd5ubVdJJcX43zO6Ko0TFEZx/65gY3BE0O6syCEmUP4qbSd6exou/F+WTISzbQ5FBVPVmhnYhG/kpwt/cIxK5iUn5hm+4tQIDAQABAoGBAI+8xiPoOrA+KMnG/T4jJsG6TsHQcDHvJi7o1IKC/hnIXha0atTX5AUkRRce95qSfvKFweXdJXSQ0JMGJyfuXgU6dI0TcseFRfewXAa/ssxAC+iUVR6KUMh1PE2wXLitfeI6JLvVtrBYswm2I7CtY0q8n5AGimHWVXJPLfGV7m0BAkEA+fqFt2LXbLtyg6wZyxMA/cnmt5Nt3U2dAu77MzFJvibANUNHE4HPLZxjGNXN+a6m0K6TD4kDdh5HfUYLWWRBYQJBANK3carmulBwqzcDBjsJ0YrIONBpCAsXxk8idXb8jL9aNIg15Wumm2enqqObahDHB5jnGOLmbasizvSVqypfM9UCQCQl8xIqy+YgURXzXCN+kwUgHinrutZms87Jyi+D8Br8NY0+Nlf+zHvXAomD2W5CsEK7C+8SLBr3k/TsnRWHJuECQHFE9RA2OP8WoaLPuGCyFXaxzICThSRZYluVnWkZtxsBhW2W8z1b8PvWUE7kMy7TnkzeJS2LSnaNHoyxi7IaPQUCQCwWU4U+v4lD7uYBw00Ga/xt+7+UqFPlPVdz1yyr4q24Zxaw0LgmuEvgU5dycq8N7JxjTubX0MIRR+G9fmDBBl8=\\\\r\\\\n-----END RSA PRIVATE KEY-----'\",\"trecho_corrigido\":\"const privateKey = process.env.PRIVATE_KEY\\nif (!privateKey) {\\n  throw new Error('Missing PRIVATE_KEY environment variable')\\n}\"},{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', privateKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\",\"trecho_corrigido\":\"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', privateKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\"}],\"justificativa_tecnica\":\"Ao remover a chave secreta hardcoded e carregá-la a partir de uma variável de ambiente, a chave pode ser gerenciada de forma segura fora do código-fonte, reduzindo o risco de exposição acidental. Isso impede que um atacante que obtenha o código-fonte consiga facilmente falsificar tokens HMAC, aumentando a segurança da aplicação.\",\"limitacoes_da_correcao\":\"A correção depende da correta configuração da variável de ambiente PRIVATE_KEY no ambiente de execução. Se a variável não estiver definida, a aplicação não iniciará, o que pode impactar a disponibilidade se não for gerenciado adequadamente. Além disso, a rotação da chave deve ser gerenciada externamente para manter a segurança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 3655,
+  "tokens_saida": 1051,
+  "latencia_s": 9.071,
+  "custo_usd": 0.00226,
+  "hash_prompt": "28916b28981e0189a6dbb1cae26d838d1e83627e901f17f0684d366955cd8a17",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2944,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Armazenamento de senhas em texto plano no arquivo de dados estático.\",\"causa_da_vulnerabilidade\":\"As senhas dos usuários estão armazenadas diretamente em texto claro no arquivo 'data/static/users.yml', sem qualquer forma de hash ou criptografia. Isso ocorre porque o arquivo contém campos 'password' com valores literais que representam as senhas dos usuários.\",\"estrategia_de_correcao\":\"Substituir as senhas armazenadas em texto plano por seus hashes seguros utilizando um algoritmo de hashing robusto como bcrypt. Isso implica gerar o hash da senha original e armazenar o hash no lugar da senha em texto claro no arquivo YAML.\",\"edicoes\":[{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'mDLx?94T~1CfVfZMzw@sJ9f?s3L6lbMqE70FfI8^54jbNikY5fymx7c!YbJb'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'J6aVjTgOpRs@?5l!Zkq2AYnCE@RF$P'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'focusOnScienceMorty!focusOnScience'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'Mr. N00dles'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: '0Y8rMnww$*9VFYE\\u001659-!Fg1L6t&6lB'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'EinBelegtesBrotMitSchinkenSCHINKEN!'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'K1f.....................'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'monkey summer birthday are all bad passwords but work just fine in a long passphrase'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'kitten lesser pooch karate buffoon indoors'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'uss enterprise'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'i am an awesome accountant'\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  password: 'muda-muda > ora-ora' # https://www.youtube.com/watch?v=vnJv8IoLMwc\",\"trecho_corrigido\":\"  password: '$2b$12$eImiTXuWVxfM37uY4JANjQ==hashedpasswordexample=='\"}],\"justificativa_tecnica\":\"Armazenar senhas em texto claro é uma prática insegura que expõe os usuários a riscos graves caso o arquivo seja acessado indevidamente. Utilizando um algoritmo de hashing seguro como bcrypt, as senhas são transformadas em hashes irreversíveis, protegendo as credenciais mesmo que o arquivo seja comprometido. Assim, a vulnerabilidade é mitigada pois o atacante não poderá recuperar as senhas originais a partir dos hashes.\",\"limitacoes_da_correcao\":\"A correção exige que o sistema que autentica os usuários suporte a verificação de senhas via hash bcrypt. Além disso, as senhas originais devem ser conhecidas para gerar os hashes, ou os usuários precisarão redefinir suas senhas. A alteração não impede que outras informações sensíveis, como respostas às perguntas de segurança, estejam em texto claro, o que pode requerer medidas adicionais para proteção.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1694,
+  "tokens_saida": 1153,
+  "latencia_s": 10.184,
+  "custo_usd": 0.002522,
+  "hash_prompt": "b9a2b2f1a701a8cdc90492c21c6fd19bfd1789d84452171ebaacd573e14ec89a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

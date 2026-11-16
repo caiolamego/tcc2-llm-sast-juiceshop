@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) ao exibir o HTML retornado pelo serviço de exportação de dados.\",\n  \"causa_da_vulnerabilidade\": \"O valor data.image, recebido do serviço de CAPTCHA, é passado a bypassSecurityTrustHtml, que desativa a sanitização contextual do Angular e o marca como HTML confiável sem validar sua origem ou conteúdo.\",\n  \"estrategia_de_correcao\": \"Remover o bypass e manter o valor como string. Quando consumido por um binding HTML do Angular, o framework poderá aplicar sua sanitização padrão, preservando a exibição de markup permitido e removendo conteúdo perigoso.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/data-export/data-export.component.ts\",\n      \"trecho_original\": \"      this.captcha = this.sanitizer.bypassSecurityTrustHtml(data.image)\",\n      \"trecho_corrigido\": \"      this.captcha = data.image\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A atribuição direta evita marcar conteúdo externo como confiável. Se o template exibe captcha por meio de [innerHTML], o Angular sanitiza o HTML antes de inseri-lo no DOM, reduzindo o risco de execução de scripts e de atributos de evento maliciosos. A alteração é mínima e mantém o fluxo de obtenção e exibição do CAPTCHA.\",\n  \"limitacoes_da_correcao\": \"A sanitização padrão do Angular não substitui a validação da origem nem uma política de conteúdo específica. A segurança depende de o template usar um binding Angular sanitizado, como [innerHTML], e não inserir o valor por APIs DOM inseguras. Conteúdo legítimo removido pela sanitização pode exigir uma política de markup permitida.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2459,
+  "tokens_saida": 377,
+  "latencia_s": 4.457,
+  "custo_usd": 0.000496,
+  "hash_prompt": "710b1730c3123551a5e4e4923d4882619b098e3ca0a2cabda4d2cdb2462af7eb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2456
+}

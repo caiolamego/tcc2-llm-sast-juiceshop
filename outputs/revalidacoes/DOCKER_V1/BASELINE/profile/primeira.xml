@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/profile" time="0.878902" disabled="0" errors="0" tests="9" failures="1" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET user profile is forbidden for unauthenticated user" time="0.023900" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts"/>
+		<testcase name="GET user profile of authenticated user" time="0.164015" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts"/>
+		<testcase name="POST update username of authenticated user" time="0.019948" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts"/>
+		<testcase name="POST update profile is forbidden for unauthenticated user" time="0.009596" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts"/>
+		<testcase name="GET user profile renders evaluated SSTI payload for username containing valid expression" time="0.061729" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts" failure="The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('>49&lt;'))&#10;">
+			<failure type="testCodeFailure" message="The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('>49&lt;'))">
+[Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:
+
+  assert.ok(res.text.includes('>49&lt;'))
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(res.text.includes('>49&lt;'))
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/user-profile.test.ts:79:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="GET user profile falls back gracefully when SSTI payload throws" time="0.057561" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts"/>
+		<testcase name="should be solved when origin header matches configured CSRF URL" time="0.021781" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts"/>
+		<testcase name="should have the configured CSRF URL in the challenge description" time="0.000388" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts"/>
+		<testcase name="should NOT be solved when origin header does NOT match configured CSRF URL" time="0.014683" classname="test" file="/repo/workspace/wt-1/test/api/user-profile.test.ts"/>
+	</testsuite>
+	<!-- tests 9 -->
+	<!-- suites 1 -->
+	<!-- pass 8 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 3345.229294 -->
+</testsuites>

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Permissão para alterar a senha sem fornecer a senha atual (currentPassword) em alguns casos, permitindo que um atacante autenticado altere a senha de outro usuário sem conhecimento da senha atual.\",\"causa_da_vulnerabilidade\":\"O código permite que a senha seja alterada mesmo quando o parâmetro currentPassword não é fornecido, desde que o token de autenticação seja válido. A verificação da senha atual é condicional e só ocorre se currentPassword estiver presente, permitindo que um usuário autenticado altere sua senha sem confirmar a senha atual.\",\"estrategia_de_correcao\":\"Exigir que o parâmetro currentPassword seja sempre fornecido e válido para permitir a alteração da senha. Caso contrário, negar a operação com erro apropriado.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\",\"trecho_corrigido\":\"if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\"}],\"justificativa_tecnica\":\"Ao exigir que currentPassword seja sempre fornecido e que sua hash corresponda à senha armazenada, impede-se que usuários autenticados alterem a senha sem conhecimento da senha atual, mitigando o risco de alteração não autorizada da senha.\",\"limitacoes_da_correcao\":\"Usuários que não conhecem sua senha atual não poderão alterá-la, mesmo que autenticados, o que pode impactar casos legítimos de recuperação de senha que dependam de outro fluxo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 1115,
+  "tokens_saida": 366,
+  "latencia_s": 4.9,
+  "custo_usd": 0.001032,
+  "hash_prompt": "33d2a64a432c90af511a2b867982f45fa7e31eec7e3e631467aee62bd0c425e5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Traversal de diretório (CWE-22) durante a extração de arquivos ZIP, permitindo gravar arquivos fora de uploads/complaints.\",\n  \"causa_da_vulnerabilidade\": \"O caminho entry.path, controlado pelo conteúdo do arquivo ZIP, é concatenado com o diretório de extração e usado para criar um arquivo. A verificação absolutePath.includes(path.resolve('.')) não confina o destino à raiz de extração: caminhos fora dela ainda podem conter o caminho do diretório atual.\",\n  \"estrategia_de_correcao\": \"Resolver uma raiz absoluta fixa para uploads/complaints e resolver cada caminho de entrada em relação a ela. Antes de gravar, usar path.relative para rejeitar caminhos iguais à raiz, caminhos que escapem por '..' e caminhos absolutos relativos. Manter a gravação e o tratamento existentes para entradas confinadas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/fileUpload.ts\",\n      \"trecho_original\": \"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve('uploads/complaints/' + fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.includes(path.resolve('.'))) {\\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\\n    }\\n  }\\n}\",\n      \"trecho_corrigido\": \"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  const extractionRoot = path.resolve('uploads/complaints')\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve(extractionRoot, fileName)\\n    const relativePath = path.relative(extractionRoot, absolutePath)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (relativePath !== '' && relativePath !== '..' && !relativePath.startsWith('..' + path.sep) && !path.isAbsolute(relativePath)) {\\n      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))\\n    }\\n  }\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação com path.relative verifica confinamento à raiz após a normalização feita por path.resolve. Ela rejeita caminhos que resolvam para a própria raiz ou para fora dela, incluindo traversal com separadores reconhecidos pela plataforma e caminhos absolutos. A gravação usa o caminho absoluto já validado, evitando reconstruir o destino a partir da entrada não confiável.\",\n  \"limitacoes_da_correcao\": \"A validação lexical não impede escapes por links simbólicos preexistentes dentro de uploads/complaints. A correção também não altera permissões, limites de tamanho ou outras validações do conteúdo do ZIP.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2958,
+  "tokens_saida": 674,
+  "latencia_s": 6.426,
+  "custo_usd": 0.000707,
+  "hash_prompt": "6cc8078a23c6ca39ddbee5e24c5d198a2828ba21846fdfa219f7165e4d601083",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2955
+}

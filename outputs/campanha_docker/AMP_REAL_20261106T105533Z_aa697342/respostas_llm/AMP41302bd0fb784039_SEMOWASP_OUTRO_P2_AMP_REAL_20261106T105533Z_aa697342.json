@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Redirecionamento aberto (open redirect) causado por validação insegura de URLs.\",\n  \"causa_da_vulnerabilidade\": \"A função isRedirectAllowed aceita uma URL quando ela contém qualquer URL da lista de permissões como substring. Assim, uma URL controlada por um atacante pode incluir uma URL permitida em seu caminho, consulta ou fragmento e ainda apontar para um destino externo.\",\n  \"estrategia_de_correcao\": \"Comparar a URL recebida com as entradas permitidas por igualdade exata, em vez de procurar uma entrada como substring. Isso mantém a lista e a assinatura da função inalteradas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\n      \"trecho_corrigido\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url === allowedUrl // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A igualdade exata impede que URLs com prefixos, sufixos, caminhos, parâmetros ou fragmentos adicionais sejam aceitas apenas por conterem uma entrada permitida. Somente os valores explicitamente presentes na lista continuam autorizados, preservando o comportamento para esses destinos.\",\n  \"limitacoes_da_correcao\": \"A validação continua dependendo da representação textual exata da URL. Variações equivalentes de formatação, como diferenças de barra final ou normalização, serão rejeitadas; isso é mais restritivo, mas evita aceitar destinos não listados.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3084,
+  "tokens_saida": 433,
+  "latencia_s": 4.588,
+  "custo_usd": 0.000602,
+  "hash_prompt": "c3a527e16f8ee42f5ffd1d397c6bf3d7a8fb8c7ef252c3ff9df8fa024d001323",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3081
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações por listagem de diretório (CWE-548) na rota /ftp.\",\"causa_da_vulnerabilidade\":\"A chamada serveIndex('ftp', { icons: true }) habilita a geração de uma página de índice contendo nomes e metadados dos arquivos no diretório ftp. Essa listagem fica acessível pela rota /ftp antes do middleware de controle de acesso usado apenas para arquivos de logs.\",\"estrategia_de_correcao\":\"Remover somente o middleware serveIndex da rota /ftp, preservando o middleware servePublicFiles() para manter o download direto dos arquivos e o comportamento funcional necessário.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\",\"trecho_corrigido\":\"  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\"}],\"justificativa_tecnica\":\"Sem serveIndex, uma requisição a /ftp não gera mais uma página com a enumeração do conteúdo do diretório. O middleware servePublicFiles() permanece ativo para URLs diretas no formato /ftp/:file, preservando o acesso aos arquivos públicos. A alteração é mínima e elimina a divulgação de nomes, estrutura e metadados dos arquivos por listagem automática.\",\"limitacoes_da_correcao\":\"Arquivos ainda poderão ser baixados se o atacante conhecer ou descobrir seus caminhos diretos, pois o download foi preservado conforme o requisito funcional. Esta correção não substitui controles de autorização, validação de nomes ou revisão do conteúdo armazenado em ftp. O marcador de análise associado à linha removida também deixa de existir nessa região.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3262,
+  "tokens_saida": 408,
+  "latencia_s": 6.096,
+  "custo_usd": 0.001305,
+  "hash_prompt": "e71f49e6c5940f026bc8b1202b88e927bbb6cb83b07914a3e7347b0532c85809",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3259
+}

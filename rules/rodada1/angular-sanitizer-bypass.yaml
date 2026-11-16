@@ -1,0 +1,13 @@
+rules:
+  - id: tcc.angular.security.bypass-security-trust-html
+    languages: [typescript]
+    severity: WARNING
+    message: >-
+      bypassSecurityTrustHtml desativa a sanitizacao HTML do Angular.
+      Revise a origem do valor e evite o bypass para conteudo nao confiavel.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      confidence: LOW
+    pattern: $SANITIZER.bypassSecurityTrustHtml($VALUE)

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado ao exibir comentários de feedback na galeria.\",\n  \"causa_da_vulnerabilidade\": \"O comentário, que pode ser controlado por um usuário, é interpolado diretamente em uma string HTML e essa string é marcada como confiável por `bypassSecurityTrustHtml`, desativando a sanitização do Angular. Um comentário malicioso pode, assim, ser interpretado como HTML ativo.\",\n  \"estrategia_de_correcao\": \"Escapar os caracteres especiais de HTML do comentário antes de inseri-lo na marcação e manter a estrutura existente da galeria. Não marcar o HTML resultante como confiável; deixar o Angular sanitizá-lo normalmente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/about/about.component.ts\",\n      \"trecho_original\": \"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\n      \"trecho_corrigido\": \"          const escapedComment = feedbacks[i].comment.replace(/[&<>\\\"']/g, (character) => {\\n            const entities: Record<string, string> = {\\n              '&': '&amp;',\\n              '<': '&lt;',\\n              '>': '&gt;',\\n              '\\\"': '&quot;',\\n              \\\"'\\\": '&#39;'\\n            }\\n            return entities[character]\\n          })\\n          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            escapedComment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O escape de `&`, `<`, `>`, aspas duplas e apóstrofos impede que o conteúdo do comentário crie elementos ou atributos HTML. A remoção de `bypassSecurityTrustHtml` evita desativar a proteção do Angular; a sanitização padrão continua aplicada ao HTML da galeria. A marcação e as estrelas permanecem funcionais.\",\n  \"limitacoes_da_correcao\": \"A correção protege o comentário neste ponto de renderização. Outros locais que exibam comentários ou conteúdo não confiável precisam ser avaliados separadamente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1775,
+  "tokens_saida": 560,
+  "latencia_s": 5.779,
+  "custo_usd": 0.000502,
+  "hash_prompt": "bedaaa448b03755e901090eed50c113c0071bdbd2a0ab8e61d4fd5d497ac4739",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1772
+}

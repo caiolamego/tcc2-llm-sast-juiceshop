@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (Insecure Direct Object Reference) no processamento de pedidos, permitindo que um usuário acesse e finalize o carrinho de outro usuário ao fornecer um ID de cesta arbitrário.\",\"causa_da_vulnerabilidade\":\"A cesta é buscada exclusivamente pelo parâmetro `req.params.id`, sem verificar se ela pertence ao usuário autenticado. Além disso, o `UserId` usado para pagamento e crédito de pontos é obtido diretamente de `req.body`, permitindo associação e alteração de saldo de outro usuário.\",\"estrategia_de_correcao\":\"Restringir a consulta da cesta ao usuário autenticado, usando o identificador do usuário derivado da sessão/autenticação, e usar esse mesmo identificador confiável nas operações de carteira. A correção mantém o fluxo existente e não altera mensagens, textos ou assinaturas.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"    const id = req.params.id\\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"    const id = req.params.id\\n    const customer = security.authenticatedUsers.from(req)\\n    const userId = customer?.data?.id\\n    BasketModel.findOne({ where: { id, ...(userId != null ? { UserId: userId } : {}) }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"},{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"          const customer = security.authenticatedUsers.from(req)\\n          const email = customer ? customer.data ? customer.data.email : '' : ''\",\"trecho_corrigido\":\"          const email = customer ? customer.data ? customer.data.email : '' : ''\"},{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"          if (req.body.UserId) {\\n            if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {\\n              const wallet = await WalletModel.findOne({ where: { UserId: req.body.UserId } })\\n              if ((wallet != null) && wallet.balance >= totalPrice) {\\n                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: req.body.UserId } })\",\"trecho_corrigido\":\"          if (userId != null) {\\n            if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {\\n              const wallet = await WalletModel.findOne({ where: { UserId: userId } })\\n              if ((wallet != null) && wallet.balance >= totalPrice) {\\n                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: userId } })\"},{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: req.body.UserId } })\",\"trecho_corrigido\":\"              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: userId } })\"}],\"justificativa_tecnica\":\"A autorização deve ser aplicada no próprio predicado da consulta, evitando que uma cesta pertencente a outro usuário seja carregada e processada. O identificador do corpo da requisição não é confiável, portanto foi substituído pelo identificador derivado do usuário autenticado também nas operações de débito e crédito da carteira. O uso de `userId` opcional preserva o comportamento para requisições sem usuário autenticado, enquanto impede que um usuário autenticado selecione outra cesta por ID.\",\"limitacoes_da_correcao\":\"A correção pressupõe que `customer.data.id` contém o identificador usado pela coluna `BasketModel.UserId` e `WalletModel.UserId`. Ela não corrige outras questões independentes presentes no fluxo, como ausência de transação atômica entre estoque, carteira, cesta e pedido, nem validações de entrada ou concorrência.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2937,
+  "tokens_saida": 833,
+  "latencia_s": 8.951,
+  "custo_usd": 0.001059,
+  "hash_prompt": "b13b1fd4d3800a11e103d4490edb10084cc12d7b86c0c83d83118e38f6436277",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2934,
+  "tokens_escrita_cache": 0
+}

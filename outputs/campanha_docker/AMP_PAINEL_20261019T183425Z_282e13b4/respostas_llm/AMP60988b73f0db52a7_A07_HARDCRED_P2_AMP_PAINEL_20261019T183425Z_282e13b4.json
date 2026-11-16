@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade de Open Redirect devido à verificação inadequada da URL permitida na função isRedirectAllowed.\",\"causa_da_vulnerabilidade\":\"A função isRedirectAllowed verifica se a URL de redirecionamento contém qualquer uma das URLs da lista de permitidos usando url.includes(allowedUrl). Isso permite que URLs maliciosas que contenham uma URL permitida como substring sejam consideradas válidas, possibilitando redirecionamentos para domínios não autorizados.\",\"estrategia_de_correcao\":\"Modificar a verificação para garantir que a URL de redirecionamento corresponda exatamente a uma das URLs permitidas ou seja um subcaminho válido dessas URLs, evitando correspondências parciais inseguras. Uma abordagem segura é usar o construtor URL para comparar a origem (protocolo + host + porta) da URL de redirecionamento com as URLs da lista permitida.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\"trecho_corrigido\":\"export const isRedirectAllowed = (url: string) => {\\n  try {\\n    const redirectUrl = new URL(url)\\n    for (const allowedUrl of redirectAllowlist) {\\n      const allowedOrigin = new URL(allowedUrl).origin\\n      if (redirectUrl.origin === allowedOrigin) {\\n        return true\\n      }\\n    }\\n  } catch {\\n    // Se a URL for inválida, não permitir\\n    return false\\n  }\\n  return false\\n}\"}],\"justificativa_tecnica\":\"Ao usar o construtor URL para analisar a URL de redirecionamento e comparar sua origem com as origens das URLs permitidas, evitamos correspondências parciais inseguras que ocorrem com o uso de includes. Isso garante que apenas URLs com o mesmo protocolo, host e porta das URLs permitidas sejam aceitas, mitigando a vulnerabilidade de Open Redirect.\",\"limitacoes_da_correcao\":\"A correção assume que as URLs na lista de permitidos são URLs completas e válidas. URLs relativas ou formatos incomuns podem não ser tratados corretamente. Além disso, subcaminhos dentro do mesmo domínio são permitidos; se for necessário restringir a caminhos específicos, a lógica precisaria ser ajustada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3087,
+  "tokens_saida": 535,
+  "latencia_s": 5.201,
+  "custo_usd": 0.001515,
+  "hash_prompt": "8fc75f3cad91f9f011b120c33afc65190c3df39dc5e179e75315ab7ab3f7d04e",
+  "do_cache": true
+}

@@ -1,0 +1,13 @@
+rules:
+  - id: tcc.express.security.public-metrics-route
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Endpoint de metricas registrado sem middleware de autorizacao explicito.
+      Verifique se o handler ou a infraestrutura restringe o acesso.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      confidence: LOW
+    pattern: $APP.get('/metrics', $HANDLER)

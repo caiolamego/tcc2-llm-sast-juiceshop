@@ -1,0 +1,24 @@
+diff --git a/routes/profileImageUrlUpload.ts b/routes/profileImageUrlUpload.ts
+index 55184083e..91ad6c388 100644
+--- a/routes/profileImageUrlUpload.ts
++++ b/routes/profileImageUrlUpload.ts
+@@ -17,6 +17,19 @@ export function profileImageUrlUpload () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+     if (req.body.imageUrl !== undefined) {
+       const url = req.body.imageUrl
++      try {
++        const parsedUrl = new URL(url)
++        if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
++          throw new Error('Invalid URL protocol')
++        }
++        const hostname = parsedUrl.hostname
++        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.match(/^192\.168\./) || hostname.match(/^10\./) || hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./)) {
++          throw new Error('Local addresses are not allowed')
++        }
++      } catch {
++        next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
++        return
++      }
+       if (url.match(/(.)*solve\/challenges\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true
+       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
+       if (loggedInUser) {

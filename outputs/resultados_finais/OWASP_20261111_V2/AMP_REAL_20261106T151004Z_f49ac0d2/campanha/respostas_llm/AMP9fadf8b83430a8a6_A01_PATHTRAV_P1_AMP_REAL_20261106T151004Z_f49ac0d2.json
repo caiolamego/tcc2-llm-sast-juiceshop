@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade de Path Traversal na função extractZipBuffer ao extrair arquivos ZIP sem validação adequada do caminho dos arquivos extraídos.\",\"causa_da_vulnerabilidade\":\"A função extractZipBuffer utiliza path.resolve para construir o caminho absoluto dos arquivos extraídos, mas a verificação if (absolutePath.includes(path.resolve('.'))) é insuficiente para prevenir que arquivos sejam extraídos fora do diretório 'uploads/complaints/'. Isso permite que um arquivo ZIP malicioso contenha caminhos como '../../ftp/legal.md' que podem sobrescrever arquivos arbitrários no sistema.\",\"estrategia_de_correcao\":\"Implementar uma verificação rigorosa para garantir que o caminho absoluto do arquivo extraído esteja dentro do diretório permitido 'uploads/complaints/'. Isso pode ser feito comparando se o caminho absoluto do arquivo extraído começa com o caminho absoluto do diretório base de extração. Caso contrário, o arquivo deve ser ignorado para evitar escrita fora do diretório permitido.\",\"edicoes\":[{\"arquivo\":\"routes/fileUpload.ts\",\"trecho_original\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve('uploads/complaints/' + fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.includes(path.resolve('.'))) {\\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  const basePath = path.resolve('uploads/complaints/')\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve(basePath, fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.startsWith(basePath + path.sep)) {\\n      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"A correção impede que arquivos extraídos do ZIP sejam escritos fora do diretório 'uploads/complaints/' ao garantir que o caminho absoluto do arquivo extraído comece com o caminho absoluto do diretório base. Isso elimina a possibilidade de path traversal via nomes de arquivos maliciosos no ZIP, mitigando a vulnerabilidade sem alterar o comportamento funcional esperado.\",\"limitacoes_da_correcao\":\"A correção assume que o sistema de arquivos utiliza separadores padrão e que o método startsWith é suficiente para validar o caminho. Em sistemas com links simbólicos ou configurações especiais, pode ser necessário um tratamento adicional. Além disso, arquivos com nomes inválidos ou muito longos podem não ser tratados explicitamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1934,
+  "tokens_saida": 643,
+  "latencia_s": 9.879,
+  "custo_usd": 0.001802,
+  "hash_prompt": "ccb34286673cdce6a19fb889af36e053864bc6881e37f2d6f0b128e8c49a43fa",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

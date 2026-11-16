@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de token JWT hard-coded no código de teste.\",\"causa_da_vulnerabilidade\":\"O código contém um token JWT fixo e explícito inserido diretamente no teste, o que pode levar à exposição acidental de segredos ou facilitar ataques se esse token for reutilizado em ambientes reais.\",\"estrategia_de_correcao\":\"Remover o token JWT hard-coded do código de teste e substituí-lo por um valor gerado dinamicamente ou um mock que não contenha segredos reais, garantindo que o teste continue funcional sem expor tokens sensíveis.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/app.guard.spec.ts\",\"trecho_original\":\"        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')\\n        expect(guard.tokenDecode()).toEqual({\",\"trecho_corrigido\":\"        localStorage.setItem('token', 'header.payload.signature')\\n        expect(guard.tokenDecode()).toEqual({\"}] ,\"justificativa_tecnica\":\"Ao substituir o token JWT hard-coded por um valor genérico que não representa um token real, evitamos a exposição de segredos no código fonte, mantendo a funcionalidade do teste que verifica a decodificação do token. Isso elimina o risco associado ao uso de tokens fixos em testes.\",\"limitacoes_da_correcao\":\"A correção remove o token JWT real do teste, o que pode limitar a verificação da decodificação real do token JWT. No entanto, para fins de teste unitário, um valor genérico é suficiente para validar o comportamento do método tokenDecode sem expor segredos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3000,
+  "tokens_saida": 429,
+  "latencia_s": 4.298,
+  "custo_usd": 0.00131,
+  "hash_prompt": "a2b45f7719eeb35a266d6700f1f491d135105f7210e4422d8fb0a1e1ee1ff301",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

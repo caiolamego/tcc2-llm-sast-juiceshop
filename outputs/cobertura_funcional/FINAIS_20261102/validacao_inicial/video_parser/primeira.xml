@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="TCC rendered subtitle parser contracts" time="0.085747" disabled="0" errors="0" tests="6" failures="2" skipped="0" hostname="9b4ff020ac32">
+		<testcase name="renders the real template and adds two timed cues to the visible subtitle track" time="0.038269" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts" failure="Values have same structure but are not reference-equal:&#10;&#10;[&#10;  'subtitles',&#10;  'English',&#10;  'en'&#10;]&#10;">
+			<failure type="testCodeFailure" message="Values have same structure but are not reference-equal:&#10;&#10;[&#10;  'subtitles',&#10;  'English',&#10;  'en'&#10;]">
+Error [ERR_TEST_FAILURE]: Values have same structure but are not reference-equal:
+
+[
+  'subtitles',
+  'English',
+  'en'
+]
+
+    at new Promise (&lt;anonymous>)
+    at Array.map (&lt;anonymous>) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  
+  [
+    'subtitles',
+    'English',
+    'en'
+  ]
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts:38:12)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at node:internal/test_runner/test:1531:71
+      at node:internal/per_context/primordials:466:82
+      at new Promise (&lt;anonymous>)
+      at new SafePromise (node:internal/per_context/primordials:435:3)
+      at node:internal/per_context/primordials:466:9
+      at Array.map (&lt;anonymous>) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'subtitles', 'English', 'en' ],
+    expected: [ 'subtitles', 'English', 'en' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="preserves multiline SRT content and comma timestamps" time="0.010203" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts" failure="Cannot read properties of null (reading 'replaceAll')">
+			<failure type="testCodeFailure" message="Cannot read properties of null (reading 'replaceAll')">
+Error [ERR_TEST_FAILURE]: Cannot read properties of null (reading 'replaceAll')
+    at async Promise.all (index 0) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: TypeError: Cannot read properties of null (reading 'replaceAll')
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts:49:31)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1533:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+}
+			</failure>
+		</testcase>
+		<testcase name="converts hours and minutes when parsing timestamps" time="0.011274" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts"/>
+		<testcase name="rejects invalid timestamps instead of constructing misleading cues" time="0.008690" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts"/>
+		<testcase name="rejects an ambiguous cue with more than one arrow separator" time="0.007795" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts"/>
+		<testcase name="creates no cues for empty subtitle data" time="0.008533" classname="test" file="/repo/workspace/wt-1/test/server/tcc_coverage_video_subtitles.unit.test.ts"/>
+	</testsuite>
+	<!-- tests 6 -->
+	<!-- suites 1 -->
+	<!-- pass 4 -->
+	<!-- fail 2 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 365.415949 -->
+</testsuites>

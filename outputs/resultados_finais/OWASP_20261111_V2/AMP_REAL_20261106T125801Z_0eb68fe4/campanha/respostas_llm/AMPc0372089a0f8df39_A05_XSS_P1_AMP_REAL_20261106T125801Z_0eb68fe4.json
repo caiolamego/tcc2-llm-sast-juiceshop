@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado/refletido por conteúdo de legendas inserido diretamente em um bloco script inline e interpretado como HTML.\",\"causa_da_vulnerabilidade\":\"O valor de subtitle.innerHTML é processado pelo parser e passado a VTTCue sem sanitização. Conteúdo de legenda controlado por atacante pode conter marcação HTML ou payloads que, dependendo do processamento do navegador, podem ser interpretados no contexto da página.\",\"estrategia_de_correcao\":\"Ler o conteúdo da legenda como texto, em vez de HTML, usando textContent. Essa alteração impede que marcações HTML inseridas no conteúdo sejam interpretadas como código ou elementos HTML, preservando o parsing textual das legendas.\",\"edicoes\":[{\"arquivo\":\"views/promotionVideo.pug\",\"trecho_original\":\"            quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function(cue) {\",\"trecho_corrigido\":\"            quick_and_dirty_vtt_or_srt_parser(subtitle.textContent).map(function(cue) {\"}],\"justificativa_tecnica\":\"textContent retorna exclusivamente o conteúdo textual do elemento, sem interpretar ou serializar marcação HTML. Assim, caracteres e tags potencialmente maliciosos presentes nas legendas permanecem dados textuais ao serem enviados ao parser e ao VTTCue. A alteração é mínima, não modifica identificadores, mensagens, textos visíveis ou assinaturas, e mantém o comportamento funcional esperado para legendas textuais.\",\"limitacoes_da_correcao\":\"A correção protege o ponto identificado no consumo do conteúdo da legenda, mas não substitui controles de segurança necessários na origem dos dados, como validação e sanitização no servidor, política de segurança de conteúdo (CSP) e proteção de outros valores dinâmicos usados no template, como _title_, _bgColor_, _textColor_, _primLight_, _navColor_ e _favicon_, caso sejam controlados por entrada externa.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1625,
+  "tokens_saida": 415,
+  "latencia_s": 6.376,
+  "custo_usd": 0.000904,
+  "hash_prompt": "ba031c81a5faf53ab947a6e6ac9869804eafd7a3613d37e4dc8317a9f42b6588",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1622
+}

@@ -1,0 +1,21 @@
+diff --git a/routes/updateProductReviews.ts b/routes/updateProductReviews.ts
+index c5d88cf6b..b0e49e03b 100644
+--- a/routes/updateProductReviews.ts
++++ b/routes/updateProductReviews.ts
+@@ -14,8 +14,15 @@ import * as db from '../data/mongodb'
+ export function updateProductReviews () {
+   return (req: Request, res: Response, next: NextFunction) => {
+     const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge
++    const { ObjectId } = require('mongodb')
++    let reviewId
++    try {
++      reviewId = new ObjectId(req.body.id)
++    } catch {
++      return res.status(400).json({ error: 'Invalid review id' })
++    }
+     db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge
+-      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge
++      { _id: reviewId }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge
+       { $set: { message: req.body.message } },
+       { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge
+     ).then(

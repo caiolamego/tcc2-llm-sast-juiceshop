@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Credenciais e outros segredos estão armazenados em texto puro no arquivo estático de usuários, incluindo senhas, respostas de segurança e um segredo TOTP. A linha indicada contém uma senha literal.\",\n  \"causa_da_vulnerabilidade\": \"O arquivo versionado contém valores de autenticação reutilizáveis e dados que podem permitir recuperação de conta. Qualquer pessoa com acesso ao arquivo ou ao histórico do repositório pode obtê-los; remover apenas o valor da linha apontada não revoga credenciais já expostas.\",\n  \"estrategia_de_correcao\": \"Remover do arquivo a senha literal sinalizada, sem substituí-la por outro segredo embutido. A correção operacional deve revogar e rotacionar as credenciais expostas e migrar a configuração para armazenamento protegido, preservando o formato esperado pela aplicação.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"data/static/users.yml\",\n      \"trecho_original\": \"  email: wurstbrot\\n  username: wurstbrot\\n  password: 'EinBelegtesBrotMitSchinkenSCHINKEN!'\\n  totpSecret: IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH\\n  key: timo\\n  role: 'admin'\",\n      \"trecho_corrigido\": \"  email: wurstbrot\\n  username: wurstbrot\\n  password: ''\\n  totpSecret: IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH\\n  key: timo\\n  role: 'admin'\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A alteração elimina a senha em texto puro apontada pelo alerta e não introduz um valor substituto previsível. O campo permanece presente para reduzir alterações estruturais no YAML, mas uma senha vazia pode impedir a autenticação dessa conta até que a aplicação obtenha uma credencial válida por um mecanismo seguro.\",\n  \"limitacoes_da_correcao\": \"O trecho fornecido contém outras credenciais e segredos em texto puro, inclusive o segredo TOTP e senhas de outras contas; eles não foram alterados porque o alerta especifica a linha 151 e a solicitação exige mudanças mínimas. A senha removida e os demais valores expostos devem ser revogados/rotacionados, e segredos presentes no histórico do repositório também precisam ser tratados. É necessário verificar o comportamento da aplicação com senha vazia e configurar uma credencial segura antes de reativar a conta.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2119,
+  "tokens_saida": 550,
+  "latencia_s": 5.714,
+  "custo_usd": 0.00054,
+  "hash_prompt": "cf8b62c9b4d5b7938145a56e8041534cde71fd0bb96caa46cb113285b6727b46",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2116
+}

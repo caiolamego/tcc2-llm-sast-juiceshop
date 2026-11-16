@@ -1,0 +1,30 @@
+diff --git a/frontend/src/app/about/about.component.ts b/frontend/src/app/about/about.component.ts
+index c33b1c813..a0d720c28 100644
+--- a/frontend/src/app/about/about.component.ts
++++ b/frontend/src/app/about/about.component.ts
+@@ -101,6 +101,16 @@ export class AboutComponent implements OnInit {
+       })
+   }
+ 
++  private escapeHtml (value: string): string {
++    return value.replace(/[&<>'"]/g, (character) => ({
++      '&': '&amp;',
++      '<': '&lt;',
++      '>': '&gt;',
++      "'": '&#39;',
++      '"': '&quot;'
++    })[character] as string)
++  }
++
+   populateSlideshowFromFeedbacks () {
+     this.feedbackService
+       .find()
+@@ -114,7 +124,7 @@ export class AboutComponent implements OnInit {
+         for (let i = 0; i < feedbacks.length; i++) {
+ 
+           feedbacks[i].comment = `<figcaption><p class="feedback-comment">${
+-            feedbacks[i].comment
++            this.escapeHtml(feedbacks[i].comment)
+           }</p><div class="feedback-stars">(${this.stars[feedbacks[i].rating]})</div></figcaption>`
+           feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(
+             feedbacks[i].comment

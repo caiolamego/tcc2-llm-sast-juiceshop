@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de eval() para calcular a expressão do CAPTCHA, permitindo execução de código caso a expressão seja influenciada ou adulterada.\",\n  \"causa_da_vulnerabilidade\": \"A expressão aritmética é construída como texto e passada a eval(), que interpreta código JavaScript em vez de apenas calcular operações matemáticas. Embora os termos e operadores atuais sejam gerados internamente, eval() cria um risco desnecessário de execução de código e torna o cálculo dependente de interpretação dinâmica.\",\n  \"estrategia_de_correcao\": \"Substituir eval() por cálculo explícito dos três termos e dos dois operadores, preservando a precedência aritmética usual: multiplicação antes de adição e subtração.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/captcha.ts\",\n      \"trecho_original\": \"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\n      \"trecho_corrigido\": \"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const terms = [firstTerm, secondTerm, thirdTerm]\\n    const expressionOperators = [firstOperator, secondOperator]\\n    let answerValue = terms[0]\\n    let pendingOperator = expressionOperators[0]\\n    for (let i = 1; i < terms.length; i++) {\\n      if (expressionOperators[i] === '*') {\\n        terms[i] = terms[i - 1] * terms[i]\\n        terms[i - 1] = 0\\n      }\\n    }\\n    answerValue = terms[0] * (pendingOperator === '*' ? 1 : 1)\\n    let total = 0\\n    let currentProduct = terms[0]\\n    for (let i = 1; i < terms.length; i++) {\\n      if (expressionOperators[i - 1] === '*') {\\n        currentProduct = terms[i]\\n      } else {\\n        total = expressionOperators[i - 1] === '+' ? total + currentProduct : total - currentProduct\\n        currentProduct = terms[i]\\n      }\\n    }\\n    total = expressionOperators[1] === '*' ? total + currentProduct : expressionOperators[1] === '+' ? total + currentProduct : total - currentProduct\\n    const answer = total.toString()\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A remoção de eval() elimina a interpretação de código dinâmico. O cálculo deve ser feito diretamente com valores numéricos e operadores permitidos, mantendo o resultado equivalente à precedência aritmética da expressão original.\",\n  \"limitacoes_da_correcao\": \"A alteração mantém a geração atual de termos e operadores. A implementação do cálculo deve ser validada para todas as combinações de operadores, especialmente a precedência de multiplicação em expressões com adição e subtração.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 920,
+  "tokens_saida": 663,
+  "latencia_s": 6.105,
+  "custo_usd": 0.000423,
+  "hash_prompt": "e004a290988149a268b896bc0e316ef6516b8409ab5efebd00960eb6fbab8266",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: o parâmetro de rota controlado pelo usuário é usado para construir o caminho passado a res.sendFile, permitindo leitura arbitrária de arquivos por traversal de diretório.\",\"causa_da_vulnerabilidade\":\"A verificação apenas rejeita o caractere '/', mas não rejeita traversal com barras invertidas em plataformas que as interpretam como separadores, nem confina explicitamente o caminho resolvido ao diretório ftp/quarantine. Assim, path.resolve pode produzir um caminho fora da raiz pretendida.\",\"estrategia_de_correcao\":\"Manter a validação existente e adicionar uma validação explícita usando path.resolve e path.relative para garantir que o caminho final permaneça dentro da raiz ftp/quarantine antes de chamar res.sendFile.\",\"edicoes\":[{\"arquivo\":\"routes/quarantineServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const root = path.resolve('ftp/quarantine/')\\n    const target = path.resolve(root, file)\\n    const relative = path.relative(root, target)\\n\\n    if (!file.includes('/') && relative !== '' && relative !== '..' && !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative)) {\\n      res.sendFile(target)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"O caminho é primeiro resolvido de forma canônica em relação à raiz fixa. Em seguida, path.relative verifica se o destino está dentro dessa raiz: valores iguais a '..', descendentes de '..' ou caminhos absolutos são rejeitados. Isso impede que segmentos '..' ou caminhos absolutos escapem de ftp/quarantine antes da chamada a res.sendFile. A validação original e a mensagem de erro são preservadas, e nomes legítimos continuam sendo servidos.\",\"limitacoes_da_correcao\":\"A correção confina o caminho lexical à raiz, mas não resolve links simbólicos; um arquivo dentro de ftp/quarantine que seja um link simbólico para fora da raiz ainda pode exigir validação adicional com fs.realpath. A correção também não substitui controles de autorização nem permissões mínimas do processo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1837,
+  "tokens_saida": 527,
+  "latencia_s": 7.27,
+  "custo_usd": 0.001092,
+  "hash_prompt": "5fcae563a8e9b4ab214f06103dd83665abc955718a257f536f9f5db2b7e2c86e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1834
+}

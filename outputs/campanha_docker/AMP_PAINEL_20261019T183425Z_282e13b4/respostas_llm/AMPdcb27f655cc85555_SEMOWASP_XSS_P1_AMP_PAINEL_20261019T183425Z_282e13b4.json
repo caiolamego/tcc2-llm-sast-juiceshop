@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) via window.open().document.write() with unsanitized user data\",\"causa_da_vulnerabilidade\":\"O código utiliza window.open('', '_blank', 'width=500')?.document.write(this.userData) para exibir dados do usuário sem sanitização adequada, permitindo a execução de scripts maliciosos inseridos em userData.\",\"estrategia_de_correcao\":\"Substituir o uso de document.write() por uma abordagem segura que não execute código HTML/JavaScript arbitrário. Uma solução simples é abrir uma nova janela e inserir o conteúdo como texto puro, evitando a interpretação como HTML. Como alternativa, criar um Blob com o conteúdo e abrir uma URL segura para download ou visualização.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"        window.open('', '_blank', 'width=500')?.document.write(this.userData)\",\"trecho_corrigido\":\"        const newWindow = window.open('', '_blank', 'width=500');\\n        if (newWindow) {\\n          newWindow.document.write('<pre>' + this.sanitizer.sanitize(1, this.userData) + '</pre>');\\n          newWindow.document.close();\\n        }\"}],\"justificativa_tecnica\":\"O uso de document.write() com dados não confiáveis permite a execução de scripts maliciosos, caracterizando vulnerabilidade XSS. Ao sanitizar o conteúdo e inseri-lo dentro de uma tag <pre>, garantimos que o conteúdo seja exibido como texto, não como HTML executável. O método DomSanitizer.sanitize é utilizado para limpar o conteúdo, prevenindo injeção de código malicioso.\",\"limitacoes_da_correcao\":\"A correção assume que userData é texto que pode ser exibido como texto puro. Se userData contiver HTML legítimo que precisa ser renderizado, essa abordagem pode não ser adequada. Além disso, a sanitização depende da implementação do DomSanitizer e pode não cobrir todos os casos complexos de XSS. Para casos mais complexos, uma abordagem mais robusta de escape ou renderização segura deve ser adotada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1395,
+  "tokens_saida": 458,
+  "latencia_s": 9.434,
+  "custo_usd": 0.001291,
+  "hash_prompt": "92f66dc003a91f06c466151be52dc443274f6a19aad4a53aa8d73f12d21d2b3c",
+  "do_cache": true
+}

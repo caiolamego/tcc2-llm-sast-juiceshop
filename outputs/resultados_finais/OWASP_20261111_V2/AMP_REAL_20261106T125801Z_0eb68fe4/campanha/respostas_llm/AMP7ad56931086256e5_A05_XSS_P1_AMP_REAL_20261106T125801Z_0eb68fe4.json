@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado na renderização das descrições de desafios.\",\"causa_da_vulnerabilidade\":\"O conteúdo de challenge.description é tratado como HTML confiável por meio de bypassSecurityTrustHtml, impedindo a sanitização padrão do Angular. Se a descrição contiver HTML ou JavaScript controlado por um atacante, ele poderá ser executado no navegador dos usuários.\",\"estrategia_de_correcao\":\"Remover o bypass explícito de segurança e fornecer a descrição diretamente ao template, permitindo que o Angular aplique sua sanitização contextual padrão.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/score-board/score-board.component.ts\",\"trecho_original\":\"          originalDescription: challenge.description as string,\\n          description: this.sanitizer.bypassSecurityTrustHtml(challenge.description as string)\",\"trecho_corrigido\":\"          originalDescription: challenge.description as string,\\n          description: challenge.description as string\"}],\"justificativa_tecnica\":\"O Angular sanitiza automaticamente valores interpolados ou vinculados a contextos HTML quando eles são strings comuns. DomSanitizer.bypassSecurityTrustHtml marca o valor como seguro sem validação adicional e deve ser usado somente para conteúdo previamente validado e controlado pela aplicação. A alteração mantém o valor e o comportamento funcional esperados, mas reativa a proteção nativa contra XSS.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o template utilize description em um contexto sanitizado pelo Angular, como [innerHTML]. O import e a injeção de DomSanitizer permanecem no arquivo, embora deixem de ser necessários; eles não foram removidos para respeitar a exigência de alteração mínima. Conteúdo HTML legítimo poderá ser sanitizado pelo Angular, removendo elementos ou atributos potencialmente perigosos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2216,
+  "tokens_saida": 383,
+  "latencia_s": 4.866,
+  "custo_usd": 0.001013,
+  "hash_prompt": "160f5c2d45c00559b1495c2868651f188cb63c51c9c87115e177b5136ef1d1b4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2213
+}

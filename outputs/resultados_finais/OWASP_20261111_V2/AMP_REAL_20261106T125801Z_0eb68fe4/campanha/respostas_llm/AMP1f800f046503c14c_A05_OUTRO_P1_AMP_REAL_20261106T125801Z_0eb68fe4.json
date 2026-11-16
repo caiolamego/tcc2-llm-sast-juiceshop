@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de consulta NoSQL no tool getProductReviews, permitindo que o modelo forneça um valor de produto que é concatenado diretamente em uma expressão $where executada pelo banco.\",\"causa_da_vulnerabilidade\":\"O valor id recebido do modelo é convertido com Number(), mas não é validado quanto a ser um identificador numérico finito e inteiro antes de ser concatenado na expressão JavaScript de $where. Valores inválidos podem alterar a expressão executada ou provocar comportamento inesperado.\",\"estrategia_de_correcao\":\"Validar estritamente o identificador convertido antes de construir a consulta e retornar uma lista vazia para entradas inválidas. Para entradas válidas, manter a consulta e o comportamento funcional existentes.\",\"edicoes\":[{\"arquivo\":\"routes/chat.ts\",\"trecho_original\":\"        execute: async ({ id }) => {\\n          const productId = Number(id)\\n          return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]\\n        }\",\"trecho_corrigido\":\"        execute: async ({ id }) => {\\n          const productId = Number(id)\\n          if (!Number.isSafeInteger(productId) || productId < 0) return []\\n          return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]\\n        }\"}],\"justificativa_tecnica\":\"A validação com Number.isSafeInteger garante que somente valores inteiros, finitos e representáveis com segurança sejam incorporados à expressão $where. Como o valor validado é numérico, não pode conter operadores, aspas ou código JavaScript capaz de modificar a consulta. A alteração é mínima, não muda identificadores, assinaturas ou mensagens visíveis e preserva o resultado para IDs válidos.\",\"limitacoes_da_correcao\":\"A consulta ainda utiliza $where, que executa uma expressão JavaScript no mecanismo de persistência; portanto, a solução reduz o risco por validação estrita, mas não elimina o risco estrutural dessa API. A correção ideal, caso suportada pela biblioteca, seria substituir $where por um filtro de igualdade nativo, por exemplo usando diretamente o campo product. Essa alteração não foi aplicada para preservar o comportamento e limitar o escopo da mudança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1889,
+  "tokens_saida": 487,
+  "latencia_s": 6.657,
+  "custo_usd": 0.001056,
+  "hash_prompt": "1e75b1cd0bdc82cc4b7d35e85a5cbd5bb725cac3d64fc15d47a16568e17bbf30",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1886
+}

@@ -1,0 +1,33 @@
+regras_candidatas:
+  timingAttackChallenge: [tcc.concurrency.security.delayed-counter-update]
+  emailLeakChallenge: [tcc.exposure.security.jsonp-response]
+triagem:
+  - regra: tcc.concurrency.security.delayed-counter-update
+    arquivo: routes/likeProductReviews.ts
+    linha: 35
+    status: confirmado
+    desafios: [timingAttackChallenge]
+    sem_marcador: true
+    motivo: >-
+      Rota autenticada verifica likedBy, incrementa contador, espera 150ms e so
+      depois registra email. Teste da rota real com MarsDB 0.6.11 real e identidade
+      simulada intercala tres chamadas na janela antes do registro. Tres repeticoes
+      produzem contador 3 e tres entradas da mesma identidade. Sequencial retorna
+      403 na repeticao. Controle com filtro de elegibilidade e inc/addToSet no mesmo
+      update conserva contador 1. Nao e teste HTTP nem prova de atomicidade de todo
+      deployment; regra e heuristica e requer esta confirmacao de fluxo.
+  - regra: tcc.exposure.security.jsonp-response
+    arquivo: routes/currentUser.ts
+    linha: 58
+    status: confirmado
+    desafios: [emailLeakChallenge]
+    sem_marcador: true
+    motivo: >-
+      Confirmado CONDICIONALMENTE para atacante em origem distinta no mesmo site
+      (subdominio irmao). Rota real, Express 4.22.1 e Chromium 121.0.6167.57
+      devolvem email ao callback em attacker.example.test usando cookie host-only
+      de victim.example.test, Lax, que nao e enviado ao host atacante. Verificacao
+      de token e cache de identidade simulados. Controle JSON nao executa callback;
+      origem other.invalid.test nao recebe email, pois Lax bloqueia cookie cross-site.
+      Nao afirmar vazamento para site arbitrario, login E2E ou versoes modernas nao
+      testadas. Exige controle de origem irma e sessao valida; SameSite nao e SameOrigin.

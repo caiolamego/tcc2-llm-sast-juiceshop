@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Controle de acesso quebrado em nível de objeto (CWE-639): um usuário autenticado pode alterar avaliações pertencentes a outro usuário ao fornecer o identificador da avaliação.\",\n  \"causa_da_vulnerabilidade\": \"A atualização seleciona documentos apenas por `{ _id: req.body.id }`. Embora a rota obtenha o usuário autenticado, essa identidade não é usada para limitar a escrita nem para verificar a propriedade da avaliação. O identificador vem da requisição e não constitui autorização.\",\n  \"estrategia_de_correcao\": \"Restringir a atualização ao documento cujo identificador foi enviado e cujo autor corresponde ao e-mail da identidade autenticada no servidor. Se não houver usuário autenticado, usar um filtro que não corresponda a documentos. Manter a atualização de um único documento e o formato da resposta.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/updateProductReviews.ts\",\n      \"trecho_original\": \"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\",\n      \"trecho_corrigido\": \"    db.reviewsCollection.update(\\n      { _id: req.body.id, author: user?.data?.email ?? null },\\n      { $set: { message: req.body.message } },\\n      { multi: false }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O filtro agora exige simultaneamente o ID solicitado e a correspondência do autor com a identidade autenticada obtida no servidor. Assim, conhecer ou fornecer o ID de uma avaliação de outra pessoa não basta para alterá-la. Quando não há identidade autenticada, `author: null` não corresponde ao autor de uma avaliação normal. `multi: false` limita a operação a um documento, preservando a intenção de atualizar uma avaliação e evitando que uma seleção ampla altere várias avaliações.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que `author` armazena o e-mail da conta proprietária, conforme indicado pelo uso de `result.original[0].author` e `user.data.email` neste código. Ela não concede acesso administrativo; se administradores devem poder editar avaliações alheias, essa regra de negócio precisa ser implementada com uma permissão confiável do servidor. A validação de autenticação e a resposta para documento inexistente ou não pertencente ao usuário dependem também do middleware e do tratamento existentes na rota.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1867,
+  "tokens_saida": 575,
+  "latencia_s": 6.526,
+  "custo_usd": 0.000521,
+  "hash_prompt": "23d84a8b6dfc66314d1e7678071b38d4b8907f54ca9222a91194a697b0bf4ae7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1864
+}

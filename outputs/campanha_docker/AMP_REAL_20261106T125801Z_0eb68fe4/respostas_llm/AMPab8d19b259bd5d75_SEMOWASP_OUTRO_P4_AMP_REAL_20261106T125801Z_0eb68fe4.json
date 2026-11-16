@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-807: decisão de elegibilidade de campanha baseada em uma data fornecida pelo cliente (`req.body.couponData`).\",\"causa_da_vulnerabilidade\":\"O código decodifica `couponData` enviado no corpo da requisição, extrai `couponDate` e aceita a campanha quando esse valor é igual à data configurada. Assim, o cliente controla o valor usado na decisão de validade temporal, podendo declarar a data da campanha sem que a elegibilidade seja determinada pelo relógio confiável do servidor.\",\"estrategia_de_correcao\":\"Manter o código da campanha como entrada do cliente, mas ignorar a data declarada no corpo da requisição e validar a campanha exclusivamente com `Date.now()` no servidor, aceitando-a somente enquanto a data atual do servidor corresponder à janela temporal definida para a campanha.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"    const couponData = Buffer.from(req.body.couponData, 'base64').toString().split('-')\\n    const couponCode = couponData[0]\\n    const couponDate = Number(couponData[1])\\n    const campaign = campaigns[couponCode as keyof typeof campaigns]\\n\\n    if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq\\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n      return campaign.discount\\n    }\",\"trecho_corrigido\":\"    const couponData = Buffer.from(req.body.couponData, 'base64').toString().split('-')\\n    const couponCode = couponData[0]\\n    const campaign = campaigns[couponCode as keyof typeof campaigns]\\n\\n    if (campaign && campaign.validOn === Date.now()) {\\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n      return campaign.discount\\n    }\"}],\"justificativa_tecnica\":\"A correção remove a dependência da data controlada pelo cliente: o segundo componente de `couponData` deixa de participar da decisão de segurança, e a comparação usa diretamente o relógio do servidor. O cliente ainda pode selecionar o código da campanha, preservando o fluxo funcional e o formato existentes, mas não pode declarar uma data arbitrária para satisfazer a validação. A comparação estrita também evita coerção de tipos. Como as campanhas possuem um instante exato em milissegundos, a condição mantém a semântica original de igualdade temporal, embora uma janela de validade seja normalmente mais adequada para campanhas reais.\",\"limitacoes_da_correcao\":\"A validação por igualdade exata com `Date.now()` pode ser difícil de atingir na prática, pois exige que a requisição ocorra no mesmo milissegundo configurado para a campanha; isso preserva a lógica temporal existente, mas pode tornar o recurso inutilizável. Se a regra de negócio exigir validade durante um período, será necessário definir explicitamente uma janela de início e fim no servidor e compará-la com `Date.now()`. A correção também não aborda outras vulnerabilidades presentes no trecho, como autorização do carrinho por usuário ou integridade de valores de pedido.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3913,
+  "tokens_saida": 691,
+  "latencia_s": 8.38,
+  "custo_usd": 0.001807,
+  "hash_prompt": "27e113aac580888a1e6a60e61d6c785c16ab57cc1bd9ad97691f838691ee5876",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3910
+}

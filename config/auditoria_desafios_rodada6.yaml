@@ -1,0 +1,48 @@
+regras_candidatas:
+  basketManipulateChallenge: [tcc.validation.security.first-last-mismatch]
+  changePasswordBenderChallenge: [tcc.auth.security.optional-current-password]
+  captchaBypassChallenge: [tcc.captcha.security.answer-in-response]
+  sstiChallenge:
+    - javascript.browser.security.eval-detected.eval-detected
+    - javascript.lang.security.audit.code-string-concat.code-string-concat
+
+triagem:
+  - regra: tcc.validation.security.first-last-mismatch
+    arquivo: routes/basketItems.ts
+    linha: 42
+    status: confirmado
+    desafios: [basketManipulateChallenge]
+    sem_marcador: true
+    motivo: >-
+      server.ts:317 preserva rawBody; lib/utils.ts:186-197 usa clarinet e mantem
+      chaves repetidas. addBasketItem coleta BasketId em array, verifica o primeiro
+      valor em :37, mas constroi e salva BasketItem com o ultimo em :42-49.
+      A autenticacao e a verificacao de estoque de server.ts:427 nao comparam
+      esse ultimo BasketId com user.bid. test/cypress/e2e/basket.spec.ts:56-70
+      documenta o mesmo caminho com parametro duplicado. Confirmacao estatica;
+      nao reclassifica o alerta intermediario de PUT da rodada 5.
+  - regra: tcc.captcha.security.answer-in-response
+    arquivo: routes/captcha.ts
+    linha: 31
+    status: confirmado
+    desafios: [captchaBypassChallenge]
+    sem_marcador: true
+    motivo: >-
+      O objeto retornado por res.json inclui captchaId, captcha e answer.
+      verifyCaptcha aceita answer com o mesmo captchaId; server.ts:404-406 nao
+      introduz um controle de uso unico nesse caminho. O teste Cypress
+      contact.spec.ts:183-222 usa a resposta da API para automatizar feedbacks.
+      Confirmacao estatica de exposicao da resposta e mecanismo do desafio;
+      nao medimos dez requisicoes em vinte segundos nesta rodada.
+  - regra: tcc.auth.security.optional-current-password
+    arquivo: routes/changePassword.ts
+    linha: 39
+    status: confirmado
+    desafios: [changePasswordBenderChallenge]
+    sem_marcador: true
+    motivo: >-
+      query.current pode faltar; a condicao currentPassword && comparacao deixa
+      de rejeitar a requisicao, e user.update altera a senha em :51. As validacoes
+      anteriores exigem token, nova senha e repeticao, nao a senha atual.
+      A falha exige sessao/token da vitima, nao e troca anonima de qualquer conta.
+      test/cypress/e2e/changePassword.spec.ts documenta a cadeia com XSS.

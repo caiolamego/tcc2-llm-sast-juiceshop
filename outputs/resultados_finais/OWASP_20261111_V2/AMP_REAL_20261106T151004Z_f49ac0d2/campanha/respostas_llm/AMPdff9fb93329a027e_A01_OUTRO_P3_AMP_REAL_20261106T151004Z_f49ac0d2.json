@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de string de formato com concatenação de variável externa em chamada de console.error, permitindo injeção de especificadores de formato (CWE-134).\",\"causa_da_vulnerabilidade\":\"Concatenação direta de variável externa (nome) em string de formato passada para console.error, que interpreta especificadores de formato, possibilitando manipulação da mensagem de log por um atacante.\",\"estrategia_de_correcao\":\"Substituir a concatenação da variável externa na string de formato por um placeholder '%s' e passar a variável como argumento separado para console.error, garantindo que o valor seja tratado como dado e não como parte da string de formato.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"console.error('Error in timed startup function: ' + name, err)\",\"trecho_corrigido\":\"console.error('Error in timed startup function: %s', name, err)\"}],\"justificativa_tecnica\":\"O console.error em Node.js suporta strings de formato semelhantes ao printf. Concatenar diretamente uma variável externa na string de formato permite que um atacante injete especificadores de formato, alterando a saída do log e potencialmente ocultando informações ou causando confusão. Usar um placeholder '%s' e passar a variável como argumento separado evita essa vulnerabilidade, pois o valor é tratado como dado literal, não como parte da string de formato.\",\"limitacoes_da_correcao\":\"A correção assume que o valor da variável 'name' não precisa ser interpretado como parte da string de formato. Caso existam usos legítimos de formatação dinâmica na variável, eles serão tratados como texto literal. A alteração é mínima e não afeta outras funcionalidades do código.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3134,
+  "tokens_saida": 354,
+  "latencia_s": 4.507,
+  "custo_usd": 0.00182,
+  "hash_prompt": "7301634293b68ccc5117d15b3dba619122d7bcf98b13839fa440eeccc6ee8273",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

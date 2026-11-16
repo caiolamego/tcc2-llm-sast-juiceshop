@@ -1,0 +1,15 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..0b455c800 100644
+--- a/server.ts
++++ b/server.ts
+@@ -509,6 +509,10 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+     // create a wallet when a new user is registered using API
+     if (name === 'User') { // vuln-code-snippet neutral-line registerAdminChallenge
+       resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge
++        if (!req.user || !req.user.isAdmin) {
++          delete (req.body as { role?: unknown, isAdmin?: unknown }).role
++          delete (req.body as { role?: unknown, isAdmin?: unknown }).isAdmin
++        }
+         WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {
+           console.log(err)
+         })

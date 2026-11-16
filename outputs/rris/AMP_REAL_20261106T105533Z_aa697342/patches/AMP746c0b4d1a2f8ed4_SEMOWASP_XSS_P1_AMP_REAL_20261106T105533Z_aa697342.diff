@@ -1,0 +1,28 @@
+diff --git a/frontend/src/app/about/about.component.ts b/frontend/src/app/about/about.component.ts
+index c33b1c813..5194c9168 100644
+--- a/frontend/src/app/about/about.component.ts
++++ b/frontend/src/app/about/about.component.ts
+@@ -113,12 +113,19 @@ export class AboutComponent implements OnInit {
+       .subscribe((feedbacks) => {
+         for (let i = 0; i < feedbacks.length; i++) {
+ 
++          const escapedComment = feedbacks[i].comment.replace(/[&<>"']/g, (character) => {
++            const entities: Record<string, string> = {
++              '&': '&amp;',
++              '<': '&lt;',
++              '>': '&gt;',
++              '"': '&quot;',
++              "'": '&#39;'
++            }
++            return entities[character]
++          })
+           feedbacks[i].comment = `<figcaption><p class="feedback-comment">${
+-            feedbacks[i].comment
++            escapedComment
+           }</p><div class="feedback-stars">(${this.stars[feedbacks[i].rating]})</div></figcaption>`
+-          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(
+-            feedbacks[i].comment
+-          )
+ 
+           this.galleryRef.addImage({
+             src: this.images[i % this.images.length],

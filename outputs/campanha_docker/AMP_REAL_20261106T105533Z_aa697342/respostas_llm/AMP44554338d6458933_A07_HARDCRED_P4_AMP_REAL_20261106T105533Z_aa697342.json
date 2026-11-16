@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Credenciais e segredos de autenticação embutidos no arquivo de dados, incluindo a senha literal associada à conta `wurstbrot` e seu segredo TOTP. Isso corresponde a CWE-798 (credenciais codificadas).\",\n  \"causa_da_vulnerabilidade\": \"O arquivo versionado contém valores de senha e um segredo TOTP em texto legível. Qualquer pessoa com acesso ao repositório, a cópias ou a artefatos que incluam esse arquivo pode obter esses valores. A linha indicada pelo alerta está dentro desse conjunto de credenciais; o trecho fornecido não inclui numeração de linhas suficiente para determinar com segurança qual literal específico foi sinalizado.\",\n  \"estrategia_de_correcao\": \"Remover os valores de credenciais do arquivo estático e carregá-los de uma fonte de configuração protegida, sem inserir valores substitutos ou fallbacks secretos no repositório. Como o trecho não mostra o mecanismo de carregamento nem o esquema esperado pelo aplicativo, a edição proposta remove apenas os campos de senha e TOTP visíveis, evitando inventar uma integração incompatível. As credenciais expostas devem ser revogadas ou rotacionadas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"data/static/users.yml\",\n      \"trecho_original\": \"  email: wurstbrot\\n  username: wurstbrot\\n  password: 'EinBelegtesBrotMitSchinkenSCHINKEN!'\\n  totpSecret: IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH\\n  key: timo\\n  role: 'admin'\",\n      \"trecho_corrigido\": \"  email: wurstbrot\\n  username: wurstbrot\\n  key: timo\\n  role: 'admin'\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A remoção impede que a senha e o segredo TOTP dessa conta continuem sendo distribuídos pelo arquivo. Não se deve substituir esses valores por variáveis de ambiente diretamente no YAML sem confirmar que o carregador interpreta variáveis; isso poderia alterar o comportamento ou deixar valores literais sem efeito. A aplicação precisa obter credenciais por um mecanismo de configuração seguro já suportado, e os valores anteriormente expostos precisam ser rotacionados, pois removê-los do arquivo atual não os invalida nem apaga cópias do histórico do repositório.\",\n  \"limitacoes_da_correcao\": \"O trecho fornecido não mostra o código que carrega `users.yml`, portanto não é possível propor uma referência a configuração externa que preserve o contrato funcional com segurança. Remover os campos pode impedir a autenticação dessa conta se o aplicativo depender deles. É necessário integrar a fonte segura no carregador, verificar o comportamento quando a configuração estiver ausente e rotacionar a senha e o segredo TOTP. Outros segredos visíveis no trecho também devem ser avaliados e tratados; não foram alterados para limitar a edição ao alerta indicado.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2227,
+  "tokens_saida": 637,
+  "latencia_s": 7.074,
+  "custo_usd": 0.000597,
+  "hash_prompt": "7d970c5df118aa53fb684894547e72cde7f1d2e72c376142b9505469ee3f4f5d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2224
+}

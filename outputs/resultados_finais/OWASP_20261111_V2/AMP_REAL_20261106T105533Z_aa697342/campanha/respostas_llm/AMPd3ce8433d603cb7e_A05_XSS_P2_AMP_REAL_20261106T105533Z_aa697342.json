@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado na tela de administração, por renderização de conteúdo não confiável como HTML.\",\n  \"causa_da_vulnerabilidade\": \"Os campos user.email e feedback.comment são inseridos em HTML confiável por meio de DomSanitizer.bypassSecurityTrustHtml. Esse método desativa a sanitização do Angular; assim, valores controlados por usuários podem ser interpretados como marcação e código executável quando exibidos no template.\",\n  \"estrategia_de_correcao\": \"Remover o bypass de segurança e manter os valores como texto. Para preservar a indicação visual de sessão ativa no email, armazenar separadamente o estado da sessão e aplicar a classe no template, sem construir HTML a partir do email.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"  private readonly sanitizer = inject(DomSanitizer)\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"        for (const user of this.userDataSource) {\\n          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`)\\n        }\\n\",\n      \"trecho_corrigido\": \"        for (const user of this.userDataSource) {\\n          user.hasActiveSession = this.doesUserHaveAnActiveSession(user)\\n        }\\n\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n        }\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"import { DomSanitizer } from '@angular/platform-browser'\\n\",\n      \"trecho_corrigido\": \"\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem bypassSecurityTrustHtml, os valores permanecem strings comuns e, quando interpolados pelo Angular, são escapados em vez de interpretados como HTML. O estado de sessão continua disponível em hasActiveSession para que o template possa aplicar as classes confirmation ou error ao elemento que exibe o email, preservando a indicação visual sem concatenar conteúdo não confiável em marcação.\",\n  \"limitacoes_da_correcao\": \"O template administration.component.html não foi fornecido. Para preservar a indicação visual de sessão ativa, ele deve aplicar a classe confirmation ou error com base em hasActiveSession e exibir user.email como texto, sem [innerHTML] nem bypass de sanitização. A correção deste arquivo impede que os dados sejam marcados como HTML confiável, mas não corrige outros pontos de renderização insegura fora dele.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1875,
+  "tokens_saida": 667,
+  "latencia_s": 5.72,
+  "custo_usd": 0.000568,
+  "hash_prompt": "9ee1a6279609a90699e7b91ac0a3b62116e6d5e870b12965cebc620c41b252f9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1872
+}

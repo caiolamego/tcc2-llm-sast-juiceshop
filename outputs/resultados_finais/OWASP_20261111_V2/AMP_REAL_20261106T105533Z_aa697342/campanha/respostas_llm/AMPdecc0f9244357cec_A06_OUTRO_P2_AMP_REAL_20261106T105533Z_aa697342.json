@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Controle de acesso quebrado (IDOR): um usuário autenticado pode adicionar um item a uma cesta que não lhe pertence.\",\n  \"causa_da_vulnerabilidade\": \"A validação compara user.bid com basketIds[0], mas o objeto persistido usa basketIds[basketIds.length - 1]. Como o corpo pode conter vários campos BasketId, um atacante pode fornecer primeiro o ID da própria cesta e depois o ID da cesta de outra pessoa. A validação passa usando o primeiro valor, enquanto a gravação usa o último. A verificação de desafio não impede a operação.\",\n  \"estrategia_de_correcao\": \"Validar o mesmo BasketId que será usado na gravação: o último valor recebido. Manter a validação antes da criação e persistência do item.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/basketItems.ts\",\n      \"trecho_original\": \"    const user = security.authenticatedUsers.from(req)\\n    if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq\",\n      \"trecho_corrigido\": \"    const user = security.authenticatedUsers.from(req)\\n    const basketId = basketIds[basketIds.length - 1]\\n    if (user && basketId && basketId !== 'undefined' && Number(user.bid) != Number(basketId)) { // eslint-disable-line eqeqeq\"\n    },\n    {\n      \"arquivo\": \"routes/basketItems.ts\",\n      \"trecho_original\": \"        BasketId: basketIds[basketIds.length - 1],\",\n      \"trecho_corrigido\": \"        BasketId: basketId,\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação e a persistência passam a usar exatamente o mesmo valor de BasketId. Assim, enviar valores duplicados não permite validar a cesta própria e gravar na cesta de outra pessoa. A comparação numérica existente é preservada, assim como o comportamento para usuários não autenticados e para requisições sem BasketId.\",\n  \"limitacoes_da_correcao\": \"A alteração corrige a discrepância entre o valor validado e o valor persistido neste endpoint. Ela não substitui controles de autorização em outras rotas que leiam ou alterem itens de cesta.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1598,
+  "tokens_saida": 516,
+  "latencia_s": 5.457,
+  "custo_usd": 0.000274,
+  "hash_prompt": "38023c7a6c1fcc372e69dcf37dbdef31c7d60f15ea515ad99bfe8b44fca94566",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1595,
+  "tokens_escrita_cache": 0
+}

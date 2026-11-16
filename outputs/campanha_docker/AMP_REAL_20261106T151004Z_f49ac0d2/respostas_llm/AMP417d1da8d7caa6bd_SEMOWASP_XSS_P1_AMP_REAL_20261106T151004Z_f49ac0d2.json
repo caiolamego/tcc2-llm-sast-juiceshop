@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) devido ao uso inseguro de bypassSecurityTrustHtml com dados não confiáveis.\",\"causa_da_vulnerabilidade\":\"O código utiliza 'bypassSecurityTrustHtml' para inserir diretamente o valor 'lastLoginIp' do token JWT no DOM sem sanitização adequada, permitindo que um atacante possa injetar código HTML ou JavaScript malicioso se controlar o conteúdo do token.\",\"estrategia_de_correcao\":\"Remover o uso de 'bypassSecurityTrustHtml' e exibir o valor 'lastLoginIp' como texto simples, garantindo que o Angular faça a sanitização automática e evite a execução de código malicioso.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)\",\"trecho_corrigido\":\"this.lastLoginIp = `<small>${payload.data.lastLoginIp}</small>`\"}],\"justificativa_tecnica\":\"Ao remover 'bypassSecurityTrustHtml', o Angular trata o conteúdo como texto simples e aplica sanitização automática, prevenindo a execução de scripts maliciosos que poderiam ser injetados via 'lastLoginIp'. Isso elimina a vulnerabilidade XSS sem alterar a funcionalidade visível do componente.\",\"limitacoes_da_correcao\":\"Se 'lastLoginIp' contiver tags HTML legítimas que precisam ser renderizadas, elas serão exibidas como texto literal, não como HTML formatado. Porém, essa é uma compensação necessária para garantir a segurança contra XSS.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 821,
+  "tokens_saida": 342,
+  "latencia_s": 4.004,
+  "custo_usd": 0.000876,
+  "hash_prompt": "ad4b7e93f7c42aaefb09418e3c8b213adcc109261bef128922c104161ea3c0b0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,21 @@
+diff --git a/frontend/src/hacking-instructor/helpers/helpers.ts b/frontend/src/hacking-instructor/helpers/helpers.ts
+index 55589bfbb..227b298f5 100644
+--- a/frontend/src/hacking-instructor/helpers/helpers.ts
++++ b/frontend/src/hacking-instructor/helpers/helpers.ts
+@@ -45,8 +45,14 @@ export function waitForInputToHaveValue (inputSelector: string, value: string, o
+       }
+       const propertyChain = options.replacement[1].split('.')
+       let replacementValue = config
+-      for (const property of propertyChain) {
+-        replacementValue = replacementValue[property]
++      const forbiddenProps = ['__proto__', 'constructor', 'prototype']
++      if (propertyChain.some(prop => forbiddenProps.includes(prop))) {
++        // Evita poluição do protótipo, ignora substituição
++      } else {
++        for (const property of propertyChain) {
++          replacementValue = replacementValue[property]
++        }
++        value = value.replace(options.replacement[0], replacementValue)
+       }
+       value = value.replace(options.replacement[0], replacementValue)
+     }

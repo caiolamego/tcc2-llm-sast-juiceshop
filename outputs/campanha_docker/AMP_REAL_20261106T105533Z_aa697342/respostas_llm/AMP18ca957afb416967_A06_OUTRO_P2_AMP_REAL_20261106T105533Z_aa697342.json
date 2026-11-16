@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição não autorizada de dados sensíveis do usuário autenticado, incluindo o hash da senha, por meio do parâmetro `fields` (mass assignment de campos de resposta).\",\n  \"causa_da_vulnerabilidade\": \"O código usa valores controlados pelo cliente em `req.query.fields` para selecionar propriedades de `user.data` e copiá-las para a resposta, sem uma lista de campos permitidos. Assim, um atacante autenticado pode solicitar `?fields=password` e obter o valor de `user.data.password`, que também aciona o desafio de vazamento de hash.\",\n  \"estrategia_de_correcao\": \"Restringir os campos selecionáveis pelo parâmetro `fields` a uma lista explícita de propriedades públicas já retornadas pelo comportamento padrão. Ignorar qualquer campo fora dessa lista, preservando a seleção de campos permitidos e a resposta padrão quando `fields` não é informado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/currentUser.ts\",\n      \"trecho_original\": \"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\n      \"trecho_corrigido\": \"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A lista de permissões impede que nomes de propriedades fornecidos pelo cliente sejam usados para ler campos sensíveis de `user.data`. Os quatro campos permitidos correspondem aos campos expostos pela resposta padrão, mantendo a funcionalidade de seleção parcial para esses dados. Como `password` não está na lista, não pode ser incluído na resposta por meio de `fields`, e a condição que resolve o desafio de vazamento deixa de receber esse valor.\",\n  \"limitacoes_da_correcao\": \"A correção protege a seleção de campos nesta rota; não avalia possíveis exposições de dados sensíveis em outras rotas ou mecanismos de serialização.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1125,
+  "tokens_saida": 574,
+  "latencia_s": 6.475,
+  "custo_usd": 0.000428,
+  "hash_prompt": "716f23669255bb42815bdadf638cc275f26be42183e6dce9483ab34c3a150879",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1122
+}

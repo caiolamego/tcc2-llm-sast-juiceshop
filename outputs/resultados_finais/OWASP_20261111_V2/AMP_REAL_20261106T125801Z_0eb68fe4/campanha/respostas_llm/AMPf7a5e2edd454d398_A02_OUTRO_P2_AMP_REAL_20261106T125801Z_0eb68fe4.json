@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"XXE (XML External Entity), com possibilidade adicional de expansão excessiva de entidades (XML bomb).\",\"causa_da_vulnerabilidade\":\"A função configura XML_PARSE_NOENT e XML_PARSE_DTDLOAD, habilitando a substituição de entidades e o carregamento de DTDs externos. Além disso, loadLibxml2 chama xmlRegisterFsInputProviders(), concedendo ao parser acesso ao sistema de arquivos para resolver entidades file://. Assim, XML controlado por um atacante pode declarar entidades externas e fazer o parser ler arquivos locais ou acessar recursos externos.\",\"estrategia_de_correcao\":\"Desabilitar o carregamento de DTDs e a substituição de entidades externas, removendo XML_PARSE_NOENT e XML_PARSE_DTDLOAD da combinação de opções. As demais opções de parsing são preservadas para minimizar a alteração funcional.\",\"edicoes\":[{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\"trecho_corrigido\":\"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"}],\"justificativa_tecnica\":\"Sem XML_PARSE_DTDLOAD, o parser não carrega DTDs externos; sem XML_PARSE_NOENT, não substitui entidades durante o parsing. Portanto, declarações como <!ENTITY xxe SYSTEM \\\"file:///etc/passwd\\\"> não resultam na leitura e inclusão do arquivo no documento retornado. A alteração também impede a expansão de entidades necessária para os ataques clássicos de XXE e reduz o risco de XML bombs. O registro do provedor de filesystem permanece inalterado para respeitar a restrição de mudança mínima, mas deixa de ser utilizável por esse caminho de parsing sem as opções que habilitam DTDs e entidades.\",\"limitacoes_da_correcao\":\"A correção impede XXE e a expansão de entidades neste parser, mas mantém o registro global do provedor de filesystem e não constitui uma política geral para outros pontos do sistema que possam usar libxml2 com opções inseguras. O timeout existente continua sendo uma camada adicional contra processamento excessivo, não um substituto para a desativação de DTDs e entidades.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1131,
+  "tokens_saida": 500,
+  "latencia_s": 5.824,
+  "custo_usd": 0.000883,
+  "hash_prompt": "3d28a21f9ad47a366e9ebcd7c0ad38aa3d3e8e9dcbb1439ca47bffc6e49bf536",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1128
+}

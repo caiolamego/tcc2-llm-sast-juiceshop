@@ -1,0 +1,21 @@
+rules:
+  - id: tcc.express.security.trust-all-proxies-rate-limit
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      A aplicacao confia em todos os proxies e usa IP/headers da requisicao
+      como chave do rate limiter. Um cliente pode controlar X-Forwarded-For se
+      o proxy de borda nao o normalizar; restrinja os proxies confiaveis.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-307: Improper Restriction of Excessive Authentication Attempts"
+      confidence: LOW
+    pattern: |
+      $APP.enable('trust proxy')
+      ...
+      $APP.use($PATH, rateLimit({
+        ...,
+        keyGenerator($ARGS) { return $HEADERS[$HEADER] ?? $IP },
+        ...
+      }))

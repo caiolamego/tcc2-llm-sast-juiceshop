@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado na exibição de comentários de feedback e endereços de e-mail na tela de administração.\",\n  \"causa_da_vulnerabilidade\": \"O código marca conteúdo potencialmente controlado por usuários como HTML confiável usando DomSanitizer.bypassSecurityTrustHtml. Isso desativa a sanitização padrão do Angular e permite que conteúdo malicioso seja interpretado como marcação HTML.\",\n  \"estrategia_de_correcao\": \"Remover o uso de bypassSecurityTrustHtml e manter os valores originais como texto. O Angular escapará o conteúdo ao renderizá-lo em interpolação, preservando a exibição do texto sem permitir sua execução como HTML.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"import { DomSanitizer } from '@angular/platform-browser'\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"  private readonly sanitizer = inject(DomSanitizer)\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"        for (const user of this.userDataSource) {\\n          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class=\\\"${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}\\\">${user.email}</span>`)\\n        }\\n\",\n      \"trecho_corrigido\": \"        for (const user of this.userDataSource) {\\n          user.email = user.email\\n        }\\n\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n        }\\n\",\n      \"trecho_corrigido\": \"\"\n    }\n  ],\n  \"justificativa_tecnica\": \"bypassSecurityTrustHtml instrui o Angular a confiar no conteúdo sem sanitização. Ao deixar de converter os valores em HTML confiável, a renderização normal por interpolação aplica o escape contextual do Angular e impede que tags ou atributos fornecidos pelo usuário sejam executados. A alteração mantém os dados originais disponíveis para a tabela e para os detalhes do feedback.\",\n  \"limitacoes_da_correcao\": \"A alteração pressupõe que os templates exibam esses valores por interpolação Angular. Se algum template os inserir em um contexto HTML por outra via, esse ponto também deve ser corrigido para usar texto ou sanitização apropriada. A remoção da marcação HTML de status do e-mail pode afetar sua apresentação visual.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1767,
+  "tokens_saida": 625,
+  "latencia_s": 6.05,
+  "custo_usd": 0.00033,
+  "hash_prompt": "60f97920ccc8611629ec0d5bf08e1e29c9d2e35370311acd33fb1666ea0dc9e7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1764,
+  "tokens_escrita_cache": 0
+}

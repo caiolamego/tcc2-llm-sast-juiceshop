@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-620 (Unverified Password Change): a troca de senha autenticada pode ocorrer sem que a senha atual seja fornecida ou verificada.\",\"causa_da_vulnerabilidade\":\"A condição `if (currentPassword && ...)` só compara a senha armazenada quando `currentPassword` é truthy. Quando o parâmetro está ausente ou vazio, a verificação é ignorada e a senha nova é atualizada para o usuário associado ao token.\",\"estrategia_de_correcao\":\"Exigir que a senha atual esteja presente e que corresponda ao hash armazenado antes de permitir a atualização. A mensagem existente para senha atual incorreta é preservada, e a alteração fica restrita ao mínimo necessário.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"    if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\",\"trecho_corrigido\":\"    if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\"}],\"justificativa_tecnica\":\"Com a condição alterada, a ausência da senha atual (`!currentPassword`) produz falha imediatamente, assim como uma senha incorreta. Portanto, o fluxo só alcança `user.update({ password: newPasswordInString })` após a apresentação de uma senha atual não vazia cujo hash corresponda ao valor armazenado na sessão autenticada. Isso elimina a possibilidade de alterar a senha apenas com um token válido, sem a prova adicional exigida pelo fluxo.\",\"limitacoes_da_correcao\":\"A correção pressupõe que `security.hash` seja o verificador compatível com o formato das senhas armazenadas e que o token em `security.authenticatedUsers` represente uma sessão válida. Ela não adiciona limitação de tentativas, reautenticação recente, rotação ou invalidação de sessões após a troca, nem altera o fluxo de recuperação de senha.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1626,
+  "tokens_saida": 455,
+  "latencia_s": 5.861,
+  "custo_usd": 0.000952,
+  "hash_prompt": "f0f823bac5f22a001a0f60b0f6e71c77eb8a971f12925bc059dcf74ac270192f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1623
+}

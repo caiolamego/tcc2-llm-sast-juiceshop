@@ -1,0 +1,468 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 27.181579386997328,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 5.5,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_33aajfrg/upload/primeira.xml",
+        "test/api/file-upload.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 10.27,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /file-upload\n  ✔ POST file valid PDF for client and API (36.140334ms)\n  ✔ POST file too large for client validation but valid for API (17.752375ms)\n  ✔ POST file with illegal type for client validation but valid for API (17.166083ms)\n  ✔ POST file type XML deprecated for API (492.942042ms)\n  ✔ POST large XML file near upload size limit (54.012542ms)\n  ✔ POST file type XML with XXE attack against Windows (41.362916ms)\n  ✔ POST file type XML with XXE attack against Linux (20.872584ms)\n  ✔ POST file type XML with Billion Laughs attack is caught by parser (26.126ms)\n  ✔ POST file type XML with Quadratic Blowup attack (82.891126ms)\n  ✔ POST file type XML with dev/random attack (2045.000834ms)\n  ✔ POST file type YAML with Billion Laughs-style attack (2057.913418ms)\n  ✔ POST file too large for API (9.883042ms)\n  ✔ POST zip file with directory traversal payload (8.767291ms)\n  ✔ POST zip file with password protection (11.873542ms)\n  ﹣ POST valid file with tampered content length (0.142708ms) # Fails on CI/CD pipeline\n✔ /file-upload (5775.062377ms)\nℹ tests 15\nℹ suites 1\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 1\nℹ todo 0\nℹ duration_ms 9955.093296\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 3.249995643272996e-06,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_33aajfrg/zip_contents/primeira.xml",
+        "test/api/tcc_coverage_zip_contents.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 5.58,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ TCC ZIP extraction contracts\n  ✔ extracts both normal ZIP entries preserving filenames and exact bytes (78.469041ms)\n  ✔ reports a corrupt ZIP instead of claiming successful extraction (48.209584ms)\n✔ TCC ZIP extraction contracts (1664.216834ms)\nℹ tests 2\nℹ suites 1\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5235.123753\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 4.090526334999595,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/fileUpload.ts"
+    ],
+    "grupos": [
+      "upload",
+      "zip_contents"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 5.5
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "upload",
+      "status": "executada",
+      "duracao_s": 10.27
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "zip_contents",
+      "status": "executada",
+      "duracao_s": 5.58
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "upload",
+      "zip_contents"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 5.5
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "upload",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file too large for API",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file too large for API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file too large for client validation but valid for API",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file too large for client validation but valid for API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file type XML deprecated for API",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file type XML deprecated for API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file type XML with Billion Laughs attack is caught by parser",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file type XML with Billion Laughs attack is caught by parser",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file type XML with Quadratic Blowup attack",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file type XML with Quadratic Blowup attack",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file type XML with XXE attack against Linux",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file type XML with XXE attack against Linux",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file type XML with XXE attack against Windows",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file type XML with XXE attack against Windows",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file type XML with dev/random attack",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file type XML with dev/random attack",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file type YAML with Billion Laughs-style attack",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file type YAML with Billion Laughs-style attack",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file valid PDF for client and API",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file valid PDF for client and API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST file with illegal type for client validation but valid for API",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST file with illegal type for client validation but valid for API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST large XML file near upload size limit",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST large XML file near upload size limit",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST valid file with tampered content length",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST valid file with tampered content length",
+            "estado": "ignorado"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST zip file with directory traversal payload",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST zip file with directory traversal payload",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/file-upload.test.ts :: /file-upload > POST zip file with password protection",
+            "arquivo": "test/api/file-upload.test.ts",
+            "nome": "/file-upload > POST zip file with password protection",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/file-upload.test.ts :: /file-upload > POST file too large for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file too large for client validation but valid for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML deprecated for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with Billion Laughs attack is caught by parser",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with Quadratic Blowup attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with XXE attack against Linux",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with XXE attack against Windows",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with dev/random attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type YAML with Billion Laughs-style attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file valid PDF for client and API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file with illegal type for client validation but valid for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST large XML file near upload size limit",
+          "test/api/file-upload.test.ts :: /file-upload > POST valid file with tampered content length",
+          "test/api/file-upload.test.ts :: /file-upload > POST zip file with directory traversal payload",
+          "test/api/file-upload.test.ts :: /file-upload > POST zip file with password protection"
+        ],
+        "esperados": [
+          "test/api/file-upload.test.ts :: /file-upload > POST file too large for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file too large for client validation but valid for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML deprecated for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with Billion Laughs attack is caught by parser",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with Quadratic Blowup attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with XXE attack against Linux",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with XXE attack against Windows",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with dev/random attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type YAML with Billion Laughs-style attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file valid PDF for client and API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file with illegal type for client validation but valid for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST large XML file near upload size limit",
+          "test/api/file-upload.test.ts :: /file-upload > POST zip file with directory traversal payload",
+          "test/api/file-upload.test.ts :: /file-upload > POST zip file with password protection"
+        ],
+        "ignorados": [
+          "test/api/file-upload.test.ts :: /file-upload > POST valid file with tampered content length"
+        ],
+        "executados": [
+          "test/api/file-upload.test.ts :: /file-upload > POST file too large for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file too large for client validation but valid for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML deprecated for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with Billion Laughs attack is caught by parser",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with Quadratic Blowup attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with XXE attack against Linux",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with XXE attack against Windows",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type XML with dev/random attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file type YAML with Billion Laughs-style attack",
+          "test/api/file-upload.test.ts :: /file-upload > POST file valid PDF for client and API",
+          "test/api/file-upload.test.ts :: /file-upload > POST file with illegal type for client validation but valid for API",
+          "test/api/file-upload.test.ts :: /file-upload > POST large XML file near upload size limit",
+          "test/api/file-upload.test.ts :: /file-upload > POST zip file with directory traversal payload",
+          "test/api/file-upload.test.ts :: /file-upload > POST zip file with password protection"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/file-upload.test.ts :: /file-upload > POST file valid PDF for client and API"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 10.27,
+        "espera_api_s": 3.249995643272996e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_33aajfrg/upload/primeira.xml",
+            "test/api/file-upload.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 10.27,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /file-upload\n  ✔ POST file valid PDF for client and API (36.140334ms)\n  ✔ POST file too large for client validation but valid for API (17.752375ms)\n  ✔ POST file with illegal type for client validation but valid for API (17.166083ms)\n  ✔ POST file type XML deprecated for API (492.942042ms)\n  ✔ POST large XML file near upload size limit (54.012542ms)\n  ✔ POST file type XML with XXE attack against Windows (41.362916ms)\n  ✔ POST file type XML with XXE attack against Linux (20.872584ms)\n  ✔ POST file type XML with Billion Laughs attack is caught by parser (26.126ms)\n  ✔ POST file type XML with Quadratic Blowup attack (82.891126ms)\n  ✔ POST file type XML with dev/random attack (2045.000834ms)\n  ✔ POST file type YAML with Billion Laughs-style attack (2057.913418ms)\n  ✔ POST file too large for API (9.883042ms)\n  ✔ POST zip file with directory traversal payload (8.767291ms)\n  ✔ POST zip file with password protection (11.873542ms)\n  ﹣ POST valid file with tampered content length (0.142708ms) # Fails on CI/CD pipeline\n✔ /file-upload (5775.062377ms)\nℹ tests 15\nℹ suites 1\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 1\nℹ todo 0\nℹ duration_ms 9955.093296\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/file-upload\" time=\"5.775062\" disabled=\"0\" errors=\"0\" tests=\"15\" failures=\"0\" skipped=\"1\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"POST file valid PDF for client and API\" time=\"0.036140\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file too large for client validation but valid for API\" time=\"0.017752\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file with illegal type for client validation but valid for API\" time=\"0.017166\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file type XML deprecated for API\" time=\"0.492942\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST large XML file near upload size limit\" time=\"0.054013\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file type XML with XXE attack against Windows\" time=\"0.041363\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file type XML with XXE attack against Linux\" time=\"0.020873\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file type XML with Billion Laughs attack is caught by parser\" time=\"0.026126\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file type XML with Quadratic Blowup attack\" time=\"0.082891\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file type XML with dev/random attack\" time=\"2.045001\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file type YAML with Billion Laughs-style attack\" time=\"2.057913\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST file too large for API\" time=\"0.009883\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST zip file with directory traversal payload\" time=\"0.008767\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST zip file with password protection\" time=\"0.011874\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\"/>\n\t\t<testcase name=\"POST valid file with tampered content length\" time=\"0.000143\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/file-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"Fails on CI/CD pipeline\"/>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 15 -->\n\t<!-- suites 1 -->\n\t<!-- pass 14 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 1 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 9955.093296 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "zip_contents",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > extracts both normal ZIP entries preserving filenames and exact bytes",
+            "arquivo": "tests/functional/juice_shop/zip_contents.test.ts",
+            "nome": "TCC ZIP extraction contracts > extracts both normal ZIP entries preserving filenames and exact bytes",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > reports a corrupt ZIP instead of claiming successful extraction",
+            "arquivo": "tests/functional/juice_shop/zip_contents.test.ts",
+            "nome": "TCC ZIP extraction contracts > reports a corrupt ZIP instead of claiming successful extraction",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > extracts both normal ZIP entries preserving filenames and exact bytes",
+          "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > reports a corrupt ZIP instead of claiming successful extraction"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > extracts both normal ZIP entries preserving filenames and exact bytes",
+          "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > reports a corrupt ZIP instead of claiming successful extraction"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > extracts both normal ZIP entries preserving filenames and exact bytes",
+          "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > reports a corrupt ZIP instead of claiming successful extraction"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > extracts both normal ZIP entries preserving filenames and exact bytes",
+          "tests/functional/juice_shop/zip_contents.test.ts :: TCC ZIP extraction contracts > reports a corrupt ZIP instead of claiming successful extraction"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 5.58,
+        "espera_api_s": 4.090526334999595,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_33aajfrg/zip_contents/primeira.xml",
+            "test/api/tcc_coverage_zip_contents.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 5.58,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ TCC ZIP extraction contracts\n  ✔ extracts both normal ZIP entries preserving filenames and exact bytes (78.469041ms)\n  ✔ reports a corrupt ZIP instead of claiming successful extraction (48.209584ms)\n✔ TCC ZIP extraction contracts (1664.216834ms)\nℹ tests 2\nℹ suites 1\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5235.123753\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC ZIP extraction contracts\" time=\"1.664217\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"5215ce4599d6\">\n\t\t<testcase name=\"extracts both normal ZIP entries preserving filenames and exact bytes\" time=\"0.078469\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_zip_contents.test.ts\"/>\n\t\t<testcase name=\"reports a corrupt ZIP instead of claiming successful extraction\" time=\"0.048210\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_zip_contents.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 2 -->\n\t<!-- suites 1 -->\n\t<!-- pass 2 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5235.123753 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

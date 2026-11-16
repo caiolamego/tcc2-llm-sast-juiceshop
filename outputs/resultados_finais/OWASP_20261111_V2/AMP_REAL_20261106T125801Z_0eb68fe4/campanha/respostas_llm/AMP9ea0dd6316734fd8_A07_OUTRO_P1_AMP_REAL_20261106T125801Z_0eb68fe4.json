@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Alteração de senha sem exigir a senha atual, permitindo que qualquer usuário autenticado redefina a senha omitindo o parâmetro current.\",\"causa_da_vulnerabilidade\":\"A validação existente só rejeita a senha atual quando currentPassword está presente. Quando o parâmetro é omitido, a condição `if (currentPassword && ...)` não é executada e a senha é atualizada mesmo assim.\",\"estrategia_de_correcao\":\"Exigir que currentPassword esteja presente e corresponda ao hash armazenado antes de permitir a atualização da senha, preservando a mensagem de erro existente e o restante do fluxo.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"    if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\",\"trecho_corrigido\":\"    if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\"}],\"justificativa_tecnica\":\"A condição corrigida rejeita tanto a ausência da senha atual quanto uma senha incorreta. Assim, possuir um token de autenticação não é suficiente para redefinir a senha; o solicitante também precisa demonstrar conhecimento da senha atual. A alteração é mínima, não modifica mensagens, identificadores, assinaturas ou o restante do comportamento válido.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o fluxo de autenticação e o armazenamento de tokens estejam protegidos adequadamente. Ela não altera outras propriedades do mecanismo de troca de senha, como política de complexidade, rotação ou invalidação de sessões existentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1004,
+  "tokens_saida": 382,
+  "latencia_s": 4.469,
+  "custo_usd": 0.000659,
+  "hash_prompt": "12e2e6c430add68f30b7fbb2f665845441e2f97f9ad9cf6b59cbac3380be11ae",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

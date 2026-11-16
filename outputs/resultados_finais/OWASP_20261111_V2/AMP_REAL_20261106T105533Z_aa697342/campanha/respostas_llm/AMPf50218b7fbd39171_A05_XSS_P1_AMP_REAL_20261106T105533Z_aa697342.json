@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado por meio do conteúdo de legendas inserido diretamente em um elemento <script>.\",\n  \"causa_da_vulnerabilidade\": \"O conteúdo das legendas, que pode ser controlado pela configuração e pelo arquivo correspondente, é concatenado sem codificação no HTML enviado ao cliente. Uma legenda contendo uma sequência como </script> pode encerrar o elemento e injetar marcação ou JavaScript executável.\",\n  \"estrategia_de_correcao\": \"Codificar o conteúdo das legendas como entidades HTML antes de inseri-lo no documento, impedindo que caracteres controlados pelo conteúdo sejam interpretados como marcação HTML ou como fechamento do elemento <script>.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/videoHandler.ts\",\n      \"trecho_original\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\n      \"trecho_corrigido\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</script>')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A codificação transforma caracteres como < e > em entidades HTML, de modo que o conteúdo da legenda não possa encerrar o elemento script nem introduzir elementos ou scripts executáveis. A alteração é localizada e mantém a estrutura da resposta e o conteúdo textual da legenda disponível no documento.\",\n  \"limitacoes_da_correcao\": \"A codificação HTML pode alterar a forma como consumidores que leem o conteúdo bruto do elemento interpretam legendas VTT. Se o cliente precisar do texto VTT original, a solução deve usar um mecanismo de transporte e consumo que não interprete o conteúdo como HTML, mantendo a validação e a codificação apropriadas ao contexto.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1404,
+  "tokens_saida": 440,
+  "latencia_s": 4.597,
+  "custo_usd": 0.000395,
+  "hash_prompt": "43b982d7c7635f6d652908e76e17c5f583a480db8cae38c3949ef561c85166b5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1401
+}

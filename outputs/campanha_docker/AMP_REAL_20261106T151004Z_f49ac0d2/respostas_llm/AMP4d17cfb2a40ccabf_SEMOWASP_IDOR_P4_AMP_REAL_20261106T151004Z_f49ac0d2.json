@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key na atualização do documento de review pelo _id sem verificar se o usuário autenticado é o proprietário do review.\",\"causa_da_vulnerabilidade\":\"O código realiza a atualização do documento de review usando apenas o _id recebido na requisição, sem verificar se o usuário autenticado é o dono do review. A busca inicial para verificar a existência do review não restringe o escopo ao usuário, e a atualização subsequente também não verifica a propriedade, permitindo que um usuário autenticado possa alterar reviews de outros usuários se souber o _id.\",\"estrategia_de_correcao\":\"Adicionar a restrição na consulta de atualização para garantir que o documento a ser atualizado pertence ao usuário autenticado, incluindo o campo que identifica o proprietário do review (por exemplo, userId ou email) na condição do filtro da atualização. Assim, a atualização só ocorrerá se o review pertencer ao usuário autenticado.\",\"edicoes\":[{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\",\"trecho_corrigido\":\"      await db.reviewsCollection.update(\\n        { _id: id, author: user.data.email },\\n        { $inc: { likesCount: 1 } }\\n      )\"},{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\",\"trecho_corrigido\":\"        const result = await db.reviewsCollection.update(\\n          { _id: id, author: user.data.email },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\"}],\"justificativa_tecnica\":\"Ao incluir a restrição que o campo 'author' do review deve ser igual ao email do usuário autenticado na condição do filtro da atualização, garantimos que somente o proprietário do review pode modificar seus dados. Isso impede que um usuário autenticado altere reviews de outros usuários mesmo que conheça o _id, mitigando a vulnerabilidade de autorização inadequada.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'author' (ou equivalente) identifica unicamente o proprietário do review e está presente no documento. Se o modelo de dados não possuir esse campo, será necessário adaptá-lo. Além disso, usuários com privilégios administrativos podem precisar de tratamento especial para modificar reviews de outros usuários, o que não está contemplado nesta correção.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1984,
+  "tokens_saida": 560,
+  "latencia_s": 6.33,
+  "custo_usd": 0.00169,
+  "hash_prompt": "e44ee5d0e26d51cd53abf2a6faad0118d9c15bc66f36c7213faa079960a3a5df",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

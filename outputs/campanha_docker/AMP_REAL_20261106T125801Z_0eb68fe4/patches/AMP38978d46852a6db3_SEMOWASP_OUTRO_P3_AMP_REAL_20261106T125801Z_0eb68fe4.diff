@@ -1,0 +1,27 @@
+diff --git a/lib/insecurity.ts b/lib/insecurity.ts
+index 4a60a901b..207a296f6 100644
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -96,7 +96,8 @@ export const userEmailFrom = ({ headers }: any) => {
+ 
+ export const generateCoupon = (discount: number, date = new Date()) => {
+   const coupon = utils.toMMMYY(date) + '-' + discount
+-  return z85.encode(coupon)
++  const signature = crypto.createHmac('sha256', privateKey).update(coupon).digest('hex')
++  return z85.encode(coupon + '-' + signature)
+ }
+ 
+ export const discountFromCoupon = (coupon?: string) => {
+@@ -107,8 +108,10 @@ export const discountFromCoupon = (coupon?: string) => {
+   if (decoded && (hasValidFormat(decoded.toString()) != null)) {
+     const parts = decoded.toString().split('-')
+     const validity = parts[0]
+-    if (utils.toMMMYY(new Date()) === validity) {
+-      const discount = parts[1]
++    const discount = parts[1]
++    const signature = parts[2]
++    const expectedSignature = crypto.createHmac('sha256', privateKey).update(validity + '-' + discount).digest('hex')
++    if (utils.toMMMYY(new Date()) === validity && signature && crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+       return parseInt(discount)
+     }
+   }

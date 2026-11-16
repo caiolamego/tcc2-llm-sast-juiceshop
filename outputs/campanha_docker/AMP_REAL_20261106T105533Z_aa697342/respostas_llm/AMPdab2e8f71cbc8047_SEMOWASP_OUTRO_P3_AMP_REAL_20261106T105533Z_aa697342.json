@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Configuração insegura do rate limiter de redefinição de senha: a aplicação confia em todos os proxies e usa um cabeçalho controlável pelo cliente como chave de limitação, permitindo contornar o limite de tentativas.\",\n  \"causa_da_vulnerabilidade\": \"app.enable('trust proxy') faz o Express confiar indiscriminadamente nos proxies. Além disso, o keyGenerator lê headers['X-Forwarded-For'], que pode ser fornecido ou manipulado pelo cliente quando o proxy de borda não o normaliza.\",\n  \"estrategia_de_correcao\": \"Remover a confiança global em proxies e usar req.ip, derivado pela configuração de proxy confiável do Express, como chave do rate limiter. Sem uma topologia de proxy confiável especificada, req.ip usa o endereço da conexão em vez de confiar diretamente no cabeçalho encaminhado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  app.enable('trust proxy')\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\",\n      \"trecho_corrigido\": \"  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ ip }: { ip: any }) { return ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O rate limiter passa a usar o endereço IP que o Express determina sem habilitar confiança irrestrita em proxies nem aceitar diretamente X-Forwarded-For como identidade do cliente. Isso impede que um cliente altere esse cabeçalho para obter novas chaves e contornar o limite. A alteração mantém a rota, a janela e o máximo de tentativas existentes.\",\n  \"limitacoes_da_correcao\": \"Se a aplicação estiver atrás de um proxy reverso, req.ip poderá identificar o proxy e agrupar clientes sob o mesmo limite. Para preservar limites por cliente nesse cenário, configure trust proxy apenas para os endereços ou saltos de proxy efetivamente confiáveis e confirme que o proxy de borda remove ou normaliza cabeçalhos encaminhados recebidos do cliente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2649,
+  "tokens_saida": 561,
+  "latencia_s": 5.67,
+  "custo_usd": 0.000612,
+  "hash_prompt": "08af30cddf8145194856c4067ab13ed0e849030e0f619db054ac1233c814b971",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2646
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso a métodos de entrega por identificador sem validação do parâmetro de rota, permitindo entradas inválidas ou malformadas chegarem à consulta ao banco de dados.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em req.params.id é passado diretamente para DeliveryModel.findOne sem validação de formato. Isso pode causar consultas com identificadores inesperados e erros de execução.\",\n  \"estrategia_de_correcao\": \"Validar que o identificador da rota seja um inteiro positivo antes de consultar o banco de dados. Para valores inválidos, manter a resposta de erro existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/delivery.ts\",\n      \"trecho_original\": \"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\",\n      \"trecho_corrigido\": \"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const id = Number(req.params.id)\\n    if (!Number.isInteger(id) || id <= 0) {\\n      res.status(400).json({ status: 'error' })\\n      return\\n    }\\n    const method = await DeliveryModel.findOne({ where: { id } })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação ocorre antes da consulta e restringe o identificador a um inteiro positivo, evitando que valores arbitrários fornecidos na URL sejam usados como critério de busca. A resposta para entradas inválidas reutiliza o status e o corpo de erro já existentes, sem alterar o comportamento para identificadores válidos.\",\n  \"limitacoes_da_correcao\": \"A validação pressupõe que os identificadores de entrega sejam inteiros positivos. Ela não substitui controles de autorização caso a consulta ou os dados de entrega devam ser restritos por usuário.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 890,
+  "tokens_saida": 429,
+  "latencia_s": 4.894,
+  "custo_usd": 0.000304,
+  "hash_prompt": "659ca3910a91e498a1e2825b34d0f385512f08e7fe3ac7ca648b5a44205f267f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

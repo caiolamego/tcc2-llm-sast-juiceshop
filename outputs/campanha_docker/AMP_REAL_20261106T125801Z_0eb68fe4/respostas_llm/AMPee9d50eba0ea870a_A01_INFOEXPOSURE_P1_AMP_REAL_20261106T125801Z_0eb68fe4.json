@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Divulgação de arquivos de log por meio do endpoint /support/logs, pois o middleware de controle de acesso está comentado e não é executado.\",\"causa_da_vulnerabilidade\":\"A rota de listagem e a rota de download dos logs são registradas sem a proteção de verify.accessControlChallenges(). A linha de proteção está marcada como hide-line e, portanto, não participa da cadeia de middlewares.\",\"estrategia_de_correcao\":\"Reativar o middleware verify.accessControlChallenges() na rota /support/logs antes da listagem e do download dos arquivos, alterando somente a linha necessária.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"Express executa os middlewares na ordem de registro. Com verify.accessControlChallenges() ativo para /support/logs, requisições à listagem e aos arquivos sob esse caminho passam pela verificação de acesso antes de serem atendidas pelos middlewares de serviço. A alteração preserva as rotas, identificadores, mensagens e o comportamento autorizado, removendo apenas o acesso não protegido aos logs.\",\"limitacoes_da_correcao\":\"A correção depende da implementação correta de verify.accessControlChallenges() e de sua configuração de autenticação/autorização. Ela protege somente as rotas /support/logs abrangidas por esse middleware; não avalia outras possíveis cópias ou exposições de logs fora do trecho fornecido.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1999,
+  "tokens_saida": 490,
+  "latencia_s": 6.331,
+  "custo_usd": 0.001088,
+  "hash_prompt": "92d226a4cd82ac760aa709bf260ee79fde27411bde2866dbbb55f5cd4312a1d0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1996
+}

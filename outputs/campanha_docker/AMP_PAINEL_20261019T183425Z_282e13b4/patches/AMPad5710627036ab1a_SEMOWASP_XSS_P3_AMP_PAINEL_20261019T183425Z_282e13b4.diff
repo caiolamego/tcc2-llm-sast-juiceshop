@@ -1,0 +1,15 @@
+diff --git a/frontend/src/app/search-result/search-result.component.ts b/frontend/src/app/search-result/search-result.component.ts
+index 1920febe3..f5cc6ff82 100644
+--- a/frontend/src/app/search-result/search-result.component.ts
++++ b/frontend/src/app/search-result/search-result.component.ts
+@@ -107,7 +107,9 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
+ 
+   trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge
+     for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge
+-      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge
++      // Removido bypassSecurityTrustHtml para evitar XSS
++      // Mantém a descrição como texto simples para que o Angular sanitize automaticamente
++      tableData[i].description = tableData[i].description
+     } // vuln-code-snippet neutral-line restfulXssChallenge
+   } // vuln-code-snippet neutral-line restfulXssChallenge
+ 

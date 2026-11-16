@@ -1,0 +1,14 @@
+diff --git a/frontend/src/hacking-instructor/helpers/helpers.ts b/frontend/src/hacking-instructor/helpers/helpers.ts
+index 55589bfbb..74a437c67 100644
+--- a/frontend/src/hacking-instructor/helpers/helpers.ts
++++ b/frontend/src/hacking-instructor/helpers/helpers.ts
+@@ -46,6 +46,9 @@ export function waitForInputToHaveValue (inputSelector: string, value: string, o
+       const propertyChain = options.replacement[1].split('.')
+       let replacementValue = config
+       for (const property of propertyChain) {
++        if (property === '__proto__' || property === 'constructor' || property === 'prototype') {
++          throw new Error('Access to prototype properties is not allowed')
++        }
+         replacementValue = replacementValue[property]
+       }
+       value = value.replace(options.replacement[0], replacementValue)

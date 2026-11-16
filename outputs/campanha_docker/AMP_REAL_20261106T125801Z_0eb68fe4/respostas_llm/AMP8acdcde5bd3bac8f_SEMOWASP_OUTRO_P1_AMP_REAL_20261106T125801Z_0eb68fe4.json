@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Escalonamento indevido de privilégios (IDOR/BOLA): o endpoint aceita req.body.UserId para escolher a conta que será promovida, sem verificar se ela corresponde ao usuário autenticado.\",\"causa_da_vulnerabilidade\":\"A consulta do usuário, da carteira e do cartão usa diretamente req.body.UserId. Um cliente autenticado pode fornecer o ID de outro cliente e promover essa conta para deluxe, além de potencialmente debitar a carteira dela.\",\"estrategia_de_correcao\":\"Usar o identificador do usuário autenticado no token da requisição, em vez do UserId controlado pelo cliente, mantendo o restante do fluxo e as mensagens existentes.\",\"edicoes\":[{\"arquivo\":\"routes/deluxe.ts\",\"trecho_original\":\"      const user = await UserModel.findOne({ where: { id: req.body.UserId, role: security.roles.customer } })\\n      if (user == null) {\\n        res.status(400).json({ status: 'error', error: 'Something went wrong. Please try again!' })\\n        return\\n      }\\n      if (req.body.paymentMode === 'wallet') {\\n        const wallet = await WalletModel.findOne({ where: { UserId: req.body.UserId } })\",\"trecho_corrigido\":\"      const user = await UserModel.findOne({ where: { id: security.authenticatedUsers.from(req), role: security.roles.customer } })\\n      if (user == null) {\\n        res.status(400).json({ status: 'error', error: 'Something went wrong. Please try again!' })\\n        return\\n      }\\n      if (req.body.paymentMode === 'wallet') {\\n        const wallet = await WalletModel.findOne({ where: { UserId: user.id } })\"},{\"arquivo\":\"routes/deluxe.ts\",\"trecho_original\":\"        const card = await CardModel.findOne({ where: { id: req.body.paymentId, UserId: req.body.UserId } })\",\"trecho_corrigido\":\"        const card = await CardModel.findOne({ where: { id: req.body.paymentId, UserId: user.id } })\"}],\"justificativa_tecnica\":\"A identidade autenticada deve ser a fonte de autoridade para operações sobre recursos do usuário. Substituir o UserId fornecido no corpo pelos dados da sessão/token impede que o atacante selecione outra conta. A alteração é mínima e preserva o fluxo de pagamento, promoção, respostas e identificadores existentes.\",\"limitacoes_da_correcao\":\"A correção pressupõe que security.authenticatedUsers.from(req) seja a API existente para obter o identificador do usuário autenticado. Ela não corrige outras questões transacionais, como débito e promoção não atômicos, nem valida explicitamente paymentMode fora dos valores esperados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1318,
+  "tokens_saida": 596,
+  "latencia_s": 7.861,
+  "custo_usd": 0.001045,
+  "hash_prompt": "e6e01838be1ac9e3328bd00c13dad718e21598d9e7d82ac2f161015fe86820c4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1315
+}

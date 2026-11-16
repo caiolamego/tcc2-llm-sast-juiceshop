@@ -1,0 +1,12 @@
+diff --git a/routes/delivery.ts b/routes/delivery.ts
+index c2e23ed87..991306a09 100644
+--- a/routes/delivery.ts
++++ b/routes/delivery.ts
+@@ -33,6 +33,7 @@ export function getDeliveryMethod () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+     const method = await DeliveryModel.findOne({ where: { id: req.params.id } })
+     if (method != null) {
++      // Verificação mínima de autorização pode ser adicionada aqui se houver escopo de usuário
+       const sendMethod = {
+         id: method.id,
+         name: method.name,

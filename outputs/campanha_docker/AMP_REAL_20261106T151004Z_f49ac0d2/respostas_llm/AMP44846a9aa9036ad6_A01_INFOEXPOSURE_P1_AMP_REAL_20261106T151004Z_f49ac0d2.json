@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição indevida de diretórios sensíveis via listagem de diretórios acessível publicamente (Directory Listing)\",\"causa_da_vulnerabilidade\":\"O middleware 'serveIndex' está configurado para permitir a listagem de diretórios sensíveis como '/ftp', '/encryptionkeys' e '/support/logs' sem autenticação ou autorização adequada, permitindo que usuários não autorizados visualizem e acessem arquivos potencialmente confidenciais.\",\"estrategia_de_correcao\":\"Adicionar um middleware de controle de acesso (autenticação e autorização) antes do middleware 'serveIndex' para restringir o acesso às rotas que expõem listagem de diretórios sensíveis. Isso garante que apenas usuários autorizados possam visualizar e acessar esses diretórios.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\",\"trecho_corrigido\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\",\"trecho_corrigido\":\"  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"A exposição de diretórios sensíveis via listagem pública pode levar à divulgação de informações confidenciais e facilitar ataques subsequentes. Ao inserir o middleware 'verify.accessControlChallenges()' antes do middleware 'serveIndex', garantimos que apenas usuários autenticados e autorizados possam acessar essas listagens, mitigando o risco de exposição indevida.\",\"limitacoes_da_correcao\":\"Esta correção assume que o middleware 'verify.accessControlChallenges()' implementa corretamente a autenticação e autorização necessárias. Se este middleware não for robusto, a vulnerabilidade pode persistir. Além disso, usuários autenticados ainda terão acesso às listagens, o que pode não ser desejado em todos os casos; para maior segurança, pode ser necessário implementar controles adicionais ou desabilitar completamente a listagem de diretórios para certos caminhos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1934,
+  "tokens_saida": 939,
+  "latencia_s": 8.296,
+  "custo_usd": 0.002276,
+  "hash_prompt": "8b71402ff4b998c0d070845f246ee7a0fc52a413f6ae6bc2b8240e5c29acef05",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

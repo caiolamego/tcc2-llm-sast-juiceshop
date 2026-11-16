@@ -1,0 +1,15 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..c65d4e4fa 100644
+--- a/server.ts
++++ b/server.ts
+@@ -503,7 +503,9 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+       endpoints: [`/api/${name}s`, `/api/${name}s/:id`],
+       excludeAttributes: exclude,
+       pagination: false,
+-      include
++      include,
++      // Adiciona middleware de autorização para criação de usuários
++      create: { middleware: name === 'User' ? [security.isAuthorized()] : [] }
+     })
+ 
+     // create a wallet when a new user is registered using API

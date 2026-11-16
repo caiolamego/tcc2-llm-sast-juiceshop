@@ -1,0 +1,128 @@
+# Resultados (`outputs/`)
+
+Tudo o que o projeto já produziu: resultados oficiais, pilotos, testes de desenvolvimento e o histórico.
+**Nada aqui é movido nem editado.** O código, as configurações, a referência Docker e os próprios
+registros apontam para estes caminhos, e cada resultado precisa continuar ligado ao comando e ao código
+que o geraram. Este índice diz o papel de cada pasta.
+
+## Onde está o resultado oficial
+
+Campanha dos 78 casos, P1–P4, três modelos, no ambiente Docker (06/11/2026):
+
+- GPT-6 Luna: `campanha_docker/AMP_REAL_20261106T105533Z_aa697342/`
+- GPT-5.6 Luna: `campanha_docker/AMP_REAL_20261106T125801Z_0eb68fe4/`
+- GPT-4.1 mini: `campanha_docker/AMP_REAL_20261106T151004Z_f49ac0d2/`
+- métricas finais com a RRIS e classificação OWASP complementar:
+  [`resultados_finais/OWASP_20261111_V2/`](resultados_finais/OWASP_20261111_V2/),
+  com procedimento e conferências em [resultados_finais/README.md](resultados_finais/README.md)
+- métricas anteriores à classificação complementar, preservadas:
+  `rris/<EXECUCAO>_METRICAS/`
+- baseline funcional usado: `cobertura_funcional/IMAGEM_81FE_D3_20261106/`
+
+Antes dela, a referência era a campanha dos 52 casos preparados, P1–P4, gpt-4.1-mini, no ambiente Docker (19/10/2026):
+
+- registros: `campanha_docker/AMP_PAINEL_20261019T183425Z_282e13b4/`
+- métricas: `campanha_docker/AMP_PAINEL_20261019T183425Z_282e13b4_METRICAS/`
+- baseline funcional usado: `baselines/docker/oficial_v1/` (imagem de `docker/historico/referencia_oficial_v1.json`)
+
+A referência oficial atual, para execuções novas, é `baselines/docker/oficial_v2/`, gerada em 26/10/2026 depois da
+reorganização do código (`docker/referencia.json`). Os 39 grupos de testes deram o mesmo resultado nas duas.
+
+## Pastas por papel
+
+### Oficial
+
+| Pasta | Conteúdo |
+|---|---|
+| `resultados_finais/OWASP_20261111_V2/` | Versão atual: artefatos com categoria OWASP nos nomes, referências e manifestos atualizados, mapas de renomeação e métricas verificadas dos três modelos. Categorias e IDs originais preservados para rastreio. Sem novas chamadas LLM, SAST ou testes do alvo. |
+| `resultados_finais/OWASP_20261111_V1/` | Consolidação anterior, preservada: classificação OWASP nos consolidados, sem cópias dos artefatos com nomes ajustados. |
+| `campanha_docker/AMP_REAL_20261106T*` | Campanha completa de 06/11/2026: 78 casos, três modelos, com chamadas reais à LLM. GPT-6 Luna `105533Z_aa697342`, GPT-5.6 Luna `125801Z_0eb68fe4`, GPT-4.1 mini `151004Z_f49ac0d2`. |
+| `rris/` | Evidência conjunta da RRIS dos três modelos, com as métricas consolidadas em `<EXECUCAO>_METRICAS/`. |
+| `cobertura_funcional/IMAGEM_81FE_D3_20261106/` | Baseline da revisão funcional v8, na imagem `81fe`, usado pela campanha de 06/11/2026. |
+| `campanha_docker/` | `AMP_PAINEL_20261019T183425Z_282e13b4`: campanha oficial (191 tentativas em duas sessões; a segunda completou um caso interrompido por falha de conexão). `AMP_PREFLIGHT_20261019T174514Z_fe15bc52`: preflight dos 52 casos (208 prompts). `AMP_PAINEL_20261019T175741Z_d61671f5`: preflight pelo painel, sem tentativas. `AMP_PAINEL_20261019T181245Z_1aca0df2`: execução interrompida com 13 tentativas, que revelou o problema de recuo na aplicação dos patches. |
+| `baselines/docker/oficial_v2/` | Baseline funcional oficial atual (26/10/2026), ligado à imagem de `docker/referencia.json`. |
+| `baselines/docker/oficial_v1/` | Baseline usado pela campanha de 19/10, ligado à imagem de `docker/historico/referencia_oficial_v1.json`. |
+
+### Entradas geradas
+
+| Pasta | Conteúdo |
+|---|---|
+| `catalogos/ampliado_v1/` | Catálogo dos 78 casos por ocorrência. |
+| `cobertura_funcional/COBERTURA_V1/` | Auditoria da cobertura funcional (52 preparados, 26 bloqueados). |
+| `cobertura_funcional/AMPLIACAO_20261102/` | Incremento de cobertura de CAPTCHA, ZIP e cupons: validação inicial, controles de regressão, baseline novo e auditoria. Não altera a campanha de 19/10. |
+| `cobertura_funcional/SERVER_20261102/` | Segundo incremento: testes de recursos gerados e falhas de inicialização de `server.ts`; validações, controles, baseline e auditoria próprios. |
+| `cobertura_funcional/CODING_CHALLENGES_20261102/` | Terceiro incremento: extração de snippets e marcadores de `lib/codingChallenges.ts`; validações, controles, baseline e auditoria próprios. |
+| `cobertura_funcional/SEED_TOTP_20261102/` | Quarto incremento: seed e login TOTP, oito controles negativos e controle positivo de rotação; versão final em `baseline_final/` e `auditoria_final/`. |
+| `cobertura_funcional/FINAIS_20261102/` | Fechamento dos seis casos restantes: chat, legendas, Grunt e integridade dos specs; inclui JUnit/logs internos em `subavaliacoes/`. |
+| `sast_antes/` | Scan e catálogo do modo histórico (JS001–JS012), usados por E01–E03. |
+
+### Pilotos e revalidações
+
+| Pasta | Conteúdo |
+|---|---|
+| `execucoes/` | Execuções de 17/10 pelo painel, fora do Docker. `AMP_PAINEL_20261017T064627Z_bf4efba0` é o piloto de 10 casos (40 tentativas). |
+| `piloto_2_issues/` | Piloto de 2 casos (14/10). |
+| `piloto_colab_1_issue/` | Teste do Qwen no Colab. |
+| `resiliencia_llm/` | Recuperação offline das métricas do piloto Colab interrompido por HTTP 503 e validação da feature 09; não contém nova campanha com LLM. |
+| `feature10/SELECAO_MODELOS_20261102/` | Validação da seleção dos três modelos: 405 testes unitários no host e no Docker, teste DOM do seletor e hashes dos três preflights de 78 casos, sem inferência real. Resultados dos preflights em `campanha_docker/`. |
+| `revalidacoes/` | `PILOTO10_CORRECAO_V1`: replay sem LLM do piloto de 10 casos. `DOCKER_V1`: baseline com o problema do `safetyMode` (não usar). `DOCKER_V2`: baseline corrigido de uma imagem local. `ANCORAS_INDENTACAO_V1`: replay das âncoras com recuo. `REORGANIZACAO_20261026`: verificação de que a reorganização do repositório não mudou o funcionamento (comparação antes × depois e as ferramentas usadas); `fase2_codigo/` cobre a reorganização do código e a referência v2. `LIMPEZA_MODO_HISTORICO_20261101`: verificação de que a retirada do modo histórico do código não mudou o funcionamento (mesma bateria antes × depois). |
+| `diagnosticos_llm/` | Diagnósticos do Qwen no Colab. |
+| `painel/` | Logs e estado das execuções iniciadas pelo painel. |
+
+### Desenvolvimento
+
+| Pasta | Conteúdo |
+|---|---|
+| `feature02/` … `feature07/` | Evidências do desenvolvimento de cada feature: dry-runs, preflights, testes e verificações. As descrições estão em `docs/historico/features/`. |
+
+### Auditoria exploratória das regras
+
+| Pasta | Conteúdo |
+|---|---|
+| `auditoria_sast/` | Scans exploratórios, matriz de desafios, candidatos de correção, avaliação dos codefixes e comparações v1/v2. |
+
+### Histórico E01–E03 (formato do TCC 1)
+
+Formato "plano" do §3.10 do TCC 1: uma pasta por tipo de artefato, na raiz de `outputs/`.
+
+O código que gerou estas execuções saiu da versão atual em 01/11/2026. Para refazê-las, use o commit de cada
+uma: tags git `e01-preliminar`, `e02-oficial-catalogo-v1` e `e03-catalogo-v2` (esta última só existe na branch
+`feat/p3-p4`). A tag `modo-historico-final` marca o último commit com o modo histórico já na estrutura
+reorganizada.
+
+| Pasta | Conteúdo |
+|---|---|
+| `patches/`, `respostas_llm/`, `tentativas/` | Artefatos das tentativas JS001–JS012. |
+| `resultados_consolidados/` | Registros e métricas de E01 e E02. |
+| `sondagens/`, `validacao_cenarios/`, `custos_validacao/` | Experimentos das fases F2–F5. |
+| `baseline_testes.json` | Linha de base de testes do modo histórico (caminho fixo no código). |
+
+## Estrutura de uma execução
+
+```
+<EXECUCAO>/
+  contrato_execucao.json        configuração e hashes que a execução promete respeitar
+  sast_antes/                   SAST inicial e reprodução do catálogo
+  prompts/                      prompt de cada tentativa
+  respostas_llm/                resposta da LLM
+  patches/                      diff aplicado
+  codigos_corrigidos/           arquivo corrigido
+  sast_depois/                  SAST depois da correção
+  comparacoes/                  comparação antes/depois (R e M)
+  testes/                       resultado dos testes (F)
+  cobertura_funcional/          revisão e baseline usados
+  resultados_consolidados/      execucoes.jsonl (uma linha por tentativa) e sessões
+<EXECUCAO>_METRICAS/            métricas consolidadas (JSON e CSV)
+```
+
+## Nome dos arquivos
+
+Cada artefato usa o identificador da tentativa, no padrão da Figura 3 do TCC 1:
+
+```
+AMP3aec6cd362844193 _ A07 _ HARDCRED _ P3 _ AMP_PAINEL_20261019T183425Z_282e13b4
+caso (hash estável)   OWASP  vulnerab.  prompt  execução (modo + data UTC + sufixo)
+```
+
+Quando o alerta não tem categoria OWASP, o segundo campo é `SEMOWASP`. O tipo de artefato é dado pela
+pasta (`prompts/`, `patches/`, ...).

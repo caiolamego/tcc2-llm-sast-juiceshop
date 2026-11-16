@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de NoSQL por meio do operador MongoDB $where, permitindo que o valor controlado por req.params.id seja interpretado como código JavaScript no banco de dados.\",\"causa_da_vulnerabilidade\":\"O parâmetro id é interpolado diretamente em uma expressão JavaScript usada por $where. A sanitização aplicada fora do desafio não elimina o risco estrutural, e a ramificação do desafio permite caracteres e conteúdo adicionais.\",\"estrategia_de_correcao\":\"Substituir a consulta baseada em $where por uma consulta MongoDB normal usando igualdade no campo orderId, mantendo o mesmo identificador id e o restante do fluxo inalterado.\",\"edicoes\":[{\"arquivo\":\"routes/trackOrder.ts\",\"trecho_original\":\"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\"trecho_corrigido\":\"    db.ordersCollection.find({ orderId: id }).then((order: any) => {\"}],\"justificativa_tecnica\":\"Consultas MongoDB estruturadas tratam id como dado, não como código executável. Assim, aspas, operadores, expressões JavaScript e demais caracteres presentes no parâmetro não podem alterar a lógica da consulta nem executar código no servidor MongoDB. A alteração é mínima e preserva o método find, o processamento do resultado, a resolução dos desafios e as respostas existentes.\",\"limitacoes_da_correcao\":\"A correção elimina a injeção associada ao $where nesta rota, mas não substitui uma revisão de outras consultas da aplicação. A eficácia funcional pressupõe que os documentos de pedidos usem o campo orderId conforme esperado e que a camada MongoDB aceite a consulta estruturada existente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 841,
+  "tokens_saida": 368,
+  "latencia_s": 4.745,
+  "custo_usd": 0.00061,
+  "hash_prompt": "0b8c84713001cb4bd861a5053a5ab9ad57fa8755cdac5115363346a682022943",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

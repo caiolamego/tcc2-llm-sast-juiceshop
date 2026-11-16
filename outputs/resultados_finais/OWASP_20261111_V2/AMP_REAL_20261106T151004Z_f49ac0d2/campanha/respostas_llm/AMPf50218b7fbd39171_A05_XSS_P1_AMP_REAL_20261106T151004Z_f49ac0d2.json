@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) via injeção de conteúdo não sanitizado em template Pug.\",\"causa_da_vulnerabilidade\":\"O conteúdo dos arquivos de legenda (subtitles) é inserido diretamente no template HTML dentro de uma tag <script> sem qualquer sanitização ou escape, permitindo que um atacante insira código JavaScript malicioso que será executado no navegador do usuário.\",\"estrategia_de_correcao\":\"Sanitizar o conteúdo das legendas antes de inseri-las no template para evitar a execução de código malicioso. Como o conteúdo é inserido dentro de uma tag <script> com type=\\\"text/vtt\\\", que é um formato de legenda, o ideal é escapar caracteres que possam quebrar o contexto ou substituir a inserção direta por uma forma segura. Aqui, a correção mínima é escapar o conteúdo das legendas usando a biblioteca 'html-entities' para evitar a execução de scripts.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</script>')\"}],\"justificativa_tecnica\":\"A vulnerabilidade XSS ocorre porque o conteúdo das legendas é inserido diretamente no HTML sem sanitização, permitindo a execução de scripts maliciosos. Ao usar 'entities.encode' para escapar caracteres especiais, prevenimos que tags ou scripts sejam interpretados pelo navegador, mitigando o risco de XSS. Essa alteração é mínima e preserva o comportamento funcional, apenas garantindo a segurança da inserção do conteúdo dinâmico.\",\"limitacoes_da_correcao\":\"A sanitização via 'entities.encode' pode alterar o conteúdo original das legendas, especialmente se elas contiverem caracteres especiais legítimos para o formato VTT. Uma solução mais robusta envolveria validar e processar o arquivo VTT adequadamente ou servir as legendas como um arquivo separado, mas isso exigiria mudanças maiores no código e na arquitetura da aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1407,
+  "tokens_saida": 487,
+  "latencia_s": 5.454,
+  "custo_usd": 0.001342,
+  "hash_prompt": "aad60aebfa0408e8c35196b7f0638106ed19cf43e381fc1293eb789adac582ad",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso não autorizado a cestas de outros usuários (IDOR/BOLA).\",\n  \"causa_da_vulnerabilidade\": \"A rota consulta e retorna a cesta usando apenas o ID fornecido em req.params.id, sem verificar se a cesta pertence ao usuário autenticado. A verificação existente em challengeUtils.solveIf apenas detecta uma condição de desafio e não bloqueia a requisição.\",\n  \"estrategia_de_correcao\": \"Obter a cesta pelo ID e pelo identificador da cesta associado ao usuário autenticado. Se não houver usuário autenticado ou a cesta não pertencer a ele, não retornar os dados da cesta.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/basket.ts\",\n      \"trecho_original\": \"      const id = req.params.id\\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\n      \"trecho_corrigido\": \"      const id = req.params.id\\n      const user = security.authenticatedUsers.from(req)\\n      const basket = user?.bid && String(user.bid) === id\\n        ? await BasketModel.findOne({ where: { id, UserId: user.id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\\n        : null\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A autorização passa a ser aplicada na consulta: além do ID solicitado, a cesta precisa estar associada ao usuário autenticado. IDs de cestas pertencentes a outros usuários, ou requisições sem usuário autenticado, resultam em null e não expõem os produtos. A lógica de detecção do desafio e a serialização da resposta permanecem inalteradas.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que o modelo Basket use UserId como chave estrangeira para o usuário e que user.id corresponda a essa chave. Se o esquema usar outro nome ou associação, a condição da consulta deve ser ajustada ao modelo real.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 874,
+  "tokens_saida": 453,
+  "latencia_s": 5.156,
+  "custo_usd": 0.000314,
+  "hash_prompt": "cb719229a5d26e7b6d29a4a58a80f3a2ec5648dfd23a65307926f06386565169",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Condição de corrida que permite registrar múltiplos likes do mesmo usuário para uma avaliação.\",\n  \"causa_da_vulnerabilidade\": \"A verificação de `likedBy` e a atualização de `likesCount` e `likedBy` são operações separadas. Requisições concorrentes podem passar pela verificação antes de qualquer uma registrar o usuário, incrementando a contagem mais de uma vez.\",\n  \"estrategia_de_correcao\": \"Substituir a leitura, verificação e atualização separadas por uma única atualização atômica condicionada à ausência do e-mail do usuário em `likedBy`. Se nenhum documento for atualizado, consultar a avaliação para preservar as respostas existentes de 404 e 403.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/likeProductReviews.ts\",\n      \"trecho_original\": \"    try {\\n      const review = await db.reviewsCollection.findOne({ _id: id })\\n      if (!review) {\\n        return res.status(404).json({ error: 'Not found' })\\n      }\\n\\n      const likedBy = review.likedBy\\n      if (likedBy.includes(user.data.email)) {\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\\n\\n      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\",\n      \"trecho_corrigido\": \"    try {\\n      const result = await db.reviewsCollection.update(\\n        { _id: id, likedBy: { $ne: user.data.email } },\\n        { $inc: { likesCount: 1 }, $addToSet: { likedBy: user.data.email } }\\n      )\\n      if (result.n === 0) {\\n        const review = await db.reviewsCollection.findOne({ _id: id })\\n        if (!review) {\\n          return res.status(404).json({ error: 'Not found' })\\n        }\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\"\n    },\n    {\n      \"arquivo\": \"routes/likeProductReviews.ts\",\n      \"trecho_original\": \"      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n        updatedLikedBy.push(user.data.email)\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\\n        res.json(result)\",\n      \"trecho_corrigido\": \"      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        res.json(result)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O filtro e a alteração são executados como uma única operação no MongoDB: somente uma requisição pode encontrar a avaliação com o e-mail ausente e incrementar `likesCount`; `$addToSet` também impede duplicatas em `likedBy`. As requisições concorrentes subsequentes não atualizam o documento e recebem a resposta de conflito já prevista para um like repetido. A leitura posterior continua permitindo avaliar a condição do desafio sem reintroduzir a escrita não atômica.\",\n  \"limitacoes_da_correcao\": \"A solução pressupõe que a versão e a configuração do driver MongoDB retornem `n` no resultado de `update`, como esperado pelo uso existente dessa API no arquivo. A lógica do desafio de timing permanece intencionalmente preservada.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1010,
+  "tokens_saida": 932,
+  "latencia_s": 8.098,
+  "custo_usd": 0.000567,
+  "hash_prompt": "01e1563e775fc48d97e32cbb5ed9bcbb3935125af7359d9d01a4b459fa2ef5cb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

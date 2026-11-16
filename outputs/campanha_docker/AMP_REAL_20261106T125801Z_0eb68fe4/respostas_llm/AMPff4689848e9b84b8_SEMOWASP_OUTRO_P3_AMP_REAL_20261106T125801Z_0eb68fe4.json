@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"O campo rating aceita qualquer valor inteiro, sem validação de faixa no modelo, permitindo avaliações fora do intervalo esperado.\",\"causa_da_vulnerabilidade\":\"A definição Sequelize de rating contém allowNull: false, que apenas impede valores nulos; ela não restringe o valor mínimo ou máximo permitido.\",\"estrategia_de_correcao\":\"Adicionar uma validação Sequelize de intervalo ao campo rating, preservando valores válidos e rejeitando valores fora da faixa de avaliação permitida, de 1 a 5.\",\"edicoes\":[{\"arquivo\":\"models/feedback.ts\",\"trecho_original\":\"      rating: {\\n        type: DataTypes.INTEGER,\\n        allowNull: false,\\n        set (rating: number) {\",\"trecho_corrigido\":\"      rating: {\\n        type: DataTypes.INTEGER,\\n        allowNull: false,\\n        validate: {\\n          min: 1,\\n          max: 5\\n        },\\n        set (rating: number) {\"}],\"justificativa_tecnica\":\"A validação é aplicada no modelo, próximo ao ponto de persistência, protegendo o sistema mesmo quando o valor não passa por um middleware específico. DataTypes.INTEGER garante a estrutura inteira, enquanto min e max impõem a regra semântica da avaliação. A alteração não modifica identificadores, assinaturas, mensagens ou o comportamento de valores válidos no intervalo de 1 a 5.\",\"limitacoes_da_correcao\":\"A correção assume que o intervalo funcional permitido para rating é de 1 a 5. Ela não substitui validações de entrada em outras camadas, autorização, tratamento de valores não inteiros antes da criação do modelo ou controles de concorrência. Valores nulos continuam sendo rejeitados por allowNull: false.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1440,
+  "tokens_saida": 376,
+  "latencia_s": 5.016,
+  "custo_usd": 0.000811,
+  "hash_prompt": "51b111d62b1465d8af5a1524e2c1c276d02b95b69833c70a16843880f5b4c22f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1437
+}

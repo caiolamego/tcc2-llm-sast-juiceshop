@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para renderizar HTML potencialmente não confiável, permitindo Cross-site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O método getNewCaptcha utiliza this.sanitizer.bypassSecurityTrustHtml para confiar cegamente no conteúdo HTML recebido do serviço externo, desabilitando a sanitização padrão do Angular e permitindo que scripts maliciosos sejam executados no contexto do navegador.\",\"estrategia_de_correcao\":\"Substituir o uso de bypassSecurityTrustHtml por uma sanitização explícita usando DomSanitizer.sanitize com SecurityContext.HTML para garantir que o conteúdo HTML seja limpo antes de ser exibido, mantendo a funcionalidade e prevenindo XSS.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"getNewCaptcha () {\\n    this.imageCaptchaService.getCaptcha().subscribe((data: any) => {\\n      this.captcha = this.sanitizer.bypassSecurityTrustHtml(data.image)\\n    })\\n  }\",\"trecho_corrigido\":\"getNewCaptcha () {\\n    this.imageCaptchaService.getCaptcha().subscribe((data: any) => {\\n      this.captcha = this.sanitizer.sanitize(1, data.image) || ''\\n    })\\n  }\"}],\"justificativa_tecnica\":\"O método DomSanitizer.sanitize com SecurityContext.HTML (valor 1) realiza uma sanitização adequada do conteúdo HTML, removendo scripts e elementos perigosos, evitando a execução de código malicioso. Isso mantém a exibição do conteúdo HTML legítimo, preservando a funcionalidade original sem expor a aplicação a vulnerabilidades XSS. O uso de bypassSecurityTrustHtml transfere a responsabilidade para o desenvolvedor e deve ser evitado para conteúdo externo ou não confiável.\",\"limitacoes_da_correcao\":\"A correção depende da eficácia da sanitização interna do Angular; se o conteúdo HTML for muito complexo ou conter elementos legítimos que a sanitização remove, pode haver perda de formatação. Além disso, se o serviço externo enviar conteúdo malicioso muito sofisticado, pode ser necessário usar bibliotecas de sanitização adicionais como DOMPurify para maior segurança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2462,
+  "tokens_saida": 462,
+  "latencia_s": 4.791,
+  "custo_usd": 0.001724,
+  "hash_prompt": "b5b2bdf7e75dd61364c09ef8c5ab18b1340d300069e24e9576004ac000f66db7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

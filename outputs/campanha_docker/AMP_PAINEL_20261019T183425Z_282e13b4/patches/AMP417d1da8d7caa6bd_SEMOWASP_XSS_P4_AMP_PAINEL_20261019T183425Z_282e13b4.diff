@@ -1,0 +1,13 @@
+diff --git a/frontend/src/app/last-login-ip/last-login-ip.component.ts b/frontend/src/app/last-login-ip/last-login-ip.component.ts
+index 194657ec3..148bab7fc 100644
+--- a/frontend/src/app/last-login-ip/last-login-ip.component.ts
++++ b/frontend/src/app/last-login-ip/last-login-ip.component.ts
+@@ -36,7 +36,7 @@ export class LastLoginIpComponent implements OnInit {
+       payload = jwtDecode(token)
+       if (payload.data.lastLoginIp) {
+ 
+-        this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)
++        this.lastLoginIp = payload.data.lastLoginIp
+       }
+     }
+   }

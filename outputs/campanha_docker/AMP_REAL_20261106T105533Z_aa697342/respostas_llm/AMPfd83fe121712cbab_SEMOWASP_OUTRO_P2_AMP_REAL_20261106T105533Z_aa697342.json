@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de diretórios (path traversal) no processamento dos arquivos de dist/ pela tarefa checksum.\",\n  \"causa_da_vulnerabilidade\": \"A tarefa percorre todas as entradas retornadas por fs.readdirSync('dist/') e concatena cada nome diretamente ao caminho dist/ para leitura. Como readdirSync também pode retornar links simbólicos, um arquivo controlado ou substituído por um link simbólico dentro de dist/ pode fazer readFileSync seguir o link e ler um arquivo fora desse diretório.\",\n  \"estrategia_de_correcao\": \"Restringir a tarefa checksum a arquivos regulares diretamente dentro de dist/, ignorando links simbólicos e outras entradas que não sejam arquivos regulares. Manter a geração de checksum e os nomes de saída existentes para os arquivos válidos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"Gruntfile.js\",\n      \"trecho_original\": \"    fs.readdirSync('dist/').forEach(file => {\\n      const buffer = fs.readFileSync('dist/' + file)\",\n      \"trecho_corrigido\": \"    fs.readdirSync('dist/', { withFileTypes: true }).forEach(entry => {\\n      if (!entry.isFile()) return\\n      const file = entry.name\\n      const buffer = fs.readFileSync('dist/' + file)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A opção withFileTypes fornece objetos Dirent, permitindo verificar o tipo da entrada sem seguir links simbólicos. isFile() é verdadeiro para arquivos regulares e falso para links simbólicos, diretórios e outros tipos de entrada; assim, a tarefa não abre caminhos externos por meio de links presentes em dist/. Para arquivos regulares, a leitura, o cálculo MD5 e a gravação do arquivo de checksum permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A correção protege contra links simbólicos encontrados diretamente em dist/. Ela não valida a integridade ou a origem dos arquivos regulares do diretório, nem aborda condições de corrida em que um arquivo seja substituído após a verificação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1337,
+  "tokens_saida": 455,
+  "latencia_s": 5.319,
+  "custo_usd": 0.000395,
+  "hash_prompt": "0dae14aab1b4c4859be096d42cf7a14bc87e3f0add051b7289db4c2425e39705",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1334
+}

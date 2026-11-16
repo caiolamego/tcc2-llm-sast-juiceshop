@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de uma chave HMAC codificada diretamente no código-fonte em deluxeToken, identificado pela regra hardcoded-hmac-key (CWE-798).\",\"causa_da_vulnerabilidade\":\"A função cria um HMAC-SHA-256 usando o literal fixo '-----BEGIN RSA PRIVATE KEY-----...' como chave. Como esse valor está versionado no arquivo, qualquer pessoa com acesso ao código, ao pacote distribuído ou ao repositório pode obtê-lo e gerar tokens deluxe válidos para endereços de e-mail arbitrários.\",\"estrategia_de_correcao\":\"Substituir a chave HMAC embutida por uma configuração externa obrigatória, obtida de uma variável de ambiente. A aplicação deve falhar na inicialização quando a configuração estiver ausente, sem fornecer fallback hardcoded.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', privateKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\",\"trecho_corrigido\":\"export const deluxeToken = (email: string) => {\\n  const hmacKey = process.env.DELUXE_TOKEN_HMAC_KEY\\n  if (!hmacKey) {\\n    throw new Error('Missing deluxe token HMAC key configuration')\\n  }\\n  const hmac = crypto.createHmac('sha256', hmacKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\"}],\"justificativa_tecnica\":\"A chave deixa de existir no código-fonte e passa a ser fornecida pelo ambiente de execução, permitindo armazenamento em um mecanismo de configuração ou gerenciamento de segredos com controle de acesso e rotação. A função continua usando HMAC-SHA-256 e mantém o mesmo formato de saída e a mesma entrada funcional. A ausência da chave não resulta em uso de um segredo previsível ou compartilhado: a operação falha explicitamente.\",\"limitacoes_da_correcao\":\"A variável de ambiente precisa ser configurada com um segredo forte, aleatório e protegido operacionalmente; variáveis de ambiente isoladamente não garantem armazenamento seguro. O segredo antigo permanece exposto no histórico e em versões já distribuídas, portanto deve ser considerado comprometido, removido do histórico quando apropriado e substituído por um novo valor. Tokens gerados com a chave antiga deixarão de ser válidos após a troca, caso não seja implementada uma migração ou período controlado de compatibilidade.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3652,
+  "tokens_saida": 547,
+  "latencia_s": 7.489,
+  "custo_usd": 0.001569,
+  "hash_prompt": "040d23a0c5949b56ff6ab0210a734559e29f65efc709f4d9759ab53ea8ab44b3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3649
+}

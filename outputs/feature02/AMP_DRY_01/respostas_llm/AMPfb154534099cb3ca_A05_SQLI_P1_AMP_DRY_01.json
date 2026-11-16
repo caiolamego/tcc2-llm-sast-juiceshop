@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"[dry-run]\",\"causa_da_vulnerabilidade\":\"[dry-run]\",\"estrategia_de_correcao\":\"comentário\",\"edicoes\":[{\"arquivo\":\"routes/login.ts\",\"trecho_original\":\"\\n  return (req: Request, res: Response, next: NextFunction) => {\\n    verifyPreLoginChallenges(req) // vuln-code-snippet hide-line\\n    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\\n      .then((authenticatedUser) => { // vuln-code-snippet neutral-line loginAdminChallenge loginBenderChallenge loginJimChallenge\\n        const user = utils.queryResultToJson(authenticatedUser)\\n        if (user.data?.id && user.data.totpSecret !== '') {\\n\",\"trecho_corrigido\":\"// dry-run catalogo ampliado\\n\\n  return (req: Request, res: Response, next: NextFunction) => {\\n    verifyPreLoginChallenges(req) // vuln-code-snippet hide-line\\n    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\\n      .then((authenticatedUser) => { // vuln-code-snippet neutral-line loginAdminChallenge loginBenderChallenge loginJimChallenge\\n        const user = utils.queryResultToJson(authenticatedUser)\\n        if (user.data?.id && user.data.totpSecret !== '') {\\n\"}],\"justificativa_tecnica\":\"[dry-run]\",\"limitacoes_da_correcao\":\"Sem avaliação de correção real\"}",
+  "modelo": "dry-run",
+  "seed": null,
+  "system_fingerprint": null,
+  "tokens_entrada": 0,
+  "tokens_saida": 0,
+  "latencia_s": 0.0,
+  "custo_usd": 0.0,
+  "do_cache": false,
+  "finish_reason": null,
+  "recusa": null,
+  "hash_prompt": "ef2cea5a29861b1d00113e6a13bb0ca055e7e68f45665dd2208da00877a66f3d"
+}

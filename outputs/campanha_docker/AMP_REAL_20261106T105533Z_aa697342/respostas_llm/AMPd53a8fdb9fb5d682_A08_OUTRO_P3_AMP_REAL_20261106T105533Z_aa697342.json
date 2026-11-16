@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível poluição de protótipo ao percorrer uma cadeia de propriedades dinâmica na configuração da aplicação.\",\n  \"causa_da_vulnerabilidade\": \"O código usa cada segmento de `options.replacement[1]` para acessar propriedades de `config` sem validar os nomes. Uma cadeia que contenha `__proto__`, `constructor` ou `prototype` pode atravessar propriedades herdadas e acessar o protótipo de objetos.\",\n  \"estrategia_de_correcao\": \"Rejeitar segmentos que possam atravessar protótipos e exigir que cada propriedade percorrida seja própria do objeto atual. Manter a substituição existente para cadeias de propriedades próprias e seguras.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/hacking-instructor/helpers/helpers.ts\",\n      \"trecho_original\": \"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\",\n      \"trecho_corrigido\": \"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        if (property === '__proto__' || property === 'constructor' || property === 'prototype' || replacementValue == null || !Object.prototype.hasOwnProperty.call(replacementValue, property)) {\\n          return\\n        }\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação impede o acesso a nomes de propriedades associados à cadeia de protótipos e bloqueia a travessia de propriedades herdadas. `Object.prototype.hasOwnProperty.call` verifica a propriedade sem depender de um método `hasOwnProperty` potencialmente sobrescrito no objeto. O retorno antecipado evita usar um valor obtido por uma cadeia inválida, sem alterar o comportamento para caminhos válidos compostos por propriedades próprias.\",\n  \"limitacoes_da_correcao\": \"A correção protege este percurso específico; não valida a origem nem o esquema completo de `config`. Se caminhos inválidos precisarem de tratamento visível ou diagnóstico, isso deve ser definido separadamente, sem expor dados de configuração.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2199,
+  "tokens_saida": 524,
+  "latencia_s": 5.708,
+  "custo_usd": 0.000537,
+  "hash_prompt": "16e364e1249ec9602d5aced4e6926d59c4856133c699baeecd58e2384c1f9e56",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2196
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função bypassSecurityTrustHtml para exibir dados externos sem sanitização adequada, permitindo possível Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código utiliza this.sanitizer.bypassSecurityTrustHtml para inserir diretamente o valor results.data[0].orderId dentro de uma tag <code> sem qualquer validação ou sanitização, desativando a proteção padrão do Angular contra injeção de HTML malicioso.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o orderId como texto puro, utilizando bindings seguros do Angular que escapam automaticamente caracteres especiais, prevenindo a execução de código malicioso.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n\",\"trecho_corrigido\":\"this.results.orderNo = results.data[0].orderId\\n\"}],\"justificativa_tecnica\":\"Ao remover bypassSecurityTrustHtml e atribuir diretamente o valor orderId como texto, o Angular aplicará automaticamente escaping dos caracteres especiais, impedindo a interpretação de qualquer código HTML ou script malicioso. Isso elimina a possibilidade de XSS via essa variável, mantendo a exibição segura dos dados.\",\"limitacoes_da_correcao\":\"A correção assume que a exibição do orderId não necessita de formatação HTML específica. Caso seja necessário algum destaque visual, deve-se implementar de forma segura, sem usar bypassSecurityTrustHtml. Além disso, se o orderId contiver caracteres especiais, eles serão exibidos literalmente, o que pode alterar a aparência original pretendida.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1818,
+  "tokens_saida": 363,
+  "latencia_s": 8.429,
+  "custo_usd": 0.001308,
+  "hash_prompt": "56ea467a72eb029b16bdbef6c0c516f3c9372f7ae4f070235fac382532236629",
+  "do_cache": false
+}

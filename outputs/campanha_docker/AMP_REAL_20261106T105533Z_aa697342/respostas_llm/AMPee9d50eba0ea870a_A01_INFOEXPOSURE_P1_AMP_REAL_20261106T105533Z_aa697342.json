@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de arquivos de log por meio de listagem de diretório e download sem controle de acesso efetivo.\",\n  \"causa_da_vulnerabilidade\": \"O middleware de listagem de /support/logs é registrado antes de verify.accessControlChallenges(). Assim, requisições atendidas pela listagem podem obter nomes e informações dos arquivos antes da verificação. Além disso, o middleware de controle está montado em /support/logs, mas o middleware de download /support/logs/:file é registrado depois e pode ser alcançado sem que a verificação proteja efetivamente esse acesso.\",\n  \"estrategia_de_correcao\": \"Aplicar o middleware de controle de acesso antes dos middlewares de listagem e download, mantendo as rotas e os handlers existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\n      \"trecho_corrigido\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"No Express, os middlewares são executados na ordem em que são registrados. Colocar verify.accessControlChallenges() antes da listagem faz com que a verificação ocorra antes de qualquer resposta da listagem; a rota de download também fica sujeita à verificação, pois o middleware está montado no prefixo /support/logs. A alteração preserva os handlers e o comportamento autorizado.\",\n  \"limitacoes_da_correcao\": \"A correção depende de verify.accessControlChallenges() aplicar a política pretendida e encerrar ou rejeitar requisições não autorizadas. Não foram avaliados outros caminhos de acesso aos logs nem a configuração de permissões dos arquivos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1999,
+  "tokens_saida": 572,
+  "latencia_s": 6.063,
+  "custo_usd": 0.000536,
+  "hash_prompt": "caf2685f8d94d391d0004b7ac62bbf0e3c044ed2ffa8ea55a229cb6de8c590ef",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1996
+}

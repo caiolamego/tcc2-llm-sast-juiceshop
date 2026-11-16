@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Execução de código arbitrário via eval() em username (Server-Side Template Injection - SSTI)\",\"causa_da_vulnerabilidade\":\"O código utiliza eval() para executar conteúdo extraído do nome de usuário, que pode conter código malicioso, permitindo execução arbitrária no servidor.\",\"estrategia_de_correcao\":\"Remover o uso de eval() para evitar execução de código arbitrário. Em vez disso, tratar o username como texto simples, escapando caracteres especiais para prevenir SSTI e XSS.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  const code = username?.substring(2, username.length - 1)\\n  try {\\n    if (!code) {\\n      throw new Error('Username is null')\\n    }\\n    username = eval(code) // eslint-disable-line no-eval\\n  } catch (err) {\\n    username = '\\\\\\\\' + username\\n  }\\n} else {\\n  username = '\\\\\\\\' + username\\n}\",\"trecho_corrigido\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  // Removido eval para evitar execução de código arbitrário\\n  username = '\\\\\\\\' + username\\n} else {\\n  username = '\\\\\\\\' + username\\n}\"}],\"justificativa_tecnica\":\"O uso de eval() em dados controlados pelo usuário é uma vulnerabilidade crítica que permite execução arbitrária de código no servidor, podendo comprometer todo o sistema. Removendo eval() e tratando o username como texto simples, prevenimos SSTI e XSS sem alterar a funcionalidade principal.\",\"limitacoes_da_correcao\":\"A correção desativa a funcionalidade da challenge usernameXssChallenge que depende da execução de código via eval(), podendo impactar testes ou desafios específicos que exploram essa vulnerabilidade para fins educacionais.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1375,
+  "tokens_saida": 457,
+  "latencia_s": 4.924,
+  "custo_usd": 0.000936,
+  "hash_prompt": "52b805701e624f37c98604759e7bfa5567a3dcb4eb823a5cc136bd9a50f0cace",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1152,
+  "tokens_escrita_cache": 0
+}

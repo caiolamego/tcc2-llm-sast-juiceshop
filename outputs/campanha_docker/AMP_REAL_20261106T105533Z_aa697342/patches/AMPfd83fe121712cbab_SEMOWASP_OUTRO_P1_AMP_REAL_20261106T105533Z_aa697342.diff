@@ -1,0 +1,32 @@
+diff --git a/Gruntfile.js b/Gruntfile.js
+index 128ff3a57..1151b85fc 100644
+--- a/Gruntfile.js
++++ b/Gruntfile.js
+@@ -69,13 +69,24 @@ module.exports = function (grunt) {
+ 
+   grunt.registerTask('checksum', 'Create .md5 checksum files', function () {
+     const fs = require('node:fs')
++    const path = require('node:path')
+     const crypto = require('node:crypto')
+-    fs.readdirSync('dist/').forEach(file => {
+-      const buffer = fs.readFileSync('dist/' + file)
++    const distPath = path.resolve('dist/')
++    fs.readdirSync(distPath).forEach(file => {
++      const filePath = path.join(distPath, file)
++      let realFilePath
++      try {
++        realFilePath = fs.realpathSync(filePath)
++        const relativeFilePath = path.relative(distPath, realFilePath)
++        if (relativeFilePath.startsWith('..' + path.sep) || relativeFilePath === '..' || path.isAbsolute(relativeFilePath) || !fs.statSync(realFilePath).isFile()) return
++      } catch {
++        return
++      }
++      const buffer = fs.readFileSync(realFilePath)
+       const md5 = crypto.createHash('md5')
+       md5.update(buffer)
+       const md5Hash = md5.digest('hex')
+-      const md5FileName = 'dist/' + file + '.md5'
++      const md5FileName = filePath + '.md5'
+       grunt.file.write(md5FileName, md5Hash)
+       grunt.log.write(`Checksum ${md5Hash} written to file ${md5FileName}.`).verbose.write('...').ok()
+       grunt.log.writeln()

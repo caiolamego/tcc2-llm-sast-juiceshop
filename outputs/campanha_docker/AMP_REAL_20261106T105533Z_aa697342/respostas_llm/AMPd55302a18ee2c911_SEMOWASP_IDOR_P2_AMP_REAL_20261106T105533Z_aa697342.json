@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção SQL (SQL injection) no parâmetro de identificação do método de entrega.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em req.params.id é passado diretamente à consulta DeliveryModel.findOne como valor de id, sem validação de formato. Se o modelo ou o dialeto do banco interpretar esse valor de forma não parametrizada, uma entrada maliciosa pode alterar a consulta.\",\n  \"estrategia_de_correcao\": \"Validar req.params.id como um identificador inteiro positivo antes de consultar o banco. Para valores inválidos, manter a resposta de erro existente e não executar a consulta.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/delivery.ts\",\n      \"trecho_original\": \"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\",\n      \"trecho_corrigido\": \"  return async (req: Request, res: Response, next: NextFunction) => {\\n    if (!/^\\\\d+$/.test(req.params.id) || Number(req.params.id) <= 0) {\\n      res.status(400).json({ status: 'error' })\\n      return\\n    }\\n    const method = await DeliveryModel.findOne({ where: { id: Number(req.params.id) } })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação restringe o parâmetro a dígitos e a um valor positivo, impedindo que operadores, aspas ou fragmentos de SQL sejam enviados como identificador. A conversão para Number garante que a consulta receba um valor numérico, e a saída antecipada evita consultar o banco para entradas inválidas. A resposta de erro existente é preservada.\",\n  \"limitacoes_da_correcao\": \"A proteção pressupõe que os identificadores de entrega sejam inteiros positivos. A consulta também deve continuar usando os mecanismos de parametrização do ORM; a validação de entrada não substitui consultas parametrizadas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 998,
+  "tokens_saida": 454,
+  "latencia_s": 5.494,
+  "custo_usd": 0.000327,
+  "hash_prompt": "38c9222a74b79ccf8d313ef4a7dceaf176a369fb23f8916a6a83bf696d0e97e7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

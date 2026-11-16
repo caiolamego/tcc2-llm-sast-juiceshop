@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open redirect (CWE-601) no redirecionamento baseado em query.to.\",\"causa_da_vulnerabilidade\":\"O valor controlado pelo usuário é convertido diretamente para string e passado a res.redirect. Embora security.isRedirectAllowed faça uma validação preliminar, a segurança efetiva depende de sua implementação e a análise estática não consegue garantir que o destino seja validado por esquema, host, porta, userinfo e formas ambíguas. Além disso, a função isUnintendedRedirect usa comparação por prefixo, que não é uma validação segura de URL.\",\"estrategia_de_correcao\":\"Validar o destino com o parser URL e uma lista explícita de hosts e esquemas permitidos, rejeitando userinfo e portas não permitidas. O redirecionamento deve usar a URL normalizada somente após essa validação, preservando o fluxo de erro e os destinos legítimos atualmente permitidos.\",\"edicoes\":[{\"arquivo\":\"routes/redirect.ts\",\"trecho_original\":\"    const toUrl: string = query.to as string\\n    if (security.isRedirectAllowed(toUrl)) {\",\"trecho_corrigido\":\"    const toUrl: string = query.to as string\\n    let validatedUrl: string\\n    try {\\n      const url = new URL(toUrl)\\n      if (url.protocol !== 'https:' || url.username !== '' || url.password !== '' || url.port !== '' || !security.redirectAllowlist.some((allowedUrl) => {\\n        const allowed = new URL(allowedUrl)\\n        return url.hostname === allowed.hostname && url.protocol === allowed.protocol && url.port === allowed.port\\n      })) {\\n        throw new Error('Invalid redirect URL')\\n      }\\n      validatedUrl = url.href\\n    } catch {\\n      res.status(406)\\n      next(new Error('Unrecognized target URL for redirect: ' + toUrl))\\n      return\\n    }\\n    if (security.isRedirectAllowed(validatedUrl)) {\"},{\"arquivo\":\"routes/redirect.ts\",\"trecho_original\":\"      challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })\\n      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\\n      res.redirect(toUrl)\",\"trecho_corrigido\":\"      challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return validatedUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || validatedUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || validatedUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })\\n      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(validatedUrl) })\\n      res.redirect(validatedUrl)\"}],\"justificativa_tecnica\":\"new URL interpreta a entrada segundo as regras reais de URL, enquanto a comparação por componentes impede esquemas diferentes, hosts não autorizados, portas explícitas e credenciais embutidas. A lista explícita de destinos continua sendo a fonte de autorização, e o valor efetivamente redirecionado é a URL normalizada após a validação. O tratamento de entradas inválidas mantém o status 406 e a mensagem de erro existentes.\",\"limitacoes_da_correcao\":\"A correção pressupõe que security.redirectAllowlist contenha URLs HTTPS completas e represente todos os destinos externos legítimos atuais. A chamada existente a security.isRedirectAllowed permanece como defesa adicional; sua implementação deve continuar restritiva. A validação de destino não substitui controles de autorização dos recursos acessados após o redirecionamento.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1905,
+  "tokens_saida": 928,
+  "latencia_s": 9.929,
+  "custo_usd": 0.00159,
+  "hash_prompt": "1f47e92af974418061000c162665a0973a61eec8fc7c6a3703a454e04cfd9d90",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1902
+}

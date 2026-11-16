@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Validação opcional e incompleta dos dados de registro de usuário (CWE-20). O middleware só executa a validação e a normalização quando email, password e passwordRepeat estão simultaneamente presentes; caso contrário, chama next() e permite que a requisição prossiga com campos ausentes.\",\"causa_da_vulnerabilidade\":\"A condição `if (req.body.email !== undefined && req.body.password !== undefined && req.body.passwordRepeat !== undefined)` transforma a presença conjunta dos três campos em um pré-requisito para toda a validação. Quando qualquer campo está ausente, nenhum erro é retornado e `next()` é chamado. Além disso, a validação existente apenas verifica se email e password não são vazios e não valida explicitamente a presença e o conteúdo de passwordRepeat antes da persistência.\",\"estrategia_de_correcao\":\"Tornar obrigatória a presença dos três campos antes de permitir o prosseguimento. Reutilizar a mensagem de erro existente para rejeitar campos ausentes ou vazios, preservando a normalização atual para entradas válidas e impedindo que `next()` seja executado após uma falha de validação.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.post('/api/Users', (req: Request, res: Response, next: NextFunction) => {\\n    if (req.body.email !== undefined && req.body.password !== undefined && req.body.passwordRepeat !== undefined) {\\n      if (req.body.email.length !== 0 && req.body.password.length !== 0) {\\n        req.body.email = req.body.email.trim()\\n        req.body.password = req.body.password.trim()\\n        req.body.passwordRepeat = req.body.passwordRepeat.trim()\\n      } else {\\n        res.status(400).send(res.__('Invalid email/password cannot be empty'))\\n      }\\n    }\\n    next()\\n  })\",\"trecho_corrigido\":\"  app.post('/api/Users', (req: Request, res: Response, next: NextFunction) => {\\n    if (req.body.email === undefined || req.body.password === undefined || req.body.passwordRepeat === undefined ||\\n      req.body.email.length === 0 || req.body.password.length === 0 || req.body.passwordRepeat.length === 0) {\\n      return res.status(400).send(res.__('Invalid email/password cannot be empty'))\\n    }\\n    req.body.email = req.body.email.trim()\\n    req.body.password = req.body.password.trim()\\n    req.body.passwordRepeat = req.body.passwordRepeat.trim()\\n    next()\\n  })\"}],\"justificativa_tecnica\":\"A correção rejeita requisições que não contenham todos os campos obrigatórios ou que contenham valores vazios antes de qualquer middleware posterior ou persistência. O `return` impede a execução de `next()` após o envio da resposta. Para entradas que satisfazem a validação existente, a normalização por `trim()` e o fluxo subsequente permanecem inalterados. Assim, a ausência de um campo deixa de ser interpretada como uma situação válida e não pode mais contornar essa etapa de validação.\",\"limitacoes_da_correcao\":\"A correção mantém a mensagem de erro existente e não adiciona validação de tipo, formato de email, limites de tamanho ou regras específicas de senha. Também não substitui a validação posterior de igualdade entre password e passwordRepeat, nem garante atomicidade ou validações de negócio realizadas por outros componentes. Se `req.body` ou os campos forem objetos ou outros tipos não string, o acesso a `length` ou `trim()` poderá exigir validação adicional em uma camada apropriada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2933,
+  "tokens_saida": 776,
+  "latencia_s": 8.585,
+  "custo_usd": 0.001664,
+  "hash_prompt": "1b4784df870368bca6a19e3b0c969f2bb9208e162ec3334baf185ca71c411a23",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2930
+}

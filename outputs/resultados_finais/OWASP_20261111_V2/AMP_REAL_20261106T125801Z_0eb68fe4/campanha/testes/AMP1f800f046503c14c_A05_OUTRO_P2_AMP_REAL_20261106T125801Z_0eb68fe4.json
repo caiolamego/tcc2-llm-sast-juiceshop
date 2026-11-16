@@ -1,0 +1,292 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 20.241465633996995,
+  "F_sem_separacao": true,
+  "F_marcador": true,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": null,
+  "tier_falha_marcador": null,
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 6.58,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_lc080rdr/chat_reviews/primeira.xml",
+        "test/api/tcc_coverage_chat_reviews.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 5.8,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ TCC chat tool and SSE contracts\n  ✔ returns exactly the matching persisted reviews through the tool round trip (119.109167ms)\n  ✔ returns an empty review list for an unknown numeric product (37.639084ms)\n  ✔ keeps reviews for a different product separate (29.949708ms)\n  ✔ normalizes a numeric string with leading zeroes before selecting reviews (26.221125ms)\n  ✔ keeps the product search tool functional (98.200709ms)\n  ✔ reports an unauthenticated order lookup through the tool (18.552125ms)\n  ✔ returns an owned order and rejects a different customer order (94.32375ms)\n  ✔ keeps normal coupon generation functional (16.768791ms)\n  ✔ finishes an SSE error response when the simulated provider fails (17.477667ms)\n✔ TCC chat tool and SSE contracts (1433.150792ms)\nℹ tests 9\nℹ suites 1\nℹ pass 9\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5427.916127\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 4.901150919002248,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/chat.ts"
+    ],
+    "grupos": [
+      "chat_reviews"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 6.58
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "chat_reviews",
+      "status": "executada",
+      "duracao_s": 5.8
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "chat_reviews"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 6.58
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "chat_reviews",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > finishes an SSE error response when the simulated provider fails",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > finishes an SSE error response when the simulated provider fails",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps normal coupon generation functional",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > keeps normal coupon generation functional",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps reviews for a different product separate",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > keeps reviews for a different product separate",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps the product search tool functional",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > keeps the product search tool functional",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > normalizes a numeric string with leading zeroes before selecting reviews",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > normalizes a numeric string with leading zeroes before selecting reviews",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > reports an unauthenticated order lookup through the tool",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > reports an unauthenticated order lookup through the tool",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an empty review list for an unknown numeric product",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > returns an empty review list for an unknown numeric product",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an owned order and rejects a different customer order",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > returns an owned order and rejects a different customer order",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns exactly the matching persisted reviews through the tool round trip",
+            "arquivo": "tests/functional/juice_shop/chat_reviews.test.ts",
+            "nome": "TCC chat tool and SSE contracts > returns exactly the matching persisted reviews through the tool round trip",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > finishes an SSE error response when the simulated provider fails",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps normal coupon generation functional",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps reviews for a different product separate",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps the product search tool functional",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > normalizes a numeric string with leading zeroes before selecting reviews",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > reports an unauthenticated order lookup through the tool",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an empty review list for an unknown numeric product",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an owned order and rejects a different customer order",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns exactly the matching persisted reviews through the tool round trip"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > finishes an SSE error response when the simulated provider fails",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps normal coupon generation functional",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps reviews for a different product separate",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps the product search tool functional",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > normalizes a numeric string with leading zeroes before selecting reviews",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > reports an unauthenticated order lookup through the tool",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an empty review list for an unknown numeric product",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an owned order and rejects a different customer order",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns exactly the matching persisted reviews through the tool round trip"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > finishes an SSE error response when the simulated provider fails",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps normal coupon generation functional",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps reviews for a different product separate",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps the product search tool functional",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > normalizes a numeric string with leading zeroes before selecting reviews",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > reports an unauthenticated order lookup through the tool",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an empty review list for an unknown numeric product",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an owned order and rejects a different customer order",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns exactly the matching persisted reviews through the tool round trip"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns exactly the matching persisted reviews through the tool round trip",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an empty review list for an unknown numeric product",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps reviews for a different product separate",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > normalizes a numeric string with leading zeroes before selecting reviews",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps the product search tool functional",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > reports an unauthenticated order lookup through the tool",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > returns an owned order and rejects a different customer order",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > keeps normal coupon generation functional",
+          "tests/functional/juice_shop/chat_reviews.test.ts :: TCC chat tool and SSE contracts > finishes an SSE error response when the simulated provider fails"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 5.8,
+        "espera_api_s": 4.901150919002248,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_lc080rdr/chat_reviews/primeira.xml",
+            "test/api/tcc_coverage_chat_reviews.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 5.8,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ TCC chat tool and SSE contracts\n  ✔ returns exactly the matching persisted reviews through the tool round trip (119.109167ms)\n  ✔ returns an empty review list for an unknown numeric product (37.639084ms)\n  ✔ keeps reviews for a different product separate (29.949708ms)\n  ✔ normalizes a numeric string with leading zeroes before selecting reviews (26.221125ms)\n  ✔ keeps the product search tool functional (98.200709ms)\n  ✔ reports an unauthenticated order lookup through the tool (18.552125ms)\n  ✔ returns an owned order and rejects a different customer order (94.32375ms)\n  ✔ keeps normal coupon generation functional (16.768791ms)\n  ✔ finishes an SSE error response when the simulated provider fails (17.477667ms)\n✔ TCC chat tool and SSE contracts (1433.150792ms)\nℹ tests 9\nℹ suites 1\nℹ pass 9\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5427.916127\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC chat tool and SSE contracts\" time=\"1.433151\" disabled=\"0\" errors=\"0\" tests=\"9\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"returns exactly the matching persisted reviews through the tool round trip\" time=\"0.119109\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t\t<testcase name=\"returns an empty review list for an unknown numeric product\" time=\"0.037639\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t\t<testcase name=\"keeps reviews for a different product separate\" time=\"0.029950\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t\t<testcase name=\"normalizes a numeric string with leading zeroes before selecting reviews\" time=\"0.026221\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t\t<testcase name=\"keeps the product search tool functional\" time=\"0.098201\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t\t<testcase name=\"reports an unauthenticated order lookup through the tool\" time=\"0.018552\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t\t<testcase name=\"returns an owned order and rejects a different customer order\" time=\"0.094324\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t\t<testcase name=\"keeps normal coupon generation functional\" time=\"0.016769\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t\t<testcase name=\"finishes an SSE error response when the simulated provider fails\" time=\"0.017478\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_chat_reviews.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 9 -->\n\t<!-- suites 1 -->\n\t<!-- pass 9 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5427.916127 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A elegibilidade para descontos de campanha depende de uma data fornecida pelo cliente, permitindo que a validade temporal da campanha seja falsificada.\",\n  \"causa_da_vulnerabilidade\": \"O código decodifica `req.body.couponData` e compara a data declarada pelo cliente (`couponDate`) com `campaign.validOn`. Essa comparação verifica apenas se o cliente enviou a data esperada, não se a campanha está válida segundo o relógio confiável do servidor.\",\n  \"estrategia_de_correcao\": \"Manter a validação do código da campanha e exigir também que a data atual do servidor corresponda à data de validade configurada. Assim, a data enviada pelo cliente deixa de ser suficiente para conceder o desconto.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"    if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq\",\n      \"trecho_corrigido\": \"    if (campaign && couponDate == campaign.validOn && new Date().getTime() === campaign.validOn) { // eslint-disable-line eqeqeq\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A condição adicional usa o relógio do servidor para decidir se a campanha está válida. Um cliente não pode obter o desconto apenas enviando a data histórica correta no corpo da requisição; a campanha só é elegível quando a data atual do servidor coincide com a data configurada. A alteração é localizada e preserva o formato da resposta e o restante do fluxo.\",\n  \"limitacoes_da_correcao\": \"A regra existente define campanhas válidas em um instante específico, e a correção preserva essa semântica, exigindo igualdade exata com o timestamp configurado. Se a intenção de negócio for permitir a campanha durante um dia ou intervalo, será necessário definir explicitamente esse período e comparar o relógio do servidor com seus limites. A comparação existente com `couponDate` permanece para compatibilidade, mas não é mais suficiente para autorizar o desconto.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3805,
+  "tokens_saida": 443,
+  "latencia_s": 6.289,
+  "custo_usd": 0.000697,
+  "hash_prompt": "d4dbcf1d62c6aaac05cfd71c754b5d49538116f43a00de9d8e84b0bbb98d07cb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3802
+}

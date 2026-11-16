@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Mass assignment nos endpoints gerados pelo Finale: os recursos são criados com escrita habilitada por padrão e podem aceitar atributos enviados pelo cliente sem uma lista explícita de campos graváveis. Isso pode permitir a alteração de propriedades sensíveis dos modelos.\",\n  \"causa_da_vulnerabilidade\": \"O laço cria recursos Finale para todos os modelos usando `finale.resource` com `excludeAttributes` vazio para quase todos e sem restringir operações de escrita. Assim, os endpoints gerados podem vincular atributos da requisição diretamente aos modelos. O trecho fornecido não mostra os esquemas completos nem as regras de autorização desses recursos, portanto não permite confirmar quais campos sensíveis são efetivamente exploráveis.\",\n  \"estrategia_de_correcao\": \"Desabilitar as operações de escrita dos recursos gerados pelo Finale, mantendo os endpoints de leitura e as rotas de escrita explícitas já definidas no código. Isso evita que os endpoints automáticos aceitem atributos arbitrários sem uma auditoria de campos permitidos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include\\n    })\",\n      \"trecho_corrigido\": \"    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include,\\n      actions: ['list', 'read']\\n    })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A opção `actions` limita as operações expostas pelo recurso Finale às operações de listagem e leitura. Com isso, os endpoints gerados deixam de criar ou atualizar registros a partir de atributos controlados pelo cliente, mitigando a superfície de mass assignment. As rotas explícitas existentes permanecem inalteradas.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que a versão instalada do Finale aceita `actions` como configuração de recurso e que `list` e `read` são os nomes válidos para essas operações; isso deve ser confirmado na documentação e validado por testes. Ela também desabilita criação e atualização automáticas para todos os modelos deste laço, o que pode afetar funcionalidades que dependam delas. As rotas explícitas de escrita não são auditadas por este trecho e ainda precisam de autorização e validação de campos permitidos. O alerta estático, isoladamente, não comprova que um campo sensível seja explorável.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2983,
+  "tokens_saida": 586,
+  "latencia_s": 6.322,
+  "custo_usd": 0.000666,
+  "hash_prompt": "de16e0f2e75a549541117dc8d228993eb30146cbc1cd2692be1d25f8fdc19da4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2980
+}

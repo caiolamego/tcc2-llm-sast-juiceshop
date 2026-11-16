@@ -1,0 +1,455 @@
+{
+  "passou": false,
+  "tier_falha": "T2",
+  "duracao_s": 15.801227548996394,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2",
+  "tier_falha_marcador": "T2",
+  "tier_falha_criterio": "T2",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+  ],
+  "testes_falhos_f_criterio": [
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 6.24,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_hzecc061/video/primeira.xml",
+        "test/api/promotion-video.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 3.47,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /promotion\n  ✔ GET promotion video page is publicly accessible (240.947751ms)\n  ✔ GET promotion video page contains embedded video (38.279958ms)\n  ✔ GET promotion video page contains subtitles as <script> (25.842583ms)\n✔ /promotion (786.891542ms)\n▶ /video\n  ✔ GET promotion video is publicly accessible (23.884ms)\n✔ /video (24.164458ms)\nℹ tests 4\nℹ suites 2\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3206.477085\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 4.084002284798771e-06,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_hzecc061/video_parser/primeira.xml",
+        "test/server/tcc_coverage_video_subtitles.unit.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 2.54,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+      ],
+      "testes_falhos_novos": [
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+        "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "al/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: promotionVideo-inline.js:12\n    var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                    ^\n    \n    TypeError: Cannot read properties of undefined (reading 'trim')\n        at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n        at init (promotionVideo-inline.js:55:1)\n        at promotionVideo-inline.js:59:1\n        at Script.runInContext (node:vm:149:12)\n        at Script.runInNewContext (node:vm:154:17)\n        at Object.runInNewContext (node:vm:310:38)\n        at render (test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n        at <anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:59:25)\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:3954\n✖ rejects an ambiguous cue with more than one arrow separator (7.406791ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:63:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: promotionVideo-inline.js:12\n    var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                    ^\n    \n    TypeError: Cannot read properties of undefined (reading 'trim')\n        at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n        at init (promotionVideo-inline.js:55:1)\n        at promotionVideo-inline.js:59:1\n        at Script.runInContext (node:vm:149:12)\n        at Script.runInNewContext (node:vm:154:17)\n        at Object.runInNewContext (node:vm:310:38)\n        at render (test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n        at <anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:63:25)\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:4185\n✖ creates no cues for empty subtitle data (12.012083ms)\n  promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:67:18)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 2.0000006770715117e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+    "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "views/promotionVideo.pug"
+    ],
+    "grupos": [
+      "video",
+      "video_parser"
+    ],
+    "dominios": [
+      "api",
+      "servidor"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 6.24
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "video",
+      "status": "executada",
+      "duracao_s": 3.47
+    },
+    {
+      "tier": "T2",
+      "grupo": "video_parser",
+      "status": "executada",
+      "duracao_s": 2.54
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api",
+      "servidor"
+    ],
+    "grupos_selecionados": [
+      "video",
+      "video_parser"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 6.24
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "video",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video",
+            "arquivo": "test/api/promotion-video.test.ts",
+            "nome": "/promotion > GET promotion video page contains embedded video",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains subtitles as <script>",
+            "arquivo": "test/api/promotion-video.test.ts",
+            "nome": "/promotion > GET promotion video page contains subtitles as <script>",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/promotion-video.test.ts :: /promotion > GET promotion video page is publicly accessible",
+            "arquivo": "test/api/promotion-video.test.ts",
+            "nome": "/promotion > GET promotion video page is publicly accessible",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/promotion-video.test.ts :: /video > GET promotion video is publicly accessible",
+            "arquivo": "test/api/promotion-video.test.ts",
+            "nome": "/video > GET promotion video is publicly accessible",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains subtitles as <script>",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page is publicly accessible",
+          "test/api/promotion-video.test.ts :: /video > GET promotion video is publicly accessible"
+        ],
+        "esperados": [
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains subtitles as <script>",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page is publicly accessible",
+          "test/api/promotion-video.test.ts :: /video > GET promotion video is publicly accessible"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains subtitles as <script>",
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page is publicly accessible",
+          "test/api/promotion-video.test.ts :: /video > GET promotion video is publicly accessible"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/promotion-video.test.ts :: /promotion > GET promotion video page contains embedded video"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 3.47,
+        "espera_api_s": 4.084002284798771e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_hzecc061/video/primeira.xml",
+            "test/api/promotion-video.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 3.47,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /promotion\n  ✔ GET promotion video page is publicly accessible (240.947751ms)\n  ✔ GET promotion video page contains embedded video (38.279958ms)\n  ✔ GET promotion video page contains subtitles as <script> (25.842583ms)\n✔ /promotion (786.891542ms)\n▶ /video\n  ✔ GET promotion video is publicly accessible (23.884ms)\n✔ /video (24.164458ms)\nℹ tests 4\nℹ suites 2\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3206.477085\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/promotion\" time=\"0.786892\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET promotion video page is publicly accessible\" time=\"0.240948\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/promotion-video.test.ts\"/>\n\t\t<testcase name=\"GET promotion video page contains embedded video\" time=\"0.038280\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/promotion-video.test.ts\"/>\n\t\t<testcase name=\"GET promotion video page contains subtitles as &lt;script>\" time=\"0.025843\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/promotion-video.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/video\" time=\"0.024164\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET promotion video is publicly accessible\" time=\"0.023884\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/promotion-video.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 4 -->\n\t<!-- suites 2 -->\n\t<!-- pass 4 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 3206.477085 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "video_parser",
+        "dominio": "servidor",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track",
+            "arquivo": "tests/functional/juice_shop/video_subtitles.unit.test.ts",
+            "nome": "TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track",
+            "estado": "falhou"
+          }
+        ],
+        "falhos": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "falhos_novos": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "falhos_novos_observados": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > converts hours and minutes when parsing timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > creates no cues for empty subtitle data",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > preserves multiline SRT content and comma timestamps",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects an ambiguous cue with more than one arrow separator",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > rejects invalid timestamps instead of constructing misleading cues",
+          "tests/functional/juice_shop/video_subtitles.unit.test.ts :: TCC rendered subtitle parser contracts > renders the real template and adds two timed cues to the visible subtitle track"
+        ],
+        "obrigatorios_aprovados": [],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 2.54,
+        "espera_api_s": 2.0000006770715117e-06,
+        "resultado": {
+          "tier": "T2",
+          "comando": [
+            "node",
+            "--import",
+            "./test/server/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_hzecc061/video_parser/primeira.xml",
+            "test/server/tcc_coverage_video_subtitles.unit.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 2.54,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "al/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: promotionVideo-inline.js:12\n    var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                    ^\n    \n    TypeError: Cannot read properties of undefined (reading 'trim')\n        at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n        at init (promotionVideo-inline.js:55:1)\n        at promotionVideo-inline.js:59:1\n        at Script.runInContext (node:vm:149:12)\n        at Script.runInNewContext (node:vm:154:17)\n        at Object.runInNewContext (node:vm:310:38)\n        at render (test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n        at <anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:59:25)\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:3954\n✖ rejects an ambiguous cue with more than one arrow separator (7.406791ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:63:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: promotionVideo-inline.js:12\n    var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                    ^\n    \n    TypeError: Cannot read properties of undefined (reading 'trim')\n        at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n        at init (promotionVideo-inline.js:55:1)\n        at promotionVideo-inline.js:59:1\n        at Script.runInContext (node:vm:149:12)\n        at Script.runInNewContext (node:vm:154:17)\n        at Object.runInNewContext (node:vm:310:38)\n        at render (test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n        at <anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:63:25)\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test/server/tcc_coverage_video_subtitles.unit.test.ts:2:4185\n✖ creates no cues for empty subtitle data (12.012083ms)\n  promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.<anonymous> (test/server/tcc_coverage_video_subtitles.unit.test.ts:67:18)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC rendered subtitle parser contracts\" time=\"0.160573\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"6\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"renders the real template and adds two timed cues to the visible subtitle track\" time=\"0.096291\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'trim')\">\nError [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'trim')\n    at new Promise (&lt;anonymous>)\n    at Array.map (&lt;anonymous>) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:37:20)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"preserves multiline SRT content and comma timestamps\" time=\"0.019173\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'trim')\">\nError [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'trim')\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:45:22)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"converts hours and minutes when parsing timestamps\" time=\"0.012904\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'trim')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'trim')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:53:25)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects invalid timestamps instead of constructing misleading cues\" time=\"0.011124\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"The validation function is expected to return &amp;quot;true&amp;quot;. Received false&#10;&#10;Caught error:&#10;&#10;TypeError: Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The validation function is expected to return &amp;quot;true&amp;quot;. Received false&#10;&#10;Caught error:&#10;&#10;TypeError: Cannot read properties of undefined (reading 'trim')\">\n[Error [ERR_TEST_FAILURE]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot read properties of undefined (reading 'trim')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:59:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: promotionVideo-inline.js:12\n    var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                    ^\n    \n    TypeError: Cannot read properties of undefined (reading 'trim')\n        at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n        at init (promotionVideo-inline.js:55:1)\n        at promotionVideo-inline.js:59:1\n        at Script.runInContext (node:vm:149:12)\n        at Script.runInNewContext (node:vm:154:17)\n        at Object.runInNewContext (node:vm:310:38)\n        at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n        at &lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:59:25)\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24),\n    operator: 'throws',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects an ambiguous cue with more than one arrow separator\" time=\"0.007407\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"The validation function is expected to return &amp;quot;true&amp;quot;. Received false&#10;&#10;Caught error:&#10;&#10;TypeError: Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The validation function is expected to return &amp;quot;true&amp;quot;. Received false&#10;&#10;Caught error:&#10;&#10;TypeError: Cannot read properties of undefined (reading 'trim')\">\n[Error [ERR_TEST_FAILURE]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot read properties of undefined (reading 'trim')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:63:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: promotionVideo-inline.js:12\n    var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                    ^\n    \n    TypeError: Cannot read properties of undefined (reading 'trim')\n        at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n        at init (promotionVideo-inline.js:55:1)\n        at promotionVideo-inline.js:59:1\n        at Script.runInContext (node:vm:149:12)\n        at Script.runInNewContext (node:vm:154:17)\n        at Object.runInNewContext (node:vm:310:38)\n        at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n        at &lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:63:25)\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24),\n    operator: 'throws',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"creates no cues for empty subtitle data\" time=\"0.012012\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'trim')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'trim')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:67:18)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 6 -->\n\t<!-- suites 1 -->\n\t<!-- pass 0 -->\n\t<!-- fail 6 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1028.426542 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC rendered subtitle parser contracts\" time=\"0.169957\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"6\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"renders the real template and adds two timed cues to the visible subtitle track\" time=\"0.104065\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'trim')\">\nError [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'trim')\n    at new Promise (&lt;anonymous>)\n    at Array.map (&lt;anonymous>) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:37:20)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"preserves multiline SRT content and comma timestamps\" time=\"0.019336\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'trim')\">\nError [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'trim')\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:45:22)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"converts hours and minutes when parsing timestamps\" time=\"0.015101\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'trim')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'trim')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:53:25)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects invalid timestamps instead of constructing misleading cues\" time=\"0.009913\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"The validation function is expected to return &amp;quot;true&amp;quot;. Received false&#10;&#10;Caught error:&#10;&#10;TypeError: Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The validation function is expected to return &amp;quot;true&amp;quot;. Received false&#10;&#10;Caught error:&#10;&#10;TypeError: Cannot read properties of undefined (reading 'trim')\">\n[Error [ERR_TEST_FAILURE]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot read properties of undefined (reading 'trim')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:59:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: promotionVideo-inline.js:12\n    var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                    ^\n    \n    TypeError: Cannot read properties of undefined (reading 'trim')\n        at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n        at init (promotionVideo-inline.js:55:1)\n        at promotionVideo-inline.js:59:1\n        at Script.runInContext (node:vm:149:12)\n        at Script.runInNewContext (node:vm:154:17)\n        at Object.runInNewContext (node:vm:310:38)\n        at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n        at &lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:59:25)\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24),\n    operator: 'throws',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects an ambiguous cue with more than one arrow separator\" time=\"0.007436\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"The validation function is expected to return &amp;quot;true&amp;quot;. Received false&#10;&#10;Caught error:&#10;&#10;TypeError: Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The validation function is expected to return &amp;quot;true&amp;quot;. Received false&#10;&#10;Caught error:&#10;&#10;TypeError: Cannot read properties of undefined (reading 'trim')\">\n[Error [ERR_TEST_FAILURE]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot read properties of undefined (reading 'trim')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:63:12)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: promotionVideo-inline.js:12\n    var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                    ^\n    \n    TypeError: Cannot read properties of undefined (reading 'trim')\n        at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n        at init (promotionVideo-inline.js:55:1)\n        at promotionVideo-inline.js:59:1\n        at Script.runInContext (node:vm:149:12)\n        at Script.runInNewContext (node:vm:154:17)\n        at Object.runInNewContext (node:vm:310:38)\n        at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n        at &lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:63:25)\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24),\n    operator: 'throws',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"creates no cues for empty subtitle data\" time=\"0.012235\" classname=\"test\" file=\"/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts\" failure=\"Cannot read properties of undefined (reading 'trim')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'trim')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'trim')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: promotionVideo-inline.js:12\n  var lines = vtt.trim().replace('\\\\r\\n', '\\n').split(/[\\r\\n]/).map(function(line) {\n                  ^\n  \n  TypeError: Cannot read properties of undefined (reading 'trim')\n      at quick_and_dirty_vtt_or_srt_parser (promotionVideo-inline.js:12:17)\n      at init (promotionVideo-inline.js:55:1)\n      at promotionVideo-inline.js:59:1\n      at Script.runInContext (node:vm:149:12)\n      at Script.runInNewContext (node:vm:154:17)\n      at Object.runInNewContext (node:vm:310:38)\n      at render (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:31:6)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/server/tcc_coverage_video_subtitles.unit.test.ts:67:18)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 6 -->\n\t<!-- suites 1 -->\n\t<!-- pass 0 -->\n\t<!-- fail 6 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1029.544292 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

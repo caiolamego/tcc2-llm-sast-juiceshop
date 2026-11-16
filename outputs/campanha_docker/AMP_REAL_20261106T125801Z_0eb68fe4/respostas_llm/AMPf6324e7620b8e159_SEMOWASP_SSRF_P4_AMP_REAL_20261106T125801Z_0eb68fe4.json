@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Server-Side Request Forgery (SSRF), pois a URL controlada pelo usuário é passada diretamente para fetch.\",\"causa_da_vulnerabilidade\":\"O valor req.body.imageUrl é atribuído a url e usado em fetch(url) sem validação de esquema, host, endereço IP ou redirecionamentos. Assim, o servidor pode realizar requisições para destinos internos, metadados de nuvem ou outros esquemas potencialmente perigosos.\",\"estrategia_de_correcao\":\"Validar a URL com o construtor URL, permitir somente HTTP e HTTPS, bloquear hosts que sejam endereços IPv4 ou IPv6 privados, loopback, link-local, multicast, não especificados ou reservados, e desabilitar redirecionamentos automáticos. URLs inválidas ou destinos internos seguem o tratamento de erro existente.\",\"edicoes\":[{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"          const response = await fetch(url)\\n          if (!response.ok || !response.body) {\",\"trecho_corrigido\":\"          const parsedUrl = new URL(url)\\n          if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {\\n            throw new Error('url returned a non-OK status code or an empty body')\\n          }\\n          const hostname = parsedUrl.hostname\\n          const isPrivateIpv4 = /^(0|10|127|169\\\\.254|192\\\\.168|224-255)(\\\\.|$)/.test(hostname) || /^172\\\\.(1[6-9]|2[0-9]|3[0-1])\\\\./.test(hostname)\\n          const isPrivateIpv6 = hostname === '::1' || hostname === '0:0:0:0:0:0:0:1' || hostname.startsWith('fc') || hostname.startsWith('fd') || hostname.startsWith('fe8') || hostname.startsWith('fe9') || hostname.startsWith('fea') || hostname.startsWith('feb')\\n          if (isPrivateIpv4 || isPrivateIpv6) {\\n            throw new Error('url returned a non-OK status code or an empty body')\\n          }\\n          const response = await fetch(url, { redirect: 'error' })\\n          if (!response.ok || !response.body) {\"}],\"justificativa_tecnica\":\"A validação impede esquemas como file:, ftp: e data:, bloqueia os principais intervalos IPv4 e IPv6 internos ou reservados e faz fetch sem seguir redirecionamentos, evitando que um destino inicialmente permitido redirecione para a rede interna. O uso de new URL também rejeita URLs malformadas antes da requisição. O tratamento de erro já existente é preservado, incluindo o fallback para armazenar a URL diretamente.\",\"limitacoes_da_correcao\":\"A validação textual de hostname não resolve DNS nem verifica todos os registros A/AAAA; portanto, não elimina completamente riscos de DNS rebinding ou domínios públicos que resolvam para endereços internos. Também não substitui controles de egress no firewall. Para proteção completa, a conexão deve ser feita após resolução controlada para IP validado, mantendo o hostname para TLS, e todos os endereços resolvidos devem ser verificados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2132,
+  "tokens_saida": 697,
+  "latencia_s": 8.29,
+  "custo_usd": 0.001369,
+  "hash_prompt": "5ddd36c78a0cb18142d7ceec365b7e627f259a197a24970f6600bb0ee21fd069",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2129
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição não autenticada do endpoint /metrics, que pode revelar métricas operacionais e informações sensíveis da aplicação.\",\"causa_da_vulnerabilidade\":\"A rota /metrics é registrada sem middleware de autenticação ou autorização: app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())). Além disso, o trecho mostrado contém uma segunda declaração da mesma rota, também sem proteção.\",\"estrategia_de_correcao\":\"Proteger ambas as declarações da rota /metrics com o middleware de autorização já utilizado pela aplicação, preservando o handler, o caminho e o comportamento funcional para usuários autorizados.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* Serve metrics before the Angular catch-all so the route is reachable in all environments */\\n  app.get('/metrics', utils.asyncHandler(metrics.serveMetrics()))\",\"trecho_corrigido\":\"  /* Serve metrics before the Angular catch-all so the route is reachable in all environments */\\n  app.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics()))\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\",\"trecho_corrigido\":\"/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\"}],\"justificativa_tecnica\":\"Sem autenticação, qualquer cliente que alcance o servidor pode consultar métricas. Essas métricas podem incluir contadores, nomes de rotas, erros, identificadores operacionais ou outros dados úteis para reconhecimento e exploração. O middleware security.isAuthorized() restringe o acesso a usuários autenticados, e a alteração é mínima, mantendo o mesmo handler e a mesma resposta para clientes autorizados. As duas declarações foram corrigidas porque ambas registram a rota no código fornecido.\",\"limitacoes_da_correcao\":\"A eficácia depende da implementação correta de security.isAuthorized() e da configuração adequada da autenticação. A correção não remove a duplicidade de registro da rota nem altera o conteúdo das métricas; apenas restringe seu acesso. Caso o endpoint deva ser consumido por um coletor interno sem sessão de usuário, será necessário substituir o middleware por uma autorização específica para esse coletor.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1971,
+  "tokens_saida": 544,
+  "latencia_s": 7.264,
+  "custo_usd": 0.001145,
+  "hash_prompt": "6e14ba20c02818a8c680455dfa48156f05b03ee9b21c1113418d8d7dc73431a5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1968
+}

@@ -1,0 +1,13 @@
+diff --git a/routes/quarantineServer.ts b/routes/quarantineServer.ts
+index e7a2e841f..7428afe48 100644
+--- a/routes/quarantineServer.ts
++++ b/routes/quarantineServer.ts
+@@ -10,7 +10,7 @@ export function serveQuarantineFiles () {
+   return ({ params, query }: Request, res: Response, next: NextFunction) => {
+     const file = params.file
+ 
+-    if (!file.includes('/')) {
++    if (!file.includes('/') && !file.includes('..')) {
+       res.sendFile(path.resolve('ftp/quarantine/', file))
+     } else {
+       res.status(403)

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"CWE-73: controle externo do caminho de arquivo, com risco de traversal e leitura de arquivos fora do diretório público por meio de res.sendFile.\",\n  \"causa_da_vulnerabilidade\": \"O nome fornecido pelo usuário é validado parcialmente e passado a path.resolve('ftp/', file), mas não há garantia explícita de que o caminho resultante permaneça dentro da raiz ftp. A validação de extensão e a rejeição de barras não substituem o confinamento do caminho.\",\n  \"estrategia_de_correcao\": \"Definir a raiz ftp como caminho absoluto e passá-la como opção root de res.sendFile, fornecendo o nome relativo do arquivo. O Express então valida que o arquivo solicitado permanece dentro dessa raiz. Manter as validações, a rota e o tratamento de erro existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/fileServer.ts\",\n      \"trecho_original\": \"      res.sendFile(path.resolve('ftp/', file))\",\n      \"trecho_corrigido\": \"      res.sendFile(file, { root: path.resolve('ftp/') })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A opção root de res.sendFile confina a resolução do nome relativo à raiz absoluta especificada e rejeita caminhos que escapem dela. A alteração preserva a raiz servida e as verificações existentes de tipos de arquivo e nomes, sem depender apenas de path.resolve com entrada controlada pelo usuário.\",\n  \"limitacoes_da_correcao\": \"O confinamento não substitui autorização por arquivo. Links simbólicos existentes dentro de ftp podem exigir validação adicional com fs.realpath e comparação do caminho real. Também é recomendável testar nomes válidos, tentativas de traversal e arquivos inexistentes.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2149,
+  "tokens_saida": 383,
+  "latencia_s": 4.345,
+  "custo_usd": 0.00046,
+  "hash_prompt": "91b7d228d949f84f344cb8cf361a94c2959cc18d374df2920e8cdbc008aa604e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2146
+}

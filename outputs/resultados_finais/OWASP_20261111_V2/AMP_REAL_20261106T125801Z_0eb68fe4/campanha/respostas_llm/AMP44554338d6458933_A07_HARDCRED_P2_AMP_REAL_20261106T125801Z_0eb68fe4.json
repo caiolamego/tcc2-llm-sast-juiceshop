@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Credenciais e dados sensíveis hardcoded em arquivo estático versionável, incluindo senhas em texto claro, respostas de perguntas de segurança, segredo TOTP, números de cartão e privilégios administrativos.\",\"causa_da_vulnerabilidade\":\"O arquivo contém diretamente valores de autenticação e autorização no formato YAML, sem hash, criptografia ou separação de segredos. Como o arquivo é um recurso estático da aplicação, ele pode ser exposto por acesso ao repositório, backups, logs, empacotamento ou configuração incorreta do servidor.\",\"estrategia_de_correcao\":\"Remover os valores sensíveis do arquivo e substituir as credenciais por referências a variáveis de ambiente ou a um gerenciador de segredos. Como o trecho fornecido não mostra o mecanismo de carregamento nem permite preservar o comportamento sem alterar outros arquivos, a correção mínima segura é invalidar imediatamente as credenciais expostas e remover os dados de pagamento e o segredo TOTP do arquivo. As credenciais reais devem ser recriadas fora do código, com senhas armazenadas usando hash apropriado e segredos rotacionados.\",\"edicoes\":[{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  email: ciso\\n  password: 'mDLx?94T~1CfVfZMzw@sJ9f?s3L6lbMqE70FfI8^54jbNikY5fymx7c!YbJb'\\n  key: ciso\\n  role: 'deluxe'\",\"trecho_corrigido\":\"  email: ciso\\n  password: '${CISO_PASSWORD}'\\n  key: ciso\\n  role: 'deluxe'\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  email: support\\n  password: 'J6aVjTgOpRs@?5l!Zkq2AYnCE@RF$P'\\n  key: support\\n  role: 'admin'\",\"trecho_corrigido\":\"  email: support\\n  password: '${SUPPORT_PASSWORD}'\\n  key: support\\n  role: 'admin'\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  email: wurstbrot\\n  username: wurstbrot\\n  password: 'EinBelegtesBrotMitSchinkenSCHINKEN!'\\n  totpSecret: IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH\\n  key: timo\\n  role: 'admin'\",\"trecho_corrigido\":\"  email: wurstbrot\\n  username: wurstbrot\\n  password: '${WURSTBROT_PASSWORD}'\\n  totpSecret: '${WURSTBROT_TOTP_SECRET}'\\n  key: timo\\n  role: 'admin'\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  email: bjoern\\n  password: 'monkey summer birthday are all bad passwords but work just fine in a long passphrase'\\n  key: bjoern\\n  profileImage: '12.png'\\n  role: 'admin'\\n  isAdmin: true\",\"trecho_corrigido\":\"  email: bjoern\\n  password: '${BJOERN_PASSWORD}'\\n  key: bjoern\\n  profileImage: '12.png'\\n  role: 'admin'\\n  isAdmin: true\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  email: bjoern@owasp.org\\n  password: 'kitten lesser pooch karate buffoon indoors'\\n  customDomain: true\\n  key: bjoernOwasp\\n  role: 'deluxe'\",\"trecho_corrigido\":\"  email: bjoern@owasp.org\\n  password: '${BJOERN_OWASP_PASSWORD}'\\n  customDomain: true\\n  key: bjoernOwasp\\n  role: 'deluxe'\"},{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  email: accountant\\n  password: 'i am an awesome accountant'\\n  key: accountant\\n  role: 'accounting'\",\"trecho_corrigido\":\"  email: accountant\\n  password: '${ACCOUNTANT_PASSWORD}'\\n  key: accountant\\n  role: 'accounting'\"}],\"justificativa_tecnica\":\"Os valores literais deixam as credenciais recuperáveis por qualquer pessoa com acesso ao arquivo e permitem autenticação como usuários privilegiados. As referências não contêm o segredo no código-fonte e permitem fornecê-lo por infraestrutura protegida. A rotação imediata dos valores expostos é obrigatória, pois substituir o texto no arquivo não invalida cópias já comprometidas. O segredo TOTP também deve ser rotacionado; números de cartão devem ser removidos e tratados por um provedor de pagamentos compatível com PCI DSS.\",\"limitacoes_da_correcao\":\"O trecho fornecido não mostra como o YAML é interpretado; portanto, a interpolação '${...}' só funcionará se o carregador já suportar variáveis de ambiente. Além disso, não é possível corrigir neste único arquivo o armazenamento em texto claro caso o sistema espere senhas literais: o código de autenticação deve aceitar hashes e as credenciais devem ser recriadas. É necessário remover os segredos do histórico do repositório, revogar/rotacionar todas as credenciais, invalidar cartões expostos e verificar logs, backups e artefatos publicados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1691,
+  "tokens_saida": 1160,
+  "latencia_s": 10.539,
+  "custo_usd": 0.001815,
+  "hash_prompt": "62e59b8d075bec8f986ad9e998dd5c30dab4723b58297715bcd8321520ea9571",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1688
+}

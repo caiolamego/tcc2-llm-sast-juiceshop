@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para conteúdo potencialmente não confiável, permitindo Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O método bypassSecurityTrustHtml desativa a sanitização padrão do Angular, permitindo que conteúdo HTML potencialmente malicioso seja inserido diretamente no DOM, o que pode ser explorado para injetar scripts maliciosos.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e confiar na sanitização padrão do Angular ao usar [innerHTML]. Para preservar a formatação legítima, construir o conteúdo HTML de forma segura sem desabilitar a sanitização, evitando assim a execução de código malicioso.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\"trecho_corrigido\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\"}],\"justificativa_tecnica\":\"O Angular já aplica sanitização automática ao usar bindings como [innerHTML], removendo scripts e elementos perigosos. O uso de bypassSecurityTrustHtml desativa essa proteção, expondo a aplicação a XSS. Removendo o bypass, o Angular sanitiza o conteúdo dinamicamente, prevenindo a execução de código malicioso, mantendo a formatação necessária.\",\"limitacoes_da_correcao\":\"Se o conteúdo original contiver HTML legítimo que precise ser exibido, a sanitização padrão pode remover algumas tags consideradas inseguras, o que pode alterar a apresentação. Para casos que exigem HTML complexo, uma sanitização customizada com bibliotecas como DOMPurify pode ser necessária, mas isso está fora do escopo da correção mínima requerida.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2846,
+  "tokens_saida": 473,
+  "latencia_s": 5.126,
+  "custo_usd": 0.001895,
+  "hash_prompt": "8eeb0962fcb7ab4cc45d031e3bdfda0747f5797b573c8080522bfa9a9ccd88c8",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

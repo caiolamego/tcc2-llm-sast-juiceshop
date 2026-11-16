@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Bypass da allowlist de redirecionamento (open redirect).\",\n  \"causa_da_vulnerabilidade\": \"isRedirectAllowed verifica se a URL contém uma URL permitida usando includes(). Uma URL controlada pelo atacante pode incluir uma entrada permitida como parte de outro endereço, por exemplo, https://site-malicioso.example/https://github.com/juice-shop/juice-shop, e ser aceita.\",\n  \"estrategia_de_correcao\": \"Analisar a URL recebida e cada entrada da allowlist, comparando a URL normalizada por igualdade exata. Rejeitar URLs inválidas e preservar o comportamento de retornar false quando nenhuma entrada corresponder.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\n      \"trecho_corrigido\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  try {\\n    const parsedUrl = new URL(url)\\n    for (const allowedUrl of redirectAllowlist) {\\n      allowed = allowed || parsedUrl.href === new URL(allowedUrl).href // vuln-code-snippet vuln-line redirectChallenge\\n    }\\n  } catch {\\n    return false\\n  }\\n  return allowed\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação por igualdade da URL absoluta normalizada impede que uma URL externa seja aceita apenas por conter uma URL permitida em seu caminho, query ou fragmento. O tratamento de erro também garante que entradas malformadas não sejam autorizadas. URLs que correspondem exatamente às entradas da allowlist continuam permitidas.\",\n  \"limitacoes_da_correcao\": \"A correção mantém a allowlist e seus esquemas existentes; não altera quais destinos são confiáveis. A validação pressupõe que o consumidor use o valor validado como destino do redirecionamento, sem transformá-lo posteriormente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2976,
+  "tokens_saida": 478,
+  "latencia_s": 5.594,
+  "custo_usd": 0.000269,
+  "hash_prompt": "d9b2667621b932eff352d540dfa69a81eb837278f748fb86a7c0552f14fdb17c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2973,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de DomSanitizer.bypassSecurityTrustHtml() com dados derivados do JWT, permitindo que conteúdo controlado pelo atacante seja tratado como HTML confiável.\",\"causa_da_vulnerabilidade\":\"O teste configura bypassSecurityTrustHtml para aceitar diretamente uma string construída a partir de lastLoginIp. Embora o arquivo fornecido seja um teste, essa construção valida e perpetua um padrão inseguro: bypassSecurityTrustHtml desativa a sanitização do Angular e qualquer valor controlado pelo usuário inserido no HTML pode conter marcação ou JavaScript malicioso.\",\"estrategia_de_correcao\":\"Não alterar o arquivo de teste, conforme solicitado. A correção deve ser aplicada no componente de produção que gera o HTML: remover o uso de bypassSecurityTrustHtml para o valor do JWT, manter o IP como dado textual e permitir que o Angular faça a interpolação/escape normal. Como o arquivo fornecido é exclusivamente um teste, não há edição segura a realizar nele sem violar a restrição de não alterar testes.\",\"edicoes\":[],\"justificativa_tecnica\":\"O arquivo informado não contém a implementação vulnerável; ele apenas fornece um mock de DomSanitizer e verifica que bypassSecurityTrustHtml foi chamado. Alterá-lo não corrigiria o comportamento da aplicação e poderia apenas mascarar a vulnerabilidade. A mitigação efetiva exige alterar LastLoginIpComponent, substituindo o HTML confiável por uma propriedade textual, por exemplo atribuindo o IP diretamente a uma variável exibida por interpolação Angular. A interpolação escapa caracteres HTML e impede que um valor como <img src=x onerror=...> seja interpretado como marcação executável.\",\"limitacoes_da_correcao\":\"Não é possível fornecer uma edição aplicável ao arquivo indicado que corrija a vulnerabilidade sem modificar um teste ou alterar seu comportamento esperado. É necessário disponibilizar o conteúdo do arquivo de implementação LastLoginIpComponent e seu template para especificar o trecho literal a ser substituído. Além disso, a validação de formato de IP pode ser adicionada como defesa em profundidade, mas não substitui o escape contextual do Angular.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1421,
+  "tokens_saida": 446,
+  "latencia_s": 5.7,
+  "custo_usd": 0.00089,
+  "hash_prompt": "bf912ede29353d39a019ca3a8aa7b2f42d104638d0ba672501f9e854bec321c1",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1418
+}

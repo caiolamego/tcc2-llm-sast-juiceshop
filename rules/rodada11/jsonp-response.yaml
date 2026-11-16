@@ -1,0 +1,10 @@
+rules:
+  - id: tcc.exposure.security.jsonp-response
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: Resposta JSONP executavel entre origens; verificar dados sensiveis, sessao, cookies e navegador antes de confirmar exposicao.
+    metadata:
+      confidence: LOW
+      category: security
+      cwe: ['CWE-200: Exposure of Sensitive Information to an Unauthorized Actor']
+    pattern: $RES.jsonp($DATA)

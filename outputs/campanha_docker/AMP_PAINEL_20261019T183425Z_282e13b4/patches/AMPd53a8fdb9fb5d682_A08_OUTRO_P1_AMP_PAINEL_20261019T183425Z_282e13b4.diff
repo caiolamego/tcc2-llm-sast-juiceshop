@@ -1,0 +1,15 @@
+diff --git a/frontend/src/hacking-instructor/helpers/helpers.ts b/frontend/src/hacking-instructor/helpers/helpers.ts
+index 55589bfbb..fb3db6d6a 100644
+--- a/frontend/src/hacking-instructor/helpers/helpers.ts
++++ b/frontend/src/hacking-instructor/helpers/helpers.ts
+@@ -48,6 +48,10 @@ export function waitForInputToHaveValue (inputSelector: string, value: string, o
+       for (const property of propertyChain) {
+         replacementValue = replacementValue[property]
+       }
++      // Sanitização simples para evitar injeção de código
++      if (typeof replacementValue === 'string') {
++        replacementValue = replacementValue.replace(/[<>"'`]/g, '')
++      }
+       value = value.replace(options.replacement[0], replacementValue)
+     }
+ 

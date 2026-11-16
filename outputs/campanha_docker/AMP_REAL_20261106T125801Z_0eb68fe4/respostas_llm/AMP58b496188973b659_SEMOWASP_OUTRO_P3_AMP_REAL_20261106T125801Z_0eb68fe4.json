@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de código JavaScript em consulta MongoDB por uso dinâmico do operador $where.\",\"causa_da_vulnerabilidade\":\"A consulta concatena o valor de id em uma expressão JavaScript executada pelo MongoDB. Quando o desafio está habilitado, req.params.id permanece como texto parcialmente truncado e pode influenciar a sintaxe interpretada pelo operador $where.\",\"estrategia_de_correcao\":\"Substituir o operador $where por um filtro MongoDB declarativo usando o campo conhecido product e um valor escalar validado. Manter a conversão numérica existente para o fluxo normal e, no fluxo do desafio, converter o valor truncado para número antes da consulta.\",\"edicoes\":[{\"arquivo\":\"routes/showProductReviews.ts\",\"trecho_original\":\"    // Truncate id to avoid unintentional RCE\\n    const id = !utils.isChallengeEnabled(challenges.noSqlCommandChallenge) ? Number(req.params.id) : utils.trunc(req.params.id, 40)\",\"trecho_corrigido\":\"    // Truncate id to avoid unintentional RCE\\n    const id = !utils.isChallengeEnabled(challenges.noSqlCommandChallenge) ? Number(req.params.id) : Number(utils.trunc(req.params.id, 40))\"},{\"arquivo\":\"routes/showProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\",\"trecho_corrigido\":\"    db.reviewsCollection.find({ product: id }).then((reviews: Review[]) => {\"}],\"justificativa_tecnica\":\"O operador $where executa JavaScript no servidor MongoDB e a concatenação transforma entrada de requisição em código. O filtro { product: id } usa a API declarativa do MongoDB, sem interpretador JavaScript, e o valor é convertido para número antes da consulta. Assim, entradas contendo operadores, aspas ou código não podem alterar a estrutura do filtro. A conversão preserva o comportamento esperado para IDs numéricos e mantém o restante do fluxo, incluindo medição de tempo, resolução do desafio e serialização dos resultados.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o campo product é armazenado como número, conforme indicado pela consulta original e pela conversão existente. Valores não numéricos resultarão em NaN e poderão produzir uma consulta sem resultados ou comportamento dependente do driver; se a aplicação precisar rejeitá-los explicitamente, seria necessária uma validação adicional, alterando o comportamento atual.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2382,
+  "tokens_saida": 538,
+  "latencia_s": 6.825,
+  "custo_usd": 0.001241,
+  "hash_prompt": "3b6aa3554dd1da65f371293ce74338f2d8d2ef1a22c4bf7edb0a1126d3a33fcc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2379
+}

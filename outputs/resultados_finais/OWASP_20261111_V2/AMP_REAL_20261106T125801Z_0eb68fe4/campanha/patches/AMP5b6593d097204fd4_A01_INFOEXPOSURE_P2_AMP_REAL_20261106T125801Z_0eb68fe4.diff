@@ -1,0 +1,14 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..a5bf7621c 100644
+--- a/server.ts
++++ b/server.ts
+@@ -278,8 +278,8 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+   app.use('/encryptionkeys/:file', serveKeyFiles())
+ 
+   /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge
+-  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge
+   app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line
++  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge
+   app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge
+ 
+   /* Swagger documentation for B2B v2 endpoints */

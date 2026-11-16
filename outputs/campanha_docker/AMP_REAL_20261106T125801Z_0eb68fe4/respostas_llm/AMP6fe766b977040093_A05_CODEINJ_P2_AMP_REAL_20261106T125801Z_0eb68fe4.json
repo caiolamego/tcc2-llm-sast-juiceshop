@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Execução arbitrária de código no servidor (Server-Side Template Injection/RCE) por meio do uso de eval() com conteúdo controlável pelo usuário no nome de usuário.\",\"causa_da_vulnerabilidade\":\"Quando o username corresponde ao padrão /#{(.*)}/, o código remove os delimitadores e executa o conteúdo resultante com eval(code). O nome de usuário é um valor potencialmente controlável pelo atacante, portanto expressões JavaScript arbitrárias podem ser executadas no processo Node.js. Além disso, o template Pug é compilado dinamicamente após substituições com dados derivados do usuário.\",\"estrategia_de_correcao\":\"Remover a execução dinâmica de código e tratar o username exclusivamente como dado textual. Manter o escape existente para preservar o comportamento funcional e impedir que o valor seja interpretado como sintaxe de template ou HTML executável.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"    let username = user.username\\n\\n    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\",\"trecho_corrigido\":\"    let username = user.username\\n\\n    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      username = '\\\\\\\\' + username\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\"}],\"justificativa_tecnica\":\"A remoção de eval() elimina o caminho que transformava o username em código JavaScript executável no servidor. O valor continua sendo inserido como dado no fluxo existente, com a barra invertida preservada, e não pode mais invocar funções, acessar módulos, ler arquivos ou executar comandos por meio dessa rota. A compilação dinâmica do template permanece, mas não recebe mais uma expressão avaliada a partir do username; portanto, a vulnerabilidade de execução arbitrária causada por esse campo é removida.\",\"limitacoes_da_correcao\":\"A correção elimina a execução arbitrária associada ao username, mas não audita outras possíveis fontes de injeção no template Pug nem altera a política CSP existente. A segurança completa também depende de que os demais valores substituídos no template sejam adequadamente tratados e de que a configuração de CSP seja revisada separadamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1480,
+  "tokens_saida": 612,
+  "latencia_s": 7.79,
+  "custo_usd": 0.000765,
+  "hash_prompt": "aa3e28cf3b25f2687954e7b9597106813590f631ddc3ef82e284981e644e3ccf",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1477,
+  "tokens_escrita_cache": 0
+}

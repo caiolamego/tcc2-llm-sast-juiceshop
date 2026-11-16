@@ -1,0 +1,15 @@
+diff --git a/lib/insecurity.ts b/lib/insecurity.ts
+index 4a60a901b..bbb30c1f2 100644
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -38,7 +38,9 @@ interface IAuthenticatedUsers {
+   updateFrom: (req: Request, user: ResponseWithUser) => any
+ }
+ 
+-export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')
++import bcrypt from 'bcrypt'
++
++export const hash = (data: string) => bcrypt.hashSync(data, 10)
+ export const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')
+ 
+ export const cutOffPoisonNullByte = (str: string) => {

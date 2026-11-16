@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de arquivos de log por listagem de diretório e download sem controle de acesso efetivo (access log disclosure).\",\n  \"causa_da_vulnerabilidade\": \"As rotas `/support/logs` e `/support/logs/:file` são registradas antes do middleware `verify.accessControlChallenges()`. A listagem é servida diretamente por `serveIndex`, e a rota de arquivos por `serveLogFiles()`. O middleware de desafio, além de estar depois da listagem, não protege a rota de download, permitindo que requisições alcancem esses recursos sem passar por uma verificação de acesso efetiva.\",\n  \"estrategia_de_correcao\": \"Aplicar o middleware de controle de acesso antes da listagem e do serviço de arquivos de log, removendo sua posição posterior. Assim, ambas as rotas ficam protegidas antes de qualquer resposta que revele nomes ou conteúdo de arquivos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\n      \"trecho_corrigido\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O Express executa os middlewares na ordem em que são registrados. Ao colocar `verify.accessControlChallenges()` antes de `serveIndex` e de `serveLogFiles`, a requisição precisa passar pelo controle antes que a aplicação liste os arquivos ou entregue seu conteúdo. Isso fecha a exposição causada pela ordem anterior e mantém os mesmos caminhos e handlers funcionais para requisições autorizadas.\",\n  \"limitacoes_da_correcao\": \"A correção depende de `verify.accessControlChallenges()` efetivamente negar requisições não autorizadas e chamar `next()` apenas quando apropriado. O trecho fornecido não permite verificar a implementação desse middleware nem se há outras rotas que exponham os mesmos logs.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2080,
+  "tokens_saida": 607,
+  "latencia_s": 5.873,
+  "custo_usd": 0.000563,
+  "hash_prompt": "67d883027271bee57a07b3c8100a58fe1648757cda68735cd25ff0ed4da41b4c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2077
+}

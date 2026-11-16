@@ -1,0 +1,16 @@
+diff --git a/routes/logfileServer.ts b/routes/logfileServer.ts
+index 7ef6160d7..9cc4ba4c5 100644
+--- a/routes/logfileServer.ts
++++ b/routes/logfileServer.ts
+@@ -10,8 +10,9 @@ export function serveLogFiles () {
+   return ({ params }: Request, res: Response, next: NextFunction) => {
+     const file = params.file
+ 
+-    if (!file.includes('/')) {
+-      res.sendFile(path.resolve('logs/', file))
++    const resolvedPath = path.resolve('logs/', file)
++    if (resolvedPath.startsWith(path.resolve('logs/'))) {
++      res.sendFile(resolvedPath)
+     } else {
+       res.status(403)
+       next(new Error('File names cannot contain forward slashes!'))

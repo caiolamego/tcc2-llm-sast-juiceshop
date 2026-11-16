@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection via concatenação direta de entrada do usuário na query SQL.\",\"causa_da_vulnerabilidade\":\"A consulta SQL é construída concatenando diretamente os valores de 'req.body.email' e 'req.body.password' na string da query, sem usar parâmetros ou sanitização adequada, permitindo que um atacante injete código SQL malicioso.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas do Sequelize para evitar a concatenação direta de strings e impedir a injeção de SQL. Substituir a query raw por uma chamada que utilize parâmetros vinculados para 'email' e 'password'.\",\"edicoes\":[{\"arquivo\":\"routes/login.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\",\"trecho_corrigido\":\"models.sequelize.query('SELECT * FROM Users WHERE email = ? AND password = ? AND deletedAt IS NULL', { replacements: [req.body.email || '', security.hash(req.body.password || '')], model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\"}],\"justificativa_tecnica\":\"A utilização de consultas parametrizadas com 'replacements' do Sequelize impede que os valores de entrada do usuário sejam interpretados como parte da instrução SQL, eliminando a possibilidade de injeção de SQL. Essa abordagem mantém o comportamento funcional original, apenas melhora a segurança da consulta.\",\"limitacoes_da_correcao\":\"A correção assume que o driver e a versão do Sequelize suportam consultas parametrizadas com 'replacements'. Não altera a lógica da aplicação nem a estrutura da resposta, portanto não afeta outras funcionalidades. A validação adicional dos dados de entrada pode ser considerada para reforçar a segurança, mas não é abordada nesta correção.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 2385,
+  "tokens_saida": 420,
+  "latencia_s": 4.269,
+  "custo_usd": 0.001626,
+  "hash_prompt": "8587551b3006416ebfd335646d162562ecb615c3d7f530e94556fff20cac73fd",
+  "do_cache": false
+}

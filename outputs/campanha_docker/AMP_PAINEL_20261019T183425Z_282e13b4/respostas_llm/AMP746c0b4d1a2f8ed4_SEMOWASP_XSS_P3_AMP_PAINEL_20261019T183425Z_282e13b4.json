@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para conteúdo potencialmente não confiável, permitindo Cross-Site Scripting (CWE-79).\",\"causa_da_vulnerabilidade\":\"O método bypassSecurityTrustHtml desativa a sanitização automática do Angular, e está sendo aplicado diretamente a comentários de usuários que podem conter código malicioso, permitindo a execução de scripts arbitrários no navegador.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o comentário do usuário como texto puro, evitando a interpretação de HTML potencialmente malicioso. Para preservar a formatação legítima, utilizar bindings seguros que escapem o conteúdo automaticamente, sem confiar em conteúdo HTML externo.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\"trecho_corrigido\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment\\n              .replace(/&/g, '&amp;')\\n              .replace(/</g, '&lt;')\\n              .replace(/>/g, '&gt;')\\n              .replace(/\\\"/g, '&quot;')\\n              .replace(/'/g, '&#39;')\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          // Removido bypassSecurityTrustHtml para evitar XSS\"}],\"justificativa_tecnica\":\"Ao escapar manualmente os caracteres especiais HTML no comentário do usuário, garantimos que o conteúdo seja exibido como texto puro, prevenindo a execução de scripts maliciosos. Isso elimina a necessidade de usar bypassSecurityTrustHtml, que desativa a sanitização do Angular e pode levar a vulnerabilidades XSS.\",\"limitacoes_da_correcao\":\"A formatação HTML original do comentário do usuário será exibida como texto literal, ou seja, qualquer marcação HTML legítima será mostrada como texto e não renderizada. Caso seja necessário permitir formatação HTML segura, uma solução mais complexa de sanitização seletiva deve ser implementada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2306,
+  "tokens_saida": 531,
+  "latencia_s": 5.251,
+  "custo_usd": 0.001772,
+  "hash_prompt": "2fa1f6ba7ab956612354bb8ec918c5656714665eb89f849dc9b91866db3d9f71",
+  "do_cache": false
+}

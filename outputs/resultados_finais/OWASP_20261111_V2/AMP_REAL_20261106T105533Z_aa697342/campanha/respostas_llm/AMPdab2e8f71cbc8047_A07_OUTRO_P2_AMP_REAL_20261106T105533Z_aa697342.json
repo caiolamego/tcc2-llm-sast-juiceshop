@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição não autorizada dos arquivos de log de acesso (access log disclosure).\",\n  \"causa_da_vulnerabilidade\": \"A rota `/support/logs/:file` é registrada com `serveLogFiles()` sem que a verificação de controle de acesso aplicada à rota `/support/logs` seja herdada por ela. No Express, o middleware montado em `/support/logs` não protege automaticamente uma rota irmã com parâmetro de caminho.\",\n  \"estrategia_de_correcao\": \"Aplicar o middleware de controle de acesso diretamente à rota que serve os arquivos de log, antes de `serveLogFiles()`.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\n      \"trecho_corrigido\": \"  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', verify.accessControlChallenges(), serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O middleware de controle de acesso passa a executar para cada requisição correspondente a `/support/logs/:file` antes de o arquivo ser servido. Assim, uma requisição sem autorização não alcança `serveLogFiles()`, impedindo a divulgação dos logs e preservando o comportamento para requisições autorizadas.\",\n  \"limitacoes_da_correcao\": \"A correção protege o acesso por essa rota. Ela pressupõe que `verify.accessControlChallenges()` aplique o controle de acesso pretendido; não avalia outras rotas ou mecanismos que possam expor os mesmos arquivos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2213,
+  "tokens_saida": 410,
+  "latencia_s": 4.22,
+  "custo_usd": 0.000482,
+  "hash_prompt": "9236e8aa4a92108fa9fd7f18b3b3b50ef98fdef86121a195798f65da050774b5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2210
+}

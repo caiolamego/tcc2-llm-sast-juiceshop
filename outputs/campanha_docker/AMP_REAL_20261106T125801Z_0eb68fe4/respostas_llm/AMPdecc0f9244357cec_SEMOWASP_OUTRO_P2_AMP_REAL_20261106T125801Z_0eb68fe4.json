@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Manipulação de itens da cesta por alteração indevida do BasketId (IDOR/BOLA), especialmente no fluxo de atualização, permitindo que um usuário associe ou altere itens de outra cesta.\",\"causa_da_vulnerabilidade\":\"A validação de autorização em quantityCheckBeforeBasketItemUpdate apenas registra o desafio quando req.body.BasketId pertence a outra cesta, mas não rejeita a requisição. Além disso, a consulta do item usa somente req.params.id, sem verificar se o item pertence à cesta do usuário autenticado. Assim, a execução prossegue para a atualização mesmo após a detecção da inconsistência.\",\"estrategia_de_correcao\":\"Rejeitar imediatamente a atualização quando o BasketId informado não corresponder à cesta do usuário autenticado, mantendo a mensagem existente e evitando que o middleware seguinte seja executado. A validação é aplicada no mesmo ponto em que a inconsistência já é detectada.\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\\n      if (req.body.quantity) {\",\"trecho_corrigido\":\"      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\\n      if (user && req.body.BasketId && user.bid != req.body.BasketId) { // eslint-disable-line eqeqeq\\n        return res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n      }\\n      if (req.body.quantity) {\"}],\"justificativa_tecnica\":\"A comparação existente identifica quando o BasketId enviado difere da cesta do usuário, mas challengeUtils.solveIf não é um mecanismo de autorização: ele apenas registra ou resolve um desafio. A nova condição transforma essa detecção em uma decisão de controle de acesso e retorna antes de next(), impedindo a continuação do pipeline de atualização. Dessa forma, um atacante não consegue usar um BasketId de outra cesta para prosseguir com a operação. A alteração é mínima, preserva a mensagem de erro existente e não modifica assinaturas ou outros fluxos.\",\"limitacoes_da_correcao\":\"A correção bloqueia a inconsistência explícita entre o BasketId enviado e a cesta do usuário, mas não substitui uma autorização baseada no proprietário do item consultado. Se houver outros endpoints que permitam atualizar um item sem validar que o item pertence à cesta autenticada, eles também deverão ser protegidos. Usuários não autenticados não são bloqueados por esta condição; a autorização de acesso anônimo deve ser garantida pelas camadas de autenticação e pelas rotas correspondentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1598,
+  "tokens_saida": 605,
+  "latencia_s": 6.649,
+  "custo_usd": 0.000758,
+  "hash_prompt": "07f38bd586bea7d5571b700652139693807d65caaf0dddfe4f82494284912208",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1595,
+  "tokens_escrita_cache": 0
+}

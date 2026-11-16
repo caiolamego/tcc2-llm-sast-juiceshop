@@ -1,0 +1,714 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 45.52997756200057,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+    "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback"
+  ],
+  "testes_falhos_f_marcador": [
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+    "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 11.99,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_o8zenivq/captcha_arithmetic/primeira.xml",
+        "test/api/tcc_coverage_captcha_arithmetic.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 11.17,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5"
+      ],
+      "testes_falhos_novos": [
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+        "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "rnal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '2',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2+3*4 = 14 (2.7855ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '14'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '14',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2+3+4 = 9 (3.478417ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '9'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '9',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2+3-4 = 1 (1.800542ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '1'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '1',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2-3*4 = -10 (1.570959ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '-10'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '-10',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2-3+4 = 3 (2.008917ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '3'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '3',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2-3-4 = -5 (2.613083ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '-5'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '-5',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 3.0000010156072676e-06,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_o8zenivq/feedback/primeira.xml",
+        "test/api/feedback.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 18.35,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+        "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback"
+      ],
+      "testes_falhos_novos": [
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+        "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "7\n✖ POST feedback in a non-existing users name as anonymous user fails with constraint error (51.023625ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 500\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:109:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:5084\n✖ POST feedback is associated with current user (151.125834ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:135:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:6019\n✖ POST feedback is associated with any passed user ID (84.796125ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:161:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:6911\n✖ POST feedback can be created without actually supplying comment (51.582792ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:180:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:7644\n✖ POST feedback cannot be created without actually supplying rating (66.919417ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 400\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:199:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 400,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:10683\n✖ DELETE existing feedback (71.483333ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:296:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 1.6670019249431789e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+    "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+    "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/captcha.ts"
+    ],
+    "grupos": [
+      "captcha_arithmetic",
+      "feedback"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 11.99
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "captcha_arithmetic",
+      "status": "executada",
+      "duracao_s": 11.17
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "feedback",
+      "status": "executada",
+      "duracao_s": 18.35
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "captcha_arithmetic",
+      "feedback"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 11.99
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "captcha_arithmetic",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > rejects a correct-looking answer for an unknown CAPTCHA",
+            "arquivo": "tests/functional/juice_shop/captcha_arithmetic.test.ts",
+            "nome": "TCC CAPTCHA arithmetic contracts > rejects a correct-looking answer for an unknown CAPTCHA",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5"
+        ],
+        "falhos_novos": [
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5"
+        ],
+        "falhos_novos_observados": [
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > rejects a correct-looking answer for an unknown CAPTCHA"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > rejects a correct-looking answer for an unknown CAPTCHA"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3*4 = 24",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3+4 = 10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2*3-4 = 2",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3*4 = 14",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3+4 = 9",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2+3-4 = 1",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3*4 = -10",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3+4 = 3",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > calculates and persists 2-3-4 = -5",
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > rejects a correct-looking answer for an unknown CAPTCHA"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/captcha_arithmetic.test.ts :: TCC CAPTCHA arithmetic contracts > rejects a correct-looking answer for an unknown CAPTCHA"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 11.17,
+        "espera_api_s": 3.0000010156072676e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_o8zenivq/captcha_arithmetic/primeira.xml",
+            "test/api/tcc_coverage_captcha_arithmetic.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 11.17,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "rnal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '2',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2+3*4 = 14 (2.7855ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '14'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '14',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2+3+4 = 9 (3.478417ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '9'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '9',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2+3-4 = 1 (1.800542ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '1'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '1',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2-3*4 = -10 (1.570959ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '-10'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '-10',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2-3+4 = 3 (2.008917ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '3'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '3',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_captcha_arithmetic.test.ts:2:1571\n✖ calculates and persists 2-3-4 = -5 (2.613083ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '-5'\n  \n      at TestContext.<anonymous> (test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '-5',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC CAPTCHA arithmetic contracts\" time=\"0.736831\" disabled=\"0\" errors=\"0\" tests=\"10\" failures=\"9\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"calculates and persists 2*3*4 = 24\" time=\"0.006290\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '24'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '24'\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '24'\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '24'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '24',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2*3+4 = 10\" time=\"0.005621\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '10'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '10'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '10'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '10'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '10',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2*3-4 = 2\" time=\"0.003689\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '2'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '2'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '2'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '2'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '2',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2+3*4 = 14\" time=\"0.002785\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '14'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '14'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '14'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '14'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '14',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2+3+4 = 9\" time=\"0.003478\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '9'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '9'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '9'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '9'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '9',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2+3-4 = 1\" time=\"0.001801\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '1'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '1'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '1'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '1'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '1',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2-3*4 = -10\" time=\"0.001571\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '-10'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '-10'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '-10'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '-10'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '-10',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2-3+4 = 3\" time=\"0.002009\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '3'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '3'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '3'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '3'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '3',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2-3-4 = -5\" time=\"0.002613\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '-5'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '-5'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '-5'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '-5'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '-5',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects a correct-looking answer for an unknown CAPTCHA\" time=\"0.043672\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 10 -->\n\t<!-- suites 1 -->\n\t<!-- pass 1 -->\n\t<!-- fail 9 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 6059.954294 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC CAPTCHA arithmetic contracts\" time=\"0.755960\" disabled=\"0\" errors=\"0\" tests=\"10\" failures=\"9\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"calculates and persists 2*3*4 = 24\" time=\"0.005999\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '24'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '24'\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '24'\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '24'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '24',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2*3+4 = 10\" time=\"0.006189\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '10'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '10'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '10'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '10'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '10',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2*3-4 = 2\" time=\"0.004552\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '2'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '2'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '2'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '2'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '2',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2+3*4 = 14\" time=\"0.002923\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '14'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '14'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '14'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '14'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '14',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2+3+4 = 9\" time=\"0.002895\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '9'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '9'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '9'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '9'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '9',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2+3-4 = 1\" time=\"0.002948\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '1'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '1'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '1'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '1'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '1',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2-3*4 = -10\" time=\"0.002296\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '-10'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '-10'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '-10'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '-10'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '-10',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2-3+4 = 3\" time=\"0.002931\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '3'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '3'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '3'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '3'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '3',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"calculates and persists 2-3-4 = -5\" time=\"0.002864\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;undefined !== '-5'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;undefined !== '-5'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nundefined !== '-5'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  undefined !== '-5'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts:33:14)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: '-5',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects a correct-looking answer for an unknown CAPTCHA\" time=\"0.046064\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/tcc_coverage_captcha_arithmetic.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 10 -->\n\t<!-- suites 1 -->\n\t<!-- pass 1 -->\n\t<!-- fail 9 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 3950.726793 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "feedback",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > GET all feedback",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > GET all feedback",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback can be created without actually supplying comment",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback in another users name as anonymous user",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback is associated with any passed user ID",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback is associated with current user",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST sanitizes unsafe HTML from comment",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > DELETE existing feedback",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > GET existing feedback by id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > PUT update existing feedback",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback is forbidden via public API",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > PUT update existing feedback is forbidden via public API",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback"
+        ],
+        "falhos_novos": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback"
+        ],
+        "falhos_novos_observados": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > GET all feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback is forbidden via public API"
+        ],
+        "esperados": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > GET all feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback is forbidden via public API"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > GET all feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback is forbidden via public API"
+        ],
+        "obrigatorios_aprovados": [],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 18.35,
+        "espera_api_s": 1.6670019249431789e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_o8zenivq/feedback/primeira.xml",
+            "test/api/feedback.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 18.35,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "7\n✖ POST feedback in a non-existing users name as anonymous user fails with constraint error (51.023625ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 500\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:109:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:5084\n✖ POST feedback is associated with current user (151.125834ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:135:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:6019\n✖ POST feedback is associated with any passed user ID (84.796125ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:161:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:6911\n✖ POST feedback can be created without actually supplying comment (51.582792ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:180:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:7644\n✖ POST feedback cannot be created without actually supplying rating (66.919417ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 400\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:199:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 400,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/feedback.test.ts:2:10683\n✖ DELETE existing feedback (71.483333ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:296:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Feedbacks\" time=\"3.076795\" disabled=\"0\" errors=\"0\" tests=\"11\" failures=\"8\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET all feedback\" time=\"0.211073\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST sanitizes unsafe HTML from comment\" time=\"0.155390\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:47:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST fails to sanitize masked XSS-attack by not applying sanitization recursively\" time=\"0.170218\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:67:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback in another users name as anonymous user\" time=\"0.119317\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:88:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback in a non-existing users name as anonymous user fails with constraint error\" time=\"0.051024\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:109:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback is associated with current user\" time=\"0.151126\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:135:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback is associated with any passed user ID\" time=\"0.084796\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:161:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback can be created without actually supplying comment\" time=\"0.051583\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:180:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback cannot be created without actually supplying rating\" time=\"0.066919\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 400&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 400\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 400\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 400\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:199:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 400,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback cannot be created with wrong CAPTCHA answer\" time=\"0.146107\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback cannot be created with invalid CAPTCHA id\" time=\"0.126527\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Feedbacks/:id\" time=\"0.160165\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"1\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing feedback by id is forbidden via public API\" time=\"0.012863\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"GET existing feedback by id\" time=\"0.051147\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"PUT update existing feedback is forbidden via public API\" time=\"0.008652\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"PUT update existing feedback\" time=\"0.011266\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"DELETE existing feedback is forbidden via public API\" time=\"0.003535\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"DELETE existing feedback\" time=\"0.071483\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:296:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 17 -->\n\t<!-- suites 2 -->\n\t<!-- pass 8 -->\n\t<!-- fail 9 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 6743.062544 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Feedbacks\" time=\"3.734653\" disabled=\"0\" errors=\"0\" tests=\"11\" failures=\"8\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET all feedback\" time=\"0.179546\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST sanitizes unsafe HTML from comment\" time=\"0.144404\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:47:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST fails to sanitize masked XSS-attack by not applying sanitization recursively\" time=\"0.097979\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:67:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback in another users name as anonymous user\" time=\"0.092513\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:88:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback in a non-existing users name as anonymous user fails with constraint error\" time=\"0.077803\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:109:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback is associated with current user\" time=\"0.222301\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:135:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback is associated with any passed user ID\" time=\"0.150861\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:161:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback can be created without actually supplying comment\" time=\"0.070616\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:180:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback cannot be created without actually supplying rating\" time=\"0.078053\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 400&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 400\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 400\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 400\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:199:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 400,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback cannot be created with wrong CAPTCHA answer\" time=\"0.066247\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback cannot be created with invalid CAPTCHA id\" time=\"0.073513\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Feedbacks/:id\" time=\"0.174964\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"1\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing feedback by id is forbidden via public API\" time=\"0.009746\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"GET existing feedback by id\" time=\"0.066270\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"PUT update existing feedback is forbidden via public API\" time=\"0.009773\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"PUT update existing feedback\" time=\"0.008823\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"DELETE existing feedback is forbidden via public API\" time=\"0.002966\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"DELETE existing feedback\" time=\"0.076273\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;401 !== 201&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;401 !== 201\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n401 !== 201\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 201\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:296:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 201,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 17 -->\n\t<!-- suites 2 -->\n\t<!-- pass 8 -->\n\t<!-- fail 9 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 10702.791005 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

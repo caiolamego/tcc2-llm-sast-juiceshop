@@ -1,0 +1,20 @@
+diff --git a/Gruntfile.js b/Gruntfile.js
+index 128ff3a57..a32341773 100644
+--- a/Gruntfile.js
++++ b/Gruntfile.js
+@@ -71,11 +71,13 @@ module.exports = function (grunt) {
+     const fs = require('node:fs')
+     const crypto = require('node:crypto')
+     fs.readdirSync('dist/').forEach(file => {
+-      const buffer = fs.readFileSync('dist/' + file)
++      const filePath = 'dist/' + file
++      if (!fs.statSync(filePath).isFile()) return
++      const buffer = fs.readFileSync(filePath)
+       const md5 = crypto.createHash('md5')
+       md5.update(buffer)
+       const md5Hash = md5.digest('hex')
+-      const md5FileName = 'dist/' + file + '.md5'
++      const md5FileName = filePath + '.md5'
+       grunt.file.write(md5FileName, md5Hash)
+       grunt.log.write(`Checksum ${md5Hash} written to file ${md5FileName}.`).verbose.write('...').ok()
+       grunt.log.writeln()

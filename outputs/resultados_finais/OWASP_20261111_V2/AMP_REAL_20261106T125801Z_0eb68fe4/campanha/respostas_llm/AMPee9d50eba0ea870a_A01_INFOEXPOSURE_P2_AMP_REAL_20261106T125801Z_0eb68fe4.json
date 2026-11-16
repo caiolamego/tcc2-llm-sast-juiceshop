@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de listagem de diretórios e download arbitrário de arquivos em /ftp, permitindo acesso não autorizado a arquivos potencialmente sensíveis.\",\"causa_da_vulnerabilidade\":\"O middleware serveIndex('/ftp', ...) é registrado antes de qualquer controle de acesso, e a rota app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) disponibiliza arquivos sob /ftp sem autenticação ou verificação de autorização. O middleware verify.accessControlChallenges() não é aplicado a essas rotas.\",\"estrategia_de_correcao\":\"Aplicar verify.accessControlChallenges() antes da listagem e do download de arquivos em /ftp, preservando a exceção existente para /ftp/quarantine e mantendo o comportamento funcional para usuários autorizados.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  // vuln-code-snippet start directoryListingChallenge accessLogDisclosureChallenge\\n  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\",\"trecho_corrigido\":\"  // vuln-code-snippet start directoryListingChallenge accessLogDisclosureChallenge\\n  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', verify.accessControlChallenges(), servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\"}],\"justificativa_tecnica\":\"O controle de acesso passa a ser executado antes de qualquer resposta de listagem ou arquivo para as rotas públicas de /ftp. Assim, requisições não autorizadas são interrompidas antes que serveIndex ou servePublicFiles possam revelar nomes, metadados ou conteúdo de arquivos. A rota /ftp/quarantine permanece inalterada, preservando seu mecanismo específico de atendimento. A alteração é mínima e não modifica mensagens, identificadores ou assinaturas existentes.\",\"limitacoes_da_correcao\":\"A correção depende de verify.accessControlChallenges() implementar corretamente autenticação, autorização e tratamento de falhas. Ela cobre as rotas /ftp mostradas no trecho; outros diretórios servidos pelo aplicativo, como /encryptionkeys, /.well-known ou /support/logs, exigem controles próprios e não são alterados por esta correção.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2107,
+  "tokens_saida": 620,
+  "latencia_s": 7.281,
+  "custo_usd": 0.001271,
+  "hash_prompt": "401113520bd0854e9607e211a34ee39c2c715fa395582f987a8c226c276443e4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2104
+}

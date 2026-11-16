@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações sensíveis por meio de listagem de diretórios habilitada em rotas que não deveriam permitir acesso público irrestrito.\",\"causa_da_vulnerabilidade\":\"O uso do middleware 'serveIndex' em diretórios como '/ftp' e '/support/logs' permite que qualquer usuário acesse a listagem completa dos arquivos nesses diretórios, sem qualquer controle de acesso ou autenticação, expondo informações potencialmente sensíveis.\",\"estrategia_de_correcao\":\"Remover o middleware 'serveIndex' das rotas que expõem listagem de diretórios sensíveis e manter apenas o middleware 'express.static' para permitir o download direto dos arquivos, evitando a exposição da estrutura e nomes dos arquivos. Para diretórios que precisam de listagem, implementar controle de acesso adequado (não mostrado aqui para manter o mínimo necessário).\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\",\"trecho_corrigido\":\"  app.use('/ftp', express.static('ftp')) // vuln-code-snippet vuln-line directoryListingChallenge\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  app.use('/support/logs', express.static('logs')) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"Ao remover o middleware 'serveIndex', que gera a listagem dos arquivos no diretório, e manter apenas o middleware 'express.static', o servidor continua servindo os arquivos diretamente quando acessados por URL, mas não expõe a listagem dos arquivos disponíveis. Isso impede que usuários não autorizados visualizem nomes e estrutura dos arquivos, mitigando a exposição de informações sensíveis.\",\"limitacoes_da_correcao\":\"Esta correção remove a funcionalidade de listagem de diretórios para as rotas afetadas, o que pode impactar usuários que dependem dessa listagem para navegação. Caso a listagem seja necessária, deve-se implementar controle de acesso adequado e filtros para limitar os arquivos exibidos, o que não foi abordado aqui para manter a alteração mínima.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3265,
+  "tokens_saida": 494,
+  "latencia_s": 4.173,
+  "custo_usd": 0.00152,
+  "hash_prompt": "311125459014cfe5c6b62d88294a32783ddac771cbdfbd946ac6a4d7c34f1d52",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

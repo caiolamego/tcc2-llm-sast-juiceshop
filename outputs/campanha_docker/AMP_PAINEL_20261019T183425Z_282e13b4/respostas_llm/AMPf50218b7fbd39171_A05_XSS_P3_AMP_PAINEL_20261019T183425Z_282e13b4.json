@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site Scripting (XSS) na inserção direta de conteúdo não sanitizado dentro de uma tag <script> no HTML renderizado.\",\"causa_da_vulnerabilidade\":\"O conteúdo da variável 'subs', que é lido de um arquivo externo e pode conter dados arbitrários, é inserido diretamente dentro de uma tag <script> sem qualquer sanitização ou validação, permitindo a execução de scripts maliciosos no navegador do usuário.\",\"estrategia_de_correcao\":\"Sanitizar o conteúdo de 'subs' antes de inseri-lo na tag <script> para garantir que caracteres especiais sejam escapados e que não seja possível injetar código JavaScript malicioso. Como o conteúdo é texto de legendas (VTT), deve ser tratado como texto e não como HTML ou script. A correção consiste em escapar os caracteres especiais HTML para prevenir a execução de scripts.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</script>')\"}],\"justificativa_tecnica\":\"A vulnerabilidade ocorre porque o conteúdo de 'subs' é inserido diretamente dentro de uma tag <script> sem sanitização, permitindo que um atacante insira código JavaScript malicioso. Ao aplicar a função 'entities.encode' do pacote 'html-entities', todos os caracteres especiais são convertidos em entidades HTML, impedindo a execução de scripts e mitigando o risco de XSS. Essa abordagem preserva o conteúdo textual das legendas, evitando a execução de código malicioso.\",\"limitacoes_da_correcao\":\"A correção assume que o conteúdo de 'subs' deve ser tratado como texto puro dentro da tag <script> do tipo 'text/vtt'. Se o conteúdo precisar conter marcação HTML válida, essa abordagem pode quebrar a formatação. Além disso, a sanitização não valida o conteúdo do arquivo de legendas, apenas impede a execução de scripts. Se o arquivo de legendas for controlado por usuários não confiáveis, outras validações podem ser necessárias.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1948,
+  "tokens_saida": 509,
+  "latencia_s": 4.233,
+  "custo_usd": 0.001594,
+  "hash_prompt": "f21f72f1ffca792b5727f741a9379fb2073ab54b05afd5a4f5743b2b351f3a72",
+  "do_cache": false
+}

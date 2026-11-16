@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Execução remota de código (RCE) por avaliação de dados de pedido controlados pelo usuário.\",\n  \"causa_da_vulnerabilidade\": \"O valor body.orderLinesData, recebido da requisição, é passado a safeEval e executado dentro de um contexto vm. A avaliação de entrada não confiável permite que um atacante forneça código ou expressões maliciosas.\",\n  \"estrategia_de_correcao\": \"Remover a avaliação dinâmica de orderLinesData e manter o processamento do pedido sem executar conteúdo fornecido pelo cliente. Preservar a resposta de sucesso e o fluxo de tratamento de erros existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/b2bOrder.ts\",\n      \"trecho_original\": \"import vm from 'node:vm'\\nimport { type Request, type Response, type NextFunction } from 'express'\\n// @ts-expect-error FIXME due to non-existing type definitions for notevil\\nimport { eval as safeEval } from 'notevil'\\n\",\n      \"trecho_corrigido\": \"import { type Request, type Response, type NextFunction } from 'express'\\n\"\n    },\n    {\n      \"arquivo\": \"routes/b2bOrder.ts\",\n      \"trecho_original\": \"      const orderLinesData = body.orderLinesData || ''\\n      try {\\n        const sandbox = { safeEval, orderLinesData }\\n        vm.createContext(sandbox)\\n        vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })\\n        res.json({ cid: body.cid, orderNo: uniqueOrderNumber(), paymentDue: dateTwoWeeksFromNow() })\\n      } catch (err) {\\n        if (utils.getErrorMessage(err).match(/Script execution timed out.*/) != null) {\\n          challengeUtils.solveIf(challenges.rceOccupyChallenge, () => { return true })\\n          res.status(503)\\n          next(new Error('Sorry, we are temporarily not available! Please try again later.'))\\n        } else {\\n          challengeUtils.solveIf(challenges.rceChallenge, () => { return utils.getErrorMessage(err) === 'Infinite loop detected - reached max iterations' })\\n          next(err)\\n        }\\n      }\",\n      \"trecho_corrigido\": \"      res.json({ cid: body.cid, orderNo: uniqueOrderNumber(), paymentDue: dateTwoWeeksFromNow() })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A remoção da chamada de avaliação elimina a execução de código derivado da requisição. O endpoint continua retornando os mesmos campos e valores funcionais para pedidos, sem depender de sandbox ou de uma biblioteca de avaliação dinâmica.\",\n  \"limitacoes_da_correcao\": \"A correção deixa de executar a lógica de avaliação associada aos desafios RCE, o que pode alterar o comportamento esperado especificamente nesses modos de desafio. Se orderLinesData precisar ser processado funcionalmente, deve-se definir um formato de dados e validá-lo com um parser não executável.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1005,
+  "tokens_saida": 663,
+  "latencia_s": 5.872,
+  "custo_usd": 0.000432,
+  "hash_prompt": "29ab8028f43d7a4d6d8cb3831323e8f365e96155efe27213ee189bb37c977ead",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

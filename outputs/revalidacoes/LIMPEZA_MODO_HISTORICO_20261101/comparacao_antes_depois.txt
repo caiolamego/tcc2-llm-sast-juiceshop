@@ -1,0 +1,57 @@
+OK    01 componentes_prompt idêntico
+OK    01 roteiro_sha256 idêntico
+OK    01 base_rag_sha256 idêntico
+OK    01 perfis idêntico
+OK    01 catalogo idêntico
+OK    01 cobertura_identidade idêntico
+OK    01 referencia_docker_entradas idêntico
+OK    01 referencia_docker_json_sha256 idêntico
+OK    01 baseline_oficial_sha256 idêntico
+OK    01 componentes do contrato: os de antes menos os removidos — 30 × 29
+NOTA  componentes com conteúdo alterado: src/pipeline/comum/componentes.py, src/pipeline/etapas/e01_analise_sast/semgrep.py, src/pipeline/orquestracao/campanha.py, src/pipeline/orquestracao/preflight.py
+OK    02 sumiram exatamente os arquivos previstos — scripts/experimento/gerar_catalogo_historico.py, scripts/experimento/marcar_desafios_historicos.py, scripts/experimento/medir_custo_validacao.py, scripts/experimento/validar_cenarios_camadas.py, scripts/relatorios/relatorio_baseline_historico.py, src/pipeline/legado/filtro.py
+OK    02 nenhum arquivo novo
+OK    02 nenhum dado de entrada mudou (configs, base RAG, regras, testes próprios, Docker)
+      alterados: config/README.md, docs/guias/referencia_detalhada.md, docs/planejamento/GUIA_CONTINUIDADE_TCC2.md, scripts/README.md, scripts/experimento/sondagem_sast.py, scripts/experimento/tentar_um_caso.py, src/pipeline/README.md, src/pipeline/comum/componentes.py, src/pipeline/etapas/e01_analise_sast/semgrep.py, src/pipeline/etapas/e05_geracao_llm/resposta_simulada.py, src/pipeline/orquestracao/campanha.py, src/pipeline/orquestracao/preflight.py, tests/unit/test_colab_contract.py, tests/unit/test_painel.py
+OK    02b outputs/: nada removido nem alterado além do índice (outputs/README.md) — 0 arquivos novos; alterados: ['outputs/README.md']
+OK    03 testes Python: mesmos testes, mesmos resultados — 358 × 358 (exit=0 / exit=0)
+OK    03 nenhum teste falhou
+OK    04 testes das regras Semgrep
+OK    05_preflight: contrato igual fora da identidade do código
+OK    05_preflight: validação igual fora da lista de arquivos do código
+OK    05_preflight: lista de arquivos do código = antes menos os removidos
+OK    05_preflight/prompts: idênticos byte a byte
+OK    05_preflight/sast_antes: iguais após normalização (2 arquivos)
+OK    05_preflight terminou com sucesso nas duas
+OK    10_dryrun: contrato igual fora da identidade do código
+OK    10_dryrun: validação igual fora da lista de arquivos do código
+OK    10_dryrun: lista de arquivos do código = antes menos os removidos
+OK    10_dryrun/prompts: idênticos byte a byte
+OK    10_dryrun/respostas_llm: idênticos byte a byte
+OK    10_dryrun/patches: idênticos byte a byte
+OK    10_dryrun/codigos_corrigidos: idênticos byte a byte
+OK    10_dryrun/comparacoes: idênticos byte a byte
+OK    10_dryrun/testes: iguais após normalização (40 arquivos)
+OK    10_dryrun/sast_depois: iguais após normalização (80 arquivos)
+OK    10_dryrun/sast_antes: iguais após normalização (2 arquivos)
+OK    10_dryrun terminou com sucesso nas duas
+OK    10 dry-run: as 40 tentativas têm os mesmos R, F, M, classificação, aplicação e hash do prompt
+OK    10 dry-run: registros completos iguais após normalização (mesmos campos, mesma ordem)
+OK    10 dry-run: registro da sessão igual após normalização (mesmos campos, mesma ordem)
+OK    05_preflight_METRICAS/metricas_gerais.csv idêntico
+OK    05_preflight_METRICAS/metricas_por_estrategia.csv idêntico
+OK    05_preflight_METRICAS/metricas_por_caso.csv idêntico
+OK    05_preflight_METRICAS/casos.csv idêntico
+OK    10_dryrun_METRICAS/metricas_gerais.csv idêntico
+OK    10_dryrun_METRICAS/metricas_por_estrategia.csv idêntico
+OK    10_dryrun_METRICAS/metricas_por_caso.csv idêntico
+OK    10_dryrun_METRICAS/casos.csv idêntico
+OK    06 reconsolidação da campanha oficial idêntica ao arquivado (antes e depois)
+OK    07 comandos do executar.py idênticos
+OK    08 Makefile (make -n) idêntico
+OK    09 painel: páginas e API iguais
+OK    11 nenhum link interno quebrado na documentação — links relativos verificados: 328; quebrados: 0
+OK    12 referência Docker conferida (antes e depois)
+OK    13 todos os módulos e scripts importam (os de antes menos os removidos) — 99 × 93
+
+RESULTADO: tudo igual no que é funcional (diferenças só as esperadas)

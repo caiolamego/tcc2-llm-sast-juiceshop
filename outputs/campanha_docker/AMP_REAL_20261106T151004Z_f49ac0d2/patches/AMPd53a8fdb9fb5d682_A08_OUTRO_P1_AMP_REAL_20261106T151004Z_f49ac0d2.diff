@@ -1,0 +1,52 @@
+diff --git a/frontend/src/hacking-instructor/helpers/helpers.ts b/frontend/src/hacking-instructor/helpers/helpers.ts
+index 55589bfbb..2d8da3c33 100644
+--- a/frontend/src/hacking-instructor/helpers/helpers.ts
++++ b/frontend/src/hacking-instructor/helpers/helpers.ts
+@@ -51,7 +51,11 @@ export function waitForInputToHaveValue (inputSelector: string, value: string, o
+       value = value.replace(options.replacement[0], replacementValue)
+     }
+ 
++    const startTime = Date.now()
+     while (true) {
++      if (Date.now() - startTime > 30000) { // timeout de 30 segundos
++        break
++      }
+       if (options.ignoreCase && inputElement.value.toLowerCase() === value.toLowerCase()) {
+         break
+       } else if (!options.ignoreCase && inputElement.value === value) {
+@@ -68,7 +72,11 @@ export function waitForInputToNotHaveValue (inputSelector: string, value: string
+       inputSelector
+     )
+ 
++    const startTime = Date.now()
+     while (true) {
++      if (Date.now() - startTime > 30000) { // timeout de 30 segundos
++        break
++      }
+       if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {
+         break
+       } else if (!options.ignoreCase && inputElement.value !== value) {
+@@ -85,7 +93,11 @@ export function waitForInputToNotHaveValueAndNotBeEmpty (inputSelector: string,
+       inputSelector
+     )
+ 
++    const startTime = Date.now()
+     while (true) {
++      if (Date.now() - startTime > 30000) { // timeout de 30 segundos
++        break
++      }
+       if (inputElement.value !== '') {
+         if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {
+           break
+@@ -104,7 +116,11 @@ export function waitForInputToNotBeEmpty (inputSelector: string) {
+       inputSelector
+     )
+ 
++    const startTime = Date.now()
+     while (true) {
++      if (Date.now() - startTime > 30000) { // timeout de 30 segundos
++        break
++      }
+       if (inputElement.value && inputElement.value !== '') {
+         break
+       }

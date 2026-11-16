@@ -1,0 +1,17 @@
+diff --git a/routes/currentUser.ts b/routes/currentUser.ts
+index 3b6a83f..10d5f50 100644
+--- a/routes/currentUser.ts
++++ b/routes/currentUser.ts
+@@ -51,11 +51,6 @@ export function retrieveLoggedInUser () {
+     // Solve passwordHashLeakChallenge when password field is included in response
+     challengeUtils.solveIf(challenges.passwordHashLeakChallenge, () => response?.user?.password)
+ 
+-    if (req.query.callback === undefined) {
+-      res.json(response)
+-    } else {
+-      challengeUtils.solveIf(challenges.emailLeakChallenge, () => { return true })
+-      res.jsonp(response)
+-    }
++    res.json(response)
+   }
+ }

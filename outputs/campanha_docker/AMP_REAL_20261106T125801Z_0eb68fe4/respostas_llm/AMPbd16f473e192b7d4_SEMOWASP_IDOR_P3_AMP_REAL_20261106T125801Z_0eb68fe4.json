@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (CWE-639): a cesta é selecionada diretamente pelo ID fornecido em req.params.id, sem restringir a consulta ao usuário autenticado.\",\"causa_da_vulnerabilidade\":\"A consulta BasketModel.findOne({ where: { id } ... }) usa um identificador controlado pelo cliente e não aplica escopo de proprietário. Além disso, a identidade autenticada só é obtida depois da consulta, impedindo que ela seja usada como critério de autorização.\",\"estrategia_de_correcao\":\"Obter a identidade autenticada antes da consulta e restringir a busca da cesta ao usuário autenticado, usando o identificador de usuário validado pelo servidor. A consulta deve continuar usando o ID da rota, mas exigir também a propriedade correspondente.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"  return (req: Request, res: Response, next: NextFunction) => {\\n    const id = req.params.id\\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\\n      .then(async (basket: BasketModel | null) => {\\n        if (basket != null) {\\n          const customer = security.authenticatedUsers.from(req)\\n          const email = customer ? customer.data ? customer.data.email : '' : ''\",\"trecho_corrigido\":\"  return (req: Request, res: Response, next: NextFunction) => {\\n    const id = req.params.id\\n    const customer = security.authenticatedUsers.from(req)\\n    const userId = customer ? customer.data ? customer.data.id : undefined : undefined\\n    BasketModel.findOne({ where: { id, UserId: userId }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\\n      .then(async (basket: BasketModel | null) => {\\n        if (basket != null) {\\n          const email = customer ? customer.data ? customer.data.email : '' : ''\"}],\"justificativa_tecnica\":\"A consulta passa a exigir simultaneamente o ID solicitado e o UserId derivado da sessão autenticada no servidor. Assim, uma cesta pertencente a outro usuário não é carregada nem processada, preservando o fluxo existente para o proprietário legítimo e mantendo a resposta de erro já existente para cestas não encontradas. A alteração é mínima e cobre a operação de leitura e as alterações subsequentes realizadas sobre a cesta selecionada.\",\"limitacoes_da_correcao\":\"A correção pressupõe que customer.data.id corresponde ao campo UserId usado pelo modelo BasketModel e que a autenticação já foi validada por middleware ou pelo mecanismo authenticatedUsers. Administradores ou outros fluxos legítimos que precisem acessar cestas de terceiros não serão permitidos por esta regra, pois não há no trecho fornecido uma política explícita de acesso administrativo. Também é recomendável validar, em testes, o comportamento com dois usuários, usuário não autenticado e cesta inexistente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3800,
+  "tokens_saida": 639,
+  "latencia_s": 7.543,
+  "custo_usd": 0.001717,
+  "hash_prompt": "8b53c6d5af94c73386207bf7968fe77a05d5f50ccda3ecaacd84e1a41760ceb3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3797
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: o parâmetro controlado pelo usuário é usado para construir o caminho passado a res.sendFile, permitindo leitura arbitrária de arquivos por traversal, incluindo variantes com separadores de diretório.\",\"causa_da_vulnerabilidade\":\"A validação atual rejeita apenas a barra `/`. Ela não confina o caminho resolvido ao diretório encryptionkeys e não bloqueia traversal com `..`, separadores `\\\\\\\\` ou caminhos absolutos.\",\"estrategia_de_correcao\":\"Resolver o diretório raiz uma única vez e usar a opção `root` do Express com o parâmetro relativo. O Express então valida que o caminho permanece dentro da raiz, preservando nomes legítimos e subpastas aceitas pela rota. A rejeição existente para nomes contendo `/` é mantida sem alterar sua mensagem.\",\"edicoes\":[{\"arquivo\":\"routes/keyServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\",\"trecho_corrigido\":\"    if (!file.includes('/')) {\\n      res.sendFile(file, { root: path.resolve('encryptionkeys/') })\\n    } else {\"}],\"justificativa_tecnica\":\"A raiz absoluta é separada da entrada controlada pelo usuário e fornecida explicitamente por meio de `root`. O Express normaliza e verifica o caminho relativo antes de servir o arquivo, impedindo que `..`, caminhos absolutos ou outras formas de traversal escapem de `encryptionkeys`. A alteração é mínima, mantém a assinatura, a rota, a mensagem de erro e o tratamento existente, além de preservar o uso de `path` já importado.\",\"limitacoes_da_correcao\":\"A proteção de `root` não substitui autorização de acesso aos arquivos. Links simbólicos existentes dentro de `encryptionkeys` podem exigir validação adicional com `realpath` caso o ambiente permita que apontem para fora da raiz. Também devem ser testados nomes válidos, arquivos inexistentes, traversal com `..`, separadores alternativos e entradas codificadas conforme o comportamento de decodificação da rota.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1724,
+  "tokens_saida": 458,
+  "latencia_s": 7.112,
+  "custo_usd": 0.00098,
+  "hash_prompt": "5b9d03b47de51ee728353ab3fb605452c02df9ac0d18e92d5dc2bb5d5e4ed39b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1721
+}

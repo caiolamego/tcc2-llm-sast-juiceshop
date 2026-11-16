@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Execução de código controlado pela requisição (CWE-95) no processamento de pedidos B2B.\",\n  \"causa_da_vulnerabilidade\": \"O valor body.orderLinesData, controlável pelo cliente, é passado a safeEval como código executável. A execução dentro de node:vm e o limite de tempo não impedem que a entrada seja interpretada como instruções.\",\n  \"estrategia_de_correcao\": \"Remover a avaliação dinâmica e interpretar orderLinesData como dados JSON. Manter o sandbox e o tratamento de erros existentes, sem alterar o formato da resposta para pedidos válidos que forneçam JSON.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/b2bOrder.ts\",\n      \"trecho_original\": \"import vm from 'node:vm'\\nimport { type Request, type Response, type NextFunction } from 'express'\\n// @ts-expect-error FIXME due to non-existing type definitions for notevil\\nimport { eval as safeEval } from 'notevil'\",\n      \"trecho_corrigido\": \"import vm from 'node:vm'\\nimport { type Request, type Response, type NextFunction } from 'express'\"\n    },\n    {\n      \"arquivo\": \"routes/b2bOrder.ts\",\n      \"trecho_original\": \"        const sandbox = { safeEval, orderLinesData }\\n        vm.createContext(sandbox)\\n        vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })\",\n      \"trecho_corrigido\": \"        JSON.parse(orderLinesData)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"JSON.parse interpreta a entrada como dados JSON, não como código JavaScript, eliminando o caminho de execução dinâmica e a dependência de notevil e node:vm. A validação sintática continua dentro do try/catch existente; JSON inválido segue pelo tratamento de erro já presente. O valor vazio, que anteriormente também falhava ao ser avaliado, continua sendo rejeitado.\",\n  \"limitacoes_da_correcao\": \"A alteração pressupõe que orderLinesData deve conter JSON válido. Se o formato funcional esperado for uma gramática diferente de JSON, será necessário definir e implementar um parser restrito para esse formato. JSON.parse não limita, por si só, o tamanho da entrada; limites de tamanho do corpo da requisição devem ser configurados na camada de parsing HTTP.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2414,
+  "tokens_saida": 519,
+  "latencia_s": 5.726,
+  "custo_usd": 0.000561,
+  "hash_prompt": "e6b47f79f568e333cbbceb43bf85d5036aa31052cfe5ac6e171e5b21050a50f3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2411
+}

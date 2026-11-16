@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de chave HMAC hardcoded (CWE-798)\",\"causa_da_vulnerabilidade\":\"A chave secreta usada para gerar o HMAC está codificada diretamente no código-fonte, o que pode levar à exposição da chave e comprometimento da segurança.\",\"estrategia_de_correcao\":\"Remover a chave secreta hardcoded e obter a chave a partir de uma variável de ambiente, garantindo que a chave não fique exposta no código-fonte e possa ser gerenciada de forma segura.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\",\"trecho_corrigido\":\"export const hmac = (data: string) => {\\n  const secret = process.env.HMAC_SECRET\\n  if (!secret) {\\n    throw new Error('Missing HMAC secret configuration')\\n  }\\n  return crypto.createHmac('sha256', secret).update(data).digest('hex')\\n}\"}],\"justificativa_tecnica\":\"Manter segredos criptográficos fora do código-fonte é uma prática recomendada para evitar exposição acidental e facilitar a rotação e gerenciamento seguro das chaves. Utilizar variáveis de ambiente para armazenar segredos permite que a aplicação acesse a chave de forma segura e configurável sem comprometer o código.\",\"limitacoes_da_correcao\":\"É necessário garantir que a variável de ambiente HMAC_SECRET esteja configurada corretamente no ambiente de execução da aplicação. Caso contrário, a aplicação lançará um erro e não funcionará corretamente. A correção não altera o comportamento funcional da função hmac, apenas a forma como a chave é obtida.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3547,
+  "tokens_saida": 386,
+  "latencia_s": 4.119,
+  "custo_usd": 0.00146,
+  "hash_prompt": "9bdcb6b7e84a84bd1a236c819dcc7f310bb4855cb487b3ee49475ff6f8b59739",
+  "do_cache": false
+}

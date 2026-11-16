@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado ou refletido no número do pedido, devido à inserção de dados controlados externamente em HTML confiável.\",\"causa_da_vulnerabilidade\":\"O valor results.data[0].orderId é interpolado diretamente em uma string HTML e marcado como confiável por meio de bypassSecurityTrustHtml, desativando as proteções de sanitização do Angular.\",\"estrategia_de_correcao\":\"Remover o uso de HTML confiável e armazenar o número do pedido como texto simples. A renderização deve ser feita pelo template usando interpolação ou binding de texto, permitindo que o Angular aplique escape automaticamente.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"import { DomSanitizer } from '@angular/platform-browser'\\n\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"  private readonly sanitizer = inject(DomSanitizer)\\n\\n\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n\",\"trecho_corrigido\":\"      this.results.orderNo = results.data[0].orderId\\n\"}],\"justificativa_tecnica\":\"O Angular escapa valores exibidos por interpolação e bindings de texto por padrão. Ao remover DomSanitizer e bypassSecurityTrustHtml, o orderId deixa de ser interpretado como marcação HTML, impedindo a execução de scripts ou de atributos maliciosos fornecidos pelo backend ou por um atacante. A alteração preserva o valor funcional do número do pedido, mas remove a formatação HTML code que anteriormente era criada no componente.\",\"limitacoes_da_correcao\":\"O template deve exibir results.orderNo por interpolação ou binding de texto seguro, como {{ results.orderNo }}. Se o template utilizar [innerHTML] para esse valor, ele também deverá ser alterado para uma forma de exibição textual; essa alteração não foi incluída porque o arquivo do template não foi fornecido.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1178,
+  "tokens_saida": 476,
+  "latencia_s": 5.546,
+  "custo_usd": 0.000866,
+  "hash_prompt": "b9f846711cf854e40b77d39c8bfd5e20e78aaa2af9fd534aa423ef2e33def4b5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1175
+}

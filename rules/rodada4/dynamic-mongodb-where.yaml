@@ -1,0 +1,15 @@
+rules:
+  - id: tcc.mongodb.security.dynamic-where
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Consulta MongoDB $where montada dinamicamente executa JavaScript e
+      pode incorporar entrada nao confiavel. Use filtros tipados sem $where.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
+      confidence: MEDIUM
+    pattern-either:
+      - pattern: '$COLLECTION.find({ $where: $LEFT + $RIGHT })'
+      - pattern: '$COLLECTION.find({ $where: `...${$VALUE}...` })'

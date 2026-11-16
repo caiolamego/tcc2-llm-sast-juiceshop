@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml que desativa a sanitização HTML do Angular, permitindo possível Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O código utiliza this.sanitizer.bypassSecurityTrustHtml para inserir diretamente conteúdo HTML vindo de dados externos (results.data[0].orderId) sem validação ou sanitização adequada, o que permite que scripts maliciosos sejam executados no contexto da aplicação.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e utilizar a interpolação padrão do Angular para exibir o conteúdo como texto, garantindo que o Angular faça a sanitização automática e escape os caracteres especiais, prevenindo a execução de scripts maliciosos.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n\",\"trecho_corrigido\":\"this.results.orderNo = `<code>${results.data[0].orderId}</code>`\\n\"}],\"justificativa_tecnica\":\"Ao remover bypassSecurityTrustHtml e atribuir o valor diretamente como string, o Angular aplicará sua sanitização padrão ao renderizar o conteúdo no template, escapando caracteres especiais e prevenindo a execução de código malicioso. Isso elimina a vulnerabilidade XSS sem alterar a funcionalidade ou a apresentação do dado.\",\"limitacoes_da_correcao\":\"Se o template utiliza [innerHTML] para exibir orderNo, o conteúdo ainda será interpretado como HTML, mas o Angular aplicará sanitização padrão removendo scripts. Caso o campo orderId contenha tags HTML legítimas que devam ser preservadas, será necessário implementar uma sanitização customizada para permitir apenas tags seguras. Esta correção assume que orderId é texto simples e não contém HTML confiável.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2358,
+  "tokens_saida": 397,
+  "latencia_s": 4.85,
+  "custo_usd": 0.001002,
+  "hash_prompt": "89213d25ddb3e0075ffb63f0eb837b3693db30ffa5da63d82d95b3809baae001",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

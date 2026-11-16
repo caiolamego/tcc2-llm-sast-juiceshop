@@ -1,0 +1,17 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..7744c5473 100644
+--- a/server.ts
++++ b/server.ts
+@@ -179,8 +179,10 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+   app.use(compression())
+ 
+   /* Bludgeon solution for possible CORS problems: Allow everything! */
+-  app.options('*', cors())
+-  app.use(cors())
++  // Restrict CORS to trusted origins only
++  const allowedOrigins = ['https://trusteddomain.com']
++  app.options('*', cors({ origin: allowedOrigins }))
++  app.use(cors({ origin: allowedOrigins }))
+ 
+   /* Security middleware */
+   app.use(helmet.noSniff())

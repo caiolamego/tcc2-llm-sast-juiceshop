@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key (IDOR) na função getDeliveryMethod ao buscar método de entrega pelo ID sem verificar se o recurso pertence ao usuário autenticado.\",\"causa_da_vulnerabilidade\":\"A consulta ao banco de dados busca o método de entrega apenas pelo ID fornecido na requisição (req.params.id), sem escopo ou filtro baseado no usuário autenticado, permitindo que um usuário acesse métodos de entrega que não deveria.\",\"estrategia_de_correcao\":\"Adicionar verificação para garantir que o método de entrega retornado pertence ao usuário autenticado ou que o usuário tem permissão para acessá-lo. Como não há informação explícita de propriedade do método de entrega, a correção mínima é restringir a consulta para incluir um filtro baseado no usuário autenticado (por exemplo, userId) obtido da sessão ou token, assumindo que tal campo exista no modelo DeliveryModel. Caso não exista, deve-se implementar essa associação. A alteração será feita na consulta findOne para incluir o filtro do usuário autenticado, prevenindo acesso não autorizado.\",\"edicoes\":[{\"arquivo\":\"routes/delivery.ts\",\"trecho_original\":\"    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\",\"trecho_corrigido\":\"    const method = await DeliveryModel.findOne({ where: { id: req.params.id, userId: req.user?.id } })\"}],\"justificativa_tecnica\":\"A alteração adiciona um filtro na consulta para garantir que o método de entrega retornado pertence ao usuário autenticado (req.user.id). Isso impede que um usuário acesse métodos de entrega de outros usuários, mitigando a vulnerabilidade de IDOR. A propriedade userId deve estar presente no modelo DeliveryModel e o middleware de autenticação deve popular req.user com os dados do usuário autenticado. Essa é a forma recomendada para escopo de usuário em consultas para evitar autorização bypass.\",\"limitacoes_da_correcao\":\"A correção assume que o modelo DeliveryModel possui um campo userId que referencia o dono do método de entrega e que o objeto req.user está corretamente populado pelo middleware de autenticação. Se essas condições não forem verdadeiras, será necessário implementar essas associações e autenticação. Além disso, se métodos de entrega forem recursos globais e não específicos de usuário, essa correção pode bloquear acessos legítimos, sendo necessário revisar a regra de negócio para definir o escopo correto.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1757,
+  "tokens_saida": 503,
+  "latencia_s": 5.099,
+  "custo_usd": 0.001508,
+  "hash_prompt": "15e2a99d1d0319792ef5c462e66099e82dd9badbcb448ce8e58cea32f451bf4d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,19 @@
+rules:
+  - id: tcc.archive.security.entry-path-write
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Caminho vindo de entrada de arquivo compactado alcanca criacao de arquivo.
+      Normalize e restrinja o caminho ao diretorio de extracao.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-22: Improper Limitation of a Pathname to a Restricted Directory"
+      confidence: MEDIUM
+    mode: taint
+    pattern-sources:
+      - pattern: $ENTRY.path
+    pattern-sanitizers:
+      - pattern: path.basename(...)
+    pattern-sinks:
+      - pattern: fs.createWriteStream(...)

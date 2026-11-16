@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função eval para executar código dinâmico extraído do nome de usuário, que pode ser controlado por um atacante.\",\"causa_da_vulnerabilidade\":\"O código extrai um trecho do nome de usuário que corresponde a uma expressão entre '#{...}' e executa essa expressão usando eval sem qualquer validação ou sanitização, permitindo execução arbitrária de código.\",\"estrategia_de_correcao\":\"Remover o uso de eval para interpretar o conteúdo do nome de usuário. Em vez disso, tratar o nome de usuário como texto simples, escapando caracteres especiais para evitar execução de código ou injeção de template.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  const code = username?.substring(2, username.length - 1)\\n  try {\\n    if (!code) {\\n      throw new Error('Username is null')\\n    }\\n    username = eval(code) // eslint-disable-line no-eval\\n  } catch (err) {\\n    username = '\\\\\\\\' + username\\n  }\\n} else {\\n  username = '\\\\\\\\' + username\\n}\",\"trecho_corrigido\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  // Removido uso de eval para evitar execução de código\\n  username = '\\\\\\\\' + username\\n} else {\\n  username = '\\\\\\\\' + username\\n}\"}],\"justificativa_tecnica\":\"A remoção do uso de eval elimina a possibilidade de execução arbitrária de código injetado via nome de usuário. Ao tratar o nome de usuário como texto simples e escapando caracteres especiais, evita-se a injeção de código e ataques de SSTI (Server Side Template Injection).\",\"limitacoes_da_correcao\":\"A correção desativa a funcionalidade que permitia a execução dinâmica de código via nome de usuário, o que pode impactar desafios ou funcionalidades específicas que dependem dessa característica. Contudo, essa é uma medida necessária para garantir a segurança da aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2113,
+  "tokens_saida": 490,
+  "latencia_s": 4.962,
+  "custo_usd": 0.001629,
+  "hash_prompt": "fbb982818786edf58cb5459f8e2aeda9a1c8addd75b3f241eb6fcbf37f0f44f4",
+  "do_cache": false
+}

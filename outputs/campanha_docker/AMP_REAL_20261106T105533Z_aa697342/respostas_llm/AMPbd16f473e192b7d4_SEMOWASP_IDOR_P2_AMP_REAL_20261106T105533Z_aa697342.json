@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso não autorizado a cestas de compras de outros usuários (IDOR/BOLA) ao finalizar um pedido.\",\n  \"causa_da_vulnerabilidade\": \"A rota busca a cesta exclusivamente pelo identificador recebido em req.params.id e verifica apenas se ela existe. Não valida que a cesta pertence ao usuário autenticado. Assim, um atacante que conheça ou adivinhe o ID de outra cesta pode finalizar o pedido usando os produtos e o cupom dessa cesta. Além disso, o código usa req.body.UserId para debitar ou creditar a carteira, permitindo que o cliente escolha o usuário afetado.\",\n  \"estrategia_de_correcao\": \"Vincular a busca da cesta ao usuário autenticado e usar a identidade obtida da sessão/autenticação, em vez de req.body.UserId, para operações de carteira. Se não houver usuário autenticado, a consulta não deve retornar cestas de usuários.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"    const id = req.params.id\\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\n      \"trecho_corrigido\": \"    const id = req.params.id\\n    const customer = security.authenticatedUsers.from(req)\\n    const userId = customer?.data?.id\\n    BasketModel.findOne({ where: { id, ...(userId != null ? { UserId: userId } : { id: null }) }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"\n    },\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"          const customer = security.authenticatedUsers.from(req)\\n          const email = customer ? customer.data ? customer.data.email : '' : ''\",\n      \"trecho_corrigido\": \"          const email = customer ? customer.data ? customer.data.email : '' : ''\"\n    },\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"          if (req.body.UserId) {\\n            if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {\\n              const wallet = await WalletModel.findOne({ where: { UserId: req.body.UserId } })\\n              if ((wallet != null) && wallet.balance >= totalPrice) {\\n                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: req.body.UserId } })\",\n      \"trecho_corrigido\": \"          if (userId != null) {\\n            if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {\\n              const wallet = await WalletModel.findOne({ where: { UserId: userId } })\\n              if ((wallet != null) && wallet.balance >= totalPrice) {\\n                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: userId } })\"\n    },\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"            try {\\n              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: req.body.UserId } })\",\n      \"trecho_corrigido\": \"            try {\\n              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: userId } })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta passa a exigir simultaneamente o ID da cesta e o UserId derivado da identidade autenticada. Quando não há identidade ou ID de usuário, a condição id: null impede que uma cesta válida seja selecionada. Isso impede que a troca do parâmetro da rota permita finalizar a cesta de outra pessoa. As operações de carteira também passam a usar esse mesmo UserId confiável, eliminando a possibilidade de o cliente indicar outro usuário no corpo da requisição. Os demais cálculos e o fluxo de finalização permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A solução pressupõe que authenticatedUsers.from(req).data.id corresponde ao campo UserId usado pelo modelo Basket e pelas carteiras. Se a aplicação permitir finalizar pedidos anonimamente, será necessário definir uma política explícita de propriedade para cestas anônimas; esta correção, intencionalmente, não permite que uma requisição sem usuário autenticado selecione uma cesta.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3045,
+  "tokens_saida": 946,
+  "latencia_s": 8.672,
+  "custo_usd": 0.000854,
+  "hash_prompt": "8a4364c87143814313f8d61243fc64f15b8295e3294fe7a6ac21d245cc935cd9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3042
+}

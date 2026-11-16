@@ -1,0 +1,13 @@
+diff --git a/views/promotionVideo.pug b/views/promotionVideo.pug
+index 7b819b80d..6de6d59dc 100644
+--- a/views/promotionVideo.pug
++++ b/views/promotionVideo.pug
+@@ -105,7 +105,7 @@ html(lang='en')
+             var subtitle = document.getElementById('subtitle');
+             var track = video.addTextTrack('subtitles', subtitle.dataset.label, subtitle.dataset.lang);
+             track.mode = "showing";
+-            quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function(cue) {
++            quick_and_dirty_vtt_or_srt_parser(subtitle.textContent).map(function(cue) {
+             track.addCue(cue);
+             });
+             }

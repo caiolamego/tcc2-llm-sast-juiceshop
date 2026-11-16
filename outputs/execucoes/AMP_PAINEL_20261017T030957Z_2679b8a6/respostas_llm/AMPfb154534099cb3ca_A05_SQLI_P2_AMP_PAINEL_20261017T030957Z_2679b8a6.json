@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection na consulta de autenticação de usuário.\",\"causa_da_vulnerabilidade\":\"O código constrói a consulta SQL concatenando diretamente os valores de entrada do usuário (req.body.email e req.body.password) sem qualquer sanitização ou uso de parâmetros preparados, permitindo que um atacante injete código SQL malicioso.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas (prepared statements) para evitar a injeção de SQL, passando os valores do email e senha como parâmetros separados da query, impedindo que sejam interpretados como código SQL.\",\"edicoes\":[{\"arquivo\":\"routes/login.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true })\",\"trecho_corrigido\":\"models.sequelize.query(`SELECT * FROM Users WHERE email = ? AND password = ? AND deletedAt IS NULL`, { replacements: [req.body.email || '', security.hash(req.body.password || '')], model: UserModel, plain: true })\"}],\"justificativa_tecnica\":\"Ao usar consultas parametrizadas com 'replacements', o Sequelize trata os valores de entrada como dados, não como parte do código SQL, eliminando a possibilidade de injeção de comandos SQL maliciosos. Isso protege a aplicação contra ataques de SQL Injection sem alterar a lógica funcional do código.\",\"limitacoes_da_correcao\":\"A correção depende do suporte do ORM Sequelize para consultas parametrizadas, que é padrão. No entanto, se outras partes do código fizerem concatenação direta de entradas em queries SQL, elas também devem ser revisadas para evitar vulnerabilidades similares.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_adba1d049a",
+  "seed": 42,
+  "tokens_entrada": 1855,
+  "tokens_saida": 360,
+  "latencia_s": 4.035,
+  "custo_usd": 0.001318,
+  "hash_prompt": "002e87ac1503fa2d9739ef5e48f7d33736a2918f9c13c873c6df43faadd6aaa0",
+  "do_cache": true
+}

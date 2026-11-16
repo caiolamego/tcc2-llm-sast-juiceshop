@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso não autorizado para alterar produtos (Broken Access Control / CWE-862).\",\n  \"causa_da_vulnerabilidade\": \"A rota PUT /api/Products/:id, que permite modificar produtos, está comentada. Assim, não há middleware de autorização associado a essa rota neste trecho, deixando a proteção dependente de outras rotas ou do comportamento do roteador.\",\n  \"estrategia_de_correcao\": \"Ativar a rota PUT existente e exigir autenticação, seguindo o padrão de autorização usado para a criação de produtos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  app.post('/api/Products', security.isAuthorized()) // vuln-code-snippet neutral-line changeProductChallenge\\n  // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\\n  app.delete('/api/Products/:id', security.denyAll())\",\n      \"trecho_corrigido\": \"  app.post('/api/Products', security.isAuthorized()) // vuln-code-snippet neutral-line changeProductChallenge\\n  app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\\n  app.delete('/api/Products/:id', security.denyAll())\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A ativação da rota aplica security.isAuthorized() às requisições PUT para produtos, impedindo que usuários não autenticados alcancem a operação de atualização. A alteração é mínima e mantém a política já indicada no código para essa rota, sem modificar outras operações.\",\n  \"limitacoes_da_correcao\": \"A autenticação não necessariamente restringe a atualização a usuários com privilégios administrativos. Se apenas um perfil específico deve alterar produtos, será necessário aplicar uma verificação de autorização baseada em função ou privilégio, conforme os mecanismos existentes na aplicação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2340,
+  "tokens_saida": 414,
+  "latencia_s": 4.803,
+  "custo_usd": 0.000499,
+  "hash_prompt": "8a2613c0580d7e5d74b1c20e3784b66269a9a16d4a3f3da0983d3c70ca6d0bda",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2337
+}

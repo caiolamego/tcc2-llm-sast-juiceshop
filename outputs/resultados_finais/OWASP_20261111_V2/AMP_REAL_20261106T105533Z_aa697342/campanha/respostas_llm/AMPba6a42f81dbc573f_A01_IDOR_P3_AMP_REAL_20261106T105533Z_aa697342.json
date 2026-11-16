@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A consulta de BasketItemModel pelo ID fornecido na URL não está limitada à cesta do usuário autenticado. Isso pode permitir que um usuário altere a quantidade de um item pertencente a outra cesta.\",\n  \"causa_da_vulnerabilidade\": \"Em quantityCheckBeforeBasketItemUpdate, o item é carregado usando somente req.params.id. A verificação de BasketId usa um valor enviado pelo cliente e não comprova que o item encontrado pertence à cesta associada à identidade autenticada.\",\n  \"estrategia_de_correcao\": \"Para usuários autenticados, limitar a busca do item ao BasketId obtido da identidade validada pelo servidor. Manter a busca existente para requisições sem usuário autenticado, preservando o comportamento anterior nesse caso.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/basketItems.ts\",\n      \"trecho_original\": \"    try {\\n      const item = await BasketItemModel.findOne({ where: { id: req.params.id } })\\n      const user = security.authenticatedUsers.from(req)\\n      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\",\n      \"trecho_corrigido\": \"    try {\\n      const user = security.authenticatedUsers.from(req)\\n      const item = await BasketItemModel.findOne({ where: user ? { id: req.params.id, BasketId: user.bid } : { id: req.params.id } })\\n      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta passa a aplicar autorização no próprio escopo de busca: para uma sessão autenticada, o registro só é encontrado se seu ID corresponder e seu BasketId pertencer à cesta associada ao usuário no servidor. Assim, um BasketId forjado no corpo da requisição não permite selecionar um item de outra cesta. A resposta e o fluxo existentes para item não encontrado são preservados.\",\n  \"limitacoes_da_correcao\": \"A alteração protege a consulta usada por esta verificação de atualização. A busca sem escopo para requisições sem usuário autenticado foi mantida para preservar o comportamento existente; a autorização dessas requisições depende dos middlewares e controles da rota, que não foram fornecidos. Também é necessário confirmar que user.bid é a associação confiável da sessão e que BasketId é o campo correto de propriedade no modelo.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2355,
+  "tokens_saida": 572,
+  "latencia_s": 5.731,
+  "custo_usd": 0.00058,
+  "hash_prompt": "1f699546d167473ad29b93dbfa0cac6d6c24c91c83529c8069697049300473a5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2352
+}

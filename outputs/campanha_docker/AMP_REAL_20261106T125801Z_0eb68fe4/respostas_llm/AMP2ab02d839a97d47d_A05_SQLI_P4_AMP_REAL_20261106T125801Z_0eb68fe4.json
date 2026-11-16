@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de SQL (CWE-89) na busca de produtos.\",\"causa_da_vulnerabilidade\":\"O valor controlado pelo usuário em req.query.q é interpolado diretamente na string SQL por meio de um template literal. Caracteres e fragmentos SQL fornecidos pelo cliente podem alterar a estrutura da consulta.\",\"estrategia_de_correcao\":\"Substituir a interpolação direta por um parâmetro nomeado do Sequelize e fornecer o valor da busca em replacements, preservando o filtro, a ordenação e o limite de 200 caracteres.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"    models.sequelize.query('SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name', { replacements: { criteria: `%${criteria}%` } }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"O texto SQL passa a ser constante e o conteúdo derivado de req.query.q é enviado separadamente como parâmetro nomeado. O Sequelize/driver trata esse valor como dado literal, impedindo que aspas, comentários, operadores ou comandos SQL alterem a consulta. A inclusão dos curingas % no valor parametrizado preserva o comportamento de busca parcial existente, inclusive para valores contendo aspas e caracteres internacionais.\",\"limitacoes_da_correcao\":\"A correção depende do suporte normal do Sequelize ao parâmetro nomeado replacements, disponível para essa API. Ela protege o valor de busca, mas não substitui validações ou controles de acesso necessários em outras partes da aplicação. O limite de 200 caracteres continua sendo apenas uma restrição funcional e não deve ser considerado mecanismo de proteção contra SQL injection.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2732,
+  "tokens_saida": 427,
+  "latencia_s": 5.698,
+  "custo_usd": 0.001195,
+  "hash_prompt": "493b1fc779b57d3b61188b508636ff691733f7cc9e0eb5c31578e4ab191ea123",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2729
+}

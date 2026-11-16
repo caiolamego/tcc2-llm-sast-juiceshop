@@ -1,0 +1,35 @@
+OK    01 identidade científica (componentes, cobertura, prompts, RAG, perfis, catálogo, referência Docker)
+      arquivos: 5 movidos sem alteração, 27 novos/alterados em local novo, 21 removidos sem destino idêntico, 6 alterados no lugar
+OK    02 só documentos (.md), o caminho da interface em painel/server.py e um comentário do .env.example mudaram de conteúdo
+OK    02b outputs/ intocado (só o índice novo) — outputs/README.md
+OK    03 testes Python: mesmos testes, mesmos resultados — antes 358 (exit=0), depois 358 (exit=0)
+OK    04 testes das regras Semgrep
+      normalização aplicada às execuções (só o que muda a cada rodada, sem relação com resultado):
+        - bloco "time" do Semgrep (segundos, memória, arquivos lentos, regras que estouraram tempo)
+        - campos de duração e horário (duracao*, tempos*, espera*, inicio*, fim*, *_s)
+        - campo "worktree" (qual das 4 cópias executou a tentativa)
+        - hashes derivados desses arquivos (artefatos_sha256, fontes_sha256, evidencia_sha256, baseline_sha256)
+        - em textos: pasta temporária /tmp/tcc_cobertura_*, milissegundos dos testes, atributos time= do JUnit, wt-N,
+          hostname do JUnit (ID do container, sorteado pelo Docker a cada execução)
+OK    05_preflight: 299 arquivos iguais após a normalização — 0 diferentes: 
+OK    05_preflight_METRICAS: 15 arquivos iguais após a normalização — 0 diferentes: 
+OK    10_dryrun: 452 arquivos iguais após a normalização — 0 diferentes: 
+OK    10_dryrun_METRICAS: 15 arquivos iguais após a normalização — 0 diferentes: 
+OK    05_preflight/prompts: idênticos byte a byte (sem normalização)
+OK    10_dryrun/prompts: idênticos byte a byte (sem normalização)
+OK    10_dryrun/respostas_llm: idênticos byte a byte (sem normalização)
+OK    10_dryrun/patches: idênticos byte a byte (sem normalização)
+OK    10_dryrun/codigos_corrigidos: idênticos byte a byte (sem normalização)
+OK    10_dryrun/comparacoes: idênticos byte a byte (sem normalização)
+OK    05 preflight terminou com sucesso nas duas
+OK    10 dry-run terminou com sucesso nas duas
+OK    10 dry-run: as 40 tentativas têm os mesmos R, F, M, classificação, aplicação e hash do prompt
+OK    06 reconsolidação da campanha oficial idêntica ao arquivado (antes e depois)
+OK    07 comandos montados pelo executar.py
+OK    08 Makefile (make -n de todos os alvos)
+OK    12 conferência da referência Docker
+OK    09 painel: páginas e API idênticas
+OK    11 nenhum link interno quebrado na documentação — antes 0, depois 0: []
+OK    11 links externos (fora do repositório) apontam para os mesmos destinos — 3 antes, 3 depois
+
+RESULTADO: tudo igual no que é funcional

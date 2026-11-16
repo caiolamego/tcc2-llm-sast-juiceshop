@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de informações por listagem de diretório (CWE-548) nas rotas /ftp e /support/logs.\",\n  \"causa_da_vulnerabilidade\": \"O middleware serveIndex está habilitado nessas rotas e gera páginas que revelam nomes e metadados dos arquivos. A rota /ftp também permite listar conteúdo sem autenticação; em /support/logs, a verificação de acesso está registrada depois do middleware de listagem, portanto não protege a listagem.\",\n  \"estrategia_de_correcao\": \"Remover apenas os middlewares serveIndex das rotas vulneráveis, preservando os middlewares de acesso aos arquivos e, em /support/logs, a verificação de controle de acesso existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\",\n      \"trecho_corrigido\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\"\n    },\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\n      \"trecho_corrigido\": \"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem serveIndex, as requisições ao caminho do diretório deixam de produzir uma listagem de nomes e metadados. Os handlers de arquivos permanecem, preservando o acesso funcional aos arquivos conforme as rotas existentes; a verificação de acesso aos logs continua registrada antes do handler de arquivos.\",\n  \"limitacoes_da_correcao\": \"A alteração impede a listagem, mas não torna os arquivos individuais inacessíveis. Os arquivos de /ftp continuam servidos pela rota existente, e a proteção dos logs depende do comportamento de verify.accessControlChallenges(). Deve-se confirmar que os arquivos disponibilizados diretamente são intencionalmente públicos e que a verificação de acesso aos logs é adequada.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3222,
+  "tokens_saida": 688,
+  "latencia_s": 6.158,
+  "custo_usd": 0.000747,
+  "hash_prompt": "adcc09740227ce8538c23c0da45cff80385ace9c27b9554d80c8394fd7300e98",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3219
+}

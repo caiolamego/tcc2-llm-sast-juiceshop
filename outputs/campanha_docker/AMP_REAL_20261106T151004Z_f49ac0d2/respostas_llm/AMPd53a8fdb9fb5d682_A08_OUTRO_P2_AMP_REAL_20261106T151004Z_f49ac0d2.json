@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de configuração sensível via fetch em frontend, permitindo acesso não autorizado a dados de configuração da aplicação.\",\"causa_da_vulnerabilidade\":\"O código realiza uma requisição fetch para '/rest/admin/application-configuration' diretamente do frontend sem qualquer controle de acesso, armazenando a configuração em uma variável global e utilizando seus valores para substituir partes de strings. Isso permite que qualquer usuário que execute esse código no frontend obtenha informações sensíveis da configuração da aplicação.\",\"estrategia_de_correcao\":\"Remover a chamada fetch para '/rest/admin/application-configuration' no frontend para evitar exposição de dados sensíveis. Caso seja necessário obter alguma configuração, deve-se implementar um endpoint seguro no backend com autenticação e autorização adequadas. No código atual, a substituição baseada em configuração deve ser desabilitada ou controlada para não expor dados sensíveis.\",\"edicoes\":[{\"arquivo\":\"frontend/src/hacking-instructor/helpers/helpers.ts\",\"trecho_original\":\"      if (!config) {\\n        const res = await fetch('/rest/admin/application-configuration')\\n        const json = await res.json()\\n        config = json.config\\n      }\",\"trecho_corrigido\":\"      if (!config) {\\n        throw new Error('Access to application configuration is not allowed in frontend')\\n      }\"}],\"justificativa_tecnica\":\"Ao remover a chamada fetch para o endpoint de configuração administrativa no frontend, impede-se que usuários não autorizados obtenham dados sensíveis da aplicação. A substituição do valor com base em configuração não poderá mais ocorrer, eliminando a exposição de dados confidenciais. Isso mitiga a vulnerabilidade de exposição de informações sensíveis diretamente no cliente.\",\"limitacoes_da_correcao\":\"A correção impede o uso da funcionalidade de substituição baseada em configuração no frontend, o que pode impactar funcionalidades que dependem dessa substituição. Para manter funcionalidades similares, seria necessário implementar um mecanismo seguro no backend para fornecer apenas dados não sensíveis, com autenticação e autorização adequadas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1401,
+  "tokens_saida": 415,
+  "latencia_s": 3.909,
+  "custo_usd": 0.001224,
+  "hash_prompt": "01982b2b157568d9b8d53db54d4a24a85b7f86ec60659b5a07b3f2cdfc82cd14",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

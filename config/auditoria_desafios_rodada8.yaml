@@ -1,0 +1,60 @@
+regras_candidatas:
+  dataExportChallenge: [tcc.identity.security.masked-email-selector]
+  negativeOrderChallenge: [tcc.validation.security.quantity-upper-bound-only]
+  registerAdminChallenge: [tcc.finale.security.generated-default-writes]
+  forgedFeedbackChallenge: [tcc.finale.security.generated-default-writes]
+
+triagem:
+  - regra: tcc.identity.security.masked-email-selector
+    arquivo: routes/dataExport.ts
+    linha: 33
+    status: confirmado
+    desafios: [dataExportChallenge]
+    sem_marcador: true
+    motivo: >-
+      A identidade autenticada fornece email, substituido por asteriscos antes
+      de selecionar pedidos. order.ts:169 persiste o mesmo mascaramento.
+      O teste cadastra alice@example.test e elice@example.test por HTTP na API
+      Finale/SQLite real extraida; sao identidades distintas com seletor igual.
+      A rota real de exportacao, com colecao de pedidos simulada, devolve pedido
+      alheio. Controle por ID do proprietario elimina o vazamento no teste.
+      Nao e teste completo de login/CAPTCHA de exportacao nem de MongoDB real.
+  - regra: tcc.identity.security.masked-email-selector
+    arquivo: routes/orderHistory.ts
+    linha: 17
+    status: confirmado
+    desafios: []
+    motivo: >-
+      O historico usa a mesma transformacao e filtro apenas pelo email mascarado.
+      Identidades diferentes podem selecionar os mesmos pedidos; leitura estatica
+      confirma o mecanismo, corroborado pelo teste de colisao da exportacao.
+      Nao e o endpoint do desafio dataExportChallenge, portanto nao cria outro
+      desafio confirmado. Deve ser coordenado com a correcao da identidade dos pedidos.
+  - regra: tcc.validation.security.quantity-upper-bound-only
+    arquivo: routes/basketItems.ts
+    linha: 93
+    status: confirmado
+    desafios: [negativeOrderChallenge]
+    sem_marcador: true
+    motivo: >-
+      quantityCheck verifica somente limites superiores; addBasketItem persiste
+      quantidade -2 pelo modelo real BasketItem em SQLite. A rota real placeOrder
+      usa o valor persistido e preco 10, produz total -20 e debito de carteira -20
+      com dependencias de estoque/carteira/pedidos/PDF simuladas. Controle previo
+      de quantidade positiva bloqueia a entrada; quantidade positiva continua aceita.
+  - regra: tcc.finale.security.generated-default-writes
+    arquivo: server.ts
+    linha: 501
+    status: confirmado
+    desafios: [registerAdminChallenge, forgedFeedbackChallenge]
+    sem_marcador: true
+    motivo: >-
+      Alerta generico de superficie de escrita, confirmado SOMENTE apos revisar
+      os modelos User/Feedback e middlewares anteriores. A chamada Finale original
+      publica criacao usando os atributos do corpo; excludeAttributes remove campos
+      de leitura/listagem, nao e allowlist de criacao. Testes HTTP com Express 4.22.1,
+      Finale 1.2.2, Sequelize 6.37.3 e SQLite 5.1.7, modelos e trechos do servidor reais,
+      persistem role admin no cadastro sem sessao e UserId de outra pessoa no feedback
+      com CAPTCHA valido. Controles impondo role customer e identidade confiavel
+      impedem os dois casos. Dois mecanismos/campos, um alerta de recurso gerado;
+      nao contar automaticamente todos os outros recursos como vulneraveis.

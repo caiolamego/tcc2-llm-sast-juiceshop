@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Divulgação de arquivos de log sensíveis via endpoint '/support/logs/:file' sem controle de acesso adequado.\",\"causa_da_vulnerabilidade\":\"O middleware 'serveLogFiles()' é usado para servir arquivos de log diretamente através do endpoint '/support/logs/:file' sem nenhuma verificação de autenticação ou autorização, permitindo que qualquer usuário acesse arquivos potencialmente sensíveis.\",\"estrategia_de_correcao\":\"Adicionar um middleware de verificação de autorização antes do middleware 'serveLogFiles()' para garantir que apenas usuários autenticados e autorizados possam acessar os arquivos de log.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', security.isAuthorized(), serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"Ao inserir o middleware 'security.isAuthorized()' antes de 'serveLogFiles()', o servidor passa a verificar se o usuário está autenticado e autorizado antes de permitir o acesso aos arquivos de log. Isso impede que usuários não autorizados acessem informações sensíveis, mitigando a vulnerabilidade de divulgação de informações.\",\"limitacoes_da_correcao\":\"A correção assume que o middleware 'security.isAuthorized()' está corretamente implementado para verificar autenticação e autorização. Se houver falhas nesse middleware, a proteção pode ser insuficiente. Além disso, usuários autorizados ainda terão acesso aos logs, o que pode ser um risco dependendo do contexto.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2216,
+  "tokens_saida": 383,
+  "latencia_s": 4.22,
+  "custo_usd": 0.001499,
+  "hash_prompt": "039b75f750bba46d431a8133d0f9acbc9930c3e3d875d88e3628f797c2fd4356",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

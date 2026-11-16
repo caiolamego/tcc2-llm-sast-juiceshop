@@ -1,0 +1,51 @@
+regras_candidatas:
+  lfrChallenge: [tcc.template.security.render-request-options]
+  changeProductChallenge: [tcc.authorization.security.asymmetric-method-guard]
+
+triagem:
+  - regra: tcc.template.security.render-request-options
+    arquivo: routes/dataErasure.ts
+    linha: 107
+    status: confirmado
+    desafios: [lfrChallenge]
+    sem_marcador: true
+    motivo: >-
+      Sessao exigida; layout vem do corpo, path.resolve somente alimenta blacklist
+      parcial e nao restringe o caminho usado por hbs. Spread do corpo fornece
+      layout a res.render. Integracao HTTP com rota real e hbs 4.2.0 reais retorna
+      os primeiros 100 caracteres de ../package.json fora de views. Controle que
+      seleciona apenas email/securityAnswer impede leitura. Sessao e persistencia
+      da solicitacao de privacidade simuladas; nao e E2E de login/navegador.
+  - regra: tcc.template.security.render-request-options
+    arquivo: routes/dataErasure.ts
+    linha: 123
+    status: falso_positivo
+    desafios: []
+    motivo: >-
+      Neste ramo req.body.layout e falsy; nao permite selecionar o caminho
+      arbitrario demonstrado no ramo anterior. O padrao generico de spread nao
+      distingue o controle de fluxo. Nao contado como segunda falha de leitura
+      local; outros abusos de opcoes nao foram demonstrados neste ramo.
+  - regra: tcc.authorization.security.asymmetric-method-guard
+    arquivo: server.ts
+    linha: 371
+    status: confirmado
+    desafios: [changeProductChallenge]
+    motivo: >-
+      Alerta indireto de assimetria, nao acerto na linha vulneravel: DELETE e
+      protegido mas PUT nao e registrado na camada de autorizacao. Revisados
+      middlewares globais e hooks; Finale publica update do Product. Integracao
+      HTTP anonima com Express/Finale/Sequelize/SQLite reais e modelo do alvo
+      persiste nova description; POST e DELETE anonimos retornam 401. Controle
+      com guard real no PUT retorna 401 e preserva description. Hooks de desafios
+      desativados e servidor reduzido; nao conta por proximidade ao comentario.
+  - regra: tcc.authorization.security.asymmetric-method-guard
+    arquivo: server.ts
+    linha: 429
+    status: falso_positivo
+    desafios: []
+    motivo: >-
+      Quantitys e protegido por app.use na linha 431 com isAccounting e IpFilter,
+      antes de Finale. A regra olha apenas guard imediatamente anterior e perde
+      essa protecao posterior. Nao ha ausencia de autorizacao demonstrada aqui;
+      alerta excluido da selecao de correcao.

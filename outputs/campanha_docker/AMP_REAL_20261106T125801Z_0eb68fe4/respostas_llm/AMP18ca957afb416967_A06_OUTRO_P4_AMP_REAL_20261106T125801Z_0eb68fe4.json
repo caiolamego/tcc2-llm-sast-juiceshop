@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de propriedade remota (remote-property injection) no acesso dinâmico a propriedades do objeto de usuário. O parâmetro de consulta fields permite que o cliente escolha propriedades arbitrárias de user.data, incluindo propriedades herdadas do protótipo.\",\"causa_da_vulnerabilidade\":\"O código usa entrada controlada pelo usuário diretamente em notação de colchetes, tanto na leitura de user.data[field] quanto na atribuição baseUser[field]. Assim, valores como __proto__, constructor ou prototype podem acessar propriedades herdadas ou alterar a semântica do objeto de resposta. Além disso, a ausência de uma lista explícita de campos permitidos permite a exposição de propriedades sensíveis, como password.\",\"estrategia_de_correcao\":\"Restringir os campos solicitáveis a uma lista explícita de propriedades permitidas e construir a resposta somente com esses campos. A lista inclui apenas os campos já expostos pelo comportamento padrão do endpoint, preservando a funcionalidade legítima e impedindo acesso a password, propriedades herdadas e chaves especiais de protótipo.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\"trecho_corrigido\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"}],\"justificativa_tecnica\":\"A validação por allowlist garante que somente id, email, lastLoginIp e profileImage possam ser lidos e copiados para a resposta. Entradas como password, __proto__, constructor e prototype deixam de ser processadas. A correção mantém o comportamento padrão e o suporte a fields para os campos públicos permitidos, mas elimina o acesso controlado pelo cliente a propriedades arbitrárias do objeto e reduz o risco de exposição de credenciais ou manipulação relacionada ao protótipo.\",\"limitacoes_da_correcao\":\"A correção protege este endpoint contra seleção arbitrária de propriedades, mas não substitui a necessidade de revisar outros endpoints que usem entrada do usuário em acessos dinâmicos a objetos. O código ainda usa notação de colchetes para os campos após a validação; a segurança depende da allowlist permanecer restritiva e alinhada aos campos públicos pretendidos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1647,
+  "tokens_saida": 629,
+  "latencia_s": 7.752,
+  "custo_usd": 0.001166,
+  "hash_prompt": "cb080c65b3e4787dd7058c0141fe8b29ce7653dabd4445398e1bd00a35d65279",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1644
+}

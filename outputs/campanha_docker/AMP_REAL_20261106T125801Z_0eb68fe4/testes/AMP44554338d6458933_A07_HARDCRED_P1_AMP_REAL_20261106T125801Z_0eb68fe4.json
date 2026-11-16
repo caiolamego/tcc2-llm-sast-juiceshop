@@ -1,0 +1,336 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 27.891853555003763,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge"
+  ],
+  "testes_falhos_f_criterio": [
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 5.66,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_0co33e65/seed_totp/primeira.xml",
+        "test/api/tcc_coverage_seed_totp.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 20.18,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge"
+      ],
+      "testes_falhos_novos": [
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+        "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "(node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_seed_totp.test.ts:2:6814\n✖ completes real seed login using an independently calculated current TOTP (37.135375ms)\n  AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.<anonymous> (test/api/tcc_coverage_seed_totp.test.ts:151:47)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_seed_totp.test.ts:2:8100\n✖ rejects an incorrect TOTP for the real seed login challenge (94.732ms)\n  AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at <anonymous> (test/api/tcc_coverage_seed_totp.test.ts:88:50)\n      at Array.map (<anonymous>)\n      at acceptedWindow (test/api/tcc_coverage_seed_totp.test.ts:88:37)\n      at TestContext.<anonymous> (test/api/tcc_coverage_seed_totp.test.ts:173:22)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_seed_totp.test.ts:2:8675\n✖ rejects a stale TOTP outside the configured time window (93.456334ms)\n  AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at <anonymous> (test/api/tcc_coverage_seed_totp.test.ts:88:50)\n      at Array.map (<anonymous>)\n      at acceptedWindow (test/api/tcc_coverage_seed_totp.test.ts:88:37)\n      at TestContext.<anonymous> (test/api/tcc_coverage_seed_totp.test.ts:187:22)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_seed_totp.test.ts:2:9335\n✖ rejects a valid current TOTP without a first-factor login proof (3.806292ms)\n  AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.<anonymous> (test/api/tcc_coverage_seed_totp.test.ts:198:84)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 1.229200279340148e-05,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+    "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "data/static/users.yml"
+    ],
+    "grupos": [
+      "seed_totp"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 5.66
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "seed_totp",
+      "status": "executada",
+      "duracao_s": 20.18
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "seed_totp"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 5.66
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "seed_totp",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > matches the independent client oracle to published SHA1 TOTP vectors",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > matches the independent client oracle to published SHA1 TOTP vectors",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > preserves the declared identities and passwords of all static seed users",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > preserves the declared identities and passwords of all static seed users",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge",
+            "estado": "falhou"
+          },
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect seed password without issuing a temporary login proof",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > rejects an incorrect seed password without issuing a temporary login proof",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > requires the second factor after a correct seed password",
+            "arquivo": "tests/functional/juice_shop/seed_totp.test.ts",
+            "nome": "TCC static seed TOTP contracts > requires the second factor after a correct seed password",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge"
+        ],
+        "falhos_novos": [
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge"
+        ],
+        "falhos_novos_observados": [
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > matches the independent client oracle to published SHA1 TOTP vectors",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > preserves the declared identities and passwords of all static seed users",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect seed password without issuing a temporary login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > requires the second factor after a correct seed password"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > matches the independent client oracle to published SHA1 TOTP vectors",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > preserves the declared identities and passwords of all static seed users",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect seed password without issuing a temporary login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > requires the second factor after a correct seed password"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > completes real seed login using an independently calculated current TOTP",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > matches the independent client oracle to published SHA1 TOTP vectors",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > persists the configured second factor for the target seed account",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > preserves the declared identities and passwords of all static seed users",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a stale TOTP outside the configured time window",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects a valid current TOTP without a first-factor login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect TOTP for the real seed login challenge",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect seed password without issuing a temporary login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > requires the second factor after a correct seed password"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > matches the independent client oracle to published SHA1 TOTP vectors",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > preserves the declared identities and passwords of all static seed users",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > rejects an incorrect seed password without issuing a temporary login proof",
+          "tests/functional/juice_shop/seed_totp.test.ts :: TCC static seed TOTP contracts > requires the second factor after a correct seed password"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 20.18,
+        "espera_api_s": 1.229200279340148e-05,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_0co33e65/seed_totp/primeira.xml",
+            "test/api/tcc_coverage_seed_totp.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 20.18,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "(node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_seed_totp.test.ts:2:6814\n✖ completes real seed login using an independently calculated current TOTP (37.135375ms)\n  AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.<anonymous> (test/api/tcc_coverage_seed_totp.test.ts:151:47)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_seed_totp.test.ts:2:8100\n✖ rejects an incorrect TOTP for the real seed login challenge (94.732ms)\n  AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at <anonymous> (test/api/tcc_coverage_seed_totp.test.ts:88:50)\n      at Array.map (<anonymous>)\n      at acceptedWindow (test/api/tcc_coverage_seed_totp.test.ts:88:37)\n      at TestContext.<anonymous> (test/api/tcc_coverage_seed_totp.test.ts:173:22)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_seed_totp.test.ts:2:8675\n✖ rejects a stale TOTP outside the configured time window (93.456334ms)\n  AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at <anonymous> (test/api/tcc_coverage_seed_totp.test.ts:88:50)\n      at Array.map (<anonymous>)\n      at acceptedWindow (test/api/tcc_coverage_seed_totp.test.ts:88:37)\n      at TestContext.<anonymous> (test/api/tcc_coverage_seed_totp.test.ts:187:22)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/tcc_coverage_seed_totp.test.ts:2:9335\n✖ rejects a valid current TOTP without a first-factor login proof (3.806292ms)\n  AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.<anonymous> (test/api/tcc_coverage_seed_totp.test.ts:198:84)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC static seed TOTP contracts\" time=\"2.778327\" disabled=\"0\" errors=\"0\" tests=\"9\" failures=\"5\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"matches the independent client oracle to published SHA1 TOTP vectors\" time=\"0.002972\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\"/>\n\t\t<testcase name=\"preserves the declared identities and passwords of all static seed users\" time=\"0.128055\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\"/>\n\t\t<testcase name=\"persists the configured second factor for the target seed account\" time=\"0.006179\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:117:18)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects an incorrect seed password without issuing a temporary login proof\" time=\"0.162387\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\"/>\n\t\t<testcase name=\"requires the second factor after a correct seed password\" time=\"0.218619\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\"/>\n\t\t<testcase name=\"completes real seed login using an independently calculated current TOTP\" time=\"0.037135\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:151:47)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects an incorrect TOTP for the real seed login challenge\" time=\"0.094732\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at &lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:88:50)\n      at Array.map (&lt;anonymous>)\n      at acceptedWindow (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:88:37)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:173:22)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects a stale TOTP outside the configured time window\" time=\"0.093456\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at &lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:88:50)\n      at Array.map (&lt;anonymous>)\n      at acceptedWindow (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:88:37)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:187:22)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects a valid current TOTP without a first-factor login proof\" time=\"0.003806\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:198:84)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 9 -->\n\t<!-- suites 1 -->\n\t<!-- pass 4 -->\n\t<!-- fail 5 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 9117.696462 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC static seed TOTP contracts\" time=\"2.903368\" disabled=\"0\" errors=\"0\" tests=\"9\" failures=\"5\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"matches the independent client oracle to published SHA1 TOTP vectors\" time=\"0.002453\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\"/>\n\t\t<testcase name=\"preserves the declared identities and passwords of all static seed users\" time=\"0.049946\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\"/>\n\t\t<testcase name=\"persists the configured second factor for the target seed account\" time=\"0.002775\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:117:18)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects an incorrect seed password without issuing a temporary login proof\" time=\"0.107024\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\"/>\n\t\t<testcase name=\"requires the second factor after a correct seed password\" time=\"0.113785\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\"/>\n\t\t<testcase name=\"completes real seed login using an independently calculated current TOTP\" time=\"0.017704\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:151:47)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects an incorrect TOTP for the real seed login challenge\" time=\"0.026973\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at &lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:88:50)\n      at Array.map (&lt;anonymous>)\n      at acceptedWindow (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:88:37)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:173:22)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects a stale TOTP outside the configured time window\" time=\"0.034391\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at &lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:88:50)\n      at Array.map (&lt;anonymous>)\n      at acceptedWindow (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:88:37)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:187:22)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"rejects a valid current TOTP without a first-factor login proof\" time=\"0.002973\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts\" failure=\"Seed must supply a usable Base32 key\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Seed must supply a usable Base32 key\">\n[Error [ERR_TEST_FAILURE]: Seed must supply a usable Base32 key] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Seed must supply a usable Base32 key\n      at totp (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:42:10)\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/tcc_coverage_seed_totp.test.ts:198:84)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)\n      at Test.postRun (node:internal/test_runner/test:1247:19)\n      at Test.run (node:internal/test_runner/test:1175:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 9 -->\n\t<!-- suites 1 -->\n\t<!-- pass 4 -->\n\t<!-- fail 5 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 10142.794422 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

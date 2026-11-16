@@ -1,0 +1,18 @@
+diff --git a/routes/quarantineServer.ts b/routes/quarantineServer.ts
+index e7a2e841f..5da7ae7ee 100644
+--- a/routes/quarantineServer.ts
++++ b/routes/quarantineServer.ts
+@@ -10,8 +10,11 @@ export function serveQuarantineFiles () {
+   return ({ params, query }: Request, res: Response, next: NextFunction) => {
+     const file = params.file
+ 
+-    if (!file.includes('/')) {
+-      res.sendFile(path.resolve('ftp/quarantine/', file))
++    const baseDir = path.resolve('ftp/quarantine/')
++    const requestedPath = path.resolve(baseDir, file)
++
++    if (requestedPath.startsWith(baseDir + path.sep)) {
++      res.sendFile(requestedPath)
+     } else {
+       res.status(403)
+       next(new Error('File names cannot contain forward slashes!'))

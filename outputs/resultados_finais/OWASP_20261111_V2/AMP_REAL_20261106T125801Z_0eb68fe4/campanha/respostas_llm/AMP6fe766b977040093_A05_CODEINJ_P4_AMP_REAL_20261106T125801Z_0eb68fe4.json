@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-95 (Eval Injection): o nome de usuário controlável é executado como código JavaScript por meio de eval.\",\"causa_da_vulnerabilidade\":\"Quando o nome de usuário corresponde ao padrão #{...}, seu conteúdo é extraído e passado diretamente a eval(code). Como o nome de usuário pode ter origem externa, um atacante pode inserir expressões JavaScript arbitrárias, executadas no contexto do processo Node.js.\",\"estrategia_de_correcao\":\"Remover a avaliação dinâmica e tratar o conteúdo entre #{...} como texto literal. Manter o comportamento de renderização do nome de usuário, incluindo o prefixo de escape existente, sem executar qualquer código fornecido pelo usuário.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\",\"trecho_corrigido\":\"      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = code\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\"}],\"justificativa_tecnica\":\"A vulnerabilidade é eliminada porque nenhum dado derivado do nome de usuário é mais enviado a eval ou a outro interpretador de código. O conteúdo entre #{...} passa a ser apenas uma string e continua sendo usado como nome exibido, preservando o fluxo funcional sem permitir execução arbitrária de JavaScript. A validação de conteúdo vazio e o tratamento de erro existentes permanecem inalterados.\",\"limitacoes_da_correcao\":\"A correção altera intencionalmente o comportamento vulnerável associado ao desafio usernameXssChallenge: expressões anteriormente avaliadas deixam de ser executadas e são exibidas como texto. A segurança final da renderização ainda depende do escaping apropriado no template Pug e das demais configurações de CSP; esta edição trata especificamente a execução arbitrária causada por eval.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2892,
+  "tokens_saida": 488,
+  "latencia_s": 5.919,
+  "custo_usd": 0.001308,
+  "hash_prompt": "e48f001aa04684a720eb754ecafe8f831e80bbe974ebfc88b34c8daf68695237",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2889
+}

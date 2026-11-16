@@ -1,0 +1,13 @@
+diff --git a/lib/xml.ts b/lib/xml.ts
+index 425a24463..13b4f536c 100644
+--- a/lib/xml.ts
++++ b/lib/xml.ts
+@@ -32,7 +32,7 @@ async function loadLibxml2 () {
+ // "Script execution timed out" error instead of hanging the process.
+ export async function parseXmlString (data: string, timeoutMs = 2000): Promise<string> {
+   const libxml2 = await loadLibxml2()
+-  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA
++  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA
+   const sandbox = { libxml2, data, option }
+   vm.createContext(sandbox)
+   const xmlDoc = vm.runInContext('libxml2.XmlDocument.fromString(data, { option })', sandbox, { timeout: timeoutMs })

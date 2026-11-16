@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key na atualização do documento MongoDB sem verificar se o usuário autenticado é o proprietário da review.\",\"causa_da_vulnerabilidade\":\"O código realiza a atualização do documento no MongoDB usando apenas o _id recebido do corpo da requisição, sem verificar se o usuário autenticado é o proprietário da review. Isso permite que um usuário autenticado possa modificar reviews de outros usuários, pois a autorização não é validada antes da escrita.\",\"estrategia_de_correcao\":\"Adicionar a verificação de propriedade na consulta de atualização, incluindo o email do usuário autenticado como parte do filtro para garantir que apenas o proprietário da review possa atualizá-la.\",\"edicoes\":[{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\",\"trecho_corrigido\":\"      await db.reviewsCollection.update(\\n        { _id: id, author: user.data.email },\\n        { $inc: { likesCount: 1 } }\\n      )\"},{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\",\"trecho_corrigido\":\"        const result = await db.reviewsCollection.update(\\n          { _id: id, author: user.data.email },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\"}],\"justificativa_tecnica\":\"Ao incluir o campo 'author' com o email do usuário autenticado no filtro da consulta de atualização, garantimos que somente o proprietário da review possa modificar seus dados. Isso impede que usuários autenticados alterem reviews de terceiros, mitigando a vulnerabilidade de autorização inadequada.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'author' na coleção 'reviewsCollection' armazena o email do proprietário da review. Se a estrutura do banco de dados for diferente, será necessário ajustar o campo usado para verificar a propriedade. Além disso, essa solução não impede que usuários com privilégios administrativos possam alterar outras reviews, o que deve ser tratado por políticas de autorização adicionais.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1689,
+  "tokens_saida": 494,
+  "latencia_s": 4.146,
+  "custo_usd": 0.001466,
+  "hash_prompt": "f50ccbf310b3c143ca492718201d6ab47c5705fed18dde5fc047eb2c6997912c",
+  "do_cache": false
+}

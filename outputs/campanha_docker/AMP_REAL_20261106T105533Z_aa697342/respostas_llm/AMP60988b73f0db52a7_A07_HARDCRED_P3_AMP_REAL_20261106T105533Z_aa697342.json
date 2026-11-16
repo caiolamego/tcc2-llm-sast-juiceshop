@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Chave HMAC hardcoded em `deluxeToken`, permitindo que qualquer pessoa com acesso ao código reproduza os tokens de acesso deluxe.\",\n  \"causa_da_vulnerabilidade\": \"A chave usada para calcular o HMAC é derivada de `privateKey`, que está definida como um literal no próprio arquivo. Assim, o segredo não é separado do código-fonte e pode ser extraído e usado para falsificar tokens.\",\n  \"estrategia_de_correcao\": \"Obter a chave HMAC de uma variável de ambiente obrigatória e falhar na inicialização com uma mensagem genérica se ela não estiver configurada. Não incluir um valor padrão embutido.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"const privateKey = '-----BEGIN RSA PRIVATE KEY-----\\\\r\\\\nMIICXAIBAAKBgQDNwqLEe9wgTXCbC7+RPdDbBbeqjdbs4kOPOIGzqLpXvJXlxxW8iMz0EaM4BKUqYsIa+ndv3NAn2RxCd5ubVdJJcX43zO6Ko0TFEZx/65gY3BE0O6syCEmUP4qbSd6exou/F+WTISzbQ5FBVPVmhnYhG/kpwt/cIxK5iUn5hm+4tQIDAQABAoGBAI+8xiPoOrA+KMnG/T4jJsG6TsHQcDHvJi7o1IKC/hnIXha0atTX5AUkRRce95qSfvKFweXdJXSQ0JMGJyfuXgU6dI0TcseFRfewXAa/ssxAC+iUVR6KUMh1PE2wXLitfeI6JLvVtrBYswm2I7CtY0q8n5AGimHWVXJPLfGV7m0BAkEA+fqFt2LXbLtyg6wZyxMA/cnmt5Nt3U2dAu77MzFJvibANUNHE4HPLZxjGNXN+a6m0K6TD4kDdh5HfUYLWWRBYQJBANK3carmulBwqzcDBjsJ0YrIONBpCAsXxk8idXb8jL9aNIg15Wumm2enqqObahDHB5jnGOLmbasizvSVqypfM9UCQCQl8xIqy+YgURXzXCN+kwUgHinrutZms87Jyi+D8Br8NY0+Nlf+zHvXAomD2W5CsEK7C+8SLBr3k/TsnRWHJuECQHFE9RA2OP8WoaLPuGCyFXaxzICThSRZYluVnWkZtxsBhW2W8z1b8PvWUE7kMy7TnkzeJS2LSnaNHoyxi7IaPQUCQCwWU4U+v4lD7uYBw00Ga/xt+7+UqFPlPVdz1yyr4q24Zxaw0LgmuEvgU5dycq8N7JxjTubX0MIRR+G9fmDBBl8=\\\\r\\\\n-----END RSA PRIVATE KEY-----'\",\n      \"trecho_corrigido\": \"const privateKey = '-----BEGIN RSA PRIVATE KEY-----\\\\r\\\\nMIICXAIBAAKBgQDNwqLEe9wgTXCbC7+RPdDbBbeqjdbs4kOPOIGzqLpXvJXlxxW8iMz0EaM4BKUqYsIa+ndv3NAn2RxCd5ubVdJJcX43zO6Ko0TFEZx/65gY3BE0O6syCEmUP4qbSd6exou/F+WTISzbQ5FBVPVmhnYhG/kpwt/cIxK5iUn5hm+4tQIDAQABAoGBAI+8xiPoOrA+KMnG/T4jJsG6TsHQcDHvJi7o1IKC/hnIXha0atTX5AUkRRce95qSfvKFweXdJXSQ0JMGJyfuXgU6dI0TcseFRfewXAa/ssxAC+iUVR6KUMh1PE2wXLitfeI6JLvVtrBYswm2I7CtY0q8n5AGimHWVXJPLfGV7m0BAkEA+fqFt2LXbLtyg6wZyxMA/cnmt5Nt3U2dAu77MzFJvibANUNHE4HPLZxjGNXN+a6m0K6TD4kDdh5HfUYLWWRBYQJBANK3carmulBwqzcDBjsJ0YrIONBpCAsXxk8idXb8jL9aNIg15Wumm2enqqObahDHB5jnGOLmbasizvSVqypfM9UCQCQl8xIqy+YgURXzXCN+kwUgHinrutZms87Jyi+D8Br8NY0+Nlf+zHvXAomD2W5CsEK7C+8SLBr3k/TsnRWHJuECQHFE9RA2OP8WoaLPuGCyFXaxzICThSRZYluVnWkZtxsBhW2W8z1b8PvWUE7kMy7TnkzeJS2LSnaNHoyxi7IaPQUCQCwWU4U+v4lD7uYBw00Ga/xt+7+UqFPlPVdz1yyr4q24Zxaw0LgmuEvgU5dycq8N7JxjTubX0MIRR+G9fmDBBl8=\\\\r\\\\n-----END RSA PRIVATE KEY-----'\\nconst deluxeHmacKey = process.env.DELUXE_HMAC_KEY\\nif (!deluxeHmacKey) throw new Error('Missing HMAC configuration')\"\n    },\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', privateKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\",\n      \"trecho_corrigido\": \"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', deluxeHmacKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A chave usada para gerar tokens deluxe deixa de ser um literal no código e passa a ser fornecida pela configuração do ambiente. A ausência da configuração interrompe a inicialização, evitando fallback previsível. O algoritmo, o formato do token e a assinatura da função permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"É necessário configurar `DELUXE_HMAC_KEY` com um segredo aleatório, protegido e suficientemente forte em cada ambiente. A troca da chave invalida tokens deluxe previamente calculados; a chave privada RSA embutida usada para assinar JWTs é um problema separado e não foi alterada nesta correção.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3544,
+  "tokens_saida": 1662,
+  "latencia_s": 12.093,
+  "custo_usd": 0.001274,
+  "hash_prompt": "6115662e8d6e6b6901f4dfb469a10de35caaf37dba0ada6cc4dff5ebd96d653e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3541
+}

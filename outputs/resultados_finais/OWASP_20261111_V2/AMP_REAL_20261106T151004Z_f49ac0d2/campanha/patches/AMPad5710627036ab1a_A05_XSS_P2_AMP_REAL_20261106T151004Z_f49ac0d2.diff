@@ -1,0 +1,26 @@
+diff --git a/frontend/src/app/search-result/search-result.component.ts b/frontend/src/app/search-result/search-result.component.ts
+index 1920febe3..0c0d5daed 100644
+--- a/frontend/src/app/search-result/search-result.component.ts
++++ b/frontend/src/app/search-result/search-result.component.ts
+@@ -65,7 +65,8 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
+       next: ([quantities, products]) => {
+         const dataTable: ProductTableEntry[] = []
+         this.tableData = products
+-        this.trustProductDescription(products) // vuln-code-snippet neutral-line restfulXssChallenge
++        // Removida chamada para trustProductDescription para evitar XSS
++        // this.trustProductDescription(products) // vuln-code-snippet neutral-line restfulXssChallenge
+         for (const product of products) {
+           dataTable.push({
+             name: product.name,
+@@ -106,8 +107,10 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
+   }
+ 
+   trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge
++    // Removido o uso de bypassSecurityTrustHtml para evitar XSS
+     for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge
+-      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge
++      // Mantém a descrição original sem marcação de segurança
++      tableData[i].description = tableData[i].description
+     } // vuln-code-snippet neutral-line restfulXssChallenge
+   } // vuln-code-snippet neutral-line restfulXssChallenge
+ 

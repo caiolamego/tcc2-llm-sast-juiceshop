@@ -1,0 +1,16 @@
+diff --git a/routes/redirect.ts b/routes/redirect.ts
+index 6b4a03da2..c8a613311 100644
+--- a/routes/redirect.ts
++++ b/routes/redirect.ts
+@@ -27,7 +27,9 @@ export function performRedirect () {
+ function isUnintendedRedirect (toUrl: string) {
+   let unintended = true
+   for (const allowedUrl of security.redirectAllowlist) {
+-    unintended = unintended && !utils.startsWith(toUrl, allowedUrl)
++    if (utils.startsWith(toUrl, allowedUrl)) {
++      return false
++    }
+   }
+-  return unintended
++  return true
+ }

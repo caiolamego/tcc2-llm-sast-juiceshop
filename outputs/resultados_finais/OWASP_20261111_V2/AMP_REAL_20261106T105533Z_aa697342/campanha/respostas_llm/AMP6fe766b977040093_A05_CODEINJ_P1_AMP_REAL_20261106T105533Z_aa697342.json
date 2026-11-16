@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção de template do lado do servidor (SSTI), que pode permitir execução de código no servidor.\",\n  \"causa_da_vulnerabilidade\": \"O nome de usuário é inserido diretamente no texto do template Pug e, em seguida, o template resultante é compilado e executado. O prefixo de barra invertida não neutraliza a sintaxe de template Pug; assim, conteúdo controlado pelo usuário pode ser interpretado como código de template.\",\n  \"estrategia_de_correcao\": \"Escapar o nome de usuário para o contexto de texto do Pug antes de inseri-lo no template, sem alterar o fluxo existente de compilação ou renderização.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/userProfile.ts\",\n      \"trecho_original\": \"    if (username) {\\n      template = template.replace(/_username_/g, username)\\n    }\",\n      \"trecho_corrigido\": \"    if (username) {\\n      template = template.replace(/_username_/g, entities.encode(username))\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A codificação de entidades HTML transforma caracteres como <, > e & em representações que não podem formar marcação ou sintaxe executável quando o valor é inserido no template. Isso impede que o nome de usuário injete código Pug ou HTML, mantendo a substituição e a renderização do perfil.\",\n  \"limitacoes_da_correcao\": \"A alteração protege a inserção do nome de usuário. Outros valores inseridos no template devem continuar sendo avaliados conforme seus contextos de saída; esta correção não revisa nem altera esses pontos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1372,
+  "tokens_saida": 372,
+  "latencia_s": 4.49,
+  "custo_usd": 0.0002,
+  "hash_prompt": "74fe5f24d03bb7d3c767bcc5058a5a599f5930ce960db263c952924b461639e8",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1369,
+  "tokens_escrita_cache": 0
+}

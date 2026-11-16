@@ -1,0 +1,34 @@
+--- a/frontend/src/app/administration/administration.component.ts
++++ b/frontend/src/app/administration/administration.component.ts
+@@ -69,9 +69,12 @@
+       next: (users) => {
+         this.userDataSource = users
+         this.userDataSourceHidden = users
+-        for (const user of this.userDataSource) {
+-          user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class="${this.doesUserHaveAnActiveSession(user) ? 'confirmation' : 'error'}">${user.email}</span>`)
+-        }
++        // Removido o uso de bypassSecurityTrustHtml e HTML inline para email
++        // Aplique a classe CSS condicionalmente no template Angular em vez de modificar o valor aqui
++        // Portanto, não modificar user.email aqui
++        // Mantém o valor original do email
++        // Código removido para evitar XSS
++
+         this.userDataSource = new MatTableDataSource(this.userDataSource)
+         this.userDataSource.paginator = this.paginatorUsers
+         this.resultsLengthUser = users.length
+@@ -87,9 +90,12 @@
+     this.feedbackService.find().subscribe({
+       next: (feedbacks) => {
+         this.feedbackDataSource = feedbacks
+-        for (const feedback of this.feedbackDataSource) {
+-          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)
+-        }
++        // Removido o uso de bypassSecurityTrustHtml para comentário
++        // Exibir o comentário como texto simples para evitar XSS
++        // Portanto, não modificar feedback.comment aqui
++        // Mantém o valor original do comentário
++        // Código removido para evitar XSS
++
+         this.feedbackDataSource = new MatTableDataSource(this.feedbackDataSource)
+         this.feedbackDataSource.paginator = this.paginatorFeedb
+         this.resultsLengthFeedback = feedbacks.length

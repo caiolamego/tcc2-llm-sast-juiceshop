@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-620: Unverified Password Change - a senha atual não é verificada quando não é fornecida, permitindo alteração de senha sem autenticação adequada.\",\"causa_da_vulnerabilidade\":\"O código permite que a senha seja alterada mesmo quando o parâmetro 'currentPassword' não é informado, pois a verificação da senha atual ocorre somente se 'currentPassword' estiver presente. Isso permite que um usuário autenticado altere a senha sem fornecer a senha atual.\",\"estrategia_de_correcao\":\"Exigir que o parâmetro 'currentPassword' seja sempre fornecido e que sua verificação seja obrigatória antes de permitir a alteração da senha. Caso contrário, negar a operação com erro apropriado.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\",\"trecho_corrigido\":\"if (!currentPassword) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\\n\\nif (security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'))\\n  return\\n}\"}],\"justificativa_tecnica\":\"Ao exigir que a senha atual seja sempre fornecida e validada, garantimos que somente o usuário legítimo, que conhece a senha atual, possa alterar sua senha. Isso elimina a possibilidade de alteração de senha sem autenticação adequada, mitigando a vulnerabilidade CWE-620.\",\"limitacoes_da_correcao\":\"Esta correção assume que o fluxo de alteração de senha sempre requer a senha atual para autenticação. Em casos de recuperação de senha ou outros fluxos especiais, essa lógica pode precisar ser adaptada para permitir exceções controladas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1629,
+  "tokens_saida": 404,
+  "latencia_s": 2.962,
+  "custo_usd": 0.001298,
+  "hash_prompt": "32abe6726dd3ac7b46859d5f5ddda53d6d6d8424bd2ed03c9b1ebb9656dc06e3",
+  "do_cache": true
+}

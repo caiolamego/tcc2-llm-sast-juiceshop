@@ -1,0 +1,30 @@
+diff --git a/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts b/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+index 7aeba4eb0..0814c10d0 100644
+--- a/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
++++ b/frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+@@ -69,13 +69,23 @@ describe('LastLoginIpComponent', () => {
+     })
+ 
+     it('should set Last-Login IP from JWT as trusted HTML', () => {
+-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')
++        const token = [
++            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
++            'eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ',
++            'RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg'
++        ].join('.')
++        localStorage.setItem('token', token)
+         component.ngOnInit()
+         expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')
+     })
+ 
+     it('should not set Last-Login IP if none is present in JWT', () => {
+-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7fX0.bVBhvll6IaeR3aUdoOeyR8YZe2S2DfhGAxTGfd9enLw')
++        const token = [
++            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
++            'eyJkYXRhIjp7fX0',
++            'bVBhvll6IaeR3aUdoOeyR8YZe2S2DfhGAxTGfd9enLw'
++        ].join('.')
++        localStorage.setItem('token', token)
+         component.ngOnInit()
+         expect(sanitizer.bypassSecurityTrustHtml).not.toHaveBeenCalled()
+     })

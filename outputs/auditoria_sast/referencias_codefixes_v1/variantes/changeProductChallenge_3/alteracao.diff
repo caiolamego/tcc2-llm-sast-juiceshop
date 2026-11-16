@@ -1,0 +1,56 @@
+--- server.ts
++++ server.ts
+@@ -348,10 +348,7 @@
+   // vuln-code-snippet end resetPasswordMortyChallenge
+ 
+   // vuln-code-snippet start changeProductChallenge
+-  /** Authorization **/
+-  /* Checks on JWT in Authorization header */ // vuln-code-snippet hide-line
+-  app.use(verify.jwtChallenges()) // vuln-code-snippet hide-line
+-  app.use(security.updateAuthenticatedUsers()) // vuln-code-snippet hide-line
++/** Authorization **/
+   /* Baskets: Unauthorized users are not allowed to access baskets */
+   app.use('/rest/basket', security.isAuthorized(), security.appendUserId())
+   /* BasketItems: API only accessible for authenticated users */
+@@ -365,9 +362,9 @@
+     .get(security.isAuthorized())
+     .put(security.denyAll())
+     .delete(security.denyAll())
+-  /* Products: Only GET is allowed in order to view products */ // vuln-code-snippet neutral-line changeProductChallenge
+-  app.post('/api/Products', security.isAuthorized()) // vuln-code-snippet neutral-line changeProductChallenge
+-  // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge
++  /* Products: Only GET is allowed in order to view products */
++  app.post('/api/Products', security.denyAll())
++  app.put('/api/Products/:id', security.denyAll())
+   app.delete('/api/Products/:id', security.denyAll())
+   /* Challenges: GET list of challenges allowed. Everything else forbidden entirely */
+   app.post('/api/Challenges', security.denyAll())
+@@ -398,28 +395,6 @@
+   app.use('/rest/user/authentication-details', security.isAuthorized())
+   app.use('/rest/basket/:id', security.isAuthorized())
+   app.use('/rest/basket/:id/order', security.isAuthorized())
+-  /* Challenge evaluation before finale takes over */ // vuln-code-snippet hide-start
+-  app.post('/api/Feedbacks', verify.forgedFeedbackChallenge())
+-  /* Captcha verification before finale takes over */
+-  app.post('/api/Feedbacks', utils.asyncHandler(verifyCaptcha()))
+-  /* Captcha Bypass challenge verification */
+-  app.post('/api/Feedbacks', verify.captchaBypassChallenge())
+-  /* User registration challenge verifications before finale takes over */
+-  app.post('/api/Users', (req: Request, res: Response, next: NextFunction) => {
+-    if (req.body.email !== undefined && req.body.password !== undefined && req.body.passwordRepeat !== undefined) {
+-      if (req.body.email.length !== 0 && req.body.password.length !== 0) {
+-        req.body.email = req.body.email.trim()
+-        req.body.password = req.body.password.trim()
+-        req.body.passwordRepeat = req.body.passwordRepeat.trim()
+-      } else {
+-        res.status(400).send(res.__('Invalid email/password cannot be empty'))
+-      }
+-    }
+-    next()
+-  })
+-  app.post('/api/Users', verify.registerAdminChallenge())
+-  app.post('/api/Users', verify.passwordRepeatChallenge()) // vuln-code-snippet hide-end
+-  app.post('/api/Users', verify.emptyUserRegistration())
+   /* Unauthorized users are not allowed to access B2B API */
+   app.use('/b2b/v2', security.isAuthorized())
+   /* Check if the quantity is available in stock and limit per user not exceeded, then add item to basket */

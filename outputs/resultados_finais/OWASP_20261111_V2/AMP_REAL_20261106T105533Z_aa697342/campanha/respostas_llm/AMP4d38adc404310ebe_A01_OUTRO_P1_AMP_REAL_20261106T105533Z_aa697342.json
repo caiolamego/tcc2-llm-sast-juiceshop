@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de eval() para calcular a resposta do CAPTCHA, permitindo execução de código caso a expressão venha a conter conteúdo controlável por um atacante.\",\n  \"causa_da_vulnerabilidade\": \"A expressão aritmética é construída como texto e passada a eval(), que interpreta o conteúdo como código JavaScript. Embora os termos e operadores atuais sejam gerados internamente, manter a avaliação dinâmica é desnecessário e cria risco de injeção de código se a origem desses valores mudar ou for comprometida.\",\n  \"estrategia_de_correcao\": \"Substituir eval() por cálculo aritmético explícito, preservando a precedência dos operadores JavaScript: multiplicação antes de adição e subtração, com avaliação da expressão da esquerda para a direita entre operadores de mesma precedência.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/captcha.ts\",\n      \"trecho_original\": \"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\n      \"trecho_corrigido\": \"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const terms = [firstTerm, secondTerm, thirdTerm]\\n    const expressionOperators = [firstOperator, secondOperator]\\n    let answerValue = terms[0]\\n    for (let i = 0; i < expressionOperators.length; i++) {\\n      if (expressionOperators[i] === '*') {\\n        answerValue *= terms[i + 1]\\n      } else if (i === 0 || expressionOperators[i - 1] === '*') {\\n        answerValue += expressionOperators[i] === '+' ? terms[i + 1] : -terms[i + 1]\\n      } else {\\n        answerValue = expressionOperators[i] === '+' ? answerValue + terms[i + 1] : answerValue - terms[i + 1]\\n      }\\n    }\\n    const answer = answerValue.toString()\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A resposta passa a ser calculada apenas com operações numéricas sobre os termos gerados, eliminando a interpretação de texto como código. O cálculo mantém a precedência de multiplicação e a associatividade à esquerda para adição e subtração, preservando o resultado da expressão exibida no CAPTCHA.\",\n  \"limitacoes_da_correcao\": \"A correção remove o uso de eval() neste cálculo, mas não altera outros aspectos do CAPTCHA, como a previsibilidade dos valores aleatórios ou a gestão e expiração dos desafios.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 920,
+  "tokens_saida": 590,
+  "latencia_s": 6.283,
+  "custo_usd": 0.000387,
+  "hash_prompt": "e004a290988149a268b896bc0e316ef6516b8409ab5efebd00960eb6fbab8266",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

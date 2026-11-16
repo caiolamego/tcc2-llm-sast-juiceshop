@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de MD5 na função hash, algoritmo criptográfico rápido e inadequado para derivação ou armazenamento de senhas (CWE-916).\",\"causa_da_vulnerabilidade\":\"A função `hash` usa `crypto.createHash('md5')`, que não possui salt nem custo computacional ajustável. Caso seja usada para proteger senhas ou outros segredos de baixa entropia, um atacante pode testar grandes quantidades de candidatos rapidamente e utilizar tabelas pré-computadas.\",\"estrategia_de_correcao\":\"Substituir MD5 por uma função de derivação de chave baseada em PBKDF2, usando SHA-512, salt aleatório e custo computacional elevado. Como a assinatura existente deve ser preservada, o salt é incorporado ao resultado retornado, permitindo verificação posterior sem alterar a interface da função.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\",\"trecho_corrigido\":\"export const hash = (data: string) => {\\n  const salt = crypto.randomBytes(16)\\n  const derivedKey = crypto.pbkdf2Sync(data, salt, 310000, 32, 'sha512')\\n  return `${salt.toString('hex')}:${derivedKey.toString('hex')}`\\n}\"}],\"justificativa_tecnica\":\"PBKDF2 com SHA-512, salt aleatório de 128 bits e 310.000 iterações torna ataques de força bruta significativamente mais caros e impede que o mesmo segredo produza sempre o mesmo valor. O salt é armazenado junto ao resultado, separado por `:`, pois não precisa ser secreto. A alteração é limitada à função que utiliza MD5 e mantém sua assinatura e o tipo string retornado.\",\"limitacoes_da_correcao\":\"A correção altera o formato e a não determinismo do resultado: valores MD5 previamente armazenados não poderão ser comparados diretamente com os novos valores sem uma migração ou estratégia de verificação legada. Além disso, PBKDF2 é apropriado para derivação de senha, mas Argon2id seria preferível quando disponível por oferecer maior resistência a hardware paralelo. A segurança também depende de os resultados serem armazenados e comparados de forma segura; esta alteração não corrige outros segredos embutidos no arquivo nem usos independentes de criptografia fraca.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3650,
+  "tokens_saida": 523,
+  "latencia_s": 7.192,
+  "custo_usd": 0.00154,
+  "hash_prompt": "089e35fecec53834e8f8857dd06b921151b368da72f08743d1c243af871544df",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3647
+}

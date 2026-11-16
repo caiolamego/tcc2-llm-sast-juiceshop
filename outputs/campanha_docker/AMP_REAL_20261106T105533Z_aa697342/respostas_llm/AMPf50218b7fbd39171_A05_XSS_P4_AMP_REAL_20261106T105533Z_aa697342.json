@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado ou refletido na página de vídeo promocional, causado pela inserção de legendas não confiáveis dentro de um elemento <script>.\",\n  \"causa_da_vulnerabilidade\": \"O conteúdo de `subs`, lido de um arquivo cujo nome vem da configuração `application.promotion.subtitles`, é concatenado diretamente no HTML entre as tags `<script>`. O navegador interpreta esse conteúdo como marcação/script, permitindo que conteúdo malicioso, como `</script><script>...</script>`, escape do elemento e seja executado.\",\n  \"estrategia_de_correcao\": \"Codificar as legendas como uma string JSON antes de inseri-las no elemento e impedir que sequências capazes de encerrar o elemento script sejam interpretadas como marcação, substituindo `<` por `\\\\u003c`. No cliente, o conteúdo permanece disponível como texto da legenda, sem ser interpretado como HTML ou JavaScript.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/videoHandler.ts\",\n      \"trecho_original\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\n      \"trecho_corrigido\": \"      const safeSubs = JSON.stringify(subs).slice(1, -1).replace(/</g, '\\\\\\\\u003c')\\n      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + safeSubs + '</script>')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A serialização JSON escapa aspas, barras invertidas e caracteres de controle, e a substituição de `<` por `\\\\u003c` impede que o conteúdo fornecido forme `</script>` no HTML analisado pelo navegador. A sequência escapada é decodificada como texto ao ser lida pelo elemento, preservando o conteúdo das legendas sem permitir que ele crie elementos ou scripts executáveis. A alteração fica restrita ao ponto de inserção vulnerável.\",\n  \"limitacoes_da_correcao\": \"A correção protege o sink de inserção no elemento script; não valida a origem nem o formato do arquivo de legendas. O código consumidor das legendas deve continuar tratando o conteúdo como texto VTT, e não reinterpretá-lo posteriormente como HTML.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2593,
+  "tokens_saida": 545,
+  "latencia_s": 7.026,
+  "custo_usd": 0.000597,
+  "hash_prompt": "bb7d51564662866a3f6c01533342b79e436d9fac5ca6e9967a8b666d4829b3ec",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2590
+}

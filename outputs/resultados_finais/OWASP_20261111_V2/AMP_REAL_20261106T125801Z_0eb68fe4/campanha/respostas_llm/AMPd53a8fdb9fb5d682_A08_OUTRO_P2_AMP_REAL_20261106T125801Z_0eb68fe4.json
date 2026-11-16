@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Prototype pollution durante a resolução de replacementValue em waitForInputToHaveValue.\",\"causa_da_vulnerabilidade\":\"O código percorre propriedades controladas por options.replacement[1] e acessa replacementValue[property] sem validar os nomes dos segmentos. Se a cadeia contiver __proto__, constructor ou prototype, pode alcançar objetos especiais da cadeia de protótipos e permitir comportamento inesperado ou alteração de protótipos, dependendo do valor e do contexto.\",\"estrategia_de_correcao\":\"Validar cada segmento da cadeia de propriedades antes de acessá-lo, rejeitando os nomes reservados associados a prototype pollution. Em caso de cadeia inválida, não realizar a substituição e preservar o valor original.\",\"edicoes\":[{\"arquivo\":\"frontend/src/hacking-instructor/helpers/helpers.ts\",\"trecho_original\":\"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\",\"trecho_corrigido\":\"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        if (property === '__proto__' || property === 'constructor' || property === 'prototype') {\\n          return\\n        }\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\"}],\"justificativa_tecnica\":\"A validação impede que segmentos controlados pelo chamador alcancem os caminhos especiais __proto__, constructor e prototype, que são os principais vetores de acesso e modificação da cadeia de protótipos em JavaScript. O restante do fluxo e a assinatura da função permanecem inalterados, preservando o comportamento para cadeias de configuração legítimas. O retorno antecipado evita a substituição quando a cadeia é potencialmente perigosa.\",\"limitacoes_da_correcao\":\"A correção protege este percurso específico contra nomes reservados, mas não substitui validação de esquema ou allowlist para configurações não confiáveis. O trecho não mostrado pode conter outros acessos dinâmicos semelhantes que exigiriam análise independente. Além disso, o retorno antecipado encerra o callback quando a cadeia é inválida, sem sinalizar erro ao chamador.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1398,
+  "tokens_saida": 515,
+  "latencia_s": 5.877,
+  "custo_usd": 0.000967,
+  "hash_prompt": "d9f74cefd9ece94ef25b9ccc4a1cf8c44783ce244846f15d524852cc1c7f53f7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1395
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site Scripting (XSS) devido à inserção direta de conteúdo não sanitizado dentro de uma tag <script> no HTML gerado.\",\"causa_da_vulnerabilidade\":\"O conteúdo da variável 'subs', que é carregado de um arquivo externo e pode conter dados não confiáveis, é inserido diretamente dentro de uma tag <script> no template HTML sem qualquer sanitização ou escape, permitindo que scripts maliciosos sejam executados no navegador do usuário.\",\"estrategia_de_correcao\":\"Substituir a inserção direta do conteúdo 'subs' dentro da tag <script> por uma inserção segura que escape o conteúdo para texto, evitando que qualquer código JavaScript seja executado. Isso pode ser feito colocando o conteúdo dentro de um elemento HTML seguro (como um <pre> ou <div>) com o conteúdo escapado, ou usando uma tag <script> do tipo 'application/json' ou 'text/plain' para evitar execução, e lendo o conteúdo via JavaScript no cliente de forma segura. No contexto atual, substituir a tag <script> por um elemento <pre> com o conteúdo escapado usando 'entities.encode' para evitar execução de scripts.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<pre id=\\\"subtitle\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</pre>')\"}],\"justificativa_tecnica\":\"Ao escapar o conteúdo de 'subs' com 'entities.encode' e inseri-lo dentro de um elemento <pre> em vez de uma tag <script>, impedimos que qualquer código JavaScript presente em 'subs' seja interpretado e executado pelo navegador, eliminando a possibilidade de XSS. A tag <pre> preserva a formatação do texto, o que é adequado para legendas, e o escape garante que caracteres especiais não sejam interpretados como código HTML ou script.\",\"limitacoes_da_correcao\":\"A correção assume que o conteúdo de 'subs' é texto de legenda que pode ser exibido como texto simples. Se o formato original exigir que o conteúdo esteja dentro de uma tag <script> do tipo 'text/vtt' para funcionalidade específica do player de vídeo, essa alteração pode impactar a funcionalidade. Nesse caso, seria necessário implementar uma sanitização mais sofisticada ou alterar a forma como as legendas são carregadas no cliente para evitar XSS sem perder funcionalidade.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2596,
+  "tokens_saida": 568,
+  "latencia_s": 5.182,
+  "custo_usd": 0.001371,
+  "hash_prompt": "a87113461e671a67a73584ee1b42f1d860080e07b45c319608669c20cb8357fa",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

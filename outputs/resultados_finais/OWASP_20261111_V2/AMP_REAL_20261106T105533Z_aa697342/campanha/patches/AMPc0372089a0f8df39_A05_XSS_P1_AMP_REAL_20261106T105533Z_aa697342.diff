@@ -1,0 +1,13 @@
+diff --git a/views/promotionVideo.pug b/views/promotionVideo.pug
+index 7b819b80d..fb87871e2 100644
+--- a/views/promotionVideo.pug
++++ b/views/promotionVideo.pug
+@@ -63,7 +63,7 @@ html(lang='en')
+             }
+             function quick_and_dirty_vtt_or_srt_parser(vtt) {
+             var lines = vtt.trim().replace('\\r\n', '\n').split(/[\r\n]/).map(function(line) {
+-            return line.trim();
++            return line.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+             });
+             var cues = [];
+             var start = null;

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possibilidade de ReDoS por construção de expressões regulares com o valor variável challengeKey.\",\n  \"causa_da_vulnerabilidade\": \"challengeKey é interpolado diretamente em padrões RegExp. Embora seja obtido de marcadores nos arquivos de snippets, caracteres especiais nele são interpretados como sintaxe de regex e podem produzir padrões com comportamento de backtracking excessivo.\",\n  \"estrategia_de_correcao\": \"Escapar os metacaracteres de challengeKey antes de interpolá-lo nas expressões regulares, preservando a correspondência literal do identificador e o comportamento de seleção dos snippets.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/codingChallenges.ts\",\n      \"trecho_original\": \"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${challengeKey}([^])*vuln-code-snippet end.*${challengeKey}`)\",\n      \"trecho_corrigido\": \"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const escapedChallengeKey = challengeKey.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${escapedChallengeKey}([^])*vuln-code-snippet end.*${escapedChallengeKey}`)\"\n    },\n    {\n      \"arquivo\": \"lib/codingChallenges.ts\",\n      \"trecho_original\": \"    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\",\n      \"trecho_corrigido\": \"    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O escape impede que challengeKey introduza operadores ou quantificadores de regex; o valor passa a ser tratado como texto literal em todos os padrões que o utilizam. Isso elimina a possibilidade de o identificador alterar a estrutura da expressão e causar backtracking por meio de metacaracteres, sem mudar a lógica de extração para chaves válidas.\",\n  \"limitacoes_da_correcao\": \"A correção protege o uso de challengeKey como parte do padrão, mas não altera a complexidade dos demais trechos fixos das expressões nem limita o tamanho dos arquivos processados. Os arquivos que contêm os marcadores continuam sendo a origem das chaves.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2934,
+  "tokens_saida": 651,
+  "latencia_s": 6.077,
+  "custo_usd": 0.000692,
+  "hash_prompt": "f2e4fccdf19a883f4bbd43240777bb1a6b9f0503af60efc1c8ba7af2a5d70c6d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2931
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal (travessia de diretórios) ao servir arquivos de log.\",\"causa_da_vulnerabilidade\":\"A validação bloqueia apenas o caractere `/`, mas permite sequências como `..\\\\` em sistemas que interpretam a barra invertida como separador de diretórios. Além disso, `path.resolve('logs/', file)` resolve o caminho fornecido sem verificar se o resultado permanece dentro do diretório `logs`.\",\"estrategia_de_correcao\":\"Resolver o diretório base e o caminho solicitado, e permitir o envio somente quando o caminho final estiver dentro do diretório de logs. A validação existente e a mensagem de erro são preservadas; quando a validação falhar, o mesmo erro é encaminhado ao middleware seguinte.\",\"edicoes\":[{\"arquivo\":\"routes/logfileServer.ts\",\"trecho_original\":\"    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('logs/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const file = params.file\\n    const logsPath = path.resolve('logs/')\\n    const filePath = path.resolve(logsPath, file)\\n\\n    if (!file.includes('/') && (filePath === logsPath || filePath.startsWith(`${logsPath}${path.sep}`))) {\\n      res.sendFile(filePath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"`path.resolve(logsPath, file)` normaliza separadores e segmentos `..`. A condição exige que o caminho resultante seja exatamente o diretório base ou esteja sob ele, usando `path.sep` para evitar falsos positivos como `logs-externo`. Assim, entradas como `..\\\\arquivo` ou `../arquivo` não podem escapar do diretório de logs. A chamada a `sendFile` passa a usar apenas o caminho previamente validado.\",\"limitacoes_da_correcao\":\"A correção mantém a rejeição de nomes contendo `/` e, portanto, preserva o comportamento existente para esses nomes. Ela permite apenas arquivos cujo caminho normalizado permaneça em `logs`; controles adicionais de autorização, existência do arquivo e exposição indevida de logs não são tratados por esta alteração.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 769,
+  "tokens_saida": 522,
+  "latencia_s": 7.499,
+  "custo_usd": 0.00078,
+  "hash_prompt": "56efd153eaecb336bfcc146ecec8ca748a6a7819014468ef57e29f4750c50746",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

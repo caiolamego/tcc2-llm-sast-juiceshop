@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de eval() para calcular uma expressão aritmética dinâmica, acionando CWE-95 (Eval Injection) e a regra javascript.browser.security.eval-detected.eval-detected.\",\"causa_da_vulnerabilidade\":\"A expressão é montada por concatenação e passada diretamente a eval(). Embora os termos e operadores atuais sejam gerados internamente, eval interpreta o conteúdo como código JavaScript, criando uma superfície desnecessária para execução de código caso a expressão venha a ser influenciada por entrada externa ou seja alterada futuramente.\",\"estrategia_de_correcao\":\"Substituir eval() por um cálculo explícito baseado em operadores permitidos e funções conhecidas, preservando os operadores e a precedência aritmética do JavaScript para as expressões geradas.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\"trecho_corrigido\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const operations: Record<string, (left: number, right: number) => number> = {\\n      '*': (left, right) => left * right,\\n      '+': (left, right) => left + right,\\n      '-': (left, right) => left - right\\n    }\\n    const terms = [firstTerm, secondTerm, thirdTerm]\\n    const operators = [firstOperator, secondOperator]\\n    const answer = (operators.includes('*')\\n      ? terms.reduce((result, term, index) => index === 0 ? term : operations[operators[index - 1]](result, term))\\n      : operations[operators[1]](operations[operators[0]](firstTerm, secondTerm), thirdTerm)).toString()\"}],\"justificativa_tecnica\":\"A correção elimina completamente a interpretação de código: somente três operadores constantes e funções aritméticas explicitamente mapeadas podem ser executados. O cálculo mantém o comportamento funcional das expressões geradas, incluindo a precedência de multiplicação sobre adição e subtração. Nenhum texto é convertido em código executável, portanto alterações ou influências externas sobre a expressão não resultam em execução arbitrária.\",\"limitacoes_da_correcao\":\"A implementação preserva o conjunto atual de operadores e a forma atual de geração das expressões. Caso novos operadores ou uma gramática mais ampla sejam adicionados, eles deverão ser incorporados explicitamente ao mapa de operações e ao cálculo de precedência, sem retornar ao uso de eval().\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2441,
+  "tokens_saida": 586,
+  "latencia_s": 7.165,
+  "custo_usd": 0.001313,
+  "hash_prompt": "f29fb549c75e08c8004bdda0e6970ddde1e3555a927e50f32aeb3580d11f43c3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2438
+}

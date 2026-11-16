@@ -1,0 +1,19 @@
+rules:
+  - id: tcc.validation.security.first-last-mismatch
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      A condicao verifica o primeiro valor, mas o ramo alternativo usa o ultimo.
+      Revisar parametros duplicados e garantir que o valor usado seja o validado.
+    metadata:
+      category: security
+      cwe: ['CWE-20: Improper Input Validation']
+      confidence: MEDIUM
+    patterns:
+      - pattern-inside: |
+          if (<... $VALUES[0] ...>) {
+            ...
+          } else {
+            ...
+          }
+      - pattern: $VALUES[$VALUES.length - 1]

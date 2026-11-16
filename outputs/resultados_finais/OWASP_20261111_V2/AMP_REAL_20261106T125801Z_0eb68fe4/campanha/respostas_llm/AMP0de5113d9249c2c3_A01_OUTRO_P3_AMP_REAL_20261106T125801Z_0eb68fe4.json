@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-863: autorização incorreta na consulta do histórico de pedidos. O seletor usa um e-mail mascarado, que não é uma identidade única e pode coincidir com o e-mail mascarado de outro usuário.\",\"causa_da_vulnerabilidade\":\"A autorização é vinculada a um valor derivado e não único (`email.replace(/[aeiou]/gi, '*')`). Usuários com e-mails diferentes podem produzir o mesmo valor mascarado, permitindo que a consulta retorne pedidos de outra identidade.\",\"estrategia_de_correcao\":\"Usar a identidade única validada pelo servidor (`loggedInUser.data.id`) como critério de escopo da consulta, preservando a autenticação existente e alterando somente o seletor usado para buscar os pedidos.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ email: updatedEmail })\",\"trecho_corrigido\":\"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ userId: loggedInUser.data.id })\"}],\"justificativa_tecnica\":\"O identificador do usuário autenticado é obtido no servidor a partir da sessão/token validado e é presumivelmente único, evitando colisões introduzidas pelo mascaramento do e-mail. A consulta passa a limitar diretamente os resultados ao proprietário autenticado, mantendo o formato da resposta e o restante do fluxo inalterados.\",\"limitacoes_da_correcao\":\"A correção pressupõe que os documentos de pedidos possuem o campo `userId` preenchido com o mesmo identificador armazenado em `loggedInUser.data.id`. Se o esquema usar outro nome ou não armazenar essa associação, será necessário ajustar o campo persistido e os dados existentes. A variável `email` e o cálculo de `updatedEmail` permanecem sem uso para respeitar as restrições de alteração mínima e preservação dos identificadores existentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1737,
+  "tokens_saida": 451,
+  "latencia_s": 5.854,
+  "custo_usd": 0.000975,
+  "hash_prompt": "1a43392b9a96a23376f915658eb04787532b6a2e6d26081915b8fd1facb45bac",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1734
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL na atualização de avaliações de produtos, permitindo que valores controlados pelo cliente alterem o filtro ou a operação de atualização.\",\n  \"causa_da_vulnerabilidade\": \"req.body.id e req.body.message são usados diretamente na consulta e no operador $set. Se forem objetos em vez de valores escalares, podem ser interpretados pelo MongoDB como operadores ou estruturas de consulta. Além disso, multi: true permite atualizar vários documentos quando o filtro fornecido corresponde a mais de uma avaliação.\",\n  \"estrategia_de_correcao\": \"Validar que o identificador é uma string e que a mensagem é texto antes de consultar o banco; rejeitar entradas inválidas e desabilitar a atualização em múltiplos documentos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/updateProductReviews.ts\",\n      \"trecho_original\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\",\n      \"trecho_corrigido\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    if (typeof req.body.id !== 'string' || typeof req.body.message !== 'string') {\\n      return res.status(400).end()\\n    }\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: false } // vuln-code-snippet vuln-line noSqlReviewsChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação de tipos impede que objetos enviados pelo cliente sejam interpretados como operadores ou estruturas NoSQL. Definir multi como false limita a operação a um único documento, mesmo que o filtro corresponda a vários registros. A resposta 400 encerra o processamento de entradas inválidas sem alterar o fluxo de sucesso existente.\",\n  \"limitacoes_da_correcao\": \"A validação não confirma que o identificador corresponde ao formato ou à existência de um ID válido no banco, nem verifica se o usuário autenticado tem autorização para editar aquela avaliação. Essas verificações dependem do formato dos IDs e das regras de autorização da aplicação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 897,
+  "tokens_saida": 575,
+  "latencia_s": 6.04,
+  "custo_usd": 0.000377,
+  "hash_prompt": "16ce8b90aebc344f4545bbe91fba0fdfd9e8ec9b260e7df791a208a873b2c171",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Divulgação de arquivos de log por meio do endpoint /support/logs/:file, permitindo que usuários não autorizados acessem logs do servidor.\",\"causa_da_vulnerabilidade\":\"A rota que serve os arquivos de log é registrada com serveLogFiles() após um middleware de controle de acesso aplicado apenas ao caminho /support/logs. Em Express, app.use('/support/logs', ...) também corresponde a /support/logs/:file, mas o middleware pode não bloquear adequadamente a requisição antes que serveLogFiles() entregue o arquivo. Além disso, a rota de serviço de arquivos está exposta diretamente e aceita o nome do arquivo fornecido pelo cliente.\",\"estrategia_de_correcao\":\"Aplicar explicitamente o controle de acesso à rota parametrizada antes do middleware que serve os arquivos, preservando a rota e o comportamento para usuários autorizados.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', verify.accessControlChallenges(), serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"O middleware de autorização passa a ser executado diretamente na rota /support/logs/:file e antes de serveLogFiles(). Assim, uma requisição sem as condições de acesso exigidas é interrompida antes que o arquivo seja localizado e enviado. Usuários autorizados continuam utilizando o mesmo endpoint e o middleware existente de serviço de arquivos permanece inalterado.\",\"limitacoes_da_correcao\":\"A eficácia depende de verify.accessControlChallenges() implementar corretamente a autenticação e autorização e de serveLogFiles() restringir o caminho a arquivos de log permitidos. A correção não altera a configuração de trust proxy, o conteúdo dos logs ou outras possíveis fontes de divulgação de informações.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2213,
+  "tokens_saida": 451,
+  "latencia_s": 6.473,
+  "custo_usd": 0.001094,
+  "hash_prompt": "8046229724f256a0f79cfd16092dcd02feefcadeb527403ab706933c8b18fb34",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2210
+}

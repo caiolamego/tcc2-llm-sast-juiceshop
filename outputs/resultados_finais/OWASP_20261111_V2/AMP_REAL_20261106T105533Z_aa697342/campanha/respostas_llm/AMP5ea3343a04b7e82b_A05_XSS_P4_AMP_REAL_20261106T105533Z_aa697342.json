@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado ou refletido ao renderizar o identificador do pedido como HTML sem sanitização.\",\n  \"causa_da_vulnerabilidade\": \"O valor results.data[0].orderId, recebido do serviço de pedidos, é interpolado em uma string HTML e passado a bypassSecurityTrustHtml. Esse método instrui o Angular a confiar no HTML e desativa a sanitização contextual; se o identificador puder ser controlado por um atacante, marcação ou atributos maliciosos podem ser interpretados pelo navegador.\",\n  \"estrategia_de_correcao\": \"Remover o bypass de confiança e atribuir ao campo o HTML como string comum. O binding [innerHTML] do Angular sanitiza esse conteúdo, preservando a formatação <code> pretendida e neutralizando conteúdo HTML perigoso.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/track-result/track-result.component.ts\",\n      \"trecho_original\": \"      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\",\n      \"trecho_corrigido\": \"      this.results.orderNo = `<code>${results.data[0].orderId}</code>`\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Uma string comum vinculada ao [innerHTML] é processada pelo sanitizador padrão do Angular, que remove construções perigosas, ao contrário de SafeHtml criado por bypassSecurityTrustHtml. A marcação <code> continua disponível para a apresentação do identificador, sem confiar automaticamente no conteúdo dinâmico. A propriedade sanitizer permanece inalterada para minimizar a edição.\",\n  \"limitacoes_da_correcao\": \"A mitigação pressupõe que o template renderize orderNo por meio de [innerHTML]. Se usar interpolação {{ }}, as tags <code> serão exibidas literalmente; nesse caso, para preservar a formatação, o template deve usar [innerHTML] sem bypass. A sanitização do Angular não substitui validação de formato do identificador nem garante que todo conteúdo considerado seguro seja apropriado para a aplicação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2355,
+  "tokens_saida": 462,
+  "latencia_s": 4.874,
+  "custo_usd": 0.000525,
+  "hash_prompt": "8496bdbb9d1f46e6fad05bd3bbefb85bc778dbc14a1b23af3bb5d63460c627b9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2352
+}

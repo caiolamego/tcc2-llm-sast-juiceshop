@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição não autenticada do endpoint /metrics, que pode revelar métricas operacionais e informações internas da aplicação.\",\"causa_da_vulnerabilidade\":\"A rota /metrics é registrada diretamente sem qualquer middleware de autenticação ou autorização, ficando acessível a qualquer cliente que consiga alcançar o servidor.\",\"estrategia_de_correcao\":\"Proteger a rota /metrics com o middleware de autenticação/autorização já utilizado pela aplicação para endpoints administrativos, mantendo o handler e o comportamento das métricas inalterados.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`\",\"trecho_corrigido\":\"  /* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', verify.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`\"}],\"justificativa_tecnica\":\"A inclusão de verify.isAuthorized() impede que requisições não autenticadas alcancem o coletor de métricas. O handler existente, a atualização periódica e o formato da resposta permanecem inalterados para usuários autorizados. A edição também corrige a ocorrência efetivamente vulnerável no trecho fornecido, que é registrada após a configuração inicial das rotas.\",\"limitacoes_da_correcao\":\"A correção pressupõe que verify.isAuthorized() seja um middleware existente e adequado para proteger endpoints administrativos. Ela não restringe o acesso por rede ou IP e não altera outras possíveis rotas ou mecanismos que exponham as mesmas métricas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1714,
+  "tokens_saida": 436,
+  "latencia_s": 6.317,
+  "custo_usd": 0.000952,
+  "hash_prompt": "953e0c585bf8ed431b01e03399828b5cdd9241e9c2315fd5557102ef80871cd5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1711
+}

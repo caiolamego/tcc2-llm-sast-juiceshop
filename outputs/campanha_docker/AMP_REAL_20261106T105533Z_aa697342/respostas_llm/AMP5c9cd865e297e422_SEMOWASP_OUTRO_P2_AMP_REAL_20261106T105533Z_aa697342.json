@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Condição de corrida (TOCTOU) na operação de curtir uma avaliação, que permite contornar a verificação de curtida duplicada.\",\n  \"causa_da_vulnerabilidade\": \"A rota verifica se o e-mail do usuário está em likedBy e, separadamente, incrementa likesCount e grava likedBy. Essas operações não são atômicas. Requisições concorrentes do mesmo usuário podem passar pela verificação antes que qualquer uma grave o e-mail, incrementando likesCount mais de uma vez. A espera artificial amplia a janela para a corrida.\",\n  \"estrategia_de_correcao\": \"Substituir a leitura, verificação e atualização separadas por uma única atualização condicional atômica no MongoDB. A atualização só incrementa likesCount e adiciona o e-mail a likedBy se o usuário ainda não estiver na lista; se nenhum documento corresponder, preservar a resposta de erro existente para curtida duplicada.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/likeProductReviews.ts\",\n      \"trecho_original\": \"    try {\\n      const review = await db.reviewsCollection.findOne({ _id: id })\\n      if (!review) {\\n        return res.status(404).json({ error: 'Not found' })\\n      }\\n\\n      const likedBy = review.likedBy\\n      if (likedBy.includes(user.data.email)) {\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\\n\\n      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\",\n      \"trecho_corrigido\": \"    try {\\n      const result = await db.reviewsCollection.update(\\n        { _id: id, likedBy: { $ne: user.data.email } },\\n        { $inc: { likesCount: 1 }, $addToSet: { likedBy: user.data.email } }\\n      )\\n      if (result.n === 0) {\\n        const review = await db.reviewsCollection.findOne({ _id: id })\\n        if (!review) {\\n          return res.status(404).json({ error: 'Not found' })\\n        }\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\"\n    },\n    {\n      \"arquivo\": \"routes/likeProductReviews.ts\",\n      \"trecho_original\": \"      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n        updatedLikedBy.push(user.data.email)\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\\n        res.json(result)\\n      } catch (err) {\\n        res.status(500).json(err)\\n      }\",\n      \"trecho_corrigido\": \"      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const count = updatedReview.likedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        res.json(result)\\n      } catch (err) {\\n        res.status(500).json(err)\\n      }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O filtro { _id: id, likedBy: { $ne: user.data.email } } e as alterações de likesCount e likedBy são executados como uma única operação atômica no documento. Em requisições concorrentes, somente a primeira pode corresponder ao filtro; as seguintes não incrementam o contador. $addToSet também impede a inclusão de e-mails duplicados. A consulta posterior distingue avaliação inexistente de curtida já registrada e mantém os códigos e mensagens de erro existentes.\",\n  \"limitacoes_da_correcao\": \"A solução pressupõe que a versão e a configuração do driver MongoDB usadas pelo projeto retornem em result.n o número de documentos correspondentes à atualização, como esperado pela API existente. A espera artificial e a lógica do desafio de timing attack foram mantidas; a correção impede a duplicação de curtidas, mas não remove esse comportamento de desafio.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1118,
+  "tokens_saida": 1038,
+  "latencia_s": 9.053,
+  "custo_usd": 0.000659,
+  "hash_prompt": "9af75b058dd368d08752f2a04bc681123921218ab61ce23042dce1a70c70676d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1115
+}

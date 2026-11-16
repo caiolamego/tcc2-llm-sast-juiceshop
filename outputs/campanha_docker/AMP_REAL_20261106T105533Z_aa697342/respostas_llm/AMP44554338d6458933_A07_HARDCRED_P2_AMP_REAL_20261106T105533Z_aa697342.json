@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Credenciais e dados sensíveis de usuários estão armazenados em texto claro no arquivo de dados, incluindo senhas, respostas de segurança e um segredo TOTP. Há também dados pessoais e financeiros, como telefone, endereço e número de cartão.\",\n  \"causa_da_vulnerabilidade\": \"O arquivo contém diretamente valores secretos e informações pessoais em campos como `password`, `answer`, `totpSecret` e `cardNum`, sem evidência de proteção criptográfica. Comentários com URLs e senhas fracas ou previsíveis também podem facilitar a descoberta ou o uso indevido dessas credenciais.\",\n  \"estrategia_de_correcao\": \"Não é possível corrigir com segurança apenas editando este trecho sem conhecer o formato de armazenamento esperado pela aplicação, o mecanismo de autenticação e os dados completos do arquivo. Substituir valores por hashes ou remover campos às cegas pode impedir o login ou quebrar funcionalidades. A correção deve migrar senhas para hashes adaptativos com salt, proteger segredos recuperáveis com criptografia gerenciada por chave externa, remover dados desnecessários e rotacionar credenciais e segredos expostos.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"Hashes adaptativos, como Argon2id, bcrypt ou scrypt, reduzem o risco de recuperação de senhas caso o arquivo seja exposto; senhas não devem ser armazenadas de forma reversível. Segredos TOTP e dados que precisam ser recuperados devem ser criptografados com chaves mantidas fora do arquivo e com controle de acesso. A rotação é necessária porque os valores apresentados já devem ser considerados comprometidos. Sem conhecer o esquema e o código consumidor, uma alteração pontual neste YAML não pode garantir essas propriedades nem preservar o comportamento funcional.\",\n  \"limitacoes_da_correcao\": \"Nenhuma edição foi proposta porque o trecho fornecido não permite determinar uma transformação compatível e segura, e a restrição de preservar o comportamento impede substituir credenciais por valores arbitrários. A correção exige mudanças coordenadas no armazenamento, no código de autenticação e na gestão de segredos, além de rotação dos valores expostos. O arquivo completo e os mecanismos de acesso também precisam ser avaliados.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1691,
+  "tokens_saida": 473,
+  "latencia_s": 6.193,
+  "custo_usd": 0.000448,
+  "hash_prompt": "fe2482aa35347bedb711b15485ba5514d71e2fb7b4783e8edf73ef59cd40537f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1688
+}

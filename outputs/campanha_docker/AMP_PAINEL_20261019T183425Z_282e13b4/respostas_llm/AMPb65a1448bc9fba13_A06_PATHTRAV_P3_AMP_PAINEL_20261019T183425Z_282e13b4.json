@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: External Control of File Name or Path (Path Traversal)\",\"causa_da_vulnerabilidade\":\"O código aceita diretamente o parâmetro 'file' da requisição e o utiliza em res.sendFile sem validação adequada do caminho, permitindo que um atacante utilize sequências como '../' para acessar arquivos fora do diretório permitido.\",\"estrategia_de_correcao\":\"Realizar a resolução do caminho absoluto do arquivo solicitado e verificar se ele está dentro do diretório permitido ('logs/'). Caso contrário, bloquear o acesso. Isso impede que caminhos com traversal acessem arquivos fora do diretório autorizado.\",\"edicoes\":[{\"arquivo\":\"routes/logfileServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('logs/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const resolvedPath = path.resolve('logs/', file)\\n    if (resolvedPath.startsWith(path.resolve('logs/'))) {\\n      res.sendFile(resolvedPath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"A validação original apenas bloqueava nomes de arquivos contendo '/', mas não impedia sequências de path traversal como '../'. Ao resolver o caminho absoluto e garantir que ele esteja dentro do diretório 'logs/', evitamos que arquivos fora desse diretório sejam acessados, mitigando a vulnerabilidade de path traversal.\",\"limitacoes_da_correcao\":\"A correção assume que o diretório 'logs/' é o único local válido para servir arquivos e que não existem links simbólicos que possam apontar para fora desse diretório. Se existirem links simbólicos, pode ser necessário um tratamento adicional para evitar bypass da restrição.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1258,
+  "tokens_saida": 409,
+  "latencia_s": 8.764,
+  "custo_usd": 0.001158,
+  "hash_prompt": "c7891d3f0d485a8e1e631f76e7633d4e5d5e70b05047ac3e7ba3376e13c62d39",
+  "do_cache": false
+}

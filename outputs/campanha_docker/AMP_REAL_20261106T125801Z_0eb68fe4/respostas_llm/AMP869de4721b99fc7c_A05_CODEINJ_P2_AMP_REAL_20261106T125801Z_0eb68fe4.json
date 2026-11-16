@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de eval() para calcular uma expressão matemática, introduzindo execução dinâmica de código.\",\"causa_da_vulnerabilidade\":\"A construção eval(expression) interpreta o conteúdo fornecido como código JavaScript. Embora a expressão atual seja montada apenas com números e operadores internos, o uso de eval() cria uma superfície de execução arbitrária e pode se tornar explorável caso qualquer parte da expressão passe a ser influenciada por entrada externa ou seja alterada futuramente sem validação rigorosa.\",\"estrategia_de_correcao\":\"Substituir eval() por um cálculo explícito dos dois operadores e operandos já gerados internamente, preservando a geração da expressão e o formato da resposta.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\"trecho_corrigido\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const firstResult = firstOperator === '*' ? firstTerm * secondTerm : firstOperator === '+' ? firstTerm + secondTerm : firstTerm - secondTerm\\n    const answer = (secondOperator === '*' ? firstResult * thirdTerm : secondOperator === '+' ? firstResult + thirdTerm : firstResult - thirdTerm).toString()\"}],\"justificativa_tecnica\":\"A resposta passa a ser calculada exclusivamente por operações aritméticas explícitas sobre números gerados pelo servidor. Nenhuma string é interpretada como código JavaScript, eliminando a possibilidade de execução arbitrária associada a eval(). A expressão CAPTCHA, os operadores permitidos, o resultado e a interface da rota permanecem funcionalmente equivalentes ao comportamento anterior, inclusive respeitando a avaliação da esquerda para a direita produzida por eval() para esses operadores.\",\"limitacoes_da_correcao\":\"A correção remove o risco de execução dinâmica nesta rota, mas não substitui outras medidas de segurança do CAPTCHA, como limitação de tentativas, expiração e proteção contra automação. Além disso, a verificação continua dependendo de req.body.captchaId e req.body.captcha, portanto validação de entrada e controles de abuso podem ser necessários conforme o contexto da aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1028,
+  "tokens_saida": 501,
+  "latencia_s": 5.775,
+  "custo_usd": 0.000858,
+  "hash_prompt": "623a908c703412145ca1ee983567dc43cac62b00c2aebabbd66a0f29089f22b3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1025
+}

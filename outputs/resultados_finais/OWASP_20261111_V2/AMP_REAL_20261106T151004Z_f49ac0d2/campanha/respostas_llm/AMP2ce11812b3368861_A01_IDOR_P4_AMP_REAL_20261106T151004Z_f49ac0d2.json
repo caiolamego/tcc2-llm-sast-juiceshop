@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key na função toggleDeliveryStatus, permitindo que qualquer usuário altere o status de entrega de pedidos que não lhe pertencem.\",\"causa_da_vulnerabilidade\":\"A função toggleDeliveryStatus atualiza o documento no banco de dados apenas com base no _id recebido via req.params.id, sem verificar se o pedido pertence ao usuário autenticado. Isso permite que um usuário malicioso altere pedidos de outros usuários simplesmente fornecendo o ID do pedido.\",\"estrategia_de_correcao\":\"Adicionar verificação para garantir que o pedido a ser atualizado pertence ao usuário autenticado. Para isso, obter o usuário autenticado via token, buscar o pedido pelo _id e pelo email do usuário, e só então realizar a atualização se o pedido pertencer ao usuário.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"export function toggleDeliveryStatus () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\\n}\",\"trecho_corrigido\":\"export function toggleDeliveryStatus () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (!loggedInUser?.data?.email) {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n      return\\n    }\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    const order = await ordersCollection.findOne({ _id: req.params.id, email: loggedInUser.data.email })\\n    if (!order) {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n      return\\n    }\\n    await ordersCollection.update({ _id: req.params.id, email: loggedInUser.data.email }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\\n}\"}],\"justificativa_tecnica\":\"A correção adiciona uma verificação explícita para garantir que o pedido a ser atualizado pertence ao usuário autenticado, evitando que um usuário altere pedidos de terceiros. Isso é feito buscando o pedido pelo _id e pelo email do usuário autenticado antes de permitir a atualização. Caso o pedido não pertença ao usuário, a operação é bloqueada com erro. Assim, a autorização é corretamente aplicada, mitigando a vulnerabilidade CWE-639.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'email' é o identificador do dono do pedido e que está presente e consistente nos documentos da coleção ordersCollection. Se houver usuários com múltiplos emails ou pedidos compartilhados, a lógica pode precisar ser ajustada. Além disso, a autenticação depende do token no cabeçalho Authorization, que deve ser seguro e confiável.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1862,
+  "tokens_saida": 699,
+  "latencia_s": 25.166,
+  "custo_usd": 0.001863,
+  "hash_prompt": "00045038172f1fc270b899209c147b19a19c2e55005dd70567fe24156fe891c0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

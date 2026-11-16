@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de dado não confiável do cliente (req.body.couponData) para decisão de elegibilidade de desconto baseado em data da campanha, permitindo manipulação da data e obtenção indevida de descontos.\",\"causa_da_vulnerabilidade\":\"O código decodifica e interpreta a data da campanha enviada pelo cliente no campo req.body.couponData para validar se o cupom é válido, comparando essa data com a data válida da campanha no servidor. Isso permite que um atacante manipule a data no corpo da requisição para burlar a validação temporal e obter descontos indevidos.\",\"estrategia_de_correcao\":\"Remover a dependência da data enviada pelo cliente para validar a elegibilidade do cupom. Utilizar exclusivamente a data confiável do servidor para validar se a campanha está vigente, comparando a data atual do servidor com a data válida da campanha. Ignorar a data enviada pelo cliente (couponDate) e validar apenas se a campanha existe e está válida no momento da requisição.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"    if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq\\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n      return campaign.discount\\n    }\",\"trecho_corrigido\":\"    if (campaign && new Date().getTime() >= campaign.validOn) {\\n      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })\\n      return campaign.discount\\n    }\"}],\"justificativa_tecnica\":\"Ao eliminar a comparação com a data enviada pelo cliente e utilizar apenas a data atual do servidor para validar a campanha, a decisão de elegibilidade do desconto passa a depender exclusivamente de uma fonte confiável e imutável pelo cliente, mitigando a possibilidade de manipulação da data para obter descontos indevidos.\",\"limitacoes_da_correcao\":\"A correção assume que a data atual do servidor está correta e sincronizada. Caso haja necessidade de aceitar cupons com datas futuras ou específicas, a lógica deverá ser ajustada para contemplar esses casos de forma segura. Além disso, a correção não impede que um cliente envie um cupom inválido, mas garante que a validação temporal seja feita de forma segura no servidor.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3916,
+  "tokens_saida": 498,
+  "latencia_s": 6.312,
+  "custo_usd": 0.00148,
+  "hash_prompt": "50295200050cc18fae2f4578a7e469e50cea799e3f43b5669be7787cfb3c9857",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2944,
+  "tokens_escrita_cache": 0
+}

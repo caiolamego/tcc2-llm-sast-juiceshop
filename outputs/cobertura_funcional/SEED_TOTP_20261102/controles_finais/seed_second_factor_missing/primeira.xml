@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="TCC static seed TOTP contracts" time="0.446917" disabled="0" errors="0" tests="9" failures="6" skipped="0" hostname="d5ba681200ee">
+		<testcase name="matches the independent client oracle to published SHA1 TOTP vectors" time="0.001076" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts"/>
+		<testcase name="preserves the declared identities and passwords of all static seed users" time="0.016982" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts"/>
+		<testcase name="persists the configured second factor for the target seed account" time="0.001246" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Seeded second factor must remain configured">
+			<failure type="testCodeFailure" message="Seeded second factor must remain configured">
+[Error [ERR_TEST_FAILURE]: Seeded second factor must remain configured] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Seeded second factor must remain configured
+      at secret (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:74:10)
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:116:17)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects an incorrect seed password without issuing a temporary login proof" time="0.035672" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts"/>
+		<testcase name="requires the second factor after a correct seed password" time="0.030171" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Expected values to be strictly equal:&#10;&#10;200 !== 401&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;200 !== 401">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+200 !== 401
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 401
+  
+      at firstFactor (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:80:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:135:23)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="completes real seed login using an independently calculated current TOTP" time="0.017553" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Expected values to be strictly equal:&#10;&#10;200 !== 401&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;200 !== 401">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+200 !== 401
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 401
+  
+      at firstFactor (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:80:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:149:23)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects an incorrect TOTP for the real seed login challenge" time="0.016986" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Expected values to be strictly equal:&#10;&#10;200 !== 401&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;200 !== 401">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+200 !== 401
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 401
+  
+      at firstFactor (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:80:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:172:23)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects a stale TOTP outside the configured time window" time="0.001042" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Seeded second factor must remain configured">
+			<failure type="testCodeFailure" message="Seeded second factor must remain configured">
+[Error [ERR_TEST_FAILURE]: Seeded second factor must remain configured] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Seeded second factor must remain configured
+      at secret (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:74:10)
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:185:17)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="rejects a valid current TOTP without a first-factor login proof" time="0.000755" classname="test" file="/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts" failure="Seeded second factor must remain configured">
+			<failure type="testCodeFailure" message="Seeded second factor must remain configured">
+[Error [ERR_TEST_FAILURE]: Seeded second factor must remain configured] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Seeded second factor must remain configured
+      at secret (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:74:10)
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/tcc_coverage_seed_totp.test.ts:198:89)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+	</testsuite>
+	<!-- tests 9 -->
+	<!-- suites 1 -->
+	<!-- pass 3 -->
+	<!-- fail 6 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 1898.693582 -->
+</testsuites>

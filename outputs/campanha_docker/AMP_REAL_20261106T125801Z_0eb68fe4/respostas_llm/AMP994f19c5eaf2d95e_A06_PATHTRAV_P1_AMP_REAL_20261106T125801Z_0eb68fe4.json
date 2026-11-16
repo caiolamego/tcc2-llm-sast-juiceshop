@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal (travessia de diretórios) no endpoint de servir arquivos, permitindo que um nome de arquivo contendo segmentos de diretório seja resolvido fora de ftp/.\",\"causa_da_vulnerabilidade\":\"A validação bloqueia apenas o caractere '/', mas não bloqueia barras invertidas. Em sistemas que reconhecem '\\\\' como separador de caminho, um valor como '..\\\\\\\\arquivo' pode passar pela validação e ser usado por path.resolve para escapar do diretório ftp/.\",\"estrategia_de_correcao\":\"Rejeitar também barras invertidas antes de qualquer resolução de caminho, preservando a lógica, mensagens, identificadores e comportamento permitido existentes.\",\"edicoes\":[{\"arquivo\":\"routes/fileServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      verify(file, res, next)\\n    } else {\",\"trecho_corrigido\":\"    if (!file.includes('/') && !file.includes('\\\\\\\\')) {\\n      verify(file, res, next)\\n    } else {\"}],\"justificativa_tecnica\":\"A expressão path.resolve('ftp/', file) interpreta separadores de caminho conforme a plataforma. A validação anterior impedia somente '/', deixando possível usar '\\\\\\\\' para introduzir componentes '..' em plataformas que aceitam esse separador. A rejeição explícita de ambos os separadores impede a inclusão de qualquer componente de diretório no parâmetro, mantendo o allowlist de extensões e o fluxo funcional original.\",\"limitacoes_da_correcao\":\"A correção depende da premissa funcional existente de que o parâmetro deve ser apenas um nome de arquivo, sem subdiretórios. Ela não altera outras propriedades de arquivos permitidos, como conteúdo ou links simbólicos eventualmente presentes no diretório ftp/.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1087,
+  "tokens_saida": 373,
+  "latencia_s": 6.519,
+  "custo_usd": 0.000719,
+  "hash_prompt": "f7c4beb26210c53bb8bb3142213b165b14ff18d2102d753ff8c6d221a49ccedd",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1084
+}

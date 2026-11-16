@@ -1,0 +1,247 @@
+{
+  "passou": false,
+  "tier_falha": "T2",
+  "duracao_s": 21.10236473600162,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2",
+  "tier_falha_marcador": "T2",
+  "tier_falha_criterio": "T2",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/server/xml.unit.test.ts :: xml > should expand internal entities"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/server/xml.unit.test.ts :: xml > should expand internal entities"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 7.07,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_c7hrkfq1/xml/primeira.xml",
+        "test/server/xml.unit.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 1.03,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/server/xml.unit.test.ts :: xml > should expand internal entities"
+      ],
+      "testes_falhos_novos": [
+        "test/server/xml.unit.test.ts :: xml > should expand internal entities"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ xml\n  ✔ should parse a simple XML string (283.76072ms)\n  ✖ should expand internal entities (3.929389ms)\n  ✔ should throw error on malformed XML (3.264974ms)\n  ✔ should timeout on entity expansion bomb (2.066684ms)\n✖ xml (293.983738ms)\nℹ tests 4\nℹ suites 1\nℹ pass 3\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 455.371923\n\n✖ failing tests:\n\ntest at test/server/xml.unit.test.ts:2:1228\n✖ should expand internal entities (3.929389ms)\n  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /<root>world<\\/root>/. Input:\n  \n  '<?xml version=\"1.0\" encoding=\"utf-8\"?>\\n' +\n    '<!DOCTYPE root [\\n' +\n    '<!ENTITY hello \"world\">\\n' +\n    ']>\\n' +\n    '<root>&hello;</root>\\n'\n  \n      at TestContext.<anonymous> (test/server/xml.unit.test.ts:24:12)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '<?xml version=\"1.0\" encoding=\"utf-8\"?>\\n<!DOCTYPE root [\\n<!ENTITY hello \"world\">\\n]>\\n<root>&hello;</root>\\n',\n    expected: /<root>world<\\/root>/,\n    operator: 'match',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 3.3700016501825303e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/server/xml.unit.test.ts :: xml > should expand internal entities"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "lib/xml.ts"
+    ],
+    "grupos": [
+      "xml"
+    ],
+    "dominios": [
+      "servidor"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 7.07
+    },
+    {
+      "tier": "T2",
+      "grupo": "xml",
+      "status": "executada",
+      "duracao_s": 1.03
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "servidor"
+    ],
+    "grupos_selecionados": [
+      "xml"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 7.07
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "xml",
+        "dominio": "servidor",
+        "testes": [
+          {
+            "id": "test/server/xml.unit.test.ts :: xml > should expand internal entities",
+            "arquivo": "test/server/xml.unit.test.ts",
+            "nome": "xml > should expand internal entities",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/server/xml.unit.test.ts :: xml > should parse a simple XML string",
+            "arquivo": "test/server/xml.unit.test.ts",
+            "nome": "xml > should parse a simple XML string",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/xml.unit.test.ts :: xml > should throw error on malformed XML",
+            "arquivo": "test/server/xml.unit.test.ts",
+            "nome": "xml > should throw error on malformed XML",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/xml.unit.test.ts :: xml > should timeout on entity expansion bomb",
+            "arquivo": "test/server/xml.unit.test.ts",
+            "nome": "xml > should timeout on entity expansion bomb",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/server/xml.unit.test.ts :: xml > should expand internal entities"
+        ],
+        "falhos_novos": [
+          "test/server/xml.unit.test.ts :: xml > should expand internal entities"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/server/xml.unit.test.ts :: xml > should expand internal entities",
+          "test/server/xml.unit.test.ts :: xml > should parse a simple XML string",
+          "test/server/xml.unit.test.ts :: xml > should throw error on malformed XML",
+          "test/server/xml.unit.test.ts :: xml > should timeout on entity expansion bomb"
+        ],
+        "esperados": [
+          "test/server/xml.unit.test.ts :: xml > should expand internal entities",
+          "test/server/xml.unit.test.ts :: xml > should parse a simple XML string",
+          "test/server/xml.unit.test.ts :: xml > should throw error on malformed XML",
+          "test/server/xml.unit.test.ts :: xml > should timeout on entity expansion bomb"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/server/xml.unit.test.ts :: xml > should expand internal entities",
+          "test/server/xml.unit.test.ts :: xml > should parse a simple XML string",
+          "test/server/xml.unit.test.ts :: xml > should throw error on malformed XML",
+          "test/server/xml.unit.test.ts :: xml > should timeout on entity expansion bomb"
+        ],
+        "obrigatorios_aprovados": [
+          "test/server/xml.unit.test.ts :: xml > should parse a simple XML string"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 1.03,
+        "espera_api_s": 3.3700016501825303e-06,
+        "resultado": {
+          "tier": "T2",
+          "comando": [
+            "node",
+            "--import",
+            "./test/server/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_c7hrkfq1/xml/primeira.xml",
+            "test/server/xml.unit.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 1.03,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ xml\n  ✔ should parse a simple XML string (283.76072ms)\n  ✖ should expand internal entities (3.929389ms)\n  ✔ should throw error on malformed XML (3.264974ms)\n  ✔ should timeout on entity expansion bomb (2.066684ms)\n✖ xml (293.983738ms)\nℹ tests 4\nℹ suites 1\nℹ pass 3\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 455.371923\n\n✖ failing tests:\n\ntest at test/server/xml.unit.test.ts:2:1228\n✖ should expand internal entities (3.929389ms)\n  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /<root>world<\\/root>/. Input:\n  \n  '<?xml version=\"1.0\" encoding=\"utf-8\"?>\\n' +\n    '<!DOCTYPE root [\\n' +\n    '<!ENTITY hello \"world\">\\n' +\n    ']>\\n' +\n    '<root>&hello;</root>\\n'\n  \n      at TestContext.<anonymous> (test/server/xml.unit.test.ts:24:12)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '<?xml version=\"1.0\" encoding=\"utf-8\"?>\\n<!DOCTYPE root [\\n<!ENTITY hello \"world\">\\n]>\\n<root>&hello;</root>\\n',\n    expected: /<root>world<\\/root>/,\n    operator: 'match',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"xml\" time=\"0.293984\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"1\" skipped=\"0\" hostname=\"matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC\">\n\t\t<testcase name=\"should parse a simple XML string\" time=\"0.283761\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts\"/>\n\t\t<testcase name=\"should expand internal entities\" time=\"0.003929\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts\" failure=\"The input did not match the regular expression /&lt;root>world&lt;\\/root>/. Input:&#10;&#10;'&lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?>\\n' +&#10;  '&lt;!DOCTYPE root [\\n' +&#10;  '&lt;!ENTITY hello &amp;quot;world&amp;quot;>\\n' +&#10;  ']>\\n' +&#10;  '&lt;root>&amp;hello;&lt;/root>\\n'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The input did not match the regular expression /&lt;root>world&lt;\\/root>/. Input:&#10;&#10;'&lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?>\\n' +&#10;  '&lt;!DOCTYPE root [\\n' +&#10;  '&lt;!ENTITY hello &amp;quot;world&amp;quot;>\\n' +&#10;  ']>\\n' +&#10;  '&lt;root>&amp;hello;&lt;/root>\\n'\">\n[Error [ERR_TEST_FAILURE]: The input did not match the regular expression /&lt;root>world&lt;\\/root>/. Input:\n\n'&lt;?xml version=\"1.0\" encoding=\"utf-8\"?>\\n' +\n  '&lt;!DOCTYPE root [\\n' +\n  '&lt;!ENTITY hello \"world\">\\n' +\n  ']>\\n' +\n  '&lt;root>&amp;hello;&lt;/root>\\n'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /&lt;root>world&lt;\\/root>/. Input:\n  \n  '&lt;?xml version=\"1.0\" encoding=\"utf-8\"?>\\n' +\n    '&lt;!DOCTYPE root [\\n' +\n    '&lt;!ENTITY hello \"world\">\\n' +\n    ']>\\n' +\n    '&lt;root>&amp;hello;&lt;/root>\\n'\n  \n      at TestContext.&lt;anonymous> (/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts:24:12)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '&lt;?xml version=\"1.0\" encoding=\"utf-8\"?>\\n&lt;!DOCTYPE root [\\n&lt;!ENTITY hello \"world\">\\n]>\\n&lt;root>&amp;hello;&lt;/root>\\n',\n    expected: /&lt;root>world&lt;\\/root>/,\n    operator: 'match',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"should throw error on malformed XML\" time=\"0.003265\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts\"/>\n\t\t<testcase name=\"should timeout on entity expansion bomb\" time=\"0.002067\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 4 -->\n\t<!-- suites 1 -->\n\t<!-- pass 3 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 455.371923 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"xml\" time=\"0.295395\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"1\" skipped=\"0\" hostname=\"matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC\">\n\t\t<testcase name=\"should parse a simple XML string\" time=\"0.285152\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts\"/>\n\t\t<testcase name=\"should expand internal entities\" time=\"0.003844\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts\" failure=\"The input did not match the regular expression /&lt;root>world&lt;\\/root>/. Input:&#10;&#10;'&lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?>\\n' +&#10;  '&lt;!DOCTYPE root [\\n' +&#10;  '&lt;!ENTITY hello &amp;quot;world&amp;quot;>\\n' +&#10;  ']>\\n' +&#10;  '&lt;root>&amp;hello;&lt;/root>\\n'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The input did not match the regular expression /&lt;root>world&lt;\\/root>/. Input:&#10;&#10;'&lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?>\\n' +&#10;  '&lt;!DOCTYPE root [\\n' +&#10;  '&lt;!ENTITY hello &amp;quot;world&amp;quot;>\\n' +&#10;  ']>\\n' +&#10;  '&lt;root>&amp;hello;&lt;/root>\\n'\">\n[Error [ERR_TEST_FAILURE]: The input did not match the regular expression /&lt;root>world&lt;\\/root>/. Input:\n\n'&lt;?xml version=\"1.0\" encoding=\"utf-8\"?>\\n' +\n  '&lt;!DOCTYPE root [\\n' +\n  '&lt;!ENTITY hello \"world\">\\n' +\n  ']>\\n' +\n  '&lt;root>&amp;hello;&lt;/root>\\n'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /&lt;root>world&lt;\\/root>/. Input:\n  \n  '&lt;?xml version=\"1.0\" encoding=\"utf-8\"?>\\n' +\n    '&lt;!DOCTYPE root [\\n' +\n    '&lt;!ENTITY hello \"world\">\\n' +\n    ']>\\n' +\n    '&lt;root>&amp;hello;&lt;/root>\\n'\n  \n      at TestContext.&lt;anonymous> (/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts:24:12)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '&lt;?xml version=\"1.0\" encoding=\"utf-8\"?>\\n&lt;!DOCTYPE root [\\n&lt;!ENTITY hello \"world\">\\n]>\\n&lt;root>&amp;hello;&lt;/root>\\n',\n    expected: /&lt;root>world&lt;\\/root>/,\n    operator: 'match',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"should throw error on malformed XML\" time=\"0.003225\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts\"/>\n\t\t<testcase name=\"should timeout on entity expansion bomb\" time=\"0.002153\" classname=\"test\" file=\"/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/xml.unit.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 4 -->\n\t<!-- suites 1 -->\n\t<!-- pass 3 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 481.357329 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "af15ab686ca7539e9f663528227aa5c323d634de170ac2760e66ffd1c501b34b",
+    "suficiente": true
+  }
+}

@@ -1,0 +1,19 @@
+rules:
+  - id: tcc.redirect.security.substring-allowlist
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Validar uma URL de redirecionamento com includes() em uma allowlist aceita
+      URLs maliciosas que apenas contenham um destino permitido como substring.
+      Compare a origem e o caminho de forma estruturada ou use igualdade exata.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+      confidence: MEDIUM
+    pattern: |
+      for (const $ENTRY of $ALLOWLIST) {
+        ...
+        $URL.includes($ENTRY)
+        ...
+      }

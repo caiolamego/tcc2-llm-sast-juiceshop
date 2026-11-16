@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função eval para calcular a expressão do CAPTCHA.\",\"causa_da_vulnerabilidade\":\"A função eval executa código JavaScript arbitrário, o que pode levar à execução de código malicioso se a expressão for manipulada ou construída de forma insegura.\",\"estrategia_de_correcao\":\"Substituir o uso de eval por uma função segura que avalie a expressão matemática composta apenas por números e operadores permitidos, evitando a execução de código arbitrário.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\"trecho_corrigido\":\"    function safeEval(expr: string): number {\\n      const operators = ['+', '-', '*'];\\n      let tokens = expr.match(/\\\\d+|[+\\\\-*]/g);\\n      if (!tokens) throw new Error('Invalid expression');\\n\\n      let result = parseInt(tokens[0], 10);\\n      for (let i = 1; i < tokens.length; i += 2) {\\n        const operator = tokens[i];\\n        const operand = parseInt(tokens[i + 1], 10);\\n        if (!operators.includes(operator) || isNaN(operand)) {\\n          throw new Error('Invalid expression');\\n        }\\n        if (operator === '+') result += operand;\\n        else if (operator === '-') result -= operand;\\n        else if (operator === '*') result *= operand;\\n      }\\n      return result;\\n    }\\n    const answer = safeEval(expression).toString() // eslint-disable-line no-eval\"}],\"justificativa_tecnica\":\"O uso de eval é uma prática insegura pois pode executar código arbitrário, mesmo que neste caso a expressão seja gerada internamente. Para eliminar qualquer risco, substituímos eval por uma função que analisa e calcula a expressão de forma segura, considerando apenas números e operadores matemáticos permitidos.\",\"limitacoes_da_correcao\":\"A correção assume que a expressão sempre terá o formato 'n operador n operador n' com operadores entre '+', '-', '*'. Caso a expressão mude para formatos mais complexos, a função safeEval precisaria ser adaptada ou substituída por um parser matemático mais robusto.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 923,
+  "tokens_saida": 489,
+  "latencia_s": 5.344,
+  "custo_usd": 0.001152,
+  "hash_prompt": "f369ed4a4fe3dca245fb6a11041a509e43e43724413d59da1d50bd10a6f545c9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

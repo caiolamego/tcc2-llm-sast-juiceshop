@@ -1,0 +1,14 @@
+diff --git a/frontend/src/app/about/about.component.ts b/frontend/src/app/about/about.component.ts
+index c33b1c813..75d105bbd 100644
+--- a/frontend/src/app/about/about.component.ts
++++ b/frontend/src/app/about/about.component.ts
+@@ -116,9 +116,6 @@ export class AboutComponent implements OnInit {
+           feedbacks[i].comment = `<figcaption><p class="feedback-comment">${
+             feedbacks[i].comment
+           }</p><div class="feedback-stars">(${this.stars[feedbacks[i].rating]})</div></figcaption>`
+-          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(
+-            feedbacks[i].comment
+-          )
+ 
+           this.galleryRef.addImage({
+             src: this.images[i % this.images.length],

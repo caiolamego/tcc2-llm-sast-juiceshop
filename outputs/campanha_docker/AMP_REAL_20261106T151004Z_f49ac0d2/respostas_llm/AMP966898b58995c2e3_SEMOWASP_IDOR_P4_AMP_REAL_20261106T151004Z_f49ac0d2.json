@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key (IDOR) na consulta do cesto de compras pelo ID sem verificar se o cesto pertence ao usuário autenticado.\",\"causa_da_vulnerabilidade\":\"O código realiza uma consulta ao modelo BasketModel usando apenas o ID recebido via parâmetro da requisição, sem restringir ou validar se o cesto pertence ao usuário autenticado. Isso permite que um usuário acesse cestos de outros usuários se souber o ID.\",\"estrategia_de_correcao\":\"Adicionar uma restrição na consulta para filtrar o cesto pelo ID e pelo identificador do usuário autenticado (user.bid), garantindo que o usuário só possa acessar seu próprio cesto.\",\"edicoes\":[{\"arquivo\":\"routes/basket.ts\",\"trecho_original\":\"      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"      const user = security.authenticatedUsers.from(req)\\n      const basket = await BasketModel.findOne({ where: { id, UserId: user?.bid }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"}],\"justificativa_tecnica\":\"Ao incluir a condição UserId: user?.bid na consulta, garantimos que o banco de dados retorne apenas o cesto que pertence ao usuário autenticado, mitigando a possibilidade de acesso não autorizado a cestos de outros usuários. Isso elimina a vulnerabilidade de IDOR, pois o usuário não pode acessar recursos que não lhe pertencem mesmo que conheça o ID.\",\"limitacoes_da_correcao\":\"A correção assume que o campo UserId no modelo BasketModel representa o dono do cesto e que o método security.authenticatedUsers.from(req) retorna corretamente o usuário autenticado com o campo bid. Se o modelo ou autenticação mudarem, a correção pode precisar ser ajustada. Além disso, usuários com privilégios administrativos podem precisar de tratamento especial que não está contemplado aqui.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1849,
+  "tokens_saida": 427,
+  "latencia_s": 4.13,
+  "custo_usd": 0.001423,
+  "hash_prompt": "1a4993ee3dd658e0e32d38add3902fbf67e94315d70dd4d4ca5e9843467106dc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Atualização múltipla de documentos no MongoDB usando um identificador não validado e não autenticado, permitindo que um atacante modifique múltiplas avaliações (reviews) arbitrariamente.\",\"causa_da_vulnerabilidade\":\"O código utiliza diretamente o valor recebido em req.body.id para construir o filtro da atualização no MongoDB, sem validação do tipo ou verificação de autorização. Além disso, a opção { multi: true } permite que múltiplos documentos sejam atualizados, o que combinado com a falta de validação, possibilita atualização em massa.\",\"estrategia_de_correcao\":\"Validar que o id recebido é um ObjectId válido e restringir a atualização para afetar apenas o documento pertencente ao usuário autenticado, garantindo que o usuário só possa atualizar suas próprias avaliações. Remover a opção multi para evitar atualizações múltiplas.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\\n    ).then(\",\"trecho_corrigido\":\"    const { ObjectId } = require('mongodb')\\n    let reviewId\\n    try {\\n      reviewId = new ObjectId(req.body.id)\\n    } catch {\\n      res.status(400).json({ error: 'Invalid review id' })\\n      return\\n    }\\n    const user = security.authenticatedUsers.from(req)\\n    db.reviewsCollection.update(\\n      { _id: reviewId, author: user?.data?.email },\\n      { $set: { message: req.body.message } },\\n      { multi: false }\\n    ).then(\"}],\"justificativa_tecnica\":\"A validação do id como ObjectId impede injeção de operadores ou valores malformados que poderiam alterar a consulta. Restringir o filtro para incluir o autor autenticado impede que usuários atualizem avaliações de terceiros. Remover a opção multi evita atualizações em massa, limitando a alteração a um único documento. Essas medidas juntas mitigam a vulnerabilidade de injeção e controle de acesso inadequado.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'author' na coleção de reviews contém o email do usuário e que o usuário está autenticado corretamente. Se o sistema permitir múltiplos autores ou diferentes formas de identificação, a lógica pode precisar ser ajustada. Além disso, a validação do ObjectId pode rejeitar ids válidos em outros formatos, caso existam.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1622,
+  "tokens_saida": 582,
+  "latencia_s": 4.921,
+  "custo_usd": 0.00158,
+  "hash_prompt": "b26a730e34161f3e5bbc2e7d2e98d051dfecb1a245626993202fe54db4d3c58d",
+  "do_cache": false
+}

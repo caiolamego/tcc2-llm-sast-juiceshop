@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-22 (Path Traversal) na extração de arquivos ZIP, permitindo que nomes de entradas controlem o caminho de escrita e potencialmente sobrescrevam arquivos fora de uploads/complaints.\",\"causa_da_vulnerabilidade\":\"O caminho fornecido pela entrada ZIP é concatenado diretamente ao diretório de extração. A condição `absolutePath.includes(path.resolve('.'))` não confina o caminho ao diretório permitido: ela apenas verifica se a string contém o caminho do diretório atual e pode aceitar caminhos fora da raiz de extração.\",\"estrategia_de_correcao\":\"Definir uma raiz absoluta fixa para a extração, resolver o caminho da entrada em relação a essa raiz e validar com `path.relative` que o resultado permanece dentro dela antes de criar o arquivo. A escrita deve usar o caminho validado.\",\"edicoes\":[{\"arquivo\":\"routes/fileUpload.ts\",\"trecho_original\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve('uploads/complaints/' + fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.includes(path.resolve('.'))) {\\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  const extractionRoot = path.resolve('uploads/complaints')\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve(extractionRoot, fileName)\\n    const relativePath = path.relative(extractionRoot, absolutePath)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (relativePath !== '' && relativePath !== '..' && !relativePath.startsWith('..' + path.sep) && !path.isAbsolute(relativePath)) {\\n      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"`path.resolve` normaliza segmentos como `..`, mas não impede que o resultado saia da raiz. A validação com `path.relative` rejeita o próprio diretório, caminhos absolutos e qualquer resultado que esteja acima ou fora de `uploads/complaints`. Assim, entradas legítimas, incluindo subdiretórios e nomes com espaços, continuam acessíveis, enquanto entradas com traversal não alcançam `createWriteStream`. O caminho validado também é usado na operação de escrita, evitando que a checagem e o destino efetivo diverjam.\",\"limitacoes_da_correcao\":\"A validação lexical não impede que links simbólicos já existentes dentro de `uploads/complaints` redirecionem a escrita para fora da raiz. Para proteção contra esse cenário, seria necessário validar caminhos reais com `realpath` e controlar a criação de diretórios/arquivos, além de aplicar permissões mínimas ao processo. A correção também não substitui controles de tamanho, tipo e autorização.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2958,
+  "tokens_saida": 721,
+  "latencia_s": 9.102,
+  "custo_usd": 0.001605,
+  "hash_prompt": "b570c0a9f9ea48e61df065e2998ba60e0939ccf824026fc31f9071173fa3e95f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2955
+}

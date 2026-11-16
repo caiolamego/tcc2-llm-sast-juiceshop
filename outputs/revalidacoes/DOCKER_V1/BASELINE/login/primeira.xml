@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/rest/user/login" time="0.762955" disabled="0" errors="0" tests="15" failures="0" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="POST login newly created user" time="0.096605" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login non-existing user" time="0.009806" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login without credentials" time="0.011588" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with admin credentials" time="0.027444" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with support-team credentials" time="0.018069" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with MC SafeSearch credentials" time="0.015634" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with Amy credentials" time="0.015303" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with wurstbrot credentials expects 2FA token" time="0.008551" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login as bjoern.kimminich@gmail.com with known password" time="0.027811" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with WHERE-clause disabling SQL injection attack" time="0.013438" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with known email &amp;quot;admin@juice-sh.op&amp;quot; in SQL injection attack" time="0.013231" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with known email &amp;quot;jim@juice-sh.op&amp;quot; in SQL injection attack" time="0.020377" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with known email &amp;quot;bender@juice-sh.op&amp;quot; in SQL injection attack" time="0.015933" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with non-existing email &amp;quot;acc0unt4nt@juice-sh.op&amp;quot; via UNION SELECT injection attack" time="0.015386" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="POST login with query-breaking SQL Injection attack" time="0.004983" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+	</testsuite>
+	<testsuite name="/rest/saveLoginIp" time="0.074677" disabled="0" errors="0" tests="3" failures="1" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET last login IP will be saved as True-Client-IP header value" time="0.033432" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+		<testcase name="GET last login IP will be saved as remote IP when True-Client-IP is not present" time="0.025129" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts" failure="Expected values to be strictly equal:&#10;&#10;'' !== '127.0.0.1'&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;'' !== '127.0.0.1'">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+'' !== '127.0.0.1'
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== '127.0.0.1'
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/login.test.ts:279:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: '127.0.0.1',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="GET last login IP returns 401 Unauthorized when no token is provided" time="0.015799" classname="test" file="/repo/workspace/wt-1/test/api/login.test.ts"/>
+	</testsuite>
+	<!-- tests 18 -->
+	<!-- suites 2 -->
+	<!-- pass 17 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 2985.655918 -->
+</testsuites>

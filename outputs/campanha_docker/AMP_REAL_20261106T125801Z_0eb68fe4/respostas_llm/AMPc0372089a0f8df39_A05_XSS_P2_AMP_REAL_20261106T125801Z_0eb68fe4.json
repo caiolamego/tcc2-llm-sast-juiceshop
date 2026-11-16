@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado ou refletido por injeção de conteúdo não escapado no template Pug, especialmente nos placeholders _title_, _favicon_, _bgColor_, _textColor_, _primLight_ e _navColor_.\",\"causa_da_vulnerabilidade\":\"Os valores são inseridos diretamente no HTML, em atributos, estilos CSS e conteúdo textual, sem escaping ou validação contextual. Se qualquer um desses placeholders for controlado por um atacante, ele poderá injetar marcação HTML, JavaScript ou CSS executável. Além disso, subtitle.innerHTML é processado como texto de legenda, mas o conteúdo é obtido do DOM sem uma barreira explícita contra HTML; a construção mais diretamente vulnerável no código fornecido é a interpolação textual não escapada dos placeholders.\",\"estrategia_de_correcao\":\"Escapar os valores dinâmicos no ponto de geração do HTML, usando escaping contextual apropriado para texto e atributos. Como o arquivo fornecido contém placeholders literais e não o código que os substitui, a correção mínima aplicável neste arquivo é impedir que o conteúdo de legenda seja interpretado como HTML, usando textContent em vez de innerHTML. Os placeholders também devem ser escapados e validados no código responsável por renderizar este template.\",\"edicoes\":[{\"arquivo\":\"views/promotionVideo.pug\",\"trecho_original\":\"            quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function(cue) {\\n            track.addCue(cue);\\n            });\",\"trecho_corrigido\":\"            quick_and_dirty_vtt_or_srt_parser(subtitle.textContent).map(function(cue) {\\n            track.addCue(cue);\\n            });\"}],\"justificativa_tecnica\":\"textContent retorna apenas o conteúdo textual do elemento e não interpreta ou serializa marcação HTML potencialmente injetada como código. Assim, conteúdo de legenda que contenha tags não será tratado como HTML pelo navegador antes de ser enviado ao parser. A correção completa dos placeholders exige alteração no código que monta/renderiza o template: valores em texto devem ser HTML-escapados; valores em atributos devem ser escapados para contexto de atributo; e valores usados em style devem ser validados por allowlist de cores e demais valores permitidos, pois HTML escaping isolado não impede injeções CSS em contexto de estilo.\",\"limitacoes_da_correcao\":\"A alteração neste arquivo corrige apenas a interpretação insegura do conteúdo de legenda. Ela não consegue, por si só, corrigir a injeção nos placeholders _title_, _favicon_, _bgColor_, _textColor_, _primLight_ e _navColor_, porque o mecanismo que substitui esses valores não foi fornecido. Esses valores continuam exigindo escaping contextual e validação por allowlist no código de renderização. Também não foi possível substituir os placeholders por sintaxe nativa de escaping do Pug sem alterar o mecanismo funcional existente e potencialmente quebrar a geração atual da página.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1733,
+  "tokens_saida": 631,
+  "latencia_s": 9.282,
+  "custo_usd": 0.00119,
+  "hash_prompt": "c2801d0d79414a6a626a11b554c723553f43914ca71a79755e26605ebb9332c8",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1730
+}

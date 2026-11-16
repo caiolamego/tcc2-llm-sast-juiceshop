@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Redirecionamento aberto (open redirect), que pode permitir phishing ou encaminhar usuários para destinos externos não confiáveis.\",\n  \"causa_da_vulnerabilidade\": \"O destino fornecido pelo usuário em `query.to` é passado diretamente a `res.redirect(toUrl)` quando `security.isRedirectAllowed(toUrl)` retorna verdadeiro. A validação depende de uma função externa e, neste arquivo, não há validação independente de que o destino seja uma URL relativa ou pertença exatamente a uma origem confiável. Além disso, `query.to` pode não ser uma string, embora seja convertido por asserção de tipo.\",\n  \"estrategia_de_correcao\": \"Validar o destino como string e analisá-lo como URL antes do redirecionamento. Permitir apenas URLs relativas ao próprio site ou URLs cuja origem corresponda a uma entrada da allowlist; manter a verificação existente e o fluxo de erro.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/redirect.ts\",\n      \"trecho_original\": \"    const toUrl: string = query.to as string\\n    if (security.isRedirectAllowed(toUrl)) {\",\n      \"trecho_corrigido\": \"    const toUrl: string = query.to as string\\n    let isSafeTarget = false\\n    if (typeof query.to === 'string') {\\n      try {\\n        const target = new URL(toUrl, 'http://localhost')\\n        isSafeTarget = target.origin === 'http://localhost' || security.redirectAllowlist.some((allowedUrl) => {\\n          try {\\n            return target.origin === new URL(allowedUrl).origin\\n          } catch {\\n            return false\\n          }\\n        })\\n      } catch {\\n        isSafeTarget = false\\n      }\\n    }\\n    if (isSafeTarget && security.isRedirectAllowed(toUrl)) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação rejeita valores que não sejam strings e destinos que não possam ser analisados como URL. URLs relativas são resolvidas contra uma origem local fixa e permanecem permitidas; URLs absolutas só são aceitas quando sua origem coincide exatamente com a origem de uma entrada da allowlist. Isso impede que um prefixo textual semelhante, como um domínio confiável seguido de um domínio controlado pelo atacante, seja tratado como destino confiável. A chamada existente a `security.isRedirectAllowed` continua sendo aplicada como verificação adicional.\",\n  \"limitacoes_da_correcao\": \"A validação de origem depende de `security.redirectAllowlist` conter URLs absolutas válidas para os destinos externos pretendidos. Se a aplicação precisar permitir destinos com regras mais específicas que a origem, essas regras devem ser representadas e verificadas explicitamente. A origem local usada para resolver URLs relativas é fixa e não altera o destino relativo enviado ao Express.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1008,
+  "tokens_saida": 612,
+  "latencia_s": 6.956,
+  "custo_usd": 0.000407,
+  "hash_prompt": "736608c4b31a0e743fc9906cb28b588c2ba701c871150f77b144a9e849ae4bb9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

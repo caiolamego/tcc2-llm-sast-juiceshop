@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Bypass do rate limiting de redefinição de senha por falsificação do cabeçalho X-Forwarded-For.\",\n  \"causa_da_vulnerabilidade\": \"A aplicação confia em trust proxy e usa diretamente headers['X-Forwarded-For'] como chave do limitador. Nomes de cabeçalhos HTTP são normalizados para minúsculas pelo Node.js, portanto essa consulta normalmente não lê o cabeçalho recebido; além disso, confiar no valor encaminhado pelo cliente permite que ele altere a chave entre requisições e contorne o limite.\",\n  \"estrategia_de_correcao\": \"Usar o IP determinado pelo Express, que considera a configuração de proxy confiável, como chave do rate limiter, em vez de aceitar um valor de cabeçalho controlado pelo cliente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\",\n      \"trecho_corrigido\": \"    keyGenerator ({ ip }: { ip: any }) { return ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"req.ip é calculado pelo Express conforme a configuração de proxies confiáveis e não depende de uma leitura direta de um cabeçalho fornecido pelo cliente. Assim, requisições do mesmo endereço de origem compartilham a chave do limitador, impedindo a rotação arbitrária de X-Forwarded-For para evitar o limite.\",\n  \"limitacoes_da_correcao\": \"A proteção depende de a configuração de trust proxy corresponder à topologia real. Se proxies não confiáveis puderem encaminhar ou definir informações de IP aceitas pelo Express, a identificação do cliente ainda poderá ser falsificada; configure os proxies confiáveis de forma restrita.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2104,
+  "tokens_saida": 436,
+  "latencia_s": 4.719,
+  "custo_usd": 0.000481,
+  "hash_prompt": "65097cbb782ea7791672e2d9948a7ee84757039b3e9ae3116232e4c581889dfb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2101
+}

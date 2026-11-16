@@ -1,0 +1,26 @@
+rules:
+  - id: tcc.vm.security.untrusted-evaluator
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Expressao de requisicao chega a interpretador notevil dentro de contexto VM.
+      Timeout nao substitui formato de dados restrito. Revisar consumo de recursos;
+      este alerta nao demonstra escape do sandbox ou execucao de comandos do SO.
+    metadata:
+      category: security
+      cwe: ['CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code']
+      confidence: MEDIUM
+    patterns:
+      - pattern-inside: |
+          import { eval as $EVAL } from 'notevil';
+          ...
+      - pattern-inside: |
+          const $DATA = $BODY.$FIELD || ...;
+          ...
+          const $CTX = { ..., $EVAL, $DATA, ... };
+          ...
+      - pattern: $VM.runInContext($CODE, $CTX, ...)
+      - metavariable-pattern:
+          metavariable: $CODE
+          language: javascript
+          pattern: $EVAL($DATA)

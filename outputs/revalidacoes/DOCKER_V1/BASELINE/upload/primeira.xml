@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/file-upload" time="4.893233" disabled="0" errors="0" tests="15" failures="1" skipped="1" hostname="97fac5bb31ac">
+		<testcase name="POST file valid PDF for client and API" time="0.021674" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file too large for client validation but valid for API" time="0.010695" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file with illegal type for client validation but valid for API" time="0.009042" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file type XML deprecated for API" time="0.268813" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST large XML file near upload size limit" time="0.028651" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file type XML with XXE attack against Windows" time="0.020749" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file type XML with XXE attack against Linux" time="0.008264" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file type XML with Billion Laughs attack is caught by parser" time="0.012021" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file type XML with Quadratic Blowup attack" time="0.006320" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file type XML with dev/random attack" time="2.023487" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file type YAML with Billion Laughs-style attack" time="2.035175" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST file too large for API" time="0.006774" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST zip file with directory traversal payload" time="0.002645" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts"/>
+		<testcase name="POST zip file with password protection" time="0.002150" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts" failure="Expected values to be strictly equal:&#10;&#10;204 !== 500&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;204 !== 500">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+204 !== 500
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  204 !== 500
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/file-upload.test.ts:137:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 204,
+    expected: 500,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="POST valid file with tampered content length" time="0.000447" classname="test" file="/repo/workspace/wt-1/test/api/file-upload.test.ts">
+			<skipped type="skipped" message="Fails on CI/CD pipeline"/>
+		</testcase>
+	</testsuite>
+	<!-- tests 15 -->
+	<!-- suites 1 -->
+	<!-- pass 13 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 1 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 7291.132587 -->
+</testsuites>

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade de Path Traversal na função servePublicFiles, onde o nome do arquivo fornecido pelo usuário é usado diretamente em res.sendFile sem validação adequada do caminho resultante.\",\"causa_da_vulnerabilidade\":\"O código aceita um parâmetro 'file' do usuário e, após verificar que não contém barras e que tem uma extensão permitida, chama res.sendFile com path.resolve('ftp/', file). Contudo, não há validação para garantir que o caminho resolvido esteja dentro do diretório 'ftp/'. Um atacante pode explorar isso usando nomes de arquivos que, após resolução, apontem para arquivos fora do diretório permitido, por exemplo, usando sequências como '..'.\",\"estrategia_de_correcao\":\"Adicionar uma validação que, após resolver o caminho absoluto do arquivo solicitado, verifique se este caminho está dentro do diretório base 'ftp/'. Se não estiver, rejeitar a requisição com erro 403. Isso impede que arquivos fora do diretório permitido sejam acessados, mitigando o path traversal.\",\"edicoes\":[{\"arquivo\":\"routes/fileServer.ts\",\"trecho_original\":\"      res.sendFile(path.resolve('ftp/', file))\",\"trecho_corrigido\":\"      const baseDir = path.resolve('ftp/')\\n      const resolvedPath = path.resolve(baseDir, file)\\n      if (!resolvedPath.startsWith(baseDir + path.sep)) {\\n        res.status(403)\\n        next(new Error('Only .md and .pdf files are allowed!'))\\n        return\\n      }\\n      res.sendFile(resolvedPath)\"}],\"justificativa_tecnica\":\"A validação do caminho absoluto do arquivo solicitado contra o diretório base impede que caminhos que escapem do diretório 'ftp/' sejam usados. Isso elimina a possibilidade de path traversal, pois mesmo que o usuário tente usar '..' ou outros truques para acessar arquivos fora do diretório permitido, a verificação bloqueia a requisição.\",\"limitacoes_da_correcao\":\"A correção assume que o diretório base 'ftp/' é o único local válido para servir arquivos. Se houver links simbólicos dentro desse diretório que apontem para fora, ainda pode haver risco. Além disso, a verificação é baseada em prefixo de string, que é adequada para sistemas POSIX e Windows, mas deve ser testada em ambientes específicos para garantir robustez.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1791,
+  "tokens_saida": 490,
+  "latencia_s": 6.133,
+  "custo_usd": 0.0015,
+  "hash_prompt": "edc12bd034a3fd50fffa9ce60d7f4989a6702f0b3f4f6f80ee6a09ba7c0b4160",
+  "do_cache": false
+}

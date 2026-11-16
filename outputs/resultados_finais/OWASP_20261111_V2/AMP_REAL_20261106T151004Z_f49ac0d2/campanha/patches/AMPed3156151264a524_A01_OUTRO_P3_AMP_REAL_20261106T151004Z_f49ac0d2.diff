@@ -1,0 +1,12 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..d4dca5c71 100644
+--- a/server.ts
++++ b/server.ts
+@@ -428,6 +428,7 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+   /* Accounting users are allowed to check and update quantities */
+   app.delete('/api/Quantitys/:id', security.denyAll())
+   app.post('/api/Quantitys', security.denyAll())
++  app.put('/api/Quantitys/:id', security.isAccounting(), IpFilter(['123.456.789'], { mode: 'allow' }))
+   app.use('/api/Quantitys/:id', security.isAccounting(), IpFilter(['123.456.789'], { mode: 'allow' }))
+   /* Feedbacks: Do not allow changes of existing feedback */
+   app.put('/api/Feedbacks/:id', security.denyAll())

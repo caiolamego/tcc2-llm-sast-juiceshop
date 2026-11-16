@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal nos caminhos de vídeo e legendas, permitindo que valores de configuração contendo segmentos como ../ sejam usados para acessar arquivos arbitrários no sistema de arquivos.\",\"causa_da_vulnerabilidade\":\"As funções videoPath e getSubsFromFile concatenam diretamente valores de configuração controláveis ou potencialmente influenciáveis com o diretório de vídeos. Embora o nome do vídeo seja parcialmente normalizado por utils.extractFilename em videoPath, o nome das legendas é concatenado sem essa proteção em getSubsFromFile. Além disso, a validação não garante que o caminho resolvido permaneça dentro do diretório permitido.\",\"estrategia_de_correcao\":\"Normalizar o nome das legendas com utils.extractFilename antes da concatenação, seguindo o mesmo mecanismo já utilizado para o vídeo. Essa alteração mínima impede que separadores de diretório e componentes de caminho fornecidos na configuração sejam usados para escapar do diretório de vídeos.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"  const subtitles = config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt'\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\",\"trecho_corrigido\":\"  const subtitles = utils.extractFilename(config.get<string>('application.promotion.subtitles') ?? 'owasp_promo.vtt')\\n  const data = fs.readFileSync('frontend/dist/frontend/assets/public/videos/' + subtitles, 'utf8')\"}],\"justificativa_tecnica\":\"utils.extractFilename remove o caminho fornecido e mantém somente o componente de nome do arquivo. Assim, valores como ../../../../etc/passwd deixam de ser interpretados como uma sequência de diretórios e passam a referenciar apenas um arquivo dentro do diretório de vídeos. A correção preserva o comportamento esperado para nomes simples de arquivos e altera somente o ponto em que a entrada era concatenada sem sanitização.\",\"limitacoes_da_correcao\":\"A correção depende do comportamento seguro de utils.extractFilename e protege diretamente o caminho das legendas. O caminho do vídeo já utiliza essa função, mas uma defesa adicional baseada em path.resolve e verificação explícita do diretório-base seria mais robusta caso a implementação de utils.extractFilename seja alterada futuramente. Também não valida se o arquivo resultante possui extensão ou conteúdo esperado.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1512,
+  "tokens_saida": 495,
+  "latencia_s": 6.349,
+  "custo_usd": 0.000625,
+  "hash_prompt": "9d46f22b7dcd47f3c0ba1c352288c4cf0fceb895bcfede3c8bb8074e547f9def",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1509,
+  "tokens_escrita_cache": 0
+}

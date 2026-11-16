@@ -1,0 +1,20 @@
+diff --git a/routes/basketItems.ts b/routes/basketItems.ts
+index 077a0d4d2..0bb43672b 100644
+--- a/routes/basketItems.ts
++++ b/routes/basketItems.ts
+@@ -34,12 +34,13 @@ export function addBasketItem () {
+     }
+ 
+     const user = security.authenticatedUsers.from(req)
+-    if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq
++    const basketIdToUse = basketIds[basketIds.length - 1]
++    if (user && basketIdToUse && basketIdToUse !== 'undefined' && Number(user.bid) !== Number(basketIdToUse)) { // eslint-disable-line eqeqeq
+       res.status(401).send('{\'error\' : \'Invalid BasketId\'}')
+     } else {
+       const basketItem = {
+         ProductId: productIds[productIds.length - 1],
+-        BasketId: basketIds[basketIds.length - 1],
++        BasketId: basketIdToUse,
+         quantity: quantities[quantities.length - 1]
+       }
+       challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && basketItem.BasketId && basketItem.BasketId !== 'undefined' && user.bid != basketItem.BasketId }) // eslint-disable-line eqeqeq

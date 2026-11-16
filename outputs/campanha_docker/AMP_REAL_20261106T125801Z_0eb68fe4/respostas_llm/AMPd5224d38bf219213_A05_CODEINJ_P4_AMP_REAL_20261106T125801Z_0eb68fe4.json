@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-95 (Eval Injection): execução de código JavaScript controlado pelo valor do nome de usuário.\",\"causa_da_vulnerabilidade\":\"O valor persistido em user.username, potencialmente originado de entrada externa, é extraído e passado diretamente a eval(code). Assim, um atacante que consiga definir um nome no formato #{...} pode executar código no contexto do processo Node.js.\",\"estrategia_de_correcao\":\"Remover a avaliação dinâmica e tratar o conteúdo do nome de usuário como dado literal, preservando a lógica de escape existente para nomes comuns e mantendo o fluxo funcional da página.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\",\"trecho_corrigido\":\"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      username = '\\\\\\\\' + username\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\"}],\"justificativa_tecnica\":\"A correção elimina completamente o interpretador JavaScript dinâmico: nenhum conteúdo derivado do usuário é mais executado. O valor permanece uma string e recebe o mesmo prefixo de escape usado no caminho não relacionado ao desafio. Dessa forma, payloads como #{process.exit()} ou #{require(...)} deixam de ser instruções executáveis e são tratados apenas como texto. A remoção também elimina a necessidade do bloco try/catch associado exclusivamente ao eval.\",\"limitacoes_da_correcao\":\"O comportamento intencional do desafio usernameXssChallenge, que dependia da execução de expressões no nome de usuário, deixa de ocorrer. Isso é necessário para remover a vulnerabilidade; a funcionalidade segura de exibir o nome como dado literal é preservada. Não foram alterados outros possíveis riscos de injeção no template ou na política CSP.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2893,
+  "tokens_saida": 538,
+  "latencia_s": 7.405,
+  "custo_usd": 0.001369,
+  "hash_prompt": "c91b019cb44b6f0df615d7b92eae193e430a606df97d6aff365fb5e9892f750b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2890
+}

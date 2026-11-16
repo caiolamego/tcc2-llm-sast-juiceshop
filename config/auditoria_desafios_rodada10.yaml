@@ -1,0 +1,32 @@
+regras_candidatas:
+  forgedCouponChallenge: [tcc.integrity.security.encoded-numeric-value]
+  manipulateClockChallenge: [tcc.validation.security.client-campaign-date]
+triagem:
+  - regra: tcc.integrity.security.encoded-numeric-value
+    arquivo: lib/insecurity.ts
+    linha: 112
+    status: confirmado
+    desafios: [forgedCouponChallenge]
+    sem_marcador: true
+    motivo: >-
+      discountFromCoupon decodifica Z85, valida formato/mes e retorna percentual,
+      sem assinatura ou consulta a emissao confiavel. Parametro coupon chega pela
+      rota applyCoupon, e persistido na cesta e consumido por calculateApplicableDiscount.
+      Testes isolados com z85 0.0.2 e funcoes reais aceitam percentual 90 escolhido
+      pelo cliente e calculam total 10 sobre subtotal 100. Controle HMAC rejeita
+      alteracao mantendo assinatura anterior. Persistencia simulada, sem HTTP/E2E.
+  - regra: tcc.validation.security.client-campaign-date
+    arquivo: routes/order.ts
+    linha: 201
+    status: confirmado
+    desafios: [manipulateClockChallenge]
+    sem_marcador: true
+    motivo: >-
+      couponData vem do corpo, Base64 nao garante integridade; data enviada e
+      comparada com campaign.validOn. Relogio real aparece apenas no hook de
+      desafio, nao na decisao de aceitar desconto. Testes das funcoes e trecho
+      de calculo reais aceitam campanha de 2019 com relogio fixado em 2026 e
+      reduzem total de 100 para 25. Data incorreta nao aplica desconto. Controle
+      ilustrativo por dia UTC do servidor rejeita vencida e aceita vigente.
+      Rotas de cesta exigem autenticacao; isto nao elimina manipulacao pelo proprio
+      usuario autenticado. Nao e teste do checkout completo nem de pagamento real.

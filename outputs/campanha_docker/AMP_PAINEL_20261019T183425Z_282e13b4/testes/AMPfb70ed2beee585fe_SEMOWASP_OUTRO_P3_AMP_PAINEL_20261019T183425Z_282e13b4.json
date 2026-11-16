@@ -1,0 +1,381 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 50.52768136499799,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+    "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+    "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 10.92,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_19qgwn6k/export/primeira.xml",
+        "test/api/data-export.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 17.35,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+        "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA"
+      ],
+      "testes_falhos_novos": [
+        "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+        "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /rest/user/data-export\n  ✔ Export data without authentication is rejected (101.052955ms)\n  ✔ Export data with invalid bearer token is rejected (35.33951ms)\n  ✔ Export data with empty bearer token is rejected (28.460178ms)\n  ✔ Export data with empty JSON body but valid token still succeeds without CAPTCHA (195.948534ms)\n  ✔ CAPTCHA cannot be requested without authentication (91.689571ms)\n  ✔ Export data without use of CAPTCHA (122.798272ms)\n  ✔ Export data when CAPTCHA requested need right answer (105.123376ms)\n  ✔ Export data using right answer to CAPTCHA (97.269422ms)\n  ✖ Export data including orders without use of CAPTCHA (434.577812ms)\n  ✔ Export data including reviews without use of CAPTCHA (79.849171ms)\n  ✔ Export data including memories without use of CAPTCHA (98.886902ms)\n  ✖ Export data including orders with use of CAPTCHA (168.492889ms)\n  ✔ Export data including reviews with use of CAPTCHA (123.789209ms)\n  ✔ Export data including memories with use of CAPTCHA (111.253011ms)\n  ▶ error cases\n    ✔ should return 500 if MemoryModel.findAll fails (78.75987ms)\n    ✔ should return 500 if ordersCollection.find fails (60.455178ms)\n    ✔ should return 500 if reviewsCollection.find fails (62.512146ms)\n  ✔ error cases (202.530204ms)\n✖ /rest/user/data-export (3146.165084ms)\nℹ tests 17\nℹ suites 2\nℹ pass 15\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 10138.542186\n\n✖ failing tests:\n\ntest at test/api/data-export.test.ts:2:5830\n✖ Export data including orders without use of CAPTCHA (434.577812ms)\n  TypeError: Cannot read properties of undefined (reading 'totalPrice')\n      at TestContext.<anonymous> (test/api/data-export.test.ts:152:39)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n\ntest at test/api/data-export.test.ts:2:10278\n✖ Export data including orders with use of CAPTCHA (168.492889ms)\n  TypeError: Cannot read properties of undefined (reading 'totalPrice')\n      at TestContext.<anonymous> (test/api/data-export.test.ts:241:39)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 18.020268890999432,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+    "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/dataExport.ts"
+    ],
+    "grupos": [
+      "export"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 10.92
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "export",
+      "status": "executada",
+      "duracao_s": 17.35
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "export"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 10.92
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "export",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > CAPTCHA cannot be requested without authentication",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > CAPTCHA cannot be requested without authentication",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data including memories with use of CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data including memories with use of CAPTCHA",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data including memories without use of CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data including memories without use of CAPTCHA",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data including orders with use of CAPTCHA",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data including orders without use of CAPTCHA",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data including reviews with use of CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data including reviews with use of CAPTCHA",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data including reviews without use of CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data including reviews without use of CAPTCHA",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data using right answer to CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data using right answer to CAPTCHA",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data when CAPTCHA requested need right answer",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data when CAPTCHA requested need right answer",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data with empty JSON body but valid token still succeeds without CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data with empty JSON body but valid token still succeeds without CAPTCHA",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data with empty bearer token is rejected",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data with empty bearer token is rejected",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data with invalid bearer token is rejected",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data with invalid bearer token is rejected",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data without authentication is rejected",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data without authentication is rejected",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > Export data without use of CAPTCHA",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > Export data without use of CAPTCHA",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if MemoryModel.findAll fails",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > error cases > should return 500 if MemoryModel.findAll fails",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if ordersCollection.find fails",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > error cases > should return 500 if ordersCollection.find fails",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if reviewsCollection.find fails",
+            "arquivo": "test/api/data-export.test.ts",
+            "nome": "/rest/user/data-export > error cases > should return 500 if reviewsCollection.find fails",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA"
+        ],
+        "falhos_novos": [
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA"
+        ],
+        "falhos_novos_observados": [
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/data-export.test.ts :: /rest/user/data-export > CAPTCHA cannot be requested without authentication",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including memories with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including memories without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including reviews with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including reviews without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data using right answer to CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data when CAPTCHA requested need right answer",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with empty JSON body but valid token still succeeds without CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with empty bearer token is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with invalid bearer token is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data without authentication is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if MemoryModel.findAll fails",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if ordersCollection.find fails",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if reviewsCollection.find fails"
+        ],
+        "esperados": [
+          "test/api/data-export.test.ts :: /rest/user/data-export > CAPTCHA cannot be requested without authentication",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including memories with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including memories without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including reviews with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including reviews without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data using right answer to CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data when CAPTCHA requested need right answer",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with empty JSON body but valid token still succeeds without CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with empty bearer token is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with invalid bearer token is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data without authentication is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if MemoryModel.findAll fails",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if ordersCollection.find fails",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if reviewsCollection.find fails"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/data-export.test.ts :: /rest/user/data-export > CAPTCHA cannot be requested without authentication",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including memories with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including memories without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including orders without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including reviews with use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data including reviews without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data using right answer to CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data when CAPTCHA requested need right answer",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with empty JSON body but valid token still succeeds without CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with empty bearer token is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data with invalid bearer token is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data without authentication is rejected",
+          "test/api/data-export.test.ts :: /rest/user/data-export > Export data without use of CAPTCHA",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if MemoryModel.findAll fails",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if ordersCollection.find fails",
+          "test/api/data-export.test.ts :: /rest/user/data-export > error cases > should return 500 if reviewsCollection.find fails"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/data-export.test.ts :: /rest/user/data-export > CAPTCHA cannot be requested without authentication"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 17.35,
+        "espera_api_s": 18.020268890999432,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_19qgwn6k/export/primeira.xml",
+            "test/api/data-export.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 17.35,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /rest/user/data-export\n  ✔ Export data without authentication is rejected (101.052955ms)\n  ✔ Export data with invalid bearer token is rejected (35.33951ms)\n  ✔ Export data with empty bearer token is rejected (28.460178ms)\n  ✔ Export data with empty JSON body but valid token still succeeds without CAPTCHA (195.948534ms)\n  ✔ CAPTCHA cannot be requested without authentication (91.689571ms)\n  ✔ Export data without use of CAPTCHA (122.798272ms)\n  ✔ Export data when CAPTCHA requested need right answer (105.123376ms)\n  ✔ Export data using right answer to CAPTCHA (97.269422ms)\n  ✖ Export data including orders without use of CAPTCHA (434.577812ms)\n  ✔ Export data including reviews without use of CAPTCHA (79.849171ms)\n  ✔ Export data including memories without use of CAPTCHA (98.886902ms)\n  ✖ Export data including orders with use of CAPTCHA (168.492889ms)\n  ✔ Export data including reviews with use of CAPTCHA (123.789209ms)\n  ✔ Export data including memories with use of CAPTCHA (111.253011ms)\n  ▶ error cases\n    ✔ should return 500 if MemoryModel.findAll fails (78.75987ms)\n    ✔ should return 500 if ordersCollection.find fails (60.455178ms)\n    ✔ should return 500 if reviewsCollection.find fails (62.512146ms)\n  ✔ error cases (202.530204ms)\n✖ /rest/user/data-export (3146.165084ms)\nℹ tests 17\nℹ suites 2\nℹ pass 15\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 10138.542186\n\n✖ failing tests:\n\ntest at test/api/data-export.test.ts:2:5830\n✖ Export data including orders without use of CAPTCHA (434.577812ms)\n  TypeError: Cannot read properties of undefined (reading 'totalPrice')\n      at TestContext.<anonymous> (test/api/data-export.test.ts:152:39)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n\ntest at test/api/data-export.test.ts:2:10278\n✖ Export data including orders with use of CAPTCHA (168.492889ms)\n  TypeError: Cannot read properties of undefined (reading 'totalPrice')\n      at TestContext.<anonymous> (test/api/data-export.test.ts:241:39)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/user/data-export\" time=\"3.146165\" disabled=\"0\" errors=\"0\" tests=\"15\" failures=\"2\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"Export data without authentication is rejected\" time=\"0.101053\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data with invalid bearer token is rejected\" time=\"0.035340\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data with empty bearer token is rejected\" time=\"0.028460\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data with empty JSON body but valid token still succeeds without CAPTCHA\" time=\"0.195949\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"CAPTCHA cannot be requested without authentication\" time=\"0.091690\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data without use of CAPTCHA\" time=\"0.122798\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data when CAPTCHA requested need right answer\" time=\"0.105123\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data using right answer to CAPTCHA\" time=\"0.097269\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data including orders without use of CAPTCHA\" time=\"0.434578\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\" failure=\"Cannot read properties of undefined (reading 'totalPrice')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'totalPrice')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'totalPrice')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of undefined (reading 'totalPrice')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/data-export.test.ts:152:39)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"Export data including reviews without use of CAPTCHA\" time=\"0.079849\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data including memories without use of CAPTCHA\" time=\"0.098887\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data including orders with use of CAPTCHA\" time=\"0.168493\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\" failure=\"Cannot read properties of undefined (reading 'totalPrice')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'totalPrice')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'totalPrice')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of undefined (reading 'totalPrice')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/data-export.test.ts:241:39)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"Export data including reviews with use of CAPTCHA\" time=\"0.123789\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data including memories with use of CAPTCHA\" time=\"0.111253\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testsuite name=\"error cases\" time=\"0.202530\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t\t<testcase name=\"should return 500 if MemoryModel.findAll fails\" time=\"0.078760\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if ordersCollection.find fails\" time=\"0.060455\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if reviewsCollection.find fails\" time=\"0.062512\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<!-- tests 17 -->\n\t<!-- suites 2 -->\n\t<!-- pass 15 -->\n\t<!-- fail 2 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 10138.542186 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/user/data-export\" time=\"2.908244\" disabled=\"0\" errors=\"0\" tests=\"15\" failures=\"2\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"Export data without authentication is rejected\" time=\"0.089762\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data with invalid bearer token is rejected\" time=\"0.026518\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data with empty bearer token is rejected\" time=\"0.021665\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data with empty JSON body but valid token still succeeds without CAPTCHA\" time=\"0.146766\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"CAPTCHA cannot be requested without authentication\" time=\"0.082340\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data without use of CAPTCHA\" time=\"0.111413\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data when CAPTCHA requested need right answer\" time=\"0.109586\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data using right answer to CAPTCHA\" time=\"0.152760\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data including orders without use of CAPTCHA\" time=\"0.493729\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\" failure=\"Cannot read properties of undefined (reading 'totalPrice')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'totalPrice')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'totalPrice')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of undefined (reading 'totalPrice')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/data-export.test.ts:152:39)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"Export data including reviews without use of CAPTCHA\" time=\"0.085184\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data including memories without use of CAPTCHA\" time=\"0.101022\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data including orders with use of CAPTCHA\" time=\"0.160246\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\" failure=\"Cannot read properties of undefined (reading 'totalPrice')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of undefined (reading 'totalPrice')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of undefined (reading 'totalPrice')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of undefined (reading 'totalPrice')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/data-export.test.ts:241:39)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"Export data including reviews with use of CAPTCHA\" time=\"0.119345\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testcase name=\"Export data including memories with use of CAPTCHA\" time=\"0.101037\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t<testsuite name=\"error cases\" time=\"0.213834\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t\t<testcase name=\"should return 500 if MemoryModel.findAll fails\" time=\"0.081015\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if ordersCollection.find fails\" time=\"0.066698\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if reviewsCollection.find fails\" time=\"0.065301\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/data-export.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<!-- tests 17 -->\n\t<!-- suites 2 -->\n\t<!-- pass 15 -->\n\t<!-- fail 2 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 7025.985554 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção NoSQL no filtro da atualização de avaliações, permitindo que req.body.id seja um operador MongoDB ou um objeto manipulável pelo cliente e, com multi:true, altere múltiplos registros.\",\"causa_da_vulnerabilidade\":\"O valor controlado pelo usuário em req.body.id é usado diretamente no filtro { _id: req.body.id }, sem validação de tipo ou formato. Além disso, a opção multi:true permite atualizar todos os documentos correspondentes.\",\"estrategia_de_correcao\":\"Validar estritamente o identificador recebido antes de executar a atualização, aceitando apenas uma string com formato válido de ObjectId. Para entradas inválidas, interromper a operação usando o fluxo de erro existente, sem alterar mensagens visíveis nem a assinatura da função.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\",\"trecho_corrigido\":\"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    if (typeof req.body.id !== 'string' || !/^[a-fA-F0-9]{24}$/.test(req.body.id)) {\\n      return next(new Error('Invalid review id'))\\n    }\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\"}],\"justificativa_tecnica\":\"A validação impede que o cliente forneça objetos como {$ne:null}, {$in:[...]}, ou outros operadores NoSQL no campo _id. O formato hexadecimal de 24 caracteres corresponde ao formato padrão de ObjectId e mantém o fluxo funcional para identificadores válidos. A opção multi:true foi preservada para não alterar o comportamento funcional existente; com um _id válido, a atualização continua limitada ao documento correspondente.\",\"limitacoes_da_correcao\":\"A correção depende de o identificador de avaliação usar o formato padrão de ObjectId. Ela não adiciona autorização para verificar se o usuário autenticado pode editar a avaliação; portanto, controles de autorização devem existir em outra camada ou ser tratados separadamente. A mensagem do erro foi criada apenas para o fluxo interno de erro e não altera mensagens de sucesso ou textos existentes ao usuário.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 897,
+  "tokens_saida": 544,
+  "latencia_s": 6.49,
+  "custo_usd": 0.000832,
+  "hash_prompt": "bc7e77d9ad2b7d791ea17547fc1aaadb305c4d0afb11d6951d14df6b26f5e028",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

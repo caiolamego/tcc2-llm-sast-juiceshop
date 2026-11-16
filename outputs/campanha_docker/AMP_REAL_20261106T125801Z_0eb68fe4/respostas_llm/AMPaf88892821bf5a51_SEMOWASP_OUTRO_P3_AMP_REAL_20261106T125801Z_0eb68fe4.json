@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Validação inconsistente do BasketId: a autorização verifica apenas o primeiro valor recebido, enquanto a operação utiliza o último valor duplicado.\",\"causa_da_vulnerabilidade\":\"O corpo pode conter múltiplos campos BasketId. A condição de validação usa basketIds[0], mas basketItem.BasketId recebe basketIds[basketIds.length - 1], permitindo que um valor inicial autorizado seja combinado com um valor final não autorizado.\",\"estrategia_de_correcao\":\"Usar o mesmo último BasketId que será efetivamente persistido também na validação de autorização, mantendo o comportamento existente para entradas válidas e alterando apenas a inconsistência entre validação e uso.\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"    const user = security.authenticatedUsers.from(req)\\n    if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq\\n      res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n    } else {\",\"trecho_corrigido\":\"    const user = security.authenticatedUsers.from(req)\\n    if (user && basketIds[basketIds.length - 1] && basketIds[basketIds.length - 1] !== 'undefined' && Number(user.bid) != Number(basketIds[basketIds.length - 1])) { // eslint-disable-line eqeqeq\\n      res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n    } else {\"}],\"justificativa_tecnica\":\"A validação agora examina exatamente o valor que será atribuído a basketItem.BasketId e salvo pelo modelo. Assim, valores duplicados não permitem divergência entre o parâmetro autorizado e o parâmetro utilizado na operação, eliminando a falha first-last-mismatch sem modificar mensagens, assinaturas ou o fluxo funcional para entradas não duplicadas.\",\"limitacoes_da_correcao\":\"A correção trata especificamente a inconsistência entre valores duplicados de BasketId. Ela não adiciona validação estrutural completa do corpo, limites de quantidade, atomicidade de estoque ou outras regras de autorização fora deste trecho.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1979,
+  "tokens_saida": 486,
+  "latencia_s": 5.72,
+  "custo_usd": 0.001078,
+  "hash_prompt": "f75996da5605d8d5f1f81310a5549052346ffc080a0f269c0dc8d31ea65c42d4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1976
+}

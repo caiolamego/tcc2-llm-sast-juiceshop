@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso inseguro a propriedades de objeto durante a substituição de valores de configuração, que pode permitir prototype pollution/leitura de propriedades herdadas ao resolver uma cadeia de propriedades controlável por quem configura a chamada.\",\n  \"causa_da_vulnerabilidade\": \"A cadeia em options.replacement[1] é dividida e percorrida diretamente em config, sem validar os segmentos nem restringir a leitura a propriedades próprias. Assim, segmentos como __proto__, constructor ou prototype podem alcançar propriedades herdadas e objetos de protótipo, em vez de apenas valores de configuração próprios.\",\n  \"estrategia_de_correcao\": \"Validar cada segmento da cadeia antes de acessá-lo e interromper a resolução se o segmento for perigoso, se o valor atual não for um objeto válido ou se a propriedade não for própria. Manter a substituição existente para caminhos válidos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/hacking-instructor/helpers/helpers.ts\",\n      \"trecho_original\": \"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\",\n      \"trecho_corrigido\": \"      const propertyChain = options.replacement[1].split('.')\\n      let replacementValue = config\\n      for (const property of propertyChain) {\\n        if (property === '__proto__' || property === 'constructor' || property === 'prototype' || replacementValue === null || typeof replacementValue !== 'object' || !Object.prototype.hasOwnProperty.call(replacementValue, property)) {\\n          return\\n        }\\n        replacementValue = replacementValue[property]\\n      }\\n      value = value.replace(options.replacement[0], replacementValue)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A verificação impede que a resolução atravesse nomes associados a protótipos e garante que cada segmento corresponda a uma propriedade própria do objeto de configuração. Isso evita a leitura de propriedades herdadas e o acesso a cadeias como __proto__. Caminhos válidos compostos por propriedades próprias continuam sendo resolvidos e usados na substituição como antes.\",\n  \"limitacoes_da_correcao\": \"A correção protege a resolução desta cadeia neste helper; não valida a origem nem a estrutura completa da configuração recebida, e não corrige eventuais usos inseguros de configuração em outros pontos da aplicação. Para caminhos inválidos, a função de espera retorna sem realizar a substituição.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1398,
+  "tokens_saida": 562,
+  "latencia_s": 6.101,
+  "custo_usd": 0.000456,
+  "hash_prompt": "8134579889ab4dc0e0bdf389c5350c2f343d0924ed3f11e7429687b6c2783eb0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1395
+}

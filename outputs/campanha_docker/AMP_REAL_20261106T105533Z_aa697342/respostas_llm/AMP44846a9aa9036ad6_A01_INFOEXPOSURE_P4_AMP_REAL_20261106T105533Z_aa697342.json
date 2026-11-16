@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de informações por listagem de diretório (CWE-548) na rota /ftp.\",\n  \"causa_da_vulnerabilidade\": \"A rota /ftp usa serveIndex('ftp', { icons: true }), que gera uma página com os nomes e metadados dos arquivos e subdiretórios. A listagem fica acessível sem autenticação.\",\n  \"estrategia_de_correcao\": \"Remover o middleware serveIndex da rota /ftp, mantendo o middleware de arquivos para preservar o acesso direto aos arquivos públicos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\",\n      \"trecho_corrigido\": \"  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem o middleware serveIndex, uma requisição ao diretório /ftp deixa de produzir uma página que enumera seu conteúdo. A rota servePublicFiles permanece, preservando o download de arquivos por URL direta; a rota de quarentena também não é alterada.\",\n  \"limitacoes_da_correcao\": \"A alteração impede a listagem pela rota /ftp, mas não restringe o acesso direto a arquivos servidos por servePublicFiles. Se algum arquivo não deveria ser público, será necessário aplicar controles de acesso ou removê-lo da área servida. A listagem de /support/logs e /encryptionkeys não foi alterada, pois a correção proposta se limita à rota indicada pelo alerta.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3262,
+  "tokens_saida": 408,
+  "latencia_s": 4.828,
+  "custo_usd": 0.000612,
+  "hash_prompt": "ea90b8ad52fb10f99dbc54696de7cdf61c76f9cd556e50ab1fc464fdbc5e6f50",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3259
+}

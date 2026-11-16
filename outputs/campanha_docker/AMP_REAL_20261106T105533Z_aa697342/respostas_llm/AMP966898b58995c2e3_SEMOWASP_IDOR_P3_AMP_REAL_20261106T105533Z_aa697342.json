@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"IDOR (CWE-639): a rota pode devolver a cesta identificada por um ID da requisição sem confirmar que ela pertence ao usuário autenticado.\",\n  \"causa_da_vulnerabilidade\": \"A consulta busca a cesta somente por `req.params.id`. A verificação de propriedade existente é usada apenas para resolver um desafio e não bloqueia a resposta. Assim, conhecer ou alterar o ID pode permitir acesso à cesta de outro usuário.\",\n  \"estrategia_de_correcao\": \"Obter a identidade autenticada pelo servidor e incluir o identificador da cesta associado a essa identidade no filtro da consulta. Se não houver usuário autenticado ou cesta associada, a consulta não deve retornar uma cesta.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/basket.ts\",\n      \"trecho_original\": \"      const id = req.params.id\\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\n      \"trecho_corrigido\": \"      const id = req.params.id\\n      const user = security.authenticatedUsers.from(req)\\n      const basket = user?.bid\\n        ? await BasketModel.findOne({ where: { id, id: user.bid }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\\n        : null\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta passa a exigir que o ID solicitado corresponda ao ID da cesta associado ao usuário autenticado, impedindo que a seleção seja feita apenas com uma chave controlada pelo cliente. A resposta continua usando o formato existente; para usuário sem cesta autenticada ou ID não correspondente, não é retornado um registro.\",\n  \"limitacoes_da_correcao\": \"A edição pressupõe que `authenticatedUsers.from(req)` fornece uma identidade validada pelo servidor e que `user.bid` é o identificador da cesta. O objeto `where` corrigido não pode conter duas propriedades chamadas `id`: em JavaScript, a segunda sobrescreve a primeira. Portanto, é necessário confirmar o nome do campo de associação da cesta no modelo e usar esse campo no filtro para que a restrição de propriedade seja efetiva.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1738,
+  "tokens_saida": 488,
+  "latencia_s": 6.309,
+  "custo_usd": 0.000461,
+  "hash_prompt": "dc49ece910dae813ceeb3e905b72e6c717f77bb14df2bfcac1ff8f593aa29907",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1735
+}

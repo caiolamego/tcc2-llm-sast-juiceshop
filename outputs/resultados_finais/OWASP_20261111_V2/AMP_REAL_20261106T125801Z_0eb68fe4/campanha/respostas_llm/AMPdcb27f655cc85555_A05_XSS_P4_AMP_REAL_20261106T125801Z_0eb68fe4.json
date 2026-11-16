@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (XSS) devido ao uso de bypassSecurityTrustHtml com conteúdo retornado pelo serviço de CAPTCHA.\",\"causa_da_vulnerabilidade\":\"O valor data.image é recebido externamente e passado diretamente para DomSanitizer.bypassSecurityTrustHtml, que desativa a sanitização HTML do Angular. Se a resposta puder ser manipulada, conteúdo HTML ou scripts poderão ser interpretados no contexto da aplicação.\",\"estrategia_de_correcao\":\"Remover o bypass de segurança e atribuir o conteúdo bruto ao campo captcha. Quando esse valor for usado em um binding HTML do Angular, a sanitização contextual padrão será aplicada automaticamente.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"  getNewCaptcha () {\\n    this.imageCaptchaService.getCaptcha().subscribe((data: any) => {\\n      this.captcha = this.sanitizer.bypassSecurityTrustHtml(data.image)\\n    })\\n  }\",\"trecho_corrigido\":\"  getNewCaptcha () {\\n    this.imageCaptchaService.getCaptcha().subscribe((data: any) => {\\n      this.captcha = data.image\\n    })\\n  }\"}],\"justificativa_tecnica\":\"A remoção de bypassSecurityTrustHtml faz com que o Angular trate captcha como conteúdo não confiável. Em um binding [innerHTML], o Angular aplicará sua sanitização HTML contextual, removendo construções perigosas como scripts e manipuladores de eventos, enquanto preserva markup permitido pelo requisito funcional. O conteúdo continua sendo exibido sem desativar a proteção padrão do framework.\",\"limitacoes_da_correcao\":\"A proteção depende de o template consumir captcha por meio de um binding Angular seguro, como [innerHTML], e não por um sink manual como document.write ou innerHTML nativo. O código também usa document.write para userData, que é um fluxo separado e potencialmente perigoso caso userData contenha conteúdo controlável; essa ocorrência não é alterada porque o alerta e a correção solicitada referem-se ao bypassSecurityTrustHtml.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2567,
+  "tokens_saida": 439,
+  "latencia_s": 6.092,
+  "custo_usd": 0.001168,
+  "hash_prompt": "15e535540c037ba922fc715ef09c6e9943ea0d5a41bdee73c729ccc0f9fce4ba",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2564
+}

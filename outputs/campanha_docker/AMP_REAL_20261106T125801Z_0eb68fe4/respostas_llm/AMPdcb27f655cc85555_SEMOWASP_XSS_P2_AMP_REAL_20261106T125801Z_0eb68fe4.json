@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) baseado em DOM ao inserir `userData` diretamente em um novo documento com `document.write`.\",\"causa_da_vulnerabilidade\":\"O valor `data.userData`, potencialmente controlado ou influenciado por dados retornados pelo servidor, é atribuído a `this.userData` e posteriormente passado sem sanitização ou validação para `window.open('', '_blank', 'width=500')?.document.write(this.userData)`. O conteúdo escrito é interpretado como HTML e pode incluir scripts ou elementos com manipuladores de eventos.\",\"estrategia_de_correcao\":\"Substituir a escrita de HTML interpretável por uma escrita de texto literal usando `textContent`, preservando a abertura da janela e evitando que o conteúdo retornado seja interpretado como marcação executável.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/data-export/data-export.component.ts\",\"trecho_original\":\"        window.open('', '_blank', 'width=500')?.document.write(this.userData)\",\"trecho_corrigido\":\"        const exportWindow = window.open('', '_blank', 'width=500')\\n        if (exportWindow !== null) {\\n          exportWindow.document.body.textContent = this.userData\\n        }\"}],\"justificativa_tecnica\":\"`document.write` interpreta a string fornecida como HTML, permitindo que conteúdo malicioso seja executado no contexto da nova janela. `document.body.textContent` insere o valor como texto, convertendo qualquer marcação em conteúdo não executável e impedindo a interpretação de tags, scripts e atributos de evento. A correção mantém a abertura da janela e a exibição dos dados exportados, alterando apenas o mecanismo inseguro de inserção.\",\"limitacoes_da_correcao\":\"A correção exibe o conteúdo exportado como texto literal, portanto qualquer formatação HTML que o formato de exportação pretendesse apresentar será mostrada sem renderização. A proteção depende de o conteúdo ser exibido exclusivamente por esse caminho; outros usos futuros de `userData` deverão aplicar uma estratégia equivalente de saída contextualizada. A vulnerabilidade de XSS no trecho corrigido é eliminada, mas a validação e o tratamento de segurança no servidor continuam sendo responsabilidades independentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1500,
+  "tokens_saida": 473,
+  "latencia_s": 5.717,
+  "custo_usd": 0.000942,
+  "hash_prompt": "3eaa0b43acf1ea59a808da37d5b92dd522cc7983124d396d6da2039efeed157a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1497
+}

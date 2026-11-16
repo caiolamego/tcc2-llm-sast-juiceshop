@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection na consulta de autenticação em routes/login.ts.\",\"causa_da_vulnerabilidade\":\"Os valores controlados pelo usuário, req.body.email e req.body.password, são interpolados diretamente em uma string SQL. Caracteres especiais podem alterar a sintaxe da consulta.\",\"estrategia_de_correcao\":\"Substituir a interpolação dos valores por parâmetros nomeados do Sequelize, mantendo a consulta, os filtros, o modelo e o resultado funcional existentes.\",\"edicoes\":[{\"arquivo\":\"routes/login.ts\",\"trecho_original\":\"    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\",\"trecho_corrigido\":\"    models.sequelize.query('SELECT * FROM Users WHERE email = :email AND password = :password AND deletedAt IS NULL', { replacements: { email: req.body.email || '', password: security.hash(req.body.password || '') }, model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\"}],\"justificativa_tecnica\":\"Os placeholders nomeados fazem com que o Sequelize envie os valores como parâmetros, impedindo que aspas, comentários ou outros caracteres fornecidos pelo usuário sejam interpretados como parte do comando SQL. A consulta continua buscando pelo mesmo e-mail, pela mesma senha derivada por security.hash e por deletedAt IS NULL, preservando o modelo UserModel e o modo plain.\",\"limitacoes_da_correcao\":\"A correção depende do suporte a replacements nomeados pela versão do Sequelize utilizada, que é o mecanismo padrão dessa API. Ela corrige a injeção nessa consulta, mas não substitui validação de entrada, proteção contra força bruta ou uso de um algoritmo moderno de armazenamento de senhas caso security.hash não forneça essas propriedades.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3164,
+  "tokens_saida": 423,
+  "latencia_s": 5.217,
+  "custo_usd": 0.001298,
+  "hash_prompt": "d9f10a2b57f6ffed81a3b494bf6faad727323142bc417851a9eed051432ea91b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3161
+}

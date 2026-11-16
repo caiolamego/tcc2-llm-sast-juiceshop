@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de expressão regular (Regular Expression Injection) na função getCodingChallengeFromFileContent.\",\"causa_da_vulnerabilidade\":\"A função getCodingChallengeFromFileContent utiliza diretamente o parâmetro challengeKey para construir uma expressão regular sem qualquer sanitização ou escape. Isso permite que um atacante forneça um challengeKey contendo caracteres especiais de regex, que podem alterar o comportamento da expressão regular, causando DoS (Denial of Service) ou vazamento de informações.\",\"estrategia_de_correcao\":\"Sanitizar o parâmetro challengeKey antes de usá-lo na construção da expressão regular, escapando todos os caracteres especiais para que sejam tratados como literais na regex.\",\"edicoes\":[{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${challengeKey}([^])*vuln-code-snippet end.*${challengeKey}`)\",\"trecho_corrigido\":\"function escapeRegExp(string: string) {\\n  return string.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&');\\n}\\n\\nconst escapedChallengeKey = escapeRegExp(challengeKey);\\nconst snippets = source.match(new RegExp(`[/#]{0,2} vuln-code-snippet start.*${escapedChallengeKey}([^])*vuln-code-snippet end.*${escapedChallengeKey}`));\"}],\"justificativa_tecnica\":\"Escapando os caracteres especiais do challengeKey, garantimos que a expressão regular interprete o valor como texto literal, eliminando a possibilidade de manipulação da regex pelo usuário. Isso previne ataques de injeção de regex que poderiam causar falhas ou comportamento inesperado.\",\"limitacoes_da_correcao\":\"A correção protege contra injeção de regex, mas não valida se o challengeKey é válido ou esperado no contexto da aplicação. Se challengeKey for controlado externamente, outras validações podem ser necessárias para garantir integridade dos dados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1759,
+  "tokens_saida": 422,
+  "latencia_s": 4.204,
+  "custo_usd": 0.000918,
+  "hash_prompt": "76892afe687c13ac682653cf412dcf6c1427ea316e6164cdadc903508d85914c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1536,
+  "tokens_escrita_cache": 0
+}

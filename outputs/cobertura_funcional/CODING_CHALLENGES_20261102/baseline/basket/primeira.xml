@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/rest/basket/:id" time="0.478085" disabled="0" errors="0" tests="4" failures="0" skipped="0" hostname="12531ec2ecd0">
+		<testcase name="GET existing basket by id is not allowed via public API" time="0.008565" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="GET empty basket when requesting non-existing basket id" time="0.047607" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="GET existing basket with contained products by id" time="0.021043" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="GET basket should accept forged JWTs" time="0.016675" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<testsuite name="/api/Baskets" time="0.018967" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="12531ec2ecd0">
+		<testcase name="POST new basket is not part of API" time="0.009759" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="GET all baskets is not part of API" time="0.008958" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<testsuite name="/api/Baskets/:id" time="0.029870" disabled="0" errors="0" tests="3" failures="0" skipped="0" hostname="12531ec2ecd0">
+		<testcase name="GET existing basket is not part of API" time="0.010057" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="PUT update existing basket is not part of API" time="0.010085" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="DELETE existing basket is not part of API" time="0.009390" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<testsuite name="/rest/basket/:id" time="0.060508" disabled="0" errors="0" tests="1" failures="0" skipped="0" hostname="12531ec2ecd0">
+		<testcase name="GET existing basket of another user" time="0.060361" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<testsuite name="/rest/basket/:id/checkout" time="0.335288" disabled="0" errors="0" tests="6" failures="0" skipped="0" hostname="12531ec2ecd0">
+		<testcase name="POST placing an order for a basket is not allowed via public API" time="0.003032" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="POST placing an order for an existing basket returns orderId" time="0.145014" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="POST placing an order for a non-existing basket fails" time="0.012118" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="POST placing an order for a basket with a negative total cost is possible" time="0.026538" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="POST placing an order for a basket with 99% discount is possible" time="0.037416" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testsuite name="error cases" time="0.110834" disabled="0" errors="0" tests="3" failures="0" skipped="0" hostname="12531ec2ecd0">
+			<testcase name="should return 500 if QuantityModel.findOne fails during checkout" time="0.034118" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+			<testcase name="should return 500 if WalletModel.findOne fails during checkout" time="0.042873" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+			<testcase name="should return 500 if ordersCollection.insert fails during checkout" time="0.033544" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		</testsuite>
+	</testsuite>
+	<testsuite name="/rest/basket/:id/coupon/:coupon" time="0.043675" disabled="0" errors="0" tests="4" failures="0" skipped="0" hostname="12531ec2ecd0">
+		<testcase name="PUT apply valid coupon to existing basket" time="0.011596" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="PUT apply invalid coupon is not accepted" time="0.010960" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="PUT apply outdated coupon is not accepted" time="0.010457" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+		<testcase name="PUT apply valid coupon to non-existing basket throws error" time="0.010448" classname="test" file="/repo/workspace/wt-1/test/api/basket.test.ts"/>
+	</testsuite>
+	<!-- tests 22 -->
+	<!-- suites 7 -->
+	<!-- pass 22 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 2455.376241 -->
+</testsuites>

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso não autorizado a itens de cestas de outros usuários por meio da alteração de BasketId.\",\n  \"causa_da_vulnerabilidade\": \"A validação compara o BasketId recebido com a cesta do usuário autenticado, mas, quando a comparação falha, apenas envia uma resposta 401 e continua a execução. O fluxo ainda cria e salva o item, permitindo que a requisição prossiga apesar da rejeição.\",\n  \"estrategia_de_correcao\": \"Encerrar imediatamente o processamento após enviar a resposta 401, impedindo a criação e persistência do item quando o BasketId não pertence ao usuário autenticado.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/basketItems.ts\",\n      \"trecho_original\": \"    if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq\\n      res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n    } else {\",\n      \"trecho_corrigido\": \"    if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq\\n      res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n      return\\n    } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O retorno após a resposta 401 interrompe o middleware antes de construir e salvar BasketItemModel. Assim, uma requisição com BasketId incompatível não pode efetuar a operação protegida. A alteração preserva a mensagem, a assinatura e o comportamento das requisições autorizadas.\",\n  \"limitacoes_da_correcao\": \"A correção trata a falha de autorização no caminho de adição de itens. Não altera nem avalia outras rotas ou possíveis problemas de validação e autorização fora deste trecho.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1490,
+  "tokens_saida": 446,
+  "latencia_s": 4.892,
+  "custo_usd": 0.000238,
+  "hash_prompt": "185d2652dc9d311a8b81d772dcf5357bb793c0f63cb893bea0b9afaca23d8b14",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1487,
+  "tokens_escrita_cache": 0
+}

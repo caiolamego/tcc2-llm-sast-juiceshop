@@ -1,0 +1,14 @@
+rules:
+  - id: tcc.validation.security.optional-validation-gate
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: Validacao condicionada a presenca conjunta de campos seguida por next; revisar campos ausentes e validacao semantica antes da persistencia.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe: ['CWE-20: Improper Input Validation']
+    pattern: |
+      if ($REQ.body.$A !== undefined && $REQ.body.$B !== undefined && $REQ.body.$C !== undefined) {
+        ...
+      }
+      $NEXT();

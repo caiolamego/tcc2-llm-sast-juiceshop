@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de campos sensíveis do usuário via parâmetro 'fields' na query string, permitindo que um atacante recupere informações confidenciais como 'password' ou 'passwordHash'.\",\"causa_da_vulnerabilidade\":\"O código permite que o cliente especifique arbitrariamente quais campos do objeto 'user.data' deseja receber através do parâmetro 'fields'. Não há validação ou restrição para impedir que campos sensíveis, como 'password' ou 'passwordHash', sejam incluídos na resposta.\",\"estrategia_de_correcao\":\"Restringir explicitamente os campos que podem ser retornados quando o parâmetro 'fields' é utilizado, permitindo apenas campos não sensíveis. Dessa forma, mesmo que o cliente solicite campos sensíveis, eles não serão incluídos na resposta.\",\"edicoes\":[{\"arquivo\":\"routes/currentUser.ts\",\"trecho_original\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          for (const field of requestedFields) {\\n            if (user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\",\"trecho_corrigido\":\"        if (requestedFields.length > 0) {\\n          // When fields are specified, return only those fields\\n          const allowedFields = ['id', 'email', 'lastLoginIp', 'profileImage']\\n          for (const field of requestedFields) {\\n            if (allowedFields.includes(field) && user?.data[field as keyof typeof user.data] !== undefined) {\\n              baseUser[field] = user?.data[field as keyof typeof user.data]\\n            }\\n          }\\n        } else {\"}],\"justificativa_tecnica\":\"Ao limitar explicitamente os campos que podem ser retornados, impedimos que campos sensíveis como 'password' ou 'passwordHash' sejam expostos, mesmo que o cliente tente solicitá-los via parâmetro 'fields'. Isso elimina a possibilidade de vazamento de informações confidenciais através da API.\",\"limitacoes_da_correcao\":\"A correção depende da manutenção da lista de campos permitidos atualizada conforme o modelo de dados evolui. Campos sensíveis adicionais devem ser adicionados à lista de bloqueio se forem introduzidos no futuro.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1128,
+  "tokens_saida": 495,
+  "latencia_s": 4.066,
+  "custo_usd": 0.001243,
+  "hash_prompt": "d985259847613d60761b1ccdb95bb1d3769b1377c8e6c95d85dece7649b9675d",
+  "do_cache": true
+}

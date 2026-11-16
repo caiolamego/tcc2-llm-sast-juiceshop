@@ -1,0 +1,32 @@
+# Complemento da triagem historica; usado apenas na matriz da rodada 2.
+regras_candidatas:
+  weakPasswordChallenge: [tcc.crypto.security.md5-hash]
+  exposedMetricsChallenge: [tcc.express.security.public-metrics-route]
+
+triagem:
+  - regra: tcc.crypto.security.md5-hash
+    arquivo: Gruntfile.js
+    linha: 75
+    status: falso_positivo
+    desafios: []
+    motivo: MD5 usado para checksum de arquivos de distribuicao, nao para senha; nao comprova a falha de armazenamento de senha investigada nesta rodada.
+  - regra: tcc.crypto.security.md5-hash
+    arquivo: lib/insecurity.ts
+    linha: 41
+    status: confirmado
+    desafios: [weakPasswordChallenge]
+    sem_marcador: true
+    motivo: A funcao hash usa MD5 sem salt e e chamada pelo setter de password em models/user.ts:76; associacao entre arquivos revisada manualmente.
+  - regra: tcc.express.security.public-metrics-route
+    arquivo: server.ts
+    linha: 676
+    status: confirmado
+    desafios: [exposedMetricsChallenge]
+    sem_marcador: true
+    motivo: Primeira das duas rotas /metrics sem middleware de autorizacao; o handler serve register.metrics() sem checar identidade. Mesmo defeito da linha 729, nao outro desafio.
+  - regra: tcc.express.security.public-metrics-route
+    arquivo: server.ts
+    linha: 729
+    status: confirmado
+    desafios: [exposedMetricsChallenge]
+    motivo: Rota /metrics sem middleware de autorizacao, no marcador oficial; o handler serve register.metrics() sem checar identidade. Teste API oficial espera HTTP 200 sem autenticacao.

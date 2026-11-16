@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Falha de autorização horizontal na exportação de dados (CWE-863). A consulta de pedidos usa um e-mail mascarado como seletor, que não identifica unicamente o usuário e pode corresponder aos pedidos de outra pessoa.\",\n  \"causa_da_vulnerabilidade\": \"O código substitui vogais do e-mail autenticado por asteriscos e usa o resultado em `db.ordersCollection.find({ email: updatedEmail })`. O mascaramento é uma transformação com perda de informação: e-mails diferentes podem produzir o mesmo valor, permitindo que a exportação inclua pedidos de outro usuário. Além disso, a consulta de memórias usa `req.body.UserId`, um valor controlado pelo cliente, em vez da identidade autenticada no servidor.\",\n  \"estrategia_de_correcao\": \"Usar o e-mail original, obtido da identidade autenticada no servidor, como seletor dos pedidos e usar o ID dessa mesma identidade para limitar a consulta de memórias. Manter o mascaramento apenas fora dos seletores de autorização e preservar o formato da resposta.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/dataExport.ts\",\n      \"trecho_original\": \"        const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n\\n        let memories, orders, reviews\\n        try {\\n          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })\",\n      \"trecho_corrigido\": \"        const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n\\n        let memories, orders, reviews\\n        try {\\n          memories = await MemoryModel.findAll({ where: { UserId: loggedInUser.data.id } })\"\n    },\n    {\n      \"arquivo\": \"routes/dataExport.ts\",\n      \"trecho_original\": \"        try {\\n          orders = await db.ordersCollection.find({ email: updatedEmail })\\n        } catch (error) {\",\n      \"trecho_corrigido\": \"        try {\\n          orders = await db.ordersCollection.find({ email })\\n        } catch (error) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O seletor de pedidos passa a usar o e-mail completo da conta autenticada, evitando colisões causadas pelo mascaramento. A consulta de memórias deixa de confiar em `req.body.UserId` e fica limitada ao ID associado à identidade autenticada no servidor. Assim, alterar o corpo da requisição ou explorar e-mails que resultem no mesmo valor mascarado não permite selecionar dados de outro usuário. O mascaramento continua definido, mas não é usado para autorização; a resposta e as mensagens existentes permanecem inalteradas.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que `loggedInUser.data.id` seja o identificador confiável e corresponda ao campo `UserId` usado pelo modelo de memórias, e que o campo `email` dos pedidos armazene o e-mail original. Não foram avaliadas outras rotas nem a configuração de confiança do cabeçalho `Host` usado na construção das URLs das imagens.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2282,
+  "tokens_saida": 668,
+  "latencia_s": 6.936,
+  "custo_usd": 0.000619,
+  "hash_prompt": "905130c1a4a5fa7c88e74f70d2b6f5fcb2e1dbc4a2aa16c883eea7705fffb648",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2279
+}

@@ -1,0 +1,136 @@
+== README.md
+   - artefatos, e o orquestrador `src/pipeline/run_pipeline.py` só encadeia as etapas. O mapa etapa → código →
+   + artefatos, e o orquestrador `src/pipeline/orquestracao/campanha.py` só encadeia as etapas. O mapa etapa → código →
+== config/README.md
+   - | `conjunto_d.json` | Lista de testes D usada pelo runner. Caminho fixo em `src/pipeline/validation/conjunto_d.py`. | contrato da execução |
+   + | `conjunto_d.json` | Lista de testes D usada pelo runner. Caminho fixo em `src/pipeline/etapas/e07_validacao/conjunto_d.py`. | contrato da execução |
+   - Usados pelos scripts de `scripts/audit/` e `scripts/reports/report_rodadaN.py`; não entram na campanha.
+   + Usados pelos scripts de `scripts/auditoria/` e `scripts/relatorios/report_rodadaN.py`; não entram na campanha.
+== docs/README.md
+   - | [conjunto_d.md](conjunto_d.md) (fixo) | Lista dos testes D, gerada por `scripts/experiment/gerar_conjunto_d.py`. |
+   + | [conjunto_d.md](conjunto_d.md) (fixo) | Lista dos testes D, gerada por `scripts/experimento/gerar_conjunto_d.py`. |
+== docs/aplicacao_ancoras.md
+   - docker compose run --rm tcc python scripts/experiment/replay_anchor_application.py \
+   + docker compose run --rm tcc python scripts/experimento/replay_ancoras.py \
+== docs/cobertura_funcional.md
+   - .venv/bin/python scripts/audit/audit_functional_coverage.py \
+   + .venv/bin/python scripts/auditoria/auditar_cobertura_funcional.py \
+   - O comando separado `scripts/experiment/validate_functional_coverage.py` recebe os
+   + O comando separado `scripts/experimento/gerar_baseline_funcional.py` recebe os
+   - .venv/bin/python scripts/setup/prepare_api_worktrees.py --origem workspace/wt-1 --k 4
+   + .venv/bin/python scripts/preparacao/preparar_worktrees_api.py --origem workspace/wt-1 --k 4
+== docs/docker.md
+   - `docker compose run --rm tcc python scripts/experiment/diagnose_llm.py --modo offline`.
+   + `docker compose run --rm tcc python scripts/experimento/diagnosticar_llm.py --modo offline`.
+== docs/guias/modelo_colab.md
+   - .venv/bin/python scripts/experiment/diagnose_llm.py --modo offline
+   + .venv/bin/python scripts/experimento/diagnosticar_llm.py --modo offline
+   - .venv/bin/python scripts/experiment/diagnose_llm.py --modo conexao
+   + .venv/bin/python scripts/experimento/diagnosticar_llm.py --modo conexao
+   - .venv/bin/python scripts/experiment/diagnose_llm.py --modo smoke
+   + .venv/bin/python scripts/experimento/diagnosticar_llm.py --modo smoke
+   - .venv/bin/python scripts/experiment/diagnose_llm.py --modo mensagem --mensagem "teste"
+   + .venv/bin/python scripts/experimento/diagnosticar_llm.py --modo mensagem --mensagem "teste"
+   - .venv/bin/python scripts/experiment/diagnose_llm.py --modo prompt \
+   + .venv/bin/python scripts/experimento/diagnosticar_llm.py --modo prompt \
+== docs/guias/referencia_detalhada.md
+   - python scripts/audit/scan_semgrep_exploratorio.py --help
+   + python scripts/auditoria/scan_semgrep_exploratorio.py --help
+   - python scripts/audit/classify_combined_scan.py --help
+   + python scripts/auditoria/classificar_scan_combinado.py --help
+   - python scripts/experiment/build_issue_catalog.py --help
+   + python scripts/experimento/gerar_catalogo_historico.py --help
+   - python scripts/experiment/baseline_testes.py --help
+   + python scripts/experimento/gerar_linha_de_base_historica.py --help
+   - python scripts/reports/metricas_execucao.py E02
+   + python scripts/relatorios/metricas_historicas.py E02
+   - A base documental está em `knowledge_base/`; o recuperador está em `src/pipeline/rag/`, e sua validação editorial em `scripts/experiment/validate_know
+   + A base documental está em `knowledge_base/`; o recuperador está em `src/pipeline/etapas/e03_contexto_rag/`, e sua validação editorial em `scripts/expe
+   - scripts/setup/        preparação do alvo
+   + scripts/preparacao/        preparação do alvo
+   - scripts/audit/        scans, triagem, matrizes e verificações das rodadas
+   + scripts/auditoria/        scans, triagem, matrizes e verificações das rodadas
+   - scripts/experiment/   catálogo, baselines e tentativas de correção
+   + scripts/experimento/   catálogo, baselines e tentativas de correção
+   - scripts/reports/      relatórios e métricas
+   + scripts/relatorios/      relatórios e métricas
+   - .venv/bin/python scripts/experiment/validate_knowledge_base.py
+   + .venv/bin/python scripts/experimento/validar_base_rag.py
+   - .venv/bin/python scripts/reports/consolidate_metrics.py \
+   + .venv/bin/python scripts/relatorios/consolidar_metricas.py \
+   - No modo ampliado, TRI/TPF/TNINI usam valores medidos; as proporções mínimas sobre todas as tentativas também são exportadas. TRV mantém todas as tenta
+   + No modo ampliado, TRI/TPF/TNINI usam valores medidos; as proporções mínimas sobre todas as tentativas também são exportadas. TRV mantém todas as tenta
+== docs/historico/features/04-metricas-consolidacao/README.md
+   - - [Calculador existente](../../../../scripts/reports/metricas_execucao.py): comportamento histórico a preservar.
+   + - [Calculador existente](../../../../scripts/relatorios/metricas_historicas.py): comportamento histórico a preservar.
+== docs/historico/features/05-otimizacao-validacao/README.md
+   - - [Runner atual](../../../../src/pipeline/validation/runner.py).
+   + - [Runner atual](../../../../src/pipeline/etapas/e07_validacao/camadas.py).
+   - - [Orquestrador](../../../../src/pipeline/run_pipeline.py).
+   + - [Orquestrador](../../../../src/pipeline/orquestracao/campanha.py).
+   - - [Contrato ampliado](../../../../src/pipeline/execucao_ampliada.py).
+   + - [Contrato ampliado](../../../../src/pipeline/orquestracao/preflight.py).
+== docs/historico/features/06-cobertura-funcional/README.md
+   - - [Seletor](../../../../src/pipeline/validation/selection.py) e [runner](../../../../src/pipeline/validation/runner.py).
+   + - [Seletor](../../../../src/pipeline/etapas/e07_validacao/selecao.py) e [runner](../../../../src/pipeline/etapas/e07_validacao/camadas.py).
+== docs/planejamento/GUIA_CONTINUIDADE_TCC2.md
+   - | [run_pipeline.py](../../src/pipeline/run_pipeline.py) | Orquestra casos, estratégias, validações e retomada; modo histórico padrão, ampliado por sel
+   + | [run_pipeline.py](../../src/pipeline/orquestracao/campanha.py) | Orquestra casos, estratégias, validações e retomada; modo histórico padrão, ampliad
+   - | [prompts/builder.py](../../src/pipeline/prompts/builder.py) | Monta P1/P2/P3/P4/P1L. RAG exige base completa e manifesto consistente. |
+   + | [prompts/builder.py](../../src/pipeline/etapas/e04_prompt/montagem.py) | Monta P1/P2/P3/P4/P1L. RAG exige base completa e manifesto consistente. |
+   - | [llm/openai_client.py](../../src/pipeline/llm/openai_client.py) | API, cache, custos e orçamento. |
+   + | [llm/openai_client.py](../../src/pipeline/etapas/e05_geracao_llm/cliente_openai.py) | API, cache, custos e orçamento. |
+   - | [llm/schema.py](../../src/pipeline/llm/schema.py) | Estrutura esperada da correção. |
+   + | [llm/schema.py](../../src/pipeline/etapas/e05_geracao_llm/esquema.py) | Estrutura esperada da correção. |
+   - | [patching/applier.py](../../src/pipeline/patching/applier.py) | Valida e aplica edições por âncora. |
+   + | [patching/applier.py](../../src/pipeline/etapas/e06_aplicacao/aplicador.py) | Valida e aplica edições por âncora. |
+   - | [target/workspace.py](../../src/pipeline/target/workspace.py) | Pool de worktrees e restauração entre tentativas. |
+   + | [target/workspace.py](../../src/pipeline/etapas/e06_aplicacao/worktrees.py) | Pool de worktrees e restauração entre tentativas. |
+   - | [sast/semgrep_client.py](../../src/pipeline/sast/semgrep_client.py) | Execução e normalização SAST; rulesets antigos e assinatura por regra/arquivo.
+   + | [sast/semgrep_client.py](../../src/pipeline/etapas/e01_analise_sast/semgrep.py) | Execução e normalização SAST; rulesets antigos e assinatura por re
+   - | [sast/filtro.py](../../src/pipeline/sast/filtro.py) | Filtros antigos de categoria, severidade e CWE, também utilizados em M. |
+   + | [sast/filtro.py](../../src/pipeline/legado/filtro.py) | Filtros antigos de categoria, severidade e CWE, também utilizados em M. |
+   - | [validation/runner.py](../../src/pipeline/validation/runner.py) | T0/T2/T3/T4, falhas preexistentes, reexecuções e definições de F. |
+   + | [validation/runner.py](../../src/pipeline/etapas/e07_validacao/camadas.py) | T0/T2/T3/T4, falhas preexistentes, reexecuções e definições de F. |
+   - | [registro.py](../../src/pipeline/registro.py) | Persistência incremental e conferência do commit do alvo. |
+   + | [registro.py](../../src/pipeline/etapas/e08_registro/registro.py) | Persistência incremental e conferência do commit do alvo. |
+   - | `scripts/setup/` | Preparação do alvo. |
+   + | `scripts/preparacao/` | Preparação do alvo. |
+   - | `scripts/audit/` | Scans, associação, classificação, inventário e verificação das rodadas. |
+   + | `scripts/auditoria/` | Scans, associação, classificação, inventário e verificação das rodadas. |
+   - | `scripts/experiment/` | Catálogo, baseline de testes, medições e tentativas. |
+   + | `scripts/experimento/` | Catálogo, baseline de testes, medições e tentativas. |
+   - | `scripts/reports/` | Relatórios históricos e cálculo parcial das métricas. |
+   + | `scripts/relatorios/` | Relatórios históricos e cálculo parcial das métricas. |
+   - python scripts/audit/test_rodada.py --rodada 1
+   + python scripts/auditoria/testar_rodada.py --rodada 1
+   - python scripts/audit/test_rodada.py --rodada 7
+   + python scripts/auditoria/testar_rodada.py --rodada 7
+   - python scripts/audit/test_rodada.py --rodada 7 --tipo regras
+   + python scripts/auditoria/testar_rodada.py --rodada 7 --tipo regras
+   - python scripts/audit/test_rodada.py --rodada 7 --tipo relatorio
+   + python scripts/auditoria/testar_rodada.py --rodada 7 --tipo relatorio
+   - bash scripts/setup/setup_target.sh 4
+   + bash scripts/preparacao/preparar_alvo.sh 4
+   - python scripts/experiment/baseline_testes.py --help
+   + python scripts/experimento/gerar_linha_de_base_historica.py --help
+   - python scripts/audit/test_rodada.py --rodada 8 --tipo integracao \
+   + python scripts/auditoria/testar_rodada.py --rodada 8 --tipo integracao \
+   - O último comando ainda usa os 12 casos históricos. Não existe atualmente um argumento de catálogo que torne esse comando uma execução dos 78 alertas. 
+   + O último comando ainda usa os 12 casos históricos. Não existe atualmente um argumento de catálogo que torne esse comando uma execução dos 78 alertas. 
+== docs/protocolo_experimental.md
+   - **Decisão.** `F = 1` quando o conjunto de testes que falham após a correção está **contido** no conjunto que já falhava sem alteração alguma. A linha 
+   + **Decisão.** `F = 1` quando o conjunto de testes que falham após a correção está **contido** no conjunto que já falhava sem alteração alguma. A linha 
+   - O gerador `scripts/experiment/build_expanded_catalog.py` lê as quatro fontes da auditoria
+   + O gerador `scripts/experimento/gerar_catalogo_ampliado.py` lê as quatro fontes da auditoria
+== knowledge_base/README.md
+   - .venv/bin/python scripts/experiment/validate_knowledge_base.py
+   + .venv/bin/python scripts/experimento/validar_base_rag.py
+   - .venv/bin/python scripts/experiment/validate_knowledge_base.py --publicar-manifesto
+   + .venv/bin/python scripts/experimento/validar_base_rag.py --publicar-manifesto
+== src/pipeline/README.md
+   - | 2. Filtragem e catálogo | 2, 3, 4 | gera: `scripts/experiment/build_expanded_catalog.py`; lê e confere: `catalogo.py` | scan arquivado; `config/mapa
+   + | 2. Filtragem e catálogo | 2, 3, 4 | gera: `scripts/experimento/gerar_catalogo_ampliado.py`; lê e confere: `catalogo.py` | scan arquivado; `config/ma
+   - | 10. Consolidação das métricas | Figura 1, etapa 3 | `metrics/` (`loader`, `normalizer`, `calculator`, `exporter`, `rris`); comando `scripts/reports/
+   + | 10. Consolidação das métricas | Figura 1, etapa 3 | `metrics/` (`loader`, `normalizer`, `calculator`, `exporter`, `rris`); comando `scripts/relatori
+documentos alterados: 15

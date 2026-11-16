@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição não autenticada de métricas operacionais por meio do endpoint GET /metrics.\",\n  \"causa_da_vulnerabilidade\": \"O endpoint é registrado com app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) sem middleware de autenticação ou autorização. Além disso, o trecho mostra um registro anterior de /metrics antes do catch-all Angular; portanto, proteger apenas o registro posterior não protegeria a rota efetivamente alcançável.\",\n  \"estrategia_de_correcao\": \"Aplicar o middleware de autorização já usado pela aplicação ao registro de /metrics que aparece antes do catch-all, mantendo o handler e o comportamento para usuários autorizados.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* Serve metrics before the Angular catch-all so the route is reachable in all environments */\\n  app.get('/metrics', utils.asyncHandler(metrics.serveMetrics()))\",\n      \"trecho_corrigido\": \"  /* Serve metrics before the Angular catch-all so the route is reachable in all environments */\\n  app.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics()))\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O middleware security.isAuthorized() é executado antes do handler de métricas e impede que requisições não autorizadas obtenham a resposta. A alteração protege o registro que precede o catch-all, sem modificar a geração das métricas nem o acesso de usuários autorizados. O registro posterior de /metrics não substitui essa proteção, pois a rota anterior já pode atender a requisição.\",\n  \"limitacoes_da_correcao\": \"A proteção depende da configuração e do escopo de security.isAuthorized(). Se as métricas precisarem de acesso público, deve-se aplicar uma política de acesso específica e restritiva, em vez de deixá-las sem controle. O registro posterior de /metrics permanece no código, mas não é necessário para proteger a rota alcançável antes do catch-all.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2079,
+  "tokens_saida": 432,
+  "latencia_s": 5.081,
+  "custo_usd": 0.000476,
+  "hash_prompt": "23c62cfdb77a17e0a234e05cbd789d6707956642e5cdaaed380c7036af515751",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2076
+}

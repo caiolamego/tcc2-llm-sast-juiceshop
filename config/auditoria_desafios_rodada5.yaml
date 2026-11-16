@@ -1,0 +1,66 @@
+# Revisao estatica manual, no mesmo commit das rodadas anteriores.
+# Nao executamos os testes de integracao oficiais nem uma exploracao dinamica.
+regras_candidatas:
+  basketAccessChallenge: [tcc.orm.security.request-id-unscoped-query]
+  basketManipulateChallenge: [tcc.orm.security.request-id-unscoped-query]
+  rceChallenge: [tcc.vm.security.untrusted-evaluator]
+  rceOccupyChallenge: [tcc.vm.security.untrusted-evaluator]
+
+triagem:
+  - regra: tcc.vm.security.untrusted-evaluator
+    arquivo: routes/b2bOrder.ts
+    linha: 23
+    status: confirmado
+    desafios: [rceChallenge, rceOccupyChallenge]
+    sem_marcador: true
+    motivo: >-
+      body.orderLinesData entra em sandbox e e interpretado por notevil via
+      vm.runInContext. server.ts:424 exige autenticacao, nao restringe a expressao.
+      Quando os desafios estao habilitados, o codigo possui caminhos para limite
+      de iteracoes e timeout; test/api/b2b-order.test.ts documenta os dois casos.
+      Confirmacao estatica do mecanismo de avaliacao e da correspondencia aos
+      desafios, nao prova dinamica de DoS, escape do sandbox ou comando do SO.
+      Os dois desafios compartilham um unico ponto de correcao.
+  - regra: tcc.orm.security.request-id-unscoped-query
+    arquivo: routes/basket.ts
+    linha: 19
+    status: confirmado
+    desafios: [basketAccessChallenge]
+    sem_marcador: true
+    motivo: >-
+      req.params.id seleciona a cesta e res.json devolve seu conteudo sem verificar
+      proprietario. server.ts:356 autentica e appendUserId apenas escreve
+      req.body.UserId (lib/insecurity.ts:175), ignorado pela consulta.
+      A comparacao com user.bid apenas registra a solucao, nao bloqueia acesso.
+      test/api/basket.test.ts:111 documenta leitura de cesta de outro usuario.
+  - regra: tcc.orm.security.request-id-unscoped-query
+    arquivo: routes/basketItems.ts
+    linha: 68
+    status: inconclusivo
+    desafios: []
+    motivo: >-
+      A consulta e intermediaria na verificacao de estoque. A mutacao acontece
+      depois, na API gerada por finale-rest. O alerta nao aponta a escrita nem
+      demonstra sozinho a manipulacao de cesta; falta validar esse caminho
+      completo. Nao associar basketManipulateChallenge so pela proximidade do hook.
+  - regra: tcc.orm.security.request-id-unscoped-query
+    arquivo: routes/delivery.ts
+    linha: 34
+    status: falso_positivo
+    desafios: []
+    motivo: >-
+      DeliveryModel e catalogo compartilhado de formas de entrega, nao objeto
+      privado de um usuario. getDeliveryMethods lista as mesmas opcoes e
+      getDeliveryMethod calcula o preco conforme o usuario; nao exige dono no where.
+  - regra: tcc.orm.security.request-id-unscoped-query
+    arquivo: routes/order.ts
+    linha: 35
+    status: confirmado
+    desafios: []
+    motivo: >-
+      Falha de autorizacao confirmada por leitura estatica, sem desafio atribuido.
+      O checkout seleciona req.params.id sem comparar cesta com usuario autenticado;
+      gera pedido usando basket.Products e depois limpa BasketItems desse ID.
+      server.ts:356 e :604 e appendUserId nao fazem essa comparacao.
+      Nao contar como basketAccessChallenge (leitura de cesta) ou
+      basketManipulateChallenge (adicao de produto): mecanismos de desafio distintos.

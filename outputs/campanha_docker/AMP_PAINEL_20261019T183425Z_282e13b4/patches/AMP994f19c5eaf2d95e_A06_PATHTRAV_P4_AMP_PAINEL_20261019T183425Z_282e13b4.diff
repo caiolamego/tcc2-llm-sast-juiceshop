@@ -1,0 +1,20 @@
+diff --git a/routes/fileServer.ts b/routes/fileServer.ts
+index e48d4da64..17479936f 100644
+--- a/routes/fileServer.ts
++++ b/routes/fileServer.ts
+@@ -30,7 +30,14 @@ export function servePublicFiles () {
+       challengeUtils.solveIf(challenges.directoryListingChallenge, () => { return file.toLowerCase() === 'acquisitions.md' })
+       verifySuccessfulPoisonNullByteExploit(file)
+ 
+-      res.sendFile(path.resolve('ftp/', file))
++      const baseDir = path.resolve('ftp/')
++      const resolvedPath = path.resolve(baseDir, file)
++      if (!resolvedPath.startsWith(baseDir + path.sep)) {
++        res.status(403)
++        next(new Error('Only .md and .pdf files are allowed!'))
++        return
++      }
++      res.sendFile(resolvedPath)
+     } else {
+       res.status(403)
+       next(new Error('Only .md and .pdf files are allowed!'))

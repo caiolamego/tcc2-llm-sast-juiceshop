@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de diretórios (CWE-73) ao servir arquivos com res.sendFile.\",\n  \"causa_da_vulnerabilidade\": \"O parâmetro controlado pelo usuário é usado como nome de arquivo sem confinamento à pasta encryptionkeys. A verificação de que o nome não contém '/' não impede traversal com barras invertidas em sistemas que as reconhecem como separadores, nem garante que o caminho resolvido permaneça na raiz pretendida.\",\n  \"estrategia_de_correcao\": \"Resolver a raiz de encryptionkeys como caminho absoluto e passar o parâmetro como caminho relativo à opção root de res.sendFile. Rejeitar nomes com separadores de diretório, preservando a mensagem e o fluxo de erro existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/keyServer.ts\",\n      \"trecho_original\": \"export function serveKeyFiles () {\\n  return ({ params }: Request, res: Response, next: NextFunction) => {\\n    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\",\n      \"trecho_corrigido\": \"export function serveKeyFiles () {\\n  return ({ params }: Request, res: Response, next: NextFunction) => {\\n    const file = params.file\\n    const root = path.resolve('encryptionkeys')\\n\\n    if (!file.includes('/') && !file.includes('\\\\\\\\')) {\\n      res.sendFile(file, { root })\\n    } else {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A opção root do Express confina o caminho relativo fornecido a uma raiz absoluta e rejeita caminhos que escapem dela. A validação adicional de barra invertida impede que nomes com separadores alternativos sejam aceitos, mantendo acessíveis arquivos legítimos diretamente na pasta e preservando o tratamento de erro existente.\",\n  \"limitacoes_da_correcao\": \"O confinamento lexical não impede que links simbólicos existentes dentro de encryptionkeys apontem para arquivos fora da raiz. A correção também não implementa autorização por arquivo; ela apenas restringe o diretório servido.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1724,
+  "tokens_saida": 475,
+  "latencia_s": 5.372,
+  "custo_usd": 0.000453,
+  "hash_prompt": "10362fc92eb05590fd05b9b36893b8f7c38ad570c9280b148766ac0e951f6e39",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1721
+}

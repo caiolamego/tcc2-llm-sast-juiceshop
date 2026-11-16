@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de credencial hard-coded para chave privada JWT.\",\"causa_da_vulnerabilidade\":\"A chave privada RSA usada para assinar tokens JWT está embutida diretamente no código-fonte como uma string literal, o que expõe o segredo a qualquer pessoa que tenha acesso ao código, facilitando o comprometimento da segurança.\",\"estrategia_de_correcao\":\"Remover a chave privada hard-coded do código e carregá-la a partir de uma variável de ambiente segura. Caso a variável não esteja definida, lançar um erro para evitar uso inseguro. Isso evita exposição do segredo no código-fonte e permite gerenciamento seguro da chave.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"const privateKey = '-----BEGIN RSA PRIVATE KEY-----\\\\r\\\\nMIICXAIBAAKBgQDNwqLEe9wgTXCbC7+RPdDbBbeqjdbs4kOPOIGzqLpXvJXlxxW8iMz0EaM4BKUqYsIa+ndv3NAn2RxCd5ubVdJJcX43zO6Ko0TFEZx/65gY3BE0O6syCEmUP4qbSd6exou/F+WTISzbQ5FBVPVmhnYhG/kpwt/cIxK5iUn5hm+4tQIDAQABAoGBAI+8xiPoOrA+KMnG/T4jJsG6TsHQcDHvJi7o1IKC/hnIXha0atTX5AUkRRce95qSfvKFweXdJXSQ0JMGJyfuXgU6dI0TcseFRfewXAa/ssxAC+iUVR6KUMh1PE2wXLitfeI6JLvVtrBYswm2I7CtY0q8n5AGimHWVXJPLfGV7m0BAkEA+fqFt2LXbLtyg6wZyxMA/cnmt5Nt3U2dAu77MzFJvibANUNHE4HPLZxjGNXN+a6m0K6TD4kDdh5HfUYLWWRBYQJBANK3carmulBwqzcDBjsJ0YrIONBpCAsXxk8idXb8jL9aNIg15Wumm2enqqObahDHB5jnGOLmbasizvSVqypfM9UCQCQl8xIqy+YgURXzXCN+kwUgHinrutZms87Jyi+D8Br8NY0+Nlf+zHvXAomD2W5CsEK7C+8SLBr3k/TsnRWHJuECQHFE9RA2OP8WoaLPuGCyFXaxzICThSRZYluVnWkZtxsBhW2W8z1b8PvWUE7kMy7TnkzeJS2LSnaNHoyxi7IaPQUCQCwWU4U+v4lD7uYBw00Ga/xt+7+UqFPlPVdz1yyr4q24Zxaw0LgmuEvgU5dycq8N7JxjTubX0MIRR+G9fmDBBl8=\\\\r\\\\n-----END RSA PRIVATE KEY-----'\",\"trecho_corrigido\":\"const privateKey = process.env.JWT_PRIVATE_KEY\\nif (!privateKey) {\\n  throw new Error('Missing JWT private key in environment variable JWT_PRIVATE_KEY')\\n}\"}],\"justificativa_tecnica\":\"Ao retirar a chave privada do código-fonte e carregá-la a partir de uma variável de ambiente, evita-se a exposição do segredo em repositórios ou distribuições do código. Isso reduz o risco de comprometimento da chave privada, que é crítica para a segurança da assinatura dos tokens JWT. A verificação da existência da variável impede que a aplicação rode sem a chave configurada, evitando falhas silenciosas.\",\"limitacoes_da_correcao\":\"A correção depende da correta configuração da variável de ambiente JWT_PRIVATE_KEY no ambiente de execução. Se a variável não for configurada corretamente, a aplicação não iniciará. Além disso, a segurança da chave passa a depender do ambiente operacional e das práticas de gerenciamento de segredos adotadas fora do código-fonte.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3680,
+  "tokens_saida": 937,
+  "latencia_s": 7.603,
+  "custo_usd": 0.002088,
+  "hash_prompt": "0b6048d3d952200267829518756983b50bbb41620717f8dcd554ed15e5ee0e55",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2944,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Server-Side Request Forgery (SSRF) devido à falta de validação adequada da URL fornecida pelo usuário.\",\"causa_da_vulnerabilidade\":\"O código aceita uma URL arbitrária do usuário (req.body.imageUrl) e realiza uma requisição fetch diretamente para essa URL sem validação ou restrição. Isso permite que um atacante envie URLs internas ou maliciosas, levando o servidor a fazer requisições não autorizadas.\",\"estrategia_de_correcao\":\"Implementar uma validação da URL para garantir que apenas URLs externas legítimas e seguras sejam aceitas. Uma abordagem simples é verificar se o protocolo da URL é HTTP ou HTTPS e rejeitar URLs locais ou internas (como localhost, 127.0.0.1, endereços privados).\",\"edicoes\":[{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"      const url = req.body.imageUrl\\n      if (url.match(/(.)*solve\\\\/challenges\\\\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true\\n      const loggedInUser = security.authenticatedUsers.get(req.cookies.token)\",\"trecho_corrigido\":\"      const url = req.body.imageUrl\\n      try {\\n        const parsedUrl = new URL(url)\\n        if (!['http:', 'https:'].includes(parsedUrl.protocol)) {\\n          throw new Error('Invalid URL protocol')\\n        }\\n        const hostname = parsedUrl.hostname\\n        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.match(/^192\\\\.168\\\\./) || hostname.match(/^10\\\\./) || hostname.match(/^172\\\\.(1[6-9]|2[0-9]|3[0-1])\\\\./)) {\\n          throw new Error('Local addresses are not allowed')\\n        }\\n      } catch {\\n        next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n        return\\n      }\\n      if (url.match(/(.)*solve\\\\/challenges\\\\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true\\n      const loggedInUser = security.authenticatedUsers.get(req.cookies.token)\"}],\"justificativa_tecnica\":\"A validação da URL utilizando o construtor URL do JavaScript permite analisar o protocolo e o hostname da URL fornecida. Ao restringir o protocolo para HTTP e HTTPS e bloquear endereços locais ou privados, evita-se que o servidor faça requisições para recursos internos ou maliciosos, mitigando a vulnerabilidade SSRF.\",\"limitacoes_da_correcao\":\"A validação implementada é básica e pode não cobrir todos os casos de endereços internos ou maliciosos. Para uma proteção mais robusta, seria necessário implementar uma lista branca de domínios confiáveis ou usar bibliotecas especializadas para validação de URLs e controle de acesso a recursos de rede.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1170,
+  "tokens_saida": 613,
+  "latencia_s": 6.134,
+  "custo_usd": 0.001449,
+  "hash_prompt": "0fb9c5a0ae7fc811b2e5b9022f2a4c14917048ccfd26da63e4987e54f28973fe",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<undefined name="insecurity">
+		<testsuite name="cutOffPoisonNullByte" time="0.001119" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+			<testcase name="returns string unchanged if it contains no null byte" time="0.000482" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns string up to null byte" time="0.000104" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="userEmailFrom" time="0.000341" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+			<testcase name="returns content of &amp;quot;x-user-email&amp;quot; header if present" time="0.000115" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined if header &amp;quot;x-user-email&amp;quot; is not present" time="0.000088" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="generateCoupon" time="0.000780" disabled="0" errors="0" tests="3" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+			<testcase name="returns base85-encoded month, year and discount as coupon code" time="0.000393" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="uses current month and year if not specified" time="0.000108" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="does not encode day of month or time into coupon code" time="0.000114" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="discountFromCoupon" time="0.001031" disabled="0" errors="0" tests="5" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+			<testcase name="returns undefined when not passing in a coupon code" time="0.000253" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined for malformed coupon code" time="0.000084" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined for coupon code not according to expected pattern" time="0.000339" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined for expired coupon code" time="0.000097" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns discount from valid coupon code" time="0.000091" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="authenticatedUsers" time="0.000977" disabled="0" errors="0" tests="5" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+			<testcase name="returns user by associated token" time="0.000590" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined if no token is passed in" time="0.000051" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns token by associated user" time="0.000058" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns user by associated token from request" time="0.000118" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined if no token is present in request" time="0.000053" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="sanitizeHtml" time="0.002079" disabled="0" errors="0" tests="6" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+			<testcase name="handles empty inputs by returning their string representation" time="0.000493" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for plain text input" time="0.000168" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for HTML input with only harmless text formatting" time="0.000401" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for HTML input with only harmless links" time="0.000457" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="removes all Javascript from HTML input" time="0.000314" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="can be bypassed by exploiting lack of recursive sanitization" time="0.000106" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="sanitizeLegacy" time="0.000405" disabled="0" errors="0" tests="4" failures="0" skipped="0" hostname="matheus-brant-Vivobook-ASUSLaptop-K6502HC-K6502HC">
+			<testcase name="returns empty string for undefined input" time="0.000124" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for plain text input" time="0.000053" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="removes all opening tags and subsequent character from HTML input" time="0.000059" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="can be bypassed to allow working HTML payload to be returned" time="0.000067" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<undefined name="sanitizeSecure">
+			<testcase name="handles empty inputs by returning their string representation" time="0.000134" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for plain text input" time="0.000085" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for HTML input with only harmless text formatting" time="0.000113" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for HTML input with only harmless links" time="0.000174" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="removes all Javascript from HTML input" time="0.000227" classname="test" file="/home/matheus-brant/Desktop/TCC/tcc2-llm-sast-juiceshop/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+	<!-- tests 32 -->
+	<!-- suites 7 -->
+	<!-- pass 32 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 320.770554 -->
+		</undefined>
+	</undefined>
+</testsuites>

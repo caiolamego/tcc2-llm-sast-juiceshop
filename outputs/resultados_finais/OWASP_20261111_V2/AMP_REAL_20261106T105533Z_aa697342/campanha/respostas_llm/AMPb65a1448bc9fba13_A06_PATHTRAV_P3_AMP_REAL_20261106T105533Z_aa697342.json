@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Traversal de caminho (CWE-73), que pode permitir a leitura de arquivos fora do diretório logs por meio do parâmetro file.\",\n  \"causa_da_vulnerabilidade\": \"A verificação rejeita apenas barras `/`. Ela não impede traversal com barras invertidas em sistemas que as tratam como separadores, nem garante que o caminho resolvido permaneça dentro de logs. O valor controlado pela requisição é passado diretamente a res.sendFile.\",\n  \"estrategia_de_correcao\": \"Definir a raiz logs como caminho absoluto e passar o parâmetro como caminho relativo usando a opção root de res.sendFile. Rejeitar separadores de diretório no parâmetro e encaminhar a recusa por next, preservando a mensagem de erro existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/logfileServer.ts\",\n      \"trecho_original\": \"export function serveLogFiles () {\\n  return ({ params }: Request, res: Response, next: NextFunction) => {\\n    const file = params.file\\n\\n    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('logs/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\\n  }\\n}\",\n      \"trecho_corrigido\": \"export function serveLogFiles () {\\n  const root = path.resolve('logs/')\\n  return ({ params }: Request, res: Response, next: NextFunction) => {\\n    const file = params.file\\n\\n    if (!file.includes('/') && !file.includes('\\\\\\\\')) {\\n      res.sendFile(file, { root }, (error) => {\\n        if (error) next(error)\\n      })\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\\n  }\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A opção root do Express restringe o caminho relativo ao diretório absoluto logs, impedindo que segmentos de traversal escapem da raiz. A validação adicional de barra invertida cobre separadores usados em plataformas Windows, enquanto a validação original de barra é mantida. O callback encaminha erros de envio ao middleware de erro do Express.\",\n  \"limitacoes_da_correcao\": \"A raiz é resolvida relativamente ao diretório de trabalho do processo, como no comportamento anterior. Links simbólicos dentro de logs podem apontar para fora da raiz; se forem possíveis ou controláveis por um atacante, será necessário validar também o caminho real e restringir permissões. O confinamento não substitui verificações de autorização para os arquivos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1724,
+  "tokens_saida": 588,
+  "latencia_s": 6.667,
+  "custo_usd": 0.000509,
+  "hash_prompt": "cb74276d8b89380cd6b96974ee20e7082c863bb28b6a3e990098dfe3f1c96aa7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1721
+}

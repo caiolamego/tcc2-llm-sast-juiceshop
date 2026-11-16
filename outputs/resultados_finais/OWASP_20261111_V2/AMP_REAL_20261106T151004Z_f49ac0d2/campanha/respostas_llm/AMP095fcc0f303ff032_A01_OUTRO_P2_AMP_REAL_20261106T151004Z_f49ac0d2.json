@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Bypass de rate limiting devido ao uso inseguro do cabeçalho 'X-Forwarded-For' para identificação do cliente.\",\"causa_da_vulnerabilidade\":\"O código utiliza o valor do cabeçalho 'X-Forwarded-For' para gerar a chave do rate limiter, porém esse cabeçalho pode ser facilmente forjado por um atacante, permitindo que ele altere seu valor para evitar o limite de requisições.\",\"estrategia_de_correcao\":\"Modificar a função 'keyGenerator' para utilizar apenas o endereço IP real do cliente (campo 'ip' fornecido pelo Express), ignorando o cabeçalho 'X-Forwarded-For'.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.enable('trust proxy')\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\",\"trecho_corrigido\":\"  app.enable('trust proxy')\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ ip }: { headers: any, ip: any }) { return ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\"}],\"justificativa_tecnica\":\"Ao utilizar apenas o endereço IP real do cliente fornecido pelo Express (campo 'ip'), que é confiável quando 'trust proxy' está habilitado corretamente, evita-se que um atacante manipule o cabeçalho 'X-Forwarded-For' para burlar o mecanismo de rate limiting. Isso garante que o limite de requisições seja aplicado corretamente por cliente, mitigando ataques de força bruta ou negação de serviço direcionados à rota de reset de senha.\",\"limitacoes_da_correcao\":\"A correção depende da configuração correta do parâmetro 'trust proxy' no Express para que o campo 'ip' reflita o endereço IP real do cliente. Se a aplicação estiver atrás de proxies não confiáveis ou mal configurados, o endereço IP pode não ser confiável. Além disso, usuários legítimos que compartilham o mesmo IP (ex: NAT) podem ser limitados conjuntamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2215,
+  "tokens_saida": 527,
+  "latencia_s": 5.503,
+  "custo_usd": 0.001729,
+  "hash_prompt": "dce9bc27b286ea2e9307f44fabbbf0251fc43a5eee62d0e0356e9f31c30d9e88",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

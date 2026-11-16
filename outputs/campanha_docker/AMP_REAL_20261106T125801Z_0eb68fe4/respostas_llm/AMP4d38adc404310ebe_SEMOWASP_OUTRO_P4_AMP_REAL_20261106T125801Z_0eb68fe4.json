@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição da resposta do CAPTCHA na resposta HTTP, permitindo que qualquer cliente obtenha diretamente o segredo necessário para passar pela verificação.\",\"causa_da_vulnerabilidade\":\"O objeto enviado por res.json(captcha) contém simultaneamente captchaId, a expressão captcha e answer. Como answer é a solução armazenada e posteriormente comparada pelo middleware verifyCaptcha, incluí-la na resposta elimina a finalidade do CAPTCHA.\",\"estrategia_de_correcao\":\"Enviar ao cliente somente o identificador e a expressão do CAPTCHA, mantendo answer exclusivamente no servidor e preservando o contrato necessário para que o cliente responda ao desafio.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    res.json(captcha)\",\"trecho_corrigido\":\"    res.json({ captchaId, captcha: expression })\"}],\"justificativa_tecnica\":\"A resposta deixa de conter o campo answer, portanto um cliente não autorizado não consegue obter a solução diretamente da rota de geração. O registro completo continua sendo salvo no servidor e verifyCaptcha permanece responsável por consultar a resposta correta e comparar com a enviada pelo cliente. A alteração é mínima e preserva captchaId e captcha, necessários para apresentar e responder ao desafio.\",\"limitacoes_da_correcao\":\"Esta alteração corrige a exposição direta da resposta, mas não implementa, por si só, expiração, consumo único, limitação de tentativas, proteção contra automação ou rate limiting. Esses controles devem ser aplicados adicionalmente conforme o fluxo da aplicação e o modelo de dados existente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2227,
+  "tokens_saida": 322,
+  "latencia_s": 5.249,
+  "custo_usd": 0.000943,
+  "hash_prompt": "218ae0352e12185171daaa7d9d6042ef0f30b7871cd07ebad51d3ae222bf40ca",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2224
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado ou refletido no conteúdo do token JWT, ao inserir lastLoginIp em HTML confiável.\",\"causa_da_vulnerabilidade\":\"O valor controlado pelo token é interpolado diretamente em uma string HTML e marcado com bypassSecurityTrustHtml, desativando as proteções de sanitização do Angular.\",\"estrategia_de_correcao\":\"Remover o uso de HTML confiável e atribuir o endereço IP como texto simples. O template continuará exibindo o valor, mas qualquer marcação ou script será tratado como texto.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"import { DomSanitizer } from '@angular/platform-browser'\\n\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"  private readonly sanitizer = inject(DomSanitizer)\\n\\n\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"        this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)\\n\",\"trecho_corrigido\":\"        this.lastLoginIp = payload.data.lastLoginIp\\n\"}],\"justificativa_tecnica\":\"Valores provenientes de localStorage e de tokens JWT não devem ser considerados confiáveis. A interpolação em HTML combinada com bypassSecurityTrustHtml permite que conteúdo controlado pelo atacante seja interpretado pelo navegador. Ao armazenar o valor diretamente, a renderização padrão do Angular o trata como texto e aplica escaping contextual, impedindo a execução de HTML ou JavaScript. A remoção do import e da propriedade injetada evita também dependências não utilizadas.\",\"limitacoes_da_correcao\":\"A correção impede XSS nessa atribuição, mas não valida semanticamente se o valor é realmente um endereço IP. Além disso, jwtDecode apenas decodifica o token e não verifica sua assinatura; a confiança no conteúdo do token deve ser garantida pelo fluxo de autenticação e pelo backend.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 818,
+  "tokens_saida": 455,
+  "latencia_s": 5.507,
+  "custo_usd": 0.00071,
+  "hash_prompt": "633e18dd63eda595827479dbabae8dc7cf142a3f31e880fccf14e35918a32fa0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Vulnerabilidade de Open Redirect devido à verificação inadequada da URL permitida na função isRedirectAllowed.\",\"causa_da_vulnerabilidade\":\"A função isRedirectAllowed verifica se a URL de redirecionamento contém qualquer uma das URLs da lista de permitidas usando url.includes(allowedUrl). Isso permite que URLs maliciosas que contenham uma URL permitida como substring sejam consideradas válidas, possibilitando redirecionamentos para domínios não autorizados.\",\"estrategia_de_correcao\":\"Modificar a verificação para garantir que a URL de redirecionamento corresponda exatamente a uma das URLs permitidas ou que seja um subcaminho legítimo dessas URLs, evitando correspondências parciais inseguras. Uma abordagem segura é comparar o início da URL com as URLs permitidas usando url.startsWith(allowedUrl) e garantir que a URL seja um subcaminho válido, ou comparar a URL completa para igualdade.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\"trecho_corrigido\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url === allowedUrl\\n  }\\n  return allowed\\n}\"}],\"justificativa_tecnica\":\"Ao substituir url.includes(allowedUrl) por url === allowedUrl, garantimos que apenas URLs exatamente iguais às da lista de permitidas sejam aceitas para redirecionamento, eliminando a possibilidade de redirecionamentos para URLs maliciosas que contenham a URL permitida como substring. Isso mitiga a vulnerabilidade de Open Redirect.\",\"limitacoes_da_correcao\":\"A correção restringe os redirecionamentos apenas às URLs exatamente listadas, o que pode limitar casos legítimos onde subcaminhos dessas URLs deveriam ser permitidos. Se for necessário permitir subcaminhos, a lógica deve ser aprimorada para validar corretamente os caminhos sem permitir redirecionamentos arbitrários.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3087,
+  "tokens_saida": 484,
+  "latencia_s": 4.298,
+  "custo_usd": 0.001126,
+  "hash_prompt": "b84ee01cb53fdd7a5fefaf010bf70ef9402e9c9cace9ca20418795af48448075",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2944,
+  "tokens_escrita_cache": 0
+}

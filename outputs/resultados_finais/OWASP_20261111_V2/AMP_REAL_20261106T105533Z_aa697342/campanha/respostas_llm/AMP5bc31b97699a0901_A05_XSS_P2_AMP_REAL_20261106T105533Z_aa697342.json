@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-Site Scripting (XSS) armazenado/refletido no conteúdo HTML confiado sem sanitização, tanto nas descrições de produtos quanto no termo de busca.\",\n  \"causa_da_vulnerabilidade\": \"O código chama DomSanitizer.bypassSecurityTrustHtml() para valores que podem ser controlados por dados de produtos ou por um parâmetro de URL. Esse método não sanitiza o conteúdo: ele instrui o Angular a confiar nele e a inseri-lo como HTML, permitindo que marcação ou atributos maliciosos sejam interpretados pelo navegador.\",\n  \"estrategia_de_correcao\": \"Remover as chamadas que contornam a sanitização do Angular e manter os valores como strings comuns. O Angular aplicará sua sanitização contextual ao renderizar HTML; quando o conteúdo for exibido como texto, ele será tratado como texto, preservando o conteúdo sem permitir a execução de marcação ativa.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/search-result/search-result.component.ts\",\n      \"trecho_original\": \"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\",\n      \"trecho_corrigido\": \"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = tableData[i].description // vuln-code-snippet neutral-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/search-result/search-result.component.ts\",\n      \"trecho_original\": \"      this.searchValue = this.sanitizer.bypassSecurityTrustHtml(queryParam) // vuln-code-snippet vuln-line localXssChallenge xssBonusChallenge\",\n      \"trecho_corrigido\": \"      this.searchValue = queryParam\"\n    }\n  ],\n  \"justificativa_tecnica\": \"bypassSecurityTrustHtml() desativa a proteção contextual do Angular e não realiza limpeza do valor. Ao deixar de marcar os dados como SafeHtml, o framework volta a aplicar a sanitização apropriada quando o valor é usado em um contexto HTML. O termo de busca também permanece uma string comum, impedindo que conteúdo fornecido pela URL seja explicitamente confiado como HTML. As alterações mantêm os valores e o fluxo de busca existentes, sem modificar textos visíveis ou assinaturas.\",\n  \"limitacoes_da_correcao\": \"A proteção depende de os templates consumirem esses valores por bindings Angular normais, sem inserção direta via APIs DOM ou outros mecanismos que contornem a sanitização. Se descrições precisarem suportar HTML formatado, será necessário sanitizá-las com uma política explícita e restritiva antes da renderização, em vez de confiar nelas diretamente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2456,
+  "tokens_saida": 736,
+  "latencia_s": 7.209,
+  "custo_usd": 0.000393,
+  "hash_prompt": "22552e0a9f2feeaf2f3364033ba0b781e3b21e72056b8fb421dc4594a77ea5bc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2453,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Redirecionamento aberto por validação inadequada de URLs.\",\n  \"causa_da_vulnerabilidade\": \"A função isRedirectAllowed usa url.includes(allowedUrl), permitindo que uma URL externa seja aceita quando apenas contém uma URL permitida como parte de seu caminho, consulta ou fragmento.\",\n  \"estrategia_de_correcao\": \"Comparar a URL recebida com cada URL permitida após o parsing, exigindo igualdade da origem e do caminho e rejeitando credenciais, parâmetros de consulta e fragmentos. URLs inválidas não são permitidas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\n      \"trecho_corrigido\": \"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  let parsedUrl: URL\\n  try {\\n    parsedUrl = new URL(url)\\n  } catch {\\n    return false\\n  }\\n  for (const allowedUrl of redirectAllowlist) {\\n    const parsedAllowedUrl = new URL(allowedUrl)\\n    allowed = allowed || (parsedUrl.origin === parsedAllowedUrl.origin && parsedUrl.pathname === parsedAllowedUrl.pathname && parsedUrl.username === '' && parsedUrl.password === '' && parsedUrl.search === '' && parsedUrl.hash === '') // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação de origem e caminho impede que domínios ou caminhos externos sejam aceitos por conterem uma URL permitida. A rejeição de credenciais, query string e fragmento evita variações ambíguas da URL de destino. O tratamento de erro também garante que entradas malformadas sejam negadas.\",\n  \"limitacoes_da_correcao\": \"A validação passa a exigir URLs absolutas e correspondência exata de origem e caminho; URLs permitidas com parâmetros de consulta ou fragmentos serão rejeitadas. Se esses componentes forem necessários no futuro, devem ser incluídos explicitamente na allowlist.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2976,
+  "tokens_saida": 511,
+  "latencia_s": 5.483,
+  "custo_usd": 0.000286,
+  "hash_prompt": "d9b2667621b932eff352d540dfa69a81eb837278f748fb86a7c0552f14fdb17c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2973,
+  "tokens_escrita_cache": 0
+}

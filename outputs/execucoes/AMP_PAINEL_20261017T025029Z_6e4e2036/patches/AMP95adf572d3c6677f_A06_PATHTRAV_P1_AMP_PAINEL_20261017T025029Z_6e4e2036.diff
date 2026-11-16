@@ -1,0 +1,20 @@
+diff --git a/routes/keyServer.ts b/routes/keyServer.ts
+index b9a4d94..55d2aec 100644
+--- a/routes/keyServer.ts
++++ b/routes/keyServer.ts
+@@ -11,7 +11,14 @@ export function serveKeyFiles () {
+     const file = params.file
+ 
+     if (!file.includes('/')) {
+-      res.sendFile(path.resolve('encryptionkeys/', file))
++      const basePath = path.resolve('encryptionkeys/')
++      const requestedPath = path.resolve(basePath, file)
++      if (requestedPath.startsWith(basePath + path.sep)) {
++        res.sendFile(requestedPath)
++      } else {
++        res.status(403)
++        next(new Error('File names cannot contain forward slashes!'))
++      }
+     } else {
+       res.status(403)
+       next(new Error('File names cannot contain forward slashes!'))

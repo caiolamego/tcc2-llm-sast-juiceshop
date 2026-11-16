@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de dados não autorizados via parâmetro UserId no corpo da requisição (Mass Assignment / Broken Access Control)\",\"causa_da_vulnerabilidade\":\"O código utiliza diretamente req.body.UserId para buscar dados relacionados ao usuário, sem verificar se o UserId pertence ao usuário autenticado. Isso permite que um usuário malicioso forneça o UserId de outro usuário e acesse seus dados pessoais.\",\"estrategia_de_correcao\":\"Substituir o uso de req.body.UserId pelo id do usuário autenticado (loggedInUser.data.id) para garantir que apenas os dados do próprio usuário sejam acessados.\",\"edicoes\":[{\"arquivo\":\"routes/dataExport.ts\",\"trecho_original\":\"          memories = await MemoryModel.findAll({ where: { UserId: req.body.UserId } })\",\"trecho_corrigido\":\"          memories = await MemoryModel.findAll({ where: { UserId: loggedInUser.data.id } })\"}],\"justificativa_tecnica\":\"Ao utilizar o UserId autenticado em vez do fornecido pelo cliente, evitamos que usuários acessem dados de outros usuários, mitigando vulnerabilidades de controle de acesso e exposição indevida de informações.\",\"limitacoes_da_correcao\":\"A correção assume que loggedInUser.data.id é confiável e representa o usuário autenticado. Se houver falhas na autenticação ou no armazenamento do usuário autenticado, a vulnerabilidade pode persistir. Além disso, outras partes do código que usam dados do corpo da requisição para controle de acesso devem ser revisadas para evitar problemas similares.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 1330,
+  "tokens_saida": 327,
+  "latencia_s": 4.491,
+  "custo_usd": 0.001055,
+  "hash_prompt": "69bcbfe851c60099a0aef3438158057bdd9675597a3d7ad30620878bfc56fa66",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

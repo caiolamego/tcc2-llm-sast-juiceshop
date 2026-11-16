@@ -1,0 +1,17 @@
+diff --git a/routes/delivery.ts b/routes/delivery.ts
+index c2e23ed87..3b2e5f5f9 100644
+--- a/routes/delivery.ts
++++ b/routes/delivery.ts
+@@ -31,7 +31,11 @@ export function getDeliveryMethods () {
+ 
+ export function getDeliveryMethod () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+-    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })
++    if (!/^\d+$/.test(req.params.id) || Number(req.params.id) <= 0) {
++      res.status(400).json({ status: 'error' })
++      return
++    }
++    const method = await DeliveryModel.findOne({ where: { id: Number(req.params.id) } })
+     if (method != null) {
+       const sendMethod = {
+         id: method.id,

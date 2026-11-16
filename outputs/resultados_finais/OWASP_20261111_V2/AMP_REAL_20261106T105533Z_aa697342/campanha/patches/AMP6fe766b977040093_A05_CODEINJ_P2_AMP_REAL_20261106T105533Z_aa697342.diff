@@ -1,0 +1,13 @@
+diff --git a/routes/userProfile.ts b/routes/userProfile.ts
+index af2c10895..7235fc707 100644
+--- a/routes/userProfile.ts
++++ b/routes/userProfile.ts
+@@ -66,6 +66,8 @@ export function getUserProfile () {
+       username = '\\' + username
+     }
+ 
++    username = entities.encode(username)
++
+     const themeKey = config.get<string>('application.theme') as keyof typeof themes
+     const theme = themes[themeKey] || themes['bluegrey-lightgreen']
+ 

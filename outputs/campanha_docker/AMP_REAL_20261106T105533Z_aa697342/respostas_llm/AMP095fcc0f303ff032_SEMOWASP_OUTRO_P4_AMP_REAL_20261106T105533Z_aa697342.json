@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível falta de autorização para atualizar produtos pela rota PUT /api/Products/:id (CWE-862). O trecho mostrado bloqueia DELETE, mas não mostra uma regra equivalente para PUT.\",\n  \"causa_da_vulnerabilidade\": \"A configuração de autorização apresentada contém app.delete('/api/Products/:id', security.denyAll()), enquanto a rota PUT está comentada. Se a API gerada ou outro roteador registrar PUT /api/Products/:id sem uma verificação de autorização própria, a operação poderá ficar acessível sem controle de acesso. O middleware global de JWT apenas verifica autenticação e não demonstra autorização para essa operação.\",\n  \"estrategia_de_correcao\": \"Aplicar a mesma política explícita de negação já usada para DELETE também à rota PUT de produtos. Isso evita permitir uma atualização cuja autorização não está demonstrada no trecho, sem alterar as operações de leitura existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\\n  app.delete('/api/Products/:id', security.denyAll())\",\n      \"trecho_corrigido\": \"  app.put('/api/Products/:id', security.denyAll())\\n  app.delete('/api/Products/:id', security.denyAll())\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A rota PUT passa a ter uma regra explícita de autorização que nega a operação, alinhada à política já aplicada a DELETE e à descrição de que somente GET é permitido para produtos. Assim, mesmo que a rota de atualização seja registrada pela API gerada, a requisição será recusada antes de alcançar essa operação. A alteração é localizada e não afeta as rotas de leitura.\",\n  \"limitacoes_da_correcao\": \"O trecho não mostra a configuração da API gerada nem roteadores externos. A correção assume que atualizações de produtos não são uma operação legítima, conforme o comentário existente de que somente GET é permitido. Se PUT precisar ser permitido a algum perfil, deve-se substituir a negação por uma verificação de papel e autorização por objeto apropriadas, após confirmar a identidade confiável e as regras de negócio no restante da aplicação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3072,
+  "tokens_saida": 498,
+  "latencia_s": 5.2,
+  "custo_usd": 0.000633,
+  "hash_prompt": "7a6cde622a7c5ebd7866cdd85d13b2558ba5265d0e70567c0825d61f9fb181ba",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3069
+}

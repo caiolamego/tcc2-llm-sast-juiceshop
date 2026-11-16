@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função eval() para avaliar uma expressão matemática gerada dinamicamente.\",\"causa_da_vulnerabilidade\":\"O código constrói uma expressão matemática como string e a avalia usando eval(), que executa código arbitrário. Embora a expressão seja gerada internamente, o uso de eval() é perigoso e pode levar a execução de código malicioso se a expressão for manipulada ou alterada no futuro.\",\"estrategia_de_correcao\":\"Substituir o uso de eval() por uma avaliação segura da expressão matemática, implementando manualmente a lógica para calcular o resultado da expressão com os operadores permitidos, evitando a execução dinâmica de código.\",\"edicoes\":[{\"arquivo\":\"routes/captcha.ts\",\"trecho_original\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\\n\",\"trecho_corrigido\":\"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    function applyOperator(a: number, b: number, operator: string): number {\\n      switch (operator) {\\n        case '+': return a + b\\n        case '-': return a - b\\n        case '*': return a * b\\n        default: throw new Error('Operador inválido')\\n      }\\n    }\\n    const intermediate = applyOperator(firstTerm, secondTerm, firstOperator)\\n    const result = applyOperator(intermediate, thirdTerm, secondOperator)\\n    const answer = result.toString()\\n\"}],\"justificativa_tecnica\":\"A substituição do eval() por uma função que aplica explicitamente os operadores matemáticos conhecidos elimina a execução dinâmica de código, removendo a possibilidade de injeção de código malicioso. Como os operadores são restritos e a avaliação é feita por código seguro, a vulnerabilidade CWE-95 é mitigada.\",\"limitacoes_da_correcao\":\"A correção assume que a expressão sempre terá exatamente três termos e dois operadores dentre '*', '+', '-'. Caso a lógica de geração da expressão mude para incluir outros operadores ou formatos, a função de avaliação deverá ser atualizada para suportá-los.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 2444,
+  "tokens_saida": 481,
+  "latencia_s": 6.211,
+  "custo_usd": 0.001171,
+  "hash_prompt": "e7685634dbfe76affc673f2b2d90be995484af22bed1460f66cdbb9f1b8e738b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

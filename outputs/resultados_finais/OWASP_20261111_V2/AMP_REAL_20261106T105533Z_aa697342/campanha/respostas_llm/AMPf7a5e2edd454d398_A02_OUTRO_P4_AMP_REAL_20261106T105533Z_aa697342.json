@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"XXE (CWE-611): o parser XML permite carregar entidades externas e substituir entidades definidas no documento.\",\n  \"causa_da_vulnerabilidade\": \"A função habilita simultaneamente XML_PARSE_NOENT e XML_PARSE_DTDLOAD. XML_PARSE_NOENT substitui entidades e XML_PARSE_DTDLOAD carrega DTDs externas; além disso, loadLibxml2 registra provedores de entrada do sistema de arquivos. Assim, XML controlado por um atacante pode fazer o parser acessar recursos externos. O timeout do vm não impede a leitura de arquivos nem constitui uma fronteira de segurança.\",\n  \"estrategia_de_correcao\": \"Remover as opções que habilitam substituição de entidades e carregamento de DTD externa, mantendo as demais opções de parsing e a assinatura da função.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/xml.ts\",\n      \"trecho_original\": \"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\n      \"trecho_corrigido\": \"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem XML_PARSE_NOENT, o parser não substitui entidades; sem XML_PARSE_DTDLOAD, não carrega DTDs externas. Isso impede o caminho de XXE que poderia expor arquivos acessíveis ao processo ou provocar requisições a recursos externos. As opções de remoção de espaços em branco e tratamento de CDATA permanecem, preservando o comportamento de parsing não relacionado à vulnerabilidade.\",\n  \"limitacoes_da_correcao\": \"A correção desabilita a substituição de entidades e o carregamento de DTDs, o que pode alterar o resultado para documentos que dependam desses recursos. Ela não adiciona rejeição explícita de DOCTYPE nem limites específicos de tamanho ou complexidade do XML; se esses requisitos forem necessários, devem ser tratados separadamente com recursos suportados pela biblioteca e falha segura quando não estiverem disponíveis.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2520,
+  "tokens_saida": 478,
+  "latencia_s": 5.97,
+  "custo_usd": 0.000554,
+  "hash_prompt": "93c10cb9219cf6cf974a3ac2cacdd2ce97c96c05584b860edf725fa9f88c005f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2517
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado ao renderizar comentários de feedback como HTML confiável.\",\"causa_da_vulnerabilidade\":\"O valor controlado pelo usuário em feedback.comment é passado diretamente para bypassSecurityTrustHtml, desativando a sanitização do Angular e permitindo que conteúdo HTML ou scripts maliciosos sejam interpretados pelo template.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml para comentários e preservar o valor original, permitindo que o Angular aplique sua sanitização padrão durante a renderização.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/administration/administration.component.ts\",\"trecho_original\":\"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n        }\",\"trecho_corrigido\":\"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = feedback.comment\\n        }\"}],\"justificativa_tecnica\":\"O Angular trata strings interpoladas ou vinculadas a conteúdo como não confiáveis e aplica sanitização contextual. O uso de DomSanitizer.bypassSecurityTrustHtml marca a entrada como segura sem validação, permitindo XSS. A alteração mantém o fluxo de carregamento e a estrutura dos dados, mas impede que o comentário seja explicitamente promovido a HTML confiável.\",\"limitacoes_da_correcao\":\"A proteção depende de o template renderizar o comentário em um contexto sanitizado do Angular, como interpolação ou binding de texto. Se o template usar [innerHTML], o Angular ainda sanitizará uma string comum; contudo, bindings adicionais ou manipulação direta do DOM fora do Angular podem exigir revisão separada. A atribuição feedback.comment = feedback.comment é intencional para alterar minimamente o código sem modificar identificadores ou o comportamento de carregamento.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1767,
+  "tokens_saida": 393,
+  "latencia_s": 4.679,
+  "custo_usd": 0.000913,
+  "hash_prompt": "80d4b68da138d70cf32f92654ceaf6ceb1eae19e7a10d705b324e64b436ab42b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1764
+}

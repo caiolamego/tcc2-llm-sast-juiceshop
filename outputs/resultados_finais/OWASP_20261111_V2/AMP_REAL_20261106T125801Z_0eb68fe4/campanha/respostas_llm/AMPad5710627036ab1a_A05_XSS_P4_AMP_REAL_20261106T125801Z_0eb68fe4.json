@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (XSS) armazenado ou refletido na renderização das descrições de produtos, causada pelo uso de bypassSecurityTrustHtml em conteúdo potencialmente não confiável.\",\"causa_da_vulnerabilidade\":\"A função trustProductDescription atribui a cada descrição o resultado de sanitizer.bypassSecurityTrustHtml(tableData[i].description). Esse método desativa a sanitização HTML do Angular e marca o valor como confiável sem validar sua origem. Se a descrição contiver markup malicioso, ele poderá ser interpretado pelo binding HTML do template.\",\"estrategia_de_correcao\":\"Remover o bypass de confiança e manter as descrições como strings comuns. O Angular aplicará sua sanitização contextual automaticamente quando o valor for usado em um binding como [innerHTML], preservando markup permitido e removendo conteúdo perigoso.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/search-result/search-result.component.ts\",\"trecho_original\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\",\"trecho_corrigido\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = tableData[i].description // vuln-code-snippet neutral-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\"}],\"justificativa_tecnica\":\"O valor deixa de ser convertido em SafeHtml confiável por bypass. Como string comum, ele será processado pelas proteções padrão do Angular no sink correspondente, especialmente [innerHTML], que remove elementos e atributos perigosos, como scripts e handlers de eventos, enquanto preserva formatação HTML permitida. A alteração mantém a assinatura, o fluxo e a exibição funcional das descrições sem desativar a defesa do framework.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o template use binding Angular seguro, como [innerHTML], e não outro sink inseguro fora do trecho fornecido. O conteúdo permitido e o resultado exato da sanitização devem ser validados em testes com payloads como <script>, <img src=x onerror=alert(1)> e markup legítimo. A atribuição redundante mantém a alteração mínima; idealmente, o método poderia deixar de modificar os dados, mas isso exigiria uma mudança estrutural maior.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3523,
+  "tokens_saida": 631,
+  "latencia_s": 6.897,
+  "custo_usd": 0.001638,
+  "hash_prompt": "cd02551509c8f9c83424504713bbe4e9e334032c5e7dc9afabcc920e2ede20dd",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3520
+}

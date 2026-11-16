@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção de consulta NoSQL no acesso às avaliações de produtos, causada pelo uso de $where com uma expressão JavaScript construída por concatenação.\",\n  \"causa_da_vulnerabilidade\": \"O valor id fornecido ao modelo é convertido para número, mas não é validado antes de ser concatenado em uma expressão $where. Essa expressão é executada pelo MongoDB como JavaScript, permitindo que uma entrada manipulada altere a consulta ou execute lógica não pretendida.\",\n  \"estrategia_de_correcao\": \"Substituir a expressão $where por uma consulta MongoDB baseada em igualdade no campo product. Validar que o ID convertido é um número inteiro finito e retornar uma lista vazia para entradas inválidas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/chat.ts\",\n      \"trecho_original\": \"        execute: async ({ id }) => {\\n          const productId = Number(id)\\n          return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]\\n        }\",\n      \"trecho_corrigido\": \"        execute: async ({ id }) => {\\n          const productId = Number(id)\\n          if (!Number.isSafeInteger(productId)) return []\\n          return await db.reviewsCollection.find({ product: productId }) as Review[]\\n        }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta por igualdade trata productId como dado, não como código JavaScript, eliminando a superfície de injeção introduzida por $where. A validação rejeita valores que não representem um inteiro seguro, sem alterar a assinatura da ferramenta nem o comportamento para IDs numéricos válidos.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que o campo product na coleção de avaliações é armazenado como número, conforme a conversão existente do ID. Ela não aborda outras vulnerabilidades fora do trecho apresentado.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1889,
+  "tokens_saida": 428,
+  "latencia_s": 5.224,
+  "custo_usd": 0.00045,
+  "hash_prompt": "b937c9c013c9b4323e2fecbebcb256fcbf19416ce19fbc283706fbeca89f574b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1886
+}

@@ -1,0 +1,23 @@
+diff --git a/routes/orderHistory.ts b/routes/orderHistory.ts
+index e5ef300d6..4f88c4120 100644
+--- a/routes/orderHistory.ts
++++ b/routes/orderHistory.ts
+@@ -31,8 +31,18 @@ export function allOrders () {
+ 
+ export function toggleDeliveryStatus () {
+   return async (req: Request, res: Response, next: NextFunction) => {
++    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))
++    if (!loggedInUser?.data?.id) {
++      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
++      return
++    }
+     const deliveryStatus = !req.body.deliveryStatus
+     const eta = deliveryStatus ? '0' : '1'
++    const order = await ordersCollection.findOne({ _id: req.params.id, userId: loggedInUser.data.id })
++    if (!order) {
++      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
++      return
++    }
+     await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })
+     res.status(200).json({ status: 'success' })
+   }

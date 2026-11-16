@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/api/Products" time="0.537502" disabled="0" errors="0" tests="3" failures="1" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET all products" time="0.064222" classname="test" file="/repo/workspace/wt-1/test/api/product.test.ts"/>
+		<testcase name="POST new product is forbidden via public API" time="0.016306" classname="test" file="/repo/workspace/wt-1/test/api/product.test.ts"/>
+		<testcase name="POST new product does not filter XSS attacks" time="0.024665" classname="test" file="/repo/workspace/wt-1/test/api/product.test.ts" failure="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ ''&#10;- '&lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ ''&#10;- '&lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
++ actual - expected
+
++ ''
+- '&lt;iframe src="javascript:alert(`xss`)">'
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + ''
+  - '&lt;iframe src="javascript:alert(`xss`)">'
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/product.test.ts:69:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: '&lt;iframe src="javascript:alert(`xss`)">',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite name="/api/Products/:id" time="0.062091" disabled="0" errors="0" tests="5" failures="0" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="GET existing product by id" time="0.021297" classname="test" file="/repo/workspace/wt-1/test/api/product.test.ts"/>
+		<testcase name="GET non-existing product by id" time="0.015114" classname="test" file="/repo/workspace/wt-1/test/api/product.test.ts"/>
+		<testcase name="PUT update existing product is possible due to Missing Function-Level Access Control vulnerability" time="0.014377" classname="test" file="/repo/workspace/wt-1/test/api/product.test.ts"/>
+		<testcase name="DELETE existing product is forbidden via public API" time="0.005221" classname="test" file="/repo/workspace/wt-1/test/api/product.test.ts"/>
+		<testcase name="DELETE existing product is forbidden via API even when authenticated" time="0.005233" classname="test" file="/repo/workspace/wt-1/test/api/product.test.ts"/>
+	</testsuite>
+	<!-- tests 8 -->
+	<!-- suites 2 -->
+	<!-- pass 7 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 2677.444501 -->
+</testsuites>

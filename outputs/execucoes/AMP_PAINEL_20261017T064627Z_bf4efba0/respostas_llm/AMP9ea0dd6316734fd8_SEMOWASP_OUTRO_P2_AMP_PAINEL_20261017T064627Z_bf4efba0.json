@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Alteração de senha sem verificação obrigatória da senha atual do usuário.\",\"causa_da_vulnerabilidade\":\"O código permite que o usuário altere sua senha sem fornecer a senha atual, pois a verificação da senha atual é condicional e pode ser ignorada se o parâmetro 'currentPassword' não for fornecido. Isso ocorre porque o código só verifica se a senha atual está correta se 'currentPassword' estiver presente, permitindo que um atacante autenticado altere a senha sem conhecer a senha atual.\",\"estrategia_de_correcao\":\"Tornar obrigatória a verificação da senha atual para qualquer alteração de senha, rejeitando a requisição caso 'currentPassword' não seja fornecida ou esteja incorreta.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'));\\n  return;\\n}\",\"trecho_corrigido\":\"if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n  res.status(401).send(res.__('Current password is not correct.'));\\n  return;\\n}\"}],\"justificativa_tecnica\":\"Ao exigir que o parâmetro 'currentPassword' seja fornecido e que sua hash corresponda à senha armazenada, garantimos que somente usuários que conhecem a senha atual possam alterá-la. Isso impede que um atacante autenticado, mas sem conhecimento da senha atual, altere a senha arbitrariamente, mitigando o risco de sequestro de conta.\",\"limitacoes_da_correcao\":\"Esta correção assume que o parâmetro 'currentPassword' é sempre enviado pelo cliente e que o método de hash utilizado é seguro. Usuários que não fornecerem a senha atual não poderão alterar a senha, o que pode impactar fluxos onde a senha atual não é solicitada (por exemplo, recuperação de senha via token).\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1115,
+  "tokens_saida": 417,
+  "latencia_s": 3.69,
+  "custo_usd": 0.001113,
+  "hash_prompt": "1e70446955ffb2afe2ab4dbb962cd350fa9ab1a8e07e6516ab6539988c5b1a35",
+  "do_cache": false
+}

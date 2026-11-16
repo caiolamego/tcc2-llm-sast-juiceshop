@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Possível XSS por conteúdo de legenda inserido no DOM via innerHTML, associado ao alerta de unescape explícito no template Pug.\",\"causa_da_vulnerabilidade\":\"O conteúdo de `script#subtitle` é lido com `subtitle.innerHTML` e posteriormente interpretado pelo parser de legendas. Se esse conteúdo for controlável externamente, markup potencialmente perigoso pode ser processado em um contexto HTML.\",\"estrategia_de_correcao\":\"Ler o conteúdo da legenda como texto, usando `textContent` em vez de `innerHTML`, preservando a funcionalidade do parser sem interpretar HTML.\",\"edicoes\":[{\"arquivo\":\"views/promotionVideo.pug\",\"trecho_original\":\"            quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function(cue) {\",\"trecho_corrigido\":\"            quick_and_dirty_vtt_or_srt_parser(subtitle.textContent).map(function(cue) {\"}],\"justificativa_tecnica\":\"`textContent` retorna o conteúdo textual do elemento sem interpretar ou expor markup HTML. Assim, tags e atributos eventualmente presentes no conteúdo da legenda não são tratados como HTML pelo navegador antes de serem processados pelo parser. A alteração é mínima e mantém o comportamento funcional de criação das legendas.\",\"limitacoes_da_correcao\":\"A correção protege o ponto de leitura no navegador, mas não substitui validação de origem ou validação do formato das legendas. O conteúdo ainda deve ser tratado como dados não confiáveis, e eventuais riscos decorrentes de outras partes do fluxo ou de fontes externas de vídeo/legenda exigem análise adicional.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2725,
+  "tokens_saida": 347,
+  "latencia_s": 6.017,
+  "custo_usd": 0.001097,
+  "hash_prompt": "26f712a4e02c10e73c9315720ed2c350f1201412a7928b4a97f3e47ff9a4238b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2722
+}

@@ -1,0 +1,21 @@
+diff --git a/routes/order.ts b/routes/order.ts
+index 53190ee17..3db931581 100644
+--- a/routes/order.ts
++++ b/routes/order.ts
+@@ -192,16 +192,6 @@ function calculateApplicableDiscount (basket: BasketModel, req: Request) {
+   if (discount) {
+     challengeUtils.solveIf(challenges.forgedCouponChallenge, () => { return (discount ?? 0) >= 80 })
+     return discount
+-  } else if (req.body.couponData) {
+-    const couponData = Buffer.from(req.body.couponData, 'base64').toString().split('-')
+-    const couponCode = couponData[0]
+-    const couponDate = Number(couponData[1])
+-    const campaign = campaigns[couponCode as keyof typeof campaigns]
+-
+-    if (campaign && couponDate == campaign.validOn) { // eslint-disable-line eqeqeq
+-      challengeUtils.solveIf(challenges.manipulateClockChallenge, () => { return campaign.validOn < new Date().getTime() })
+-      return campaign.discount
+-    }
+   }
+   return 0
+ }

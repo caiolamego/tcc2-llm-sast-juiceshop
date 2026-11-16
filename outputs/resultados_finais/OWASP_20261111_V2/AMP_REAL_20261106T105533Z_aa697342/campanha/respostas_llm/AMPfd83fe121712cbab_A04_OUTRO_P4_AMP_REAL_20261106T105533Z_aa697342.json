@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de MD5 para gerar checksums dos arquivos do pacote. Embora o alerta mencione hashes de senha, este código não armazena nem verifica senhas; o risco relevante é a possibilidade de colisões em MD5, que podem permitir que um arquivo malicioso seja apresentado com o mesmo checksum de outro arquivo.\",\n  \"causa_da_vulnerabilidade\": \"A tarefa checksum chama crypto.createHash('md5') para calcular o digest de cada arquivo em dist/. MD5 é um algoritmo criptograficamente quebrado para resistência a colisões. Como o checksum é publicado junto ao arquivo, ele não autentica a origem do pacote e pode ser forjado por quem consegue substituir tanto o pacote quanto seu arquivo de checksum.\",\n  \"estrategia_de_correcao\": \"Substituir MD5 por SHA-256 na geração dos checksums e nos nomes dos arquivos de checksum, preservando o fluxo de empacotamento e a escrita dos resultados.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"Gruntfile.js\",\n      \"trecho_original\": \"  grunt.registerTask('checksum', 'Create .md5 checksum files', function () {\\n    const fs = require('node:fs')\\n    const crypto = require('node:crypto')\\n    fs.readdirSync('dist/').forEach(file => {\\n      const buffer = fs.readFileSync('dist/' + file)\\n      const md5 = crypto.createHash('md5')\\n      md5.update(buffer)\\n      const md5Hash = md5.digest('hex')\\n      const md5FileName = 'dist/' + file + '.md5'\\n      grunt.file.write(md5FileName, md5Hash)\\n      grunt.log.write(`Checksum ${md5Hash} written to file ${md5FileName}.`).verbose.write('...').ok()\",\n      \"trecho_corrigido\": \"  grunt.registerTask('checksum', 'Create .sha256 checksum files', function () {\\n    const fs = require('node:fs')\\n    const crypto = require('node:crypto')\\n    fs.readdirSync('dist/').forEach(file => {\\n      const buffer = fs.readFileSync('dist/' + file)\\n      const sha256 = crypto.createHash('sha256')\\n      sha256.update(buffer)\\n      const sha256Hash = sha256.digest('hex')\\n      const sha256FileName = 'dist/' + file + '.sha256'\\n      grunt.file.write(sha256FileName, sha256Hash)\\n      grunt.log.write(`Checksum ${sha256Hash} written to file ${sha256FileName}.`).verbose.write('...').ok()\"\n    }\n  ],\n  \"justificativa_tecnica\": \"SHA-256 oferece resistência a colisões adequada para checksums de integridade e remove o uso de MD5 sinalizado. A alteração mantém o cálculo sobre os mesmos arquivos e a gravação do digest, mas muda a extensão dos arquivos auxiliares para identificar corretamente o algoritmo. O checksum continua sendo uma verificação de integridade, não uma assinatura nem uma prova de autenticidade da origem.\",\n  \"limitacoes_da_correcao\": \"Consumidores que esperam arquivos .md5 precisarão passar a usar os arquivos .sha256. Como os checksums são distribuídos junto com os pacotes, um atacante capaz de substituir ambos ainda pode recalcular o SHA-256; para autenticar a origem, é necessário distribuir os checksums por um canal confiável ou assinar os artefatos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1903,
+  "tokens_saida": 760,
+  "latencia_s": 7.228,
+  "custo_usd": 0.000618,
+  "hash_prompt": "fa56a96dd912cec80a6eeb283e104236081c4c30b10a1ba1c64b38ab16949baa",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1900
+}

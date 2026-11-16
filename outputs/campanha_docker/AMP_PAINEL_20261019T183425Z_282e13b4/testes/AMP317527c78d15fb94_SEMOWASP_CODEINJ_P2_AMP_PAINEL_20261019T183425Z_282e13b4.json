@@ -1,0 +1,290 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 30.11698491199968,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 11.2,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_nlm9dhk6/b2b/primeira.xml",
+        "test/api/b2b-order.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 9.940000000000001,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+        "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+        "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+      ],
+      "testes_falhos_novos": [
+        "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+        "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+        "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /b2b/v2/orders\n  ✖ POST endless loop exploit in \"orderLinesData\" will raise explicit error (92.631985ms)\n  ✖ POST busy spinning regex attack does not raise an error (29.81447ms)\n  ✖ POST sandbox breakout attack in \"orderLinesData\" will raise error (21.986718ms)\n  ✔ POST new B2B order is forbidden without authorization token (10.999552ms)\n  ✔ POST new B2B order accepts arbitrary valid JSON (23.044182ms)\n  ✔ POST new B2B order has passed \"cid\" in response (24.997476ms)\n✖ /b2b/v2/orders (1050.48307ms)\nℹ tests 6\nℹ suites 1\nℹ pass 3\nℹ fail 3\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4917.320611\n\n✖ failing tests:\n\ntest at test/api/b2b-order.test.ts:2:1563\n✖ POST endless loop exploit in \"orderLinesData\" will raise explicit error (92.631985ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.<anonymous> (test/api/b2b-order.test.ts:33:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/b2b-order.test.ts:2:1965\n✖ POST busy spinning regex attack does not raise an error (29.81447ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 503\n  \n      at TestContext.<anonymous> (test/api/b2b-order.test.ts:45:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 503,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/b2b-order.test.ts:2:2269\n✖ POST sandbox breakout attack in \"orderLinesData\" will raise error (21.986718ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.<anonymous> (test/api/b2b-order.test.ts:56:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 5.24200004292652e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+    "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/b2bOrder.ts"
+    ],
+    "grupos": [
+      "b2b"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 11.2
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "b2b",
+      "status": "executada",
+      "duracao_s": 9.940000000000001
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "b2b"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 11.2
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "b2b",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+            "arquivo": "test/api/b2b-order.test.ts",
+            "nome": "/b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+            "arquivo": "test/api/b2b-order.test.ts",
+            "nome": "/b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order accepts arbitrary valid JSON",
+            "arquivo": "test/api/b2b-order.test.ts",
+            "nome": "/b2b/v2/orders > POST new B2B order accepts arbitrary valid JSON",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order has passed \"cid\" in response",
+            "arquivo": "test/api/b2b-order.test.ts",
+            "nome": "/b2b/v2/orders > POST new B2B order has passed \"cid\" in response",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order is forbidden without authorization token",
+            "arquivo": "test/api/b2b-order.test.ts",
+            "nome": "/b2b/v2/orders > POST new B2B order is forbidden without authorization token",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error",
+            "arquivo": "test/api/b2b-order.test.ts",
+            "nome": "/b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error",
+            "estado": "falhou"
+          }
+        ],
+        "falhos": [
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+        ],
+        "falhos_novos": [
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+        ],
+        "falhos_novos_observados": [
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order accepts arbitrary valid JSON",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order has passed \"cid\" in response",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order is forbidden without authorization token",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+        ],
+        "esperados": [
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order accepts arbitrary valid JSON",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order has passed \"cid\" in response",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order is forbidden without authorization token",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST busy spinning regex attack does not raise an error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST endless loop exploit in \"orderLinesData\" will raise explicit error",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order accepts arbitrary valid JSON",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order has passed \"cid\" in response",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order is forbidden without authorization token",
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST sandbox breakout attack in \"orderLinesData\" will raise error"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/b2b-order.test.ts :: /b2b/v2/orders > POST new B2B order accepts arbitrary valid JSON"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 9.940000000000001,
+        "espera_api_s": 5.24200004292652e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_nlm9dhk6/b2b/primeira.xml",
+            "test/api/b2b-order.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 9.940000000000001,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /b2b/v2/orders\n  ✖ POST endless loop exploit in \"orderLinesData\" will raise explicit error (92.631985ms)\n  ✖ POST busy spinning regex attack does not raise an error (29.81447ms)\n  ✖ POST sandbox breakout attack in \"orderLinesData\" will raise error (21.986718ms)\n  ✔ POST new B2B order is forbidden without authorization token (10.999552ms)\n  ✔ POST new B2B order accepts arbitrary valid JSON (23.044182ms)\n  ✔ POST new B2B order has passed \"cid\" in response (24.997476ms)\n✖ /b2b/v2/orders (1050.48307ms)\nℹ tests 6\nℹ suites 1\nℹ pass 3\nℹ fail 3\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4917.320611\n\n✖ failing tests:\n\ntest at test/api/b2b-order.test.ts:2:1563\n✖ POST endless loop exploit in \"orderLinesData\" will raise explicit error (92.631985ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.<anonymous> (test/api/b2b-order.test.ts:33:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/b2b-order.test.ts:2:1965\n✖ POST busy spinning regex attack does not raise an error (29.81447ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 503\n  \n      at TestContext.<anonymous> (test/api/b2b-order.test.ts:45:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 503,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/b2b-order.test.ts:2:2269\n✖ POST sandbox breakout attack in \"orderLinesData\" will raise error (21.986718ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.<anonymous> (test/api/b2b-order.test.ts:56:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/b2b/v2/orders\" time=\"1.050483\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"3\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"POST endless loop exploit in &amp;quot;orderLinesData&amp;quot; will raise explicit error\" time=\"0.092632\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/b2b-order.test.ts:33:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST busy spinning regex attack does not raise an error\" time=\"0.029814\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 503&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 503\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 503\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 503\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/b2b-order.test.ts:45:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 503,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST sandbox breakout attack in &amp;quot;orderLinesData&amp;quot; will raise error\" time=\"0.021987\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/b2b-order.test.ts:56:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST new B2B order is forbidden without authorization token\" time=\"0.011000\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\"/>\n\t\t<testcase name=\"POST new B2B order accepts arbitrary valid JSON\" time=\"0.023044\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\"/>\n\t\t<testcase name=\"POST new B2B order has passed &amp;quot;cid&amp;quot; in response\" time=\"0.024997\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 6 -->\n\t<!-- suites 1 -->\n\t<!-- pass 3 -->\n\t<!-- fail 3 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 4917.320611 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/b2b/v2/orders\" time=\"0.986689\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"3\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"POST endless loop exploit in &amp;quot;orderLinesData&amp;quot; will raise explicit error\" time=\"0.087664\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/b2b-order.test.ts:33:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST busy spinning regex attack does not raise an error\" time=\"0.028849\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 503&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 503\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 503\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 503\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/b2b-order.test.ts:45:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 503,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST sandbox breakout attack in &amp;quot;orderLinesData&amp;quot; will raise error\" time=\"0.021779\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/b2b-order.test.ts:56:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST new B2B order is forbidden without authorization token\" time=\"0.010487\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\"/>\n\t\t<testcase name=\"POST new B2B order accepts arbitrary valid JSON\" time=\"0.021880\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\"/>\n\t\t<testcase name=\"POST new B2B order has passed &amp;quot;cid&amp;quot; in response\" time=\"0.022168\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/b2b-order.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 6 -->\n\t<!-- suites 1 -->\n\t<!-- pass 3 -->\n\t<!-- fail 3 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 4855.121624 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

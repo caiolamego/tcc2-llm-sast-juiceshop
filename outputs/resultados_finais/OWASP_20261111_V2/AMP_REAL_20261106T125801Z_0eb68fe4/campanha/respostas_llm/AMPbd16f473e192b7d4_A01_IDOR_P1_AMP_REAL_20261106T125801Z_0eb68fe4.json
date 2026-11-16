@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (Insecure Direct Object Reference) no processamento de pedidos, permitindo que um usuário autenticado finalize o carrinho de outro usuário ao fornecer o ID do basket na URL.\",\"causa_da_vulnerabilidade\":\"A consulta ao BasketModel filtra apenas pelo campo id e não verifica se o carrinho pertence ao usuário autenticado. Assim, conhecer ou adivinhar outro ID de carrinho é suficiente para acessar seus produtos, removê-los e criar um pedido.\",\"estrategia_de_correcao\":\"Restringir a busca do carrinho ao ID informado e ao usuário autenticado, usando o identificador do usuário obtido da sessão/autenticação. Quando não houver usuário autenticado, manter a consulta sem correspondência para impedir acesso indevido.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"  return (req: Request, res: Response, next: NextFunction) => {\\n    const id = req.params.id\\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"  return (req: Request, res: Response, next: NextFunction) => {\\n    const id = req.params.id\\n    const customer = security.authenticatedUsers.from(req)\\n    const userId = customer?.data?.id\\n    BasketModel.findOne({ where: { id, ...(userId != null ? { UserId: userId } : { id: null }) }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"},{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"          const customer = security.authenticatedUsers.from(req)\\n          const email = customer ? customer.data ? customer.data.email : '' : ''\",\"trecho_corrigido\":\"          const email = customer ? customer.data ? customer.data.email : '' : ''\"}],\"justificativa_tecnica\":\"A autorização deve ser aplicada na própria consulta ao banco, evitando que dados de um carrinho pertencente a outro usuário sejam carregados ou modificados. O filtro UserId associa o recurso ao usuário autenticado. Para requisições sem usuário autenticado, a condição id: null impede que um carrinho válido seja selecionado, sem alterar mensagens de erro ou o fluxo funcional posterior. A variável customer é obtida uma única vez e reutilizada para preservar o comportamento existente.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o modelo BasketModel utiliza o campo UserId para representar o proprietário do carrinho e que customer.data.id contém o identificador correspondente. Ela não corrige outras possíveis falhas independentes no fluxo, como validações de autorização de UserId presentes no corpo da requisição, operações não transacionais de estoque/carteira ou validação de valores de entrada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2937,
+  "tokens_saida": 596,
+  "latencia_s": 6.987,
+  "custo_usd": 0.001449,
+  "hash_prompt": "b13b1fd4d3800a11e103d4490edb10084cc12d7b86c0c83d83118e38f6436277",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2934
+}

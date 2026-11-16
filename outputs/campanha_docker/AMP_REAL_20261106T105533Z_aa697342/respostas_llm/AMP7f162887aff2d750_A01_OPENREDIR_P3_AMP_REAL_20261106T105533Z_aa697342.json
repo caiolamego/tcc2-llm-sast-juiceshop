@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Redirecionamento aberto (CWE-601): o destino do redirecionamento é controlado pelo parâmetro de consulta `to`.\",\n  \"causa_da_vulnerabilidade\": \"A rota passa `toUrl` a `res.redirect`. A validação depende de `security.isRedirectAllowed`, cuja implementação não está incluída no trecho fornecido; portanto, não é possível confirmar que ela rejeita URLs ambíguas ou compara esquema, host e porta de forma segura.\",\n  \"estrategia_de_correcao\": \"Validar o destino com o parser WHATWG `URL` e permitir somente URLs HTTPS sem credenciais cujo host e porta efetiva correspondam exatamente a um dos destinos externos já permitidos. Redirecionar para a URL canônica validada e manter o tratamento de erro existente para destinos recusados.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/redirect.ts\",\n      \"trecho_original\": \"    const toUrl: string = query.to as string\\n    if (security.isRedirectAllowed(toUrl)) {\",\n      \"trecho_corrigido\": \"    const toUrl: string = query.to as string\\n    let parsedUrl: URL | undefined\\n    try {\\n      parsedUrl = new URL(toUrl)\\n    } catch {}\\n    const allowedHosts = new Set(['explorer.dash.org', 'blockchain.info', 'etherscan.io'])\\n    const allowedPorts = new Set(['explorer.dash.org:443', 'blockchain.info:443', 'etherscan.io:443'])\\n    const isAllowed = parsedUrl !== undefined && parsedUrl.protocol === 'https:' && parsedUrl.username === '' && parsedUrl.password === '' && allowedHosts.has(parsedUrl.hostname) && allowedPorts.has(parsedUrl.host)\\n    if (isAllowed) {\"\n    },\n    {\n      \"arquivo\": \"routes/redirect.ts\",\n      \"trecho_original\": \"      res.redirect(toUrl)\",\n      \"trecho_corrigido\": \"      res.redirect(parsedUrl.href)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação compara componentes interpretados pelo parser, em vez de confiar em prefixos ou em uma validação cuja implementação não foi fornecida. Exige HTTPS, rejeita credenciais e restringe host e porta efetiva aos três hosts dos destinos legítimos indicados no código. O redirecionamento usa a URL canônica que foi validada. Destinos recusados continuam seguindo o ramo de erro existente, incluindo o status 406 e a mensagem atual.\",\n  \"limitacoes_da_correcao\": \"A lista de hosts foi inferida dos três destinos de criptomoeda reconhecidos no código e pode restringir outros destinos que `security.isRedirectAllowed` permitia intencionalmente. Antes de aplicar, confirme os destinos externos legítimos usados pela aplicação e acrescente-os explicitamente, com suas portas esperadas. A validação não substitui autorização nos recursos de destino.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1797,
+  "tokens_saida": 636,
+  "latencia_s": 6.2,
+  "custo_usd": 0.000543,
+  "hash_prompt": "5102640d62eb42bb0bd5d04d4b92aab5c07de38b8bc2895eba56b1a442cf6174",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1794
+}

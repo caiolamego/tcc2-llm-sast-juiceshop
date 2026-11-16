@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção SQL (CWE-89) na busca de produtos.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em req.query.q é interpolado diretamente na string SQL. Aspas e outros elementos da sintaxe SQL podem, portanto, alterar a consulta executada.\",\n  \"estrategia_de_correcao\": \"Substituir a interpolação por um parâmetro bind do Sequelize, mantendo a consulta, os filtros, a ordenação e o comportamento de busca por substring.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/search.ts\",\n      \"trecho_original\": \"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\n      \"trecho_corrigido\": \"    models.sequelize.query(\\\"SELECT * FROM Products WHERE ((name LIKE '%' || $criteria || '%' OR description LIKE '%' || $criteria || '%') AND deletedAt IS NULL) ORDER BY name\\\", { bind: { criteria } }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O valor de criteria é enviado separadamente da instrução SQL por meio de bind, impedindo que seu conteúdo seja interpretado como sintaxe SQL. A concatenação de '%' ocorre dentro da consulta, preservando a busca por substring sem concatenar entrada do usuário à instrução. A sintaxe || é suportada pelo SQLite usado pelo projeto.\",\n  \"limitacoes_da_correcao\": \"A alteração pressupõe o dialeto SQLite indicado pelo uso de sqlite_master no próprio arquivo. Deve-se confirmar que a configuração do Sequelize utiliza esse dialeto e executar testes com aspas, caracteres internacionais e entradas contendo padrões SQL para verificar a preservação dos resultados esperados.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2732,
+  "tokens_saida": 417,
+  "latencia_s": 5.162,
+  "custo_usd": 0.00055,
+  "hash_prompt": "9be01b4e3812b21bda092cf3538910fa067c366afc53fc43234fd613ee333752",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2729
+}

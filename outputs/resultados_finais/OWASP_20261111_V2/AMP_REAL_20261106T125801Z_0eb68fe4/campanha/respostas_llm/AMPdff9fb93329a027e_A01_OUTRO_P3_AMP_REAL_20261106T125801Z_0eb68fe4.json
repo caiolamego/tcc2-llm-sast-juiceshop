@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-134: uso de string de formato controlável externamente em chamada de console, permitindo que especificadores como %s, %d ou %j alterem a interpretação da mensagem e forjem o conteúdo do log.\",\"causa_da_vulnerabilidade\":\"A mensagem passada ao console é construída por concatenação e contém um valor não literal antes de ser usada como string de formato. Se esse valor contiver especificadores de formato, o util.format poderá interpretá-los como instruções.\",\"estrategia_de_correcao\":\"Manter a mensagem e o comportamento do log, mas usar uma string de formato literal e passar o valor dinâmico como argumento separado.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"      console.error('Error in timed startup function: ' + name, err)\",\"trecho_corrigido\":\"      console.error('Error in timed startup function: %s', name, err)\"}],\"justificativa_tecnica\":\"A string de formato agora é constante e o valor name é tratado exclusivamente como argumento de dados. Assim, qualquer especificador de formato presente em name não será reprocessado pelo console. A mensagem exibida permanece equivalente para valores normais, e err continua sendo fornecido como argumento adicional para preservar o diagnóstico do erro.\",\"limitacoes_da_correcao\":\"A correção cobre a chamada identificada no trecho fornecido. Ela não avalia outras chamadas de console ou util.format no restante de server.ts ou em outros arquivos; essas chamadas devem ser analisadas separadamente caso também usem dados não literais como string de formato.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3131,
+  "tokens_saida": 338,
+  "latencia_s": 4.805,
+  "custo_usd": 0.001188,
+  "hash_prompt": "58fb7fe891983cd053db7f561d1cb3a9f33950cab7d5aa729631c596865abfd4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3128
+}

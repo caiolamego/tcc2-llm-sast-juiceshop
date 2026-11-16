@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de listagem de diretórios e possível divulgação de arquivos sensíveis nos endpoints /ftp e /support/logs.\",\"causa_da_vulnerabilidade\":\"Os middlewares serveIndex são registrados antes dos controles de acesso. Assim, uma requisição a /ftp ou /support/logs pode obter a listagem do diretório sem passar por verify.accessControlChallenges(). No caso de /ftp, a rota de download também permite acesso direto a arquivos antes de qualquer proteção equivalente.\",\"estrategia_de_correcao\":\"Aplicar o middleware de controle de acesso antes dos middlewares de listagem e download dos diretórios protegidos, preservando as rotas, identificadores e comportamento após a autorização.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\",\"trecho_corrigido\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', verify.accessControlChallenges()) // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\"},{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"No Express, os middlewares são executados na ordem de registro. Antes da alteração, serveIndex podia responder diretamente às requisições de listagem, impedindo que o middleware de autorização posterior fosse alcançado. Para /ftp, a proteção também precisava ser aplicada ao prefixo antes da listagem e do download. Com verify.accessControlChallenges() registrado primeiro, requisições não autorizadas são interrompidas antes de qualquer resposta de listagem ou acesso a arquivo; requisições autorizadas continuam seguindo para os mesmos handlers existentes.\",\"limitacoes_da_correcao\":\"A correção depende de verify.accessControlChallenges() rejeitar corretamente requisições não autorizadas e de sua configuração abranger os recursos protegidos. Ela não altera permissões do sistema de arquivos nem protege outros diretórios ou rotas não incluídos neste trecho.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2125,
+  "tokens_saida": 814,
+  "latencia_s": 8.885,
+  "custo_usd": 0.001508,
+  "hash_prompt": "6aa89d714a5b53b23e4ead54d337bc2eee0e1bbd17bfc10b161b711dc73e2c93",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2122
+}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="/b2b/v2/orders" time="0.554237" disabled="0" errors="0" tests="6" failures="3" skipped="0" hostname="97fac5bb31ac">
+		<testcase name="POST endless loop exploit in &amp;quot;orderLinesData&amp;quot; will raise explicit error" time="0.042637" classname="test" file="/repo/workspace/wt-1/test/api/b2b-order.test.ts" failure="Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;200 !== 500">
+Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+200 !== 500
+
+    at async Promise.all (index 0) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 500
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/b2b-order.test.ts:33:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1533:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 500,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="POST busy spinning regex attack does not raise an error" time="0.029390" classname="test" file="/repo/workspace/wt-1/test/api/b2b-order.test.ts" failure="Expected values to be strictly equal:&#10;&#10;200 !== 503&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;200 !== 503">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+200 !== 503
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 503
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/b2b-order.test.ts:45:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 503,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="POST sandbox breakout attack in &amp;quot;orderLinesData&amp;quot; will raise error" time="0.016047" classname="test" file="/repo/workspace/wt-1/test/api/b2b-order.test.ts" failure="Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;200 !== 500">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+200 !== 500
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 500
+  
+      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/b2b-order.test.ts:56:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 500,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="POST new B2B order is forbidden without authorization token" time="0.006176" classname="test" file="/repo/workspace/wt-1/test/api/b2b-order.test.ts"/>
+		<testcase name="POST new B2B order accepts arbitrary valid JSON" time="0.009360" classname="test" file="/repo/workspace/wt-1/test/api/b2b-order.test.ts"/>
+		<testcase name="POST new B2B order has passed &amp;quot;cid&amp;quot; in response" time="0.008199" classname="test" file="/repo/workspace/wt-1/test/api/b2b-order.test.ts"/>
+	</testsuite>
+	<!-- tests 6 -->
+	<!-- suites 1 -->
+	<!-- pass 3 -->
+	<!-- fail 3 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 3139.190585 -->
+</testsuites>

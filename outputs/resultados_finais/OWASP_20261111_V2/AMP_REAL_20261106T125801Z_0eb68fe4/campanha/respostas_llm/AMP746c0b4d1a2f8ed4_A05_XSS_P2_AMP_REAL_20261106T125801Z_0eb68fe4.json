@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-Site Scripting (XSS) armazenado no comentário dos feedbacks exibido na galeria.\",\"causa_da_vulnerabilidade\":\"O valor controlado pelo usuário em feedbacks[i].comment é interpolado diretamente em uma string HTML e, em seguida, essa string é marcada como confiável por meio de sanitizer.bypassSecurityTrustHtml(). Isso desativa a sanitização padrão do Angular e permite que marcação ou scripts injetados no comentário sejam interpretados no contexto da aplicação.\",\"estrategia_de_correcao\":\"Remover o uso de HTML confiável para o comentário e escapar o conteúdo controlado pelo usuário antes de inseri-lo na string HTML. Os caracteres especiais HTML serão convertidos para entidades, preservando o texto visível e impedindo sua interpretação como marcação.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">$\\\\{\\n            feedbacks[i].comment\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\\n          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\"trecho_corrigido\":\"          feedbacks[i].comment = `<figcaption><p class=\\\"feedback-comment\\\">${\\n            feedbacks[i].comment.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\\\"/g, '&quot;').replace(/'/g, '&#39;')\\n          }</p><div class=\\\"feedback-stars\\\">(${this.stars[feedbacks[i].rating]})</div></figcaption>`\"}],\"justificativa_tecnica\":\"A entrada do comentário é convertida para entidades HTML antes de ser incorporada ao conteúdo exibido. Assim, caracteres como < e > não podem iniciar elementos ou scripts, e aspas não podem formar atributos injetados. A remoção de bypassSecurityTrustHtml também evita marcar conteúdo derivado de entrada externa como confiável. O HTML estático da figura e das estrelas continua funcionando, preservando o comportamento visual esperado.\",\"limitacoes_da_correcao\":\"A correção depende de feedbacks[i].comment ser uma string, como esperado pelo modelo de dados atual. Ela protege especificamente o comentário inserido nessa composição; outras fontes de conteúdo HTML confiável ou usos de bypassSecurityTrustHtml em outros arquivos devem ser avaliados separadamente. O campo sanitizer permanece injetado, embora deixe de ser utilizado nesta rotina.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1883,
+  "tokens_saida": 562,
+  "latencia_s": 7.077,
+  "custo_usd": 0.001145,
+  "hash_prompt": "ebc6c0ebdfb93a94e28bef4634965d680c04d4b1c1e825c2b8f1d5d855525d70",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1880
+}

@@ -1,0 +1,426 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 31.038248514996667,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+    "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+    "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 6.35,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_ep3o5h8w/basket/primeira.xml",
+        "test/api/basket.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 17.93,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+        "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+      ],
+      "testes_falhos_novos": [
+        "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+        "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /rest/basket/:id\n  ✔ GET existing basket by id is not allowed via public API (20.380458ms)\n  ✔ GET empty basket when requesting non-existing basket id (32.026958ms)\n  ✖ GET existing basket with contained products by id (18.404625ms)\n  ✔ GET basket should accept forged JWTs (31.062625ms)\n✖ /rest/basket/:id (1112.411584ms)\n▶ /api/Baskets\n  ✔ POST new basket is not part of API (29.066291ms)\n  ✔ GET all baskets is not part of API (19.264833ms)\n✔ /api/Baskets (48.969833ms)\n▶ /api/Baskets/:id\n  ✔ GET existing basket is not part of API (13.508917ms)\n  ✔ PUT update existing basket is not part of API (85.564459ms)\n  ✔ DELETE existing basket is not part of API (42.629583ms)\n✔ /api/Baskets/:id (143.132709ms)\n▶ /rest/basket/:id\n  ✖ GET existing basket of another user (158.843625ms)\n✖ /rest/basket/:id (159.703583ms)\n▶ /rest/basket/:id/checkout\n  ✔ POST placing an order for a basket is not allowed via public API (6.822542ms)\n  ✔ POST placing an order for an existing basket returns orderId (309.338167ms)\n  ✔ POST placing an order for a non-existing basket fails (35.691ms)\n  ✔ POST placing an order for a basket with a negative total cost is possible (64.133667ms)\n  ✔ POST placing an order for a basket with 99% discount is possible (91.0205ms)\n  ▶ error cases\n    ✔ should return 500 if QuantityModel.findOne fails during checkout (67.76075ms)\n    ✔ should return 500 if WalletModel.findOne fails during checkout (88.362458ms)\n    ✔ should return 500 if ordersCollection.insert fails during checkout (71.3445ms)\n  ✔ error cases (228.079917ms)\n✔ /rest/basket/:id/checkout (735.589167ms)\n▶ /rest/basket/:id/coupon/:coupon\n  ✔ PUT apply valid coupon to existing basket (23.756875ms)\n  ✔ PUT apply invalid coupon is not accepted (20.806875ms)\n  ✔ PUT apply outdated coupon is not accepted (22.676041ms)\n  ✔ PUT apply valid coupon to non-existing basket throws error (19.440375ms)\n✔ /rest/basket/:id/coupon/:coupon (87.497792ms)\nℹ tests 22\nℹ suites 7\nℹ pass 20\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 6623.30771\n\n✖ failing tests:\n\ntest at test/api/basket.test.ts:2:2450\n✖ GET existing basket with contained products by id (18.404625ms)\n  TypeError: Cannot read properties of null (reading 'id')\n      at TestContext.<anonymous> (test/api/basket.test.ts:59:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n\ntest at test/api/basket.test.ts:2:4754\n✖ GET existing basket of another user (158.843625ms)\n  TypeError: Cannot read properties of null (reading 'id')\n      at TestContext.<anonymous> (test/api/basket.test.ts:121:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 4.152535417997569,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+    "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/basket.ts"
+    ],
+    "grupos": [
+      "basket"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 6.35
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "basket",
+      "status": "executada",
+      "duracao_s": 17.93
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "basket"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 6.35
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "basket",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets > GET all baskets is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets > POST new basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > DELETE existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > GET existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > PUT update existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET basket should accept forged JWTs",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET empty basket when requesting non-existing basket id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket by id is not allowed via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket of another user",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket with contained products by id",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+        ],
+        "falhos_novos": [
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+        ],
+        "falhos_novos_observados": [
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "esperados": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 17.93,
+        "espera_api_s": 4.152535417997569,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_ep3o5h8w/basket/primeira.xml",
+            "test/api/basket.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 17.93,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /rest/basket/:id\n  ✔ GET existing basket by id is not allowed via public API (20.380458ms)\n  ✔ GET empty basket when requesting non-existing basket id (32.026958ms)\n  ✖ GET existing basket with contained products by id (18.404625ms)\n  ✔ GET basket should accept forged JWTs (31.062625ms)\n✖ /rest/basket/:id (1112.411584ms)\n▶ /api/Baskets\n  ✔ POST new basket is not part of API (29.066291ms)\n  ✔ GET all baskets is not part of API (19.264833ms)\n✔ /api/Baskets (48.969833ms)\n▶ /api/Baskets/:id\n  ✔ GET existing basket is not part of API (13.508917ms)\n  ✔ PUT update existing basket is not part of API (85.564459ms)\n  ✔ DELETE existing basket is not part of API (42.629583ms)\n✔ /api/Baskets/:id (143.132709ms)\n▶ /rest/basket/:id\n  ✖ GET existing basket of another user (158.843625ms)\n✖ /rest/basket/:id (159.703583ms)\n▶ /rest/basket/:id/checkout\n  ✔ POST placing an order for a basket is not allowed via public API (6.822542ms)\n  ✔ POST placing an order for an existing basket returns orderId (309.338167ms)\n  ✔ POST placing an order for a non-existing basket fails (35.691ms)\n  ✔ POST placing an order for a basket with a negative total cost is possible (64.133667ms)\n  ✔ POST placing an order for a basket with 99% discount is possible (91.0205ms)\n  ▶ error cases\n    ✔ should return 500 if QuantityModel.findOne fails during checkout (67.76075ms)\n    ✔ should return 500 if WalletModel.findOne fails during checkout (88.362458ms)\n    ✔ should return 500 if ordersCollection.insert fails during checkout (71.3445ms)\n  ✔ error cases (228.079917ms)\n✔ /rest/basket/:id/checkout (735.589167ms)\n▶ /rest/basket/:id/coupon/:coupon\n  ✔ PUT apply valid coupon to existing basket (23.756875ms)\n  ✔ PUT apply invalid coupon is not accepted (20.806875ms)\n  ✔ PUT apply outdated coupon is not accepted (22.676041ms)\n  ✔ PUT apply valid coupon to non-existing basket throws error (19.440375ms)\n✔ /rest/basket/:id/coupon/:coupon (87.497792ms)\nℹ tests 22\nℹ suites 7\nℹ pass 20\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 6623.30771\n\n✖ failing tests:\n\ntest at test/api/basket.test.ts:2:2450\n✖ GET existing basket with contained products by id (18.404625ms)\n  TypeError: Cannot read properties of null (reading 'id')\n      at TestContext.<anonymous> (test/api/basket.test.ts:59:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n\ntest at test/api/basket.test.ts:2:4754\n✖ GET existing basket of another user (158.843625ms)\n  TypeError: Cannot read properties of null (reading 'id')\n      at TestContext.<anonymous> (test/api/basket.test.ts:121:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/basket/:id\" time=\"1.112412\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"1\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket by id is not allowed via public API\" time=\"0.020380\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET empty basket when requesting non-existing basket id\" time=\"0.032027\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET existing basket with contained products by id\" time=\"0.018405\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\" failure=\"Cannot read properties of null (reading 'id')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of null (reading 'id')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of null (reading 'id')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of null (reading 'id')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/basket.test.ts:59:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET basket should accept forged JWTs\" time=\"0.031063\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets\" time=\"0.048970\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"POST new basket is not part of API\" time=\"0.029066\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET all baskets is not part of API\" time=\"0.019265\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets/:id\" time=\"0.143133\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket is not part of API\" time=\"0.013509\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT update existing basket is not part of API\" time=\"0.085564\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"DELETE existing basket is not part of API\" time=\"0.042630\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id\" time=\"0.159704\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket of another user\" time=\"0.158844\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\" failure=\"Cannot read properties of null (reading 'id')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of null (reading 'id')\">\nError [ERR_TEST_FAILURE]: Cannot read properties of null (reading 'id')\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of null (reading 'id')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/basket.test.ts:121:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/checkout\" time=\"0.735589\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"POST placing an order for a basket is not allowed via public API\" time=\"0.006823\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for an existing basket returns orderId\" time=\"0.309338\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a non-existing basket fails\" time=\"0.035691\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a basket with a negative total cost is possible\" time=\"0.064134\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a basket with 99% discount is possible\" time=\"0.091021\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testsuite name=\"error cases\" time=\"0.228080\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t\t<testcase name=\"should return 500 if QuantityModel.findOne fails during checkout\" time=\"0.067761\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if WalletModel.findOne fails during checkout\" time=\"0.088362\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if ordersCollection.insert fails during checkout\" time=\"0.071344\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/coupon/:coupon\" time=\"0.087498\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"PUT apply valid coupon to existing basket\" time=\"0.023757\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply invalid coupon is not accepted\" time=\"0.020807\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply outdated coupon is not accepted\" time=\"0.022676\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply valid coupon to non-existing basket throws error\" time=\"0.019440\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 22 -->\n\t<!-- suites 7 -->\n\t<!-- pass 20 -->\n\t<!-- fail 2 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 6623.30771 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/basket/:id\" time=\"1.452356\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"1\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket by id is not allowed via public API\" time=\"0.026880\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET empty basket when requesting non-existing basket id\" time=\"0.046724\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET existing basket with contained products by id\" time=\"0.025575\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\" failure=\"Cannot read properties of null (reading 'id')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of null (reading 'id')\">\n[Error [ERR_TEST_FAILURE]: Cannot read properties of null (reading 'id')] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of null (reading 'id')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/basket.test.ts:59:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET basket should accept forged JWTs\" time=\"0.048838\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets\" time=\"0.071323\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"POST new basket is not part of API\" time=\"0.043775\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET all baskets is not part of API\" time=\"0.026723\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets/:id\" time=\"0.078684\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket is not part of API\" time=\"0.018842\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT update existing basket is not part of API\" time=\"0.025619\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"DELETE existing basket is not part of API\" time=\"0.032626\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id\" time=\"0.440086\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket of another user\" time=\"0.439206\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\" failure=\"Cannot read properties of null (reading 'id')\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Cannot read properties of null (reading 'id')\">\nError [ERR_TEST_FAILURE]: Cannot read properties of null (reading 'id')\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: TypeError: Cannot read properties of null (reading 'id')\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/basket.test.ts:121:32)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/checkout\" time=\"1.348612\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"POST placing an order for a basket is not allowed via public API\" time=\"0.007837\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for an existing basket returns orderId\" time=\"0.437539\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a non-existing basket fails\" time=\"0.081588\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a basket with a negative total cost is possible\" time=\"0.120371\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a basket with 99% discount is possible\" time=\"0.171017\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testsuite name=\"error cases\" time=\"0.529109\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t\t<testcase name=\"should return 500 if QuantityModel.findOne fails during checkout\" time=\"0.165752\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if WalletModel.findOne fails during checkout\" time=\"0.159568\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if ordersCollection.insert fails during checkout\" time=\"0.203096\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/coupon/:coupon\" time=\"0.204965\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"PUT apply valid coupon to existing basket\" time=\"0.053175\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply invalid coupon is not accepted\" time=\"0.054339\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply outdated coupon is not accepted\" time=\"0.034890\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply valid coupon to non-existing basket throws error\" time=\"0.061333\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 22 -->\n\t<!-- suites 7 -->\n\t<!-- pass 20 -->\n\t<!-- fail 2 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 10496.165005 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

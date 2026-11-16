@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Criação de contas de administrador por meio do endpoint de registro público (escalada de privilégios).\",\n  \"causa_da_vulnerabilidade\": \"O callback de criação de User cria uma carteira, mas não restringe nem valida o papel ou os privilégios da conta criada. Como os endpoints gerados pelo Finale não têm, neste trecho, controles de autorização explícitos, um usuário pode enviar atributos de administrador no registro e obter privilégios elevados.\",\n  \"estrategia_de_correcao\": \"Excluir o atributo de privilégios administrativos dos atributos aceitos pelo recurso User, mantendo a criação da carteira e os demais atributos e comportamentos existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"    { name: 'User', exclude: ['password', 'totpSecret'], model: UserModel },\",\n      \"trecho_corrigido\": \"    { name: 'User', exclude: ['password', 'totpSecret', 'role'], model: UserModel },\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A exclusão de `role` impede que o endpoint gerado exponha ou aceite esse atributo por meio do recurso User, bloqueando a atribuição direta de privilégios administrativos durante o registro sem alterar o callback de criação da carteira.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que `role` seja o atributo usado para conceder privilégios administrativos. Se o modelo usar outro atributo de autorização, ele também deve ser excluído ou definido exclusivamente no servidor. A autorização dos demais endpoints gerados deve ser verificada separadamente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2052,
+  "tokens_saida": 357,
+  "latencia_s": 4.617,
+  "custo_usd": 0.000435,
+  "hash_prompt": "b43d7286e57d3ba113babbd7755192713801ff87455bd28665d9a5cacc986266",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2049
+}

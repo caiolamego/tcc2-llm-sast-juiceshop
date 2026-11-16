@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"SQL Injection via concatenação direta de entrada do usuário em consulta SQL.\",\"causa_da_vulnerabilidade\":\"O código constrói a consulta SQL concatenando diretamente o parâmetro 'criteria' vindo da query string na string da consulta, sem qualquer sanitização ou uso de parâmetros preparados.\",\"estrategia_de_correcao\":\"Utilizar consultas parametrizadas (prepared statements) para passar o parâmetro 'criteria' de forma segura, evitando a injeção de código SQL malicioso.\",\"edicoes\":[{\"arquivo\":\"routes/search.ts\",\"trecho_original\":\"models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\"trecho_corrigido\":\"models.sequelize.query(\\\"SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name\\\", { replacements: { criteria: `%${criteria}%` }, type: models.sequelize.QueryTypes.SELECT }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"}],\"justificativa_tecnica\":\"Ao usar consultas parametrizadas com 'replacements', o Sequelize trata o parâmetro 'criteria' como dado, não como parte do código SQL, prevenindo a injeção de comandos SQL maliciosos. Isso elimina a possibilidade de manipulação da consulta via entrada do usuário.\",\"limitacoes_da_correcao\":\"A correção assume que o ORM Sequelize está configurado corretamente para suportar consultas parametrizadas. Além disso, a limitação do tamanho do parâmetro 'criteria' permanece, mas não impede ataques de injeção se a concatenação fosse mantida. A correção não altera a lógica funcional da busca.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1315,
+  "tokens_saida": 374,
+  "latencia_s": 3.388,
+  "custo_usd": 0.001124,
+  "hash_prompt": "d213df12c05f1b7e90c3b25443f42e0e5b32666c102bf4aaf3e049c594166efc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

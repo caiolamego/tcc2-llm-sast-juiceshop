@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Autorização incorreta na consulta ao histórico de pedidos: a identidade do usuário é usada após mascarar o e-mail, em vez de limitar a consulta por um identificador único e confiável.\",\n  \"causa_da_vulnerabilidade\": \"A rota substitui todas as vogais do e-mail por asteriscos e usa o resultado como seletor em ordersCollection.find. Esse mascaramento não é único: e-mails diferentes podem produzir o mesmo valor, fazendo com que a consulta retorne pedidos de outro usuário. A autenticação do usuário não garante, por si só, que os registros retornados pertençam a ele.\",\n  \"estrategia_de_correcao\": \"Usar o identificador único do usuário autenticado no servidor para restringir a consulta, sem transformar o e-mail. A correção pressupõe que os pedidos armazenem esse identificador em um campo compatível; se não armazenarem, o esquema e a criação dos pedidos precisam ser ajustados para persistir essa associação.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/orderHistory.ts\",\n      \"trecho_original\": \"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ email: updatedEmail })\",\n      \"trecho_corrigido\": \"      const order = await ordersCollection.find({ userId: loggedInUser.data.id })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta passa a filtrar os pedidos pelo identificador único obtido da identidade autenticada mantida no servidor. Assim, colisões causadas pelo mascaramento do e-mail deixam de determinar quais registros são retornados, e a consulta fica limitada aos pedidos associados ao usuário autenticado.\",\n  \"limitacoes_da_correcao\": \"A alteração depende de os documentos de pedido possuírem o campo userId com o mesmo identificador usado em loggedInUser.data.id. O código fornecido não mostra o esquema nem a gravação dos pedidos; se esse vínculo não existir, será necessário adicioná-lo e migrar os registros existentes. A rota allOrders e a rota toggleDeliveryStatus também não apresentam verificações de autorização neste trecho e devem ser avaliadas separadamente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1845,
+  "tokens_saida": 485,
+  "latencia_s": 6.294,
+  "custo_usd": 0.000473,
+  "hash_prompt": "19d477c278ca1e2b8cf50887f1ae26392e6bf1b67a59f740dcb1c86d0d442415",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1842
+}

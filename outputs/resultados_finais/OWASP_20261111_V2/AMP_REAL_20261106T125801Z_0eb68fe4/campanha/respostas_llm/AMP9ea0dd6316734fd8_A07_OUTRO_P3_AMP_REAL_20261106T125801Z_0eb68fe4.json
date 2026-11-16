@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-620: alteração de senha sem verificação obrigatória da senha atual. Quando currentPassword está ausente, a troca prossegue apenas com um token de sessão.\",\"causa_da_vulnerabilidade\":\"A condição `if (currentPassword && ...)` só compara a senha armazenada quando o valor atual foi fornecido. Assim, uma requisição autenticada pode omitir currentPassword e alterar a senha sem reautenticação.\",\"estrategia_de_correcao\":\"Exigir que currentPassword esteja presente e que corresponda ao hash armazenado antes de permitir a atualização. A mensagem existente para senha atual incorreta será reutilizada, sem alterar textos visíveis ou assinaturas.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"    if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\",\"trecho_corrigido\":\"    if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\"}],\"justificativa_tecnica\":\"Com a condição corrigida, a ausência de currentPassword falha explicitamente, e a senha fornecida só é aceita quando seu hash corresponde ao hash armazenado para o usuário autenticado. Isso impede a alteração de senha baseada exclusivamente na existência do token de sessão e preserva o fluxo legítimo de troca mediante senha atual correta.\",\"limitacoes_da_correcao\":\"A correção não adiciona limitação de tentativas, reautenticação adicional, rotação ou invalidação de sessões existentes, nem altera o mecanismo de autenticação do token. Esses controles devem ser avaliados separadamente. O fluxo de recuperação de senha, caso exista, deve permanecer independente e usar sua própria prova de recuperação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1518,
+  "tokens_saida": 412,
+  "latencia_s": 5.635,
+  "custo_usd": 0.000874,
+  "hash_prompt": "c31d33ad6b66b90af96ba21bcea1a83c1c92f349e0d273763f4c128307849ede",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1515
+}

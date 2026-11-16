@@ -1,0 +1,51 @@
+# Triagem da expansao para desafios sem marcadores de trecho vulneravel.
+regras_candidatas:
+  ssrfChallenge: [tcc.http.security.request-url-fetch]
+  noSqlCommandChallenge: [tcc.mongodb.security.dynamic-where]
+  noSqlOrdersChallenge: [tcc.mongodb.security.dynamic-where]
+  fileWriteChallenge: [tcc.archive.security.entry-path-write]
+  xxeFileDisclosureChallenge: [tcc.xml.security.external-entity-expansion]
+  xxeDosChallenge: [tcc.xml.security.external-entity-expansion]
+
+triagem:
+  - regra: tcc.xml.security.external-entity-expansion
+    arquivo: lib/xml.ts
+    linha: 35
+    status: confirmado
+    desafios: [xxeFileDisclosureChallenge]
+    sem_marcador: true
+    motivo: XML_PARSE_NOENT e XML_PARSE_DTDLOAD estao juntos e loadLibxml2 registra provedor de filesystem; parseXmlString recebe XML de upload em routes/fileUpload.ts. Demonstra o mecanismo de leitura de entidade externa, nao prova por si o impacto de xxeDosChallenge.
+  - regra: tcc.mongodb.security.dynamic-where
+    arquivo: routes/chat.ts
+    linha: 149
+    status: falso_positivo
+    desafios: []
+    motivo: A entrada id e convertida por Number(id) antes de ser concatenada no $where. O padrao dinamico e encontrado, mas a entrada nao injeta JavaScript nessa consulta.
+  - regra: tcc.archive.security.entry-path-write
+    arquivo: routes/fileUpload.ts
+    linha: 34
+    status: confirmado
+    desafios: [fileWriteChallenge]
+    sem_marcador: true
+    motivo: entry.path do ZIP chega a fs.createWriteStream sem restringir o destino a uploads/complaints; a verificacao includes(path.resolve('.')) admite destino em ftp/legal.md dentro do repositorio.
+  - regra: tcc.http.security.request-url-fetch
+    arquivo: routes/profileImageUrlUpload.ts
+    linha: 24
+    status: confirmado
+    desafios: [ssrfChallenge]
+    sem_marcador: true
+    motivo: req.body.imageUrl e atribuido a url e passado a fetch no servidor; a autenticacao exigida nao restringe o host nem destinos internos.
+  - regra: tcc.mongodb.security.dynamic-where
+    arquivo: routes/showProductReviews.ts
+    linha: 36
+    status: confirmado
+    desafios: [noSqlCommandChallenge]
+    sem_marcador: true
+    motivo: Quando o desafio esta habilitado, req.params.id nao e convertido a numero antes de ser concatenado no JavaScript de $where. O teste Cypress usa sleep(100) nesse parametro.
+  - regra: tcc.mongodb.security.dynamic-where
+    arquivo: routes/trackOrder.ts
+    linha: 18
+    status: confirmado
+    desafios: [noSqlOrdersChallenge]
+    sem_marcador: true
+    motivo: ID de rota sem sanitizacao quando o desafio esta habilitado e interpolado em string JavaScript de $where; o teste Cypress injeta uma expressao sempre verdadeira.

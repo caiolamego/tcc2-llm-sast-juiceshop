@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso do algoritmo MD5 para hashing, que é considerado inseguro para armazenamento de senhas ou dados sensíveis devido à sua velocidade e vulnerabilidade a ataques de colisão e força bruta.\",\"causa_da_vulnerabilidade\":\"A função 'hash' utiliza 'crypto.createHash('md5')' para gerar um hash MD5 de uma string, o que não é adequado para proteger senhas ou dados sensíveis, pois MD5 é um algoritmo rápido e vulnerável a ataques modernos.\",\"estrategia_de_correcao\":\"Substituir o uso do MD5 por uma função de derivação de chave segura e com custo computacional ajustável, como 'crypto.scrypt', que utiliza salt e é resistente a ataques de força bruta. A função 'hash' será alterada para usar 'crypto.scryptSync' com um salt fixo para manter compatibilidade, retornando um hash hexadecimal.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')\",\"trecho_corrigido\":\"export const hash = (data: string) => {\\n  const salt = 'fixed_salt_for_compatibility'\\n  return crypto.scryptSync(data, salt, 64).toString('hex')\\n}\"}],\"justificativa_tecnica\":\"MD5 é um algoritmo de hash rápido e vulnerável a ataques de colisão e força bruta, inadequado para proteger senhas ou dados sensíveis. A função 'crypto.scryptSync' implementa uma função de derivação de chave com salt e custo computacional configurável, tornando o hash resistente a ataques modernos. A alteração mantém a interface da função 'hash' e gera um hash hexadecimal compatível, melhorando significativamente a segurança sem alterar o comportamento funcional esperado.\",\"limitacoes_da_correcao\":\"A correção utiliza um salt fixo para manter compatibilidade, o que não é ideal para armazenamento seguro de senhas; idealmente, cada senha deveria ter um salt único armazenado junto. Além disso, a alteração pode gerar hashes diferentes dos anteriores, o que pode impactar sistemas que dependem do hash MD5 original. Uma migração cuidadosa dos dados pode ser necessária para sistemas que armazenam hashes MD5 existentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3653,
+  "tokens_saida": 481,
+  "latencia_s": 4.399,
+  "custo_usd": 0.001348,
+  "hash_prompt": "b2dbf3ad654b2c4a624ffa3fa600a17bdbffb6322997aa6aeec21e1dac74d5b5",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2944,
+  "tokens_escrita_cache": 0
+}

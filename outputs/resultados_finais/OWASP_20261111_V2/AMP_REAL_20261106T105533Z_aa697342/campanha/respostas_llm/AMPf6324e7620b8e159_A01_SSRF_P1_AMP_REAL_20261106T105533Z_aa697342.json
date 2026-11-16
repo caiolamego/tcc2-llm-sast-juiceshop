@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Server-Side Request Forgery (SSRF) no carregamento de imagens de perfil por URL.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em req.body.imageUrl é passado diretamente a fetch(url), sem validação do esquema, host ou endereço IP de destino. Isso permite que o servidor faça requisições a serviços internos ou a outros destinos não pretendidos.\",\n  \"estrategia_de_correcao\": \"Validar a URL antes de iniciar a requisição: aceitar somente HTTP ou HTTPS e rejeitar destinos que resolvam para endereços IP não públicos. Desabilitar redirecionamentos para impedir que um destino inicialmente permitido redirecione a requisição para um endereço interno.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/profileImageUrlUpload.ts\",\n      \"trecho_original\": \"import fs from 'node:fs'\\nimport { Readable } from 'node:stream'\",\n      \"trecho_corrigido\": \"import fs from 'node:fs'\\nimport { isIP } from 'node:net'\\nimport { lookup } from 'node:dns/promises'\\nimport { Readable } from 'node:stream'\"\n    },\n    {\n      \"arquivo\": \"routes/profileImageUrlUpload.ts\",\n      \"trecho_original\": \"          const response = await fetch(url)\\n          if (!response.ok || !response.body) {\",\n      \"trecho_corrigido\": \"          const parsedUrl = new URL(url)\\n          if (!['http:', 'https:'].includes(parsedUrl.protocol) || parsedUrl.username || parsedUrl.password) {\\n            throw new Error('url returned a non-OK status code or an empty body')\\n          }\\n          const addresses = isIP(parsedUrl.hostname) ? [{ address: parsedUrl.hostname }] : await lookup(parsedUrl.hostname, { all: true })\\n          if (addresses.length === 0 || addresses.some(({ address }) => {\\n            const normalizedAddress = address.toLowerCase().replace(/^::ffff:/, '')\\n            return isIP(normalizedAddress) === 4\\n              ? normalizedAddress.split('.').map(Number)[0] === 10 || normalizedAddress.split('.').map(Number)[0] === 127 || normalizedAddress.split('.').map(Number)[0] === 0 || normalizedAddress.split('.').map(Number)[0] >= 224 || (normalizedAddress.split('.').map(Number)[0] === 169 && normalizedAddress.split('.').map(Number)[1] === 254) || (normalizedAddress.split('.').map(Number)[0] === 172 && normalizedAddress.split('.').map(Number)[1] >= 16 && normalizedAddress.split('.').map(Number)[1] <= 31) || (normalizedAddress.split('.').map(Number)[0] === 192 && normalizedAddress.split('.').map(Number)[1] === 168)\\n              : normalizedAddress === '::' || normalizedAddress === '::1' || normalizedAddress.startsWith('fc') || normalizedAddress.startsWith('fd') || normalizedAddress.startsWith('fe8') || normalizedAddress.startsWith('fe9') || normalizedAddress.startsWith('fea') || normalizedAddress.startsWith('feb')\\n          })) {\\n            throw new Error('url returned a non-OK status code or an empty body')\\n          }\\n          const response = await fetch(parsedUrl, { redirect: 'error' })\\n          if (!response.ok || !response.body) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação limita a requisição a HTTP/HTTPS, rejeita credenciais embutidas e bloqueia endereços IPv4 e IPv6 locais, privados, de link-local ou reservados. A resolução DNS verifica todos os endereços retornados, e redirect: 'error' impede que redirecionamentos contornem a validação inicial. A lógica de gravação e atualização da imagem permanece inalterada.\",\n  \"limitacoes_da_correcao\": \"A validação DNS seguida de fetch não fixa a conexão ao endereço validado; uma alteração de DNS entre a verificação e a conexão (DNS rebinding) ainda pode contornar a checagem. Uma proteção mais robusta exigiria um agente/dispatcher que conecte ao IP validado e revalide cada destino. A lista de faixas bloqueadas também pode precisar de atualização para cobrir faixas especiais adicionais.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1059,
+  "tokens_saida": 943,
+  "latencia_s": 8.84,
+  "custo_usd": 0.000604,
+  "hash_prompt": "e43258ebd77ddbebe6d8fc378b8ae921fee295bf800b33c3ef3a6a4db5aacdf6",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1056
+}

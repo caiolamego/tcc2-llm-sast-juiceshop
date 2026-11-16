@@ -1,0 +1,33 @@
+regras_candidatas:
+  emptyUserRegistration: [tcc.validation.security.optional-validation-gate]
+  passwordRepeatChallenge: [tcc.validation.security.optional-validation-gate]
+  zeroStarsChallenge: [tcc.validation.security.rating-without-range]
+triagem:
+  - regra: tcc.validation.security.optional-validation-gate
+    arquivo: server.ts
+    linha: 409
+    status: confirmado
+    desafios: [emptyUserRegistration, passwordRepeatChallenge]
+    sem_marcador: true
+    motivo: >-
+      A validacao exige que email, password e passwordRepeat estejam todos presentes;
+      se passwordRepeat e omitido, email/password vazios passam ate Finale. Quando
+      presentes, apenas trim e verificacao de tamanho sao realizados, sem igualdade
+      entre senhas. Hooks de desafios chamam next, nao rejeitam. Modelos nao impoem
+      estas restricoes. Integracao HTTP com middlewares/modelos/chamada resource
+      reais e Express/Finale/SQLite reais confirma ambos persistidos. Controles de
+      obrigatoriedade e igualdade retornam 400 sem novas linhas; cadastro valido
+      permanece aceito. Hash, sanitizacao, identidade e carteira simulados; nao E2E
+      completo. Um alerta, dois requisitos e mecanismos de validacao distintos.
+  - regra: tcc.validation.security.rating-without-range
+    arquivo: models/feedback.ts
+    linha: 57
+    status: confirmado
+    desafios: [zeroStarsChallenge]
+    sem_marcador: true
+    motivo: >-
+      Rating INTEGER allowNull false nao estabelece minimo. Setter apenas persiste
+      e aciona hook, nao rejeita zero. Revisados middleware de CAPTCHA e API gerada.
+      POST com CAPTCHA valido persiste rating zero no SQLite real; controle de
+      intervalo 1-5 rejeita zero e aceita 3. CAPTCHA incorreto retorna 401. Regras
+      sao heuristicas: validate externo pode proteger e gerar falso positivo.

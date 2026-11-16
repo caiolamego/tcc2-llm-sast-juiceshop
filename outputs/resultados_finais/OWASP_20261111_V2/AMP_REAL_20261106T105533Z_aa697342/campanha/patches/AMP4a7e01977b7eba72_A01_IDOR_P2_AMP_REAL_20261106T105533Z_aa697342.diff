@@ -1,0 +1,22 @@
+diff --git a/routes/updateProductReviews.ts b/routes/updateProductReviews.ts
+index c5d88cf6b..7cd2ba65f 100644
+--- a/routes/updateProductReviews.ts
++++ b/routes/updateProductReviews.ts
+@@ -14,10 +14,13 @@ import * as db from '../data/mongodb'
+ export function updateProductReviews () {
+   return (req: Request, res: Response, next: NextFunction) => {
+     const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge
+-    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge
+-      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge
+-      { $set: { message: req.body.message } },
+-      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge
++    if (typeof req.body.id !== 'string' || !/^[a-fA-F0-9]{24}$/.test(req.body.id) || typeof req.body.message !== 'string' || !user?.data?.email) {
++      return res.sendStatus(400)
++    }
++    db.reviewsCollection.update(
++      { _id: req.body.id, author: user.data.email },
++      { $set: { message: req.body.message } }
++    )
+     ).then(
+       (result: { modified: number, original: Array<{ author: any }> }) => {
+         challengeUtils.solveIf(challenges.noSqlReviewsChallenge, () => { return result.modified > 1 }) // vuln-code-snippet hide-line

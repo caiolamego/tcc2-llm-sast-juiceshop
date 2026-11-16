@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"ReDoS (Regular Expression Denial of Service) e possível injeção de metacaracteres de expressão regular por meio de challengeKey não escapado, especialmente em getCodingChallengeFromFileContent.\",\"causa_da_vulnerabilidade\":\"O valor challengeKey, extraído do conteúdo do arquivo, é interpolado diretamente em expressões regulares construídas com new RegExp e também em uma string passada a source.match. Metacaracteres podem alterar a semântica da expressão e padrões com quantificadores ou alternâncias podem causar backtracking excessivo, consumindo CPU durante o processamento de arquivos.\",\"estrategia_de_correcao\":\"Escapar challengeKey antes de interpolá-lo nas expressões regulares, tratando-o como texto literal. A alteração é limitada à criação de uma versão escapada e à substituição das interpolações vulneráveis, preservando o fluxo e o comportamento funcional para chaves normais.\",\"edicoes\":[{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${challengeKey}([^])*vuln-code-snippet end.*${challengeKey}`)\",\"trecho_corrigido\":\"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const escapedChallengeKey = challengeKey.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${escapedChallengeKey}([^])*vuln-code-snippet end.*${escapedChallengeKey}`)\"},{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\",\"trecho_corrigido\":\"    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\"}],\"justificativa_tecnica\":\"A expressão /[.*+?^${}()|[\\\\]\\\\\\\\]/g é o padrão usual para escapar caracteres especiais de RegExp. Assim, challengeKey deixa de controlar a estrutura das expressões dinâmicas e passa a ser comparado literalmente. Isso impede que uma chave contendo padrões como .* ou grupos cause correspondências inesperadas ou backtracking controlado pelo conteúdo do arquivo. Nenhuma mensagem, assinatura, identificador existente ou arquivo de teste é alterado.\",\"limitacoes_da_correcao\":\"A correção protege as expressões que interpolam challengeKey, mas não modifica outras expressões regulares estáticas nem elimina possíveis custos inerentes ao uso de padrões amplos já existentes, como .* e ([^]). Como os arquivos processados são obtidos de caminhos locais definidos por SNIPPET_PATHS, a exposição depende da possibilidade de conteúdo não confiável ser gravado nesses arquivos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1648,
+  "tokens_saida": 727,
+  "latencia_s": 7.851,
+  "custo_usd": 0.001284,
+  "hash_prompt": "8160f3a18878b3d92b6ee1d650a02e5de68164ef0dadb5fa3ead86aae31b9113",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1645
+}

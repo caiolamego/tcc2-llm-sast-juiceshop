@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para renderizar descrições de desafios que podem conter conteúdo HTML malicioso.\",\"causa_da_vulnerabilidade\":\"O código utiliza DomSanitizer.bypassSecurityTrustHtml diretamente sobre o campo 'challenge.description' sem validação ou sanitização prévia, o que pode permitir a injeção de código HTML/JavaScript malicioso (XSS) se o conteúdo não for confiável.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml para que o Angular trate o conteúdo como texto simples, evitando a interpretação de HTML potencialmente malicioso. Assim, a descrição será exibida como texto puro, prevenindo XSS.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/score-board/score-board.component.ts\",\"trecho_original\":\"          originalDescription: challenge.description as string,\\n          description: this.sanitizer.bypassSecurityTrustHtml(challenge.description as string)\",\"trecho_corrigido\":\"          originalDescription: challenge.description as string,\\n          description: challenge.description as string\"}],\"justificativa_tecnica\":\"O método bypassSecurityTrustHtml instrui o Angular a confiar no conteúdo HTML fornecido, desabilitando as proteções contra XSS. Como o campo 'challenge.description' pode conter conteúdo não confiável, isso representa um risco de segurança. Ao remover essa chamada, o Angular automaticamente escapa o conteúdo, prevenindo a execução de scripts maliciosos.\",\"limitacoes_da_correcao\":\"A descrição dos desafios será exibida como texto simples, sem renderização de HTML formatado. Caso seja necessário permitir HTML seguro, deve-se implementar uma sanitização adequada do conteúdo antes de exibi-lo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2219,
+  "tokens_saida": 351,
+  "latencia_s": 3.85,
+  "custo_usd": 0.001449,
+  "hash_prompt": "66e74e4642aec0fddf0991d9499201040bc1e693a2b0c0e4f3a9df8290803b8e",
+  "do_cache": false
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-639: bypass de autorização por chave controlada pelo usuário (IDOR), permitindo alterar avaliações de qualquer produto/documento cujo _id seja fornecido em req.body.id.\",\"causa_da_vulnerabilidade\":\"A atualização seleciona documentos apenas por { _id: req.body.id }. Embora a identidade do usuário autenticado seja obtida, ela não é usada para restringir ou autorizar o documento antes da escrita.\",\"estrategia_de_correcao\":\"Restringir a atualização ao documento identificado pelo ID recebido e cujo autor corresponda ao usuário autenticado no servidor, usando o e-mail da sessão em vez de qualquer valor controlado pelo cliente. A operação continuará permitindo a alteração legítima da própria avaliação e preservará a resposta e o fluxo existentes.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\",\"trecho_corrigido\":\"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id, author: user?.data?.email }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\"}],\"justificativa_tecnica\":\"O filtro passa a exigir simultaneamente o identificador enviado e a identidade autenticada obtida pelo servidor. Assim, um usuário não consegue modificar a avaliação de outro usuário apenas fornecendo o ID dela. O uso de user?.data?.email evita introduzir uma identidade proveniente da requisição e mantém o restante da operação, incluindo a resposta e os desafios existentes, inalterado.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o campo author da avaliação armazena o e-mail da identidade autenticada, conforme indicado pela lógica existente do desafio forgedReviewChallenge. Ela não altera outras rotas que possam permitir leitura, criação ou exclusão não autorizadas; essas operações devem ser avaliadas separadamente. Também depende do middleware anterior garantir que a rota seja acessível apenas a usuários autenticados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1759,
+  "tokens_saida": 454,
+  "latencia_s": 5.695,
+  "custo_usd": 0.000984,
+  "hash_prompt": "35b9f61a9186c1643b3eedd95bf09f608443810b5013ad37e2f670ba7d91c1d0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1756
+}

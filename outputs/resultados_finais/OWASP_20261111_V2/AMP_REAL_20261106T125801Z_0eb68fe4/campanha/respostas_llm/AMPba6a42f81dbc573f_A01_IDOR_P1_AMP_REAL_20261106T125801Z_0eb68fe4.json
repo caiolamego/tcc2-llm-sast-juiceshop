@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Manipulação de itens da cesta por meio de um BasketId controlado pelo cliente, permitindo que um usuário autenticado associe itens à cesta de outro usuário.\",\"causa_da_vulnerabilidade\":\"A validação de autorização é feita apenas contra basketIds[0], enquanto o objeto persistido usa o último BasketId recebido. Assim, um atacante pode fornecer um primeiro BasketId pertencente à própria cesta e um último BasketId pertencente a outra cesta, contornando a verificação. Além disso, a comparação usa coerção de tipos.\",\"estrategia_de_correcao\":\"Validar o BasketId efetivamente utilizado na persistência, isto é, o último valor recebido, antes de construir e salvar o item. A alteração mantém o fluxo, as mensagens e os identificadores existentes, removendo a discrepância entre o valor validado e o valor persistido.\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"    const user = security.authenticatedUsers.from(req)\\n    if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq\\n      res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n    } else {\",\"trecho_corrigido\":\"    const user = security.authenticatedUsers.from(req)\\n    if (user && basketIds[basketIds.length - 1] && basketIds[basketIds.length - 1] !== 'undefined' && Number(user.bid) != Number(basketIds[basketIds.length - 1])) { // eslint-disable-line eqeqeq\\n      res.status(401).send('{\\\\'error\\\\' : \\\\'Invalid BasketId\\\\'}')\\n    } else {\"}],\"justificativa_tecnica\":\"A autorização agora verifica exatamente o valor que será atribuído a basketItem.BasketId e salvo no banco. Portanto, não é mais possível satisfazer a validação com um BasketId inicial autorizado e persistir um BasketId posterior não autorizado. A mudança é mínima e preserva o comportamento funcional esperado para requisições válidas.\",\"limitacoes_da_correcao\":\"A correção trata a inconsistência entre o valor validado e o valor persistido neste endpoint. Ela não altera outras possíveis superfícies de autorização, como a atualização ou remoção de itens, nem substitui validações de autorização no nível do modelo ou do banco de dados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1490,
+  "tokens_saida": 531,
+  "latencia_s": 6.748,
+  "custo_usd": 0.000668,
+  "hash_prompt": "4899d778eebb5048214fd9915af8eaa3c0507fa964f5f3ad6a654cff04bf9ce9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1487,
+  "tokens_escrita_cache": 0
+}

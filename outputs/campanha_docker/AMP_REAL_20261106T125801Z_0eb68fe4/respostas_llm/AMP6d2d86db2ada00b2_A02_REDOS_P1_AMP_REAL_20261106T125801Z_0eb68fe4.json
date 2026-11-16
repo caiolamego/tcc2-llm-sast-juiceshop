@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"ReDoS (Regular Expression Denial of Service) e interpretação insegura de challengeKey nas expressões regulares construídas dinamicamente.\",\"causa_da_vulnerabilidade\":\"O valor challengeKey é extraído do conteúdo do arquivo e interpolado diretamente em expressões regulares, sem escape. Metacaracteres podem alterar a semântica da expressão e padrões controlados pelo conteúdo analisado podem causar backtracking excessivo, especialmente em conjunto com `([^])*` e curingas gananciosos.\",\"estrategia_de_correcao\":\"Escapar challengeKey antes de interpolá-lo nas expressões regulares dinâmicas, preservando o comportamento existente para chaves normais e impedindo que o conteúdo da chave seja interpretado como sintaxe de regex.\",\"edicoes\":[{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${challengeKey}([^])*vuln-code-snippet end.*${challengeKey}`)\",\"trecho_corrigido\":\"function getCodingChallengeFromFileContent (source: string, challengeKey: string) {\\n  const escapedChallengeKey = challengeKey.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  const snippets = source.match(`[/#]{0,2} vuln-code-snippet start.*${escapedChallengeKey}([^])*vuln-code-snippet end.*${escapedChallengeKey}`)\"},{\"arquivo\":\"lib/codingChallenges.ts\",\"trecho_original\":\"  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\\n  }\",\"trecho_corrigido\":\"  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      neutralLines.push(i + 1)\\n    }\\n  }\"}],\"justificativa_tecnica\":\"A função de escape transforma caracteres especiais de regex em literais, evitando que uma challengeKey como `.*`, `a|b` ou uma sequência com quantificadores modifique os padrões. Isso reduz a superfície de ReDoS e impede correspondências indevidas sem modificar assinaturas, mensagens, identificadores ou o fluxo funcional. A alteração usa apenas a variável local adicional necessária e substitui exclusivamente as interpolações vulneráveis.\",\"limitacoes_da_correcao\":\"Os padrões existentes continuam contendo curingas gananciosos e `([^])*`; portanto, a correção elimina a influência sintática de challengeKey, mas não reestrutura completamente as expressões regulares. Como os padrões são aplicados a arquivos locais do projeto, o risco residual depende do tamanho e do conteúdo desses arquivos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1648,
+  "tokens_saida": 737,
+  "latencia_s": 7.933,
+  "custo_usd": 0.000918,
+  "hash_prompt": "8160f3a18878b3d92b6ee1d650a02e5de68164ef0dadb5fa3ead86aae31b9113",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1645,
+  "tokens_escrita_cache": 0
+}

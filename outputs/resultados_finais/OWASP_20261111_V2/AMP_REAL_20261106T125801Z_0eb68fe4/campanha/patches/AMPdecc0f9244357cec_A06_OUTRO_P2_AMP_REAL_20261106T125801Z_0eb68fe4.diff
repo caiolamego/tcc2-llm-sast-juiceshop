@@ -1,0 +1,14 @@
+diff --git a/routes/basketItems.ts b/routes/basketItems.ts
+index 077a0d4d2..da3c7d497 100644
+--- a/routes/basketItems.ts
++++ b/routes/basketItems.ts
+@@ -68,6 +68,9 @@ export function quantityCheckBeforeBasketItemUpdate () {
+       const item = await BasketItemModel.findOne({ where: { id: req.params.id } })
+       const user = security.authenticatedUsers.from(req)
+       challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && req.body.BasketId && user.bid != req.body.BasketId }) // eslint-disable-line eqeqeq
++      if (user && req.body.BasketId && user.bid != req.body.BasketId) { // eslint-disable-line eqeqeq
++        return res.status(401).send('{\'error\' : \'Invalid BasketId\'}')
++      }
+       if (req.body.quantity) {
+         if (item == null) {
+           throw new Error('No such item found!')

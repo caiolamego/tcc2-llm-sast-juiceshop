@@ -1,0 +1,27 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..4d879e2fa 100644
+--- a/server.ts
++++ b/server.ts
+@@ -266,7 +266,7 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+ 
+   // vuln-code-snippet start directoryListingChallenge accessLogDisclosureChallenge
+   /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge
+-  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge
++  app.use('/ftp', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge
+   app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge
+   app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge
+ 
+@@ -274,11 +274,11 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+   app.use('/.well-known', express.static('.well-known'))
+ 
+   /* /encryptionkeys directory browsing */
+-  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))
++  app.use('/encryptionkeys', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))
+   app.use('/encryptionkeys/:file', serveKeyFiles())
+ 
+   /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge
+-  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge
++  app.use('/support/logs', verify.accessControlChallenges(), serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge
+   app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line
+   app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge
+ 

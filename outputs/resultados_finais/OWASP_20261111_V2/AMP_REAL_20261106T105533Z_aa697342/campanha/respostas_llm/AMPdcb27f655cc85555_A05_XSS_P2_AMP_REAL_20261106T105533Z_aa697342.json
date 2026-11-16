@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) ao renderizar os dados exportados em uma nova janela.\",\n  \"causa_da_vulnerabilidade\": \"O valor `this.userData`, recebido da resposta da API, é passado diretamente a `document.write`. Esse método interpreta a string como HTML e executa conteúdo ativo, como elementos `<script>` ou atributos de evento. A confiança aplicada a `data.image` em `bypassSecurityTrustHtml` não protege essa chamada, que escreve `userData` separadamente.\",\n  \"estrategia_de_correcao\": \"Exibir os dados exportados como texto, em vez de interpretá-los como HTML, usando `document.createTextNode` e anexando o nó ao documento da nova janela.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/data-export/data-export.component.ts\",\n      \"trecho_original\": \"        window.open('', '_blank', 'width=500')?.document.write(this.userData)\",\n      \"trecho_corrigido\": \"        const exportWindow = window.open('', '_blank', 'width=500')\\n        exportWindow?.document.body.appendChild(exportWindow.document.createTextNode(String(this.userData)))\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Um nó de texto não interpreta seu conteúdo como marcação HTML nem executa scripts ou manipuladores de eventos. Converter o valor para string também permite exibir dados não textuais sem passá-los a um interpretador HTML. A alteração mantém a abertura da janela e a apresentação do conteúdo exportado, mas o apresenta como texto inerte.\",\n  \"limitacoes_da_correcao\": \"O conteúdo exportado deixa de ser renderizado como HTML e passa a ser exibido literalmente como texto. Esta correção protege o ponto de escrita mostrado; não avalia outros usos de dados não confiáveis no aplicativo.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1500,
+  "tokens_saida": 400,
+  "latencia_s": 6.46,
+  "custo_usd": 0.000387,
+  "hash_prompt": "09c2be2a94bffca8dbb07507c7bbca04c7588305c53d2570046bd3674dff9f29",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1497
+}

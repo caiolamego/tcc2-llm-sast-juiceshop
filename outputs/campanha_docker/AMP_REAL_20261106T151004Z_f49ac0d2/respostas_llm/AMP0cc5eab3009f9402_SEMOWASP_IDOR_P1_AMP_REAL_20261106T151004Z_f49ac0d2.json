@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de NoSQL devido ao uso direto do parâmetro 'id' do corpo da requisição na consulta MongoDB sem validação ou sanitização.\",\"causa_da_vulnerabilidade\":\"O parâmetro 'id' é utilizado diretamente na consulta ao banco de dados MongoDB como parte do filtro {_id: id} sem qualquer validação ou conversão para o tipo ObjectId, permitindo que um atacante injete um objeto malicioso que pode manipular a consulta e acessar ou modificar dados indevidamente.\",\"estrategia_de_correcao\":\"Validar e converter o parâmetro 'id' para um ObjectId do MongoDB antes de usá-lo na consulta. Caso a conversão falhe, retornar um erro apropriado. Isso impede que objetos maliciosos sejam usados para manipular a consulta.\",\"edicoes\":[{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"    const id = req.body.id\\n    const user = security.authenticatedUsers.from(req)\\n    if (!user) {\\n      return res.status(401).json({ error: 'Unauthorized' })\\n    }\",\"trecho_corrigido\":\"    const idParam = req.body.id\\n    const user = security.authenticatedUsers.from(req)\\n    if (!user) {\\n      return res.status(401).json({ error: 'Unauthorized' })\\n    }\"},{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"    try {\\n      const review = await db.reviewsCollection.findOne({ _id: id })\\n      if (!review) {\\n        return res.status(404).json({ error: 'Not found' })\\n      }\",\"trecho_corrigido\":\"    try {\\n      const { ObjectId } = await import('mongodb')\\n      let objectId\\n      try {\\n        objectId = new ObjectId(idParam)\\n      } catch {\\n        return res.status(400).json({ error: 'Wrong Params' })\\n      }\\n      const review = await db.reviewsCollection.findOne({ _id: objectId })\\n      if (!review) {\\n        return res.status(404).json({ error: 'Not found' })\\n      }\"},{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\",\"trecho_corrigido\":\"      await db.reviewsCollection.update(\\n        { _id: objectId },\\n        { $inc: { likesCount: 1 } }\\n      )\"},{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n        updatedLikedBy.push(user.data.email)\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\",\"trecho_corrigido\":\"        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: objectId })\\n        const updatedLikedBy = updatedReview.likedBy\\n        updatedLikedBy.push(user.data.email)\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        const result = await db.reviewsCollection.update(\\n          { _id: objectId },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\"}],\"justificativa_tecnica\":\"MongoDB utiliza ObjectId para identificar documentos. Usar diretamente o valor recebido do cliente sem validar ou converter permite que um atacante envie um objeto JSON malicioso que pode alterar a consulta, causando injeção de NoSQL. Ao converter o parâmetro para ObjectId, garantimos que apenas valores válidos sejam usados, mitigando a injeção.\",\"limitacoes_da_correcao\":\"A correção assume que o parâmetro 'id' deve ser um ObjectId válido. Se o sistema aceitar outros formatos de ID, será necessário adaptar a validação. Além disso, a conversão para ObjectId pode lançar exceções, que são tratadas para retornar erro 400. Essa validação não impede outros tipos de ataques que não envolvam o parâmetro 'id'.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1013,
+  "tokens_saida": 992,
+  "latencia_s": 8.99,
+  "custo_usd": 0.001992,
+  "hash_prompt": "30df0d6eb7a8beb558f0567ee50accd01f6758337e4a07c53e2b826b7a18a564",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

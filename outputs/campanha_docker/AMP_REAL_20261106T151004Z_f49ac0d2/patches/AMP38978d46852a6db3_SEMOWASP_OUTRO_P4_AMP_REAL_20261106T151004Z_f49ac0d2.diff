@@ -1,0 +1,46 @@
+diff --git a/lib/insecurity.ts b/lib/insecurity.ts
+index 4a60a901b..f9df5e7aa 100644
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -94,9 +94,13 @@ export const userEmailFrom = ({ headers }: any) => {
+   return headers ? headers['x-user-email'] : undefined
+ }
+ 
++const couponSecret = 'a_secure_secret_key_for_hmac';
++
+ export const generateCoupon = (discount: number, date = new Date()) => {
+-  const coupon = utils.toMMMYY(date) + '-' + discount
+-  return z85.encode(coupon)
++  const couponData = utils.toMMMYY(date) + '-' + discount
++  const hmac = crypto.createHmac('sha256', couponSecret).update(couponData).digest('hex')
++  const fullCoupon = couponData + '-' + hmac
++  return z85.encode(fullCoupon)
+ }
+ 
+ export const discountFromCoupon = (coupon?: string) => {
+@@ -104,11 +108,21 @@ export const discountFromCoupon = (coupon?: string) => {
+     return undefined
+   }
+   const decoded = z85.decode(coupon)
+-  if (decoded && (hasValidFormat(decoded.toString()) != null)) {
+-    const parts = decoded.toString().split('-')
++  if (decoded) {
++    const decodedStr = decoded.toString()
++    const parts = decodedStr.split('-')
++    if(parts.length !== 3) {
++      return undefined
++    }
+     const validity = parts[0]
+-    if (utils.toMMMYY(new Date()) === validity) {
+-      const discount = parts[1]
++    const discount = parts[1]
++    const hmac = parts[2]
++    const couponData = validity + '-' + discount
++    const expectedHmac = crypto.createHmac('sha256', couponSecret).update(couponData).digest('hex')
++    if(hmac !== expectedHmac) {
++      return undefined
++    }
++    if (utils.toMMMYY(new Date()) === validity && hasValidFormat(couponData) != null) {
+       return parseInt(discount)
+     }
+   }

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Mass assignment (CWE-915) nos recursos gerados automaticamente pelo Finale, que expõem operações de escrita para todos os atributos dos modelos, incluindo potencialmente campos sensíveis de identidade, propriedade, privilégio ou estado interno.\",\"causa_da_vulnerabilidade\":\"O laço cria cada recurso com `finale.resource` usando apenas `excludeAttributes: exclude`. Como os modelos, exceto User, recebem `exclude: []`, o Finale pode aceitar atributos enviados pelo cliente nas operações de criação e atualização sem uma lista explícita de campos permitidos. A autorização existente em rotas anteriores não protege necessariamente os endpoints gerados depois de `finale.initialize`.\",\"estrategia_de_correcao\":\"Restringir explicitamente os atributos graváveis dos recursos gerados por meio de listas de campos permitidos, mantendo os atributos de leitura e preservando a exclusão de `password` e `totpSecret` do recurso User. Como o trecho fornecido não informa quais atributos de criação e atualização são legítimos para cada modelo, a correção mínima e segura é impedir escritas automáticas nos recursos gerados; as rotas específicas já definidas anteriormente continuam responsáveis pelas operações suportadas.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include\\n    })\",\"trecho_corrigido\":\"    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include,\\n      actions: {\\n        create: false,\\n        update: false,\\n        delete: false\\n      }\\n    })\"}],\"justificativa_tecnica\":\"A configuração deixa de expor as operações automáticas de criação, atualização e exclusão, eliminando a superfície de escrita baseada em atributos dinamicamente determinados pelo corpo da requisição. Assim, um atacante não consegue usar os endpoints gerados para enviar campos como papel, proprietário, saldo, identificadores ou indicadores de privilégio. As operações de leitura permanecem disponíveis, e as rotas específicas declaradas antes do Finale continuam preservadas. A correção evita depender de uma lista de bloqueio incompleta e não altera modelos, mensagens, identificadores ou assinaturas existentes.\",\"limitacoes_da_correcao\":\"O trecho fornecido não mostra a configuração completa do Finale nem confirma se a opção `actions` é suportada exatamente nessa versão da biblioteca; ela deve ser validada na documentação ou nos tipos instalados. A correção desabilita todas as escritas automáticas, portanto qualquer criação, atualização ou exclusão que devesse permanecer disponível precisa ser implementada em rotas específicas, com autorização e listas explícitas de campos permitidos. Também é necessário auditar outros endpoints e hooks não mostrados, pois a correção deste recurso não substitui autorização por objeto nem validação de entrada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2983,
+  "tokens_saida": 653,
+  "latencia_s": 8.139,
+  "custo_usd": 0.001529,
+  "hash_prompt": "e2c4966f6027081ac6c0b5c494b8935d8afaf44023a41d531a42c9b27d46d49d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2980
+}

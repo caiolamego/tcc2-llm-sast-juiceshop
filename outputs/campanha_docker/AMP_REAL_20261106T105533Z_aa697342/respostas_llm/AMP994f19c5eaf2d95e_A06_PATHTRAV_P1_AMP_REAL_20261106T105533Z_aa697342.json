@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Travessia de diretórios (path traversal) ao servir arquivos, permitindo que um nome de arquivo codificado com separadores de caminho contorne a verificação e acesse arquivos fora de ftp/.\",\n  \"causa_da_vulnerabilidade\": \"A validação rejeita apenas a barra literal em params.file. Separadores codificados, como %2f, podem chegar decodificados ou ser interpretados durante a resolução do caminho. Além disso, path.resolve('ftp/', file) não verifica que o caminho resultante permanece dentro do diretório ftp/.\",\n  \"estrategia_de_correcao\": \"Resolver o caminho solicitado e o diretório ftp/ para caminhos absolutos, e só enviar o arquivo quando o caminho resolvido estiver dentro do diretório permitido. A verificação de contenção também rejeita caminhos absolutos e travessias com segmentos .., sem alterar as mensagens de erro nem a lista de tipos permitidos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/fileServer.ts\",\n      \"trecho_original\": \"      res.sendFile(path.resolve('ftp/', file))\",\n      \"trecho_corrigido\": \"      const ftpDirectory = path.resolve('ftp')\\n      const resolvedFile = path.resolve(ftpDirectory, file)\\n      if (resolvedFile.startsWith(ftpDirectory + path.sep)) {\\n        res.sendFile(resolvedFile)\\n      } else {\\n        res.status(403)\\n        next(new Error('Only .md and .pdf files are allowed!'))\\n      }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação de contenção ocorre sobre o caminho absoluto já normalizado, impedindo que segmentos de travessia ou caminhos absolutos escapem de ftp/. O prefixo inclui path.sep para evitar aceitar caminhos cujo nome apenas começa com o texto do diretório permitido, como ftp-externo. Arquivos diretamente na raiz ftp/ continuam sendo servidos normalmente.\",\n  \"limitacoes_da_correcao\": \"A correção impede a travessia lexical de diretórios, mas não resolve links simbólicos dentro de ftp/ que apontem para fora desse diretório. Se diretórios ou arquivos nessa árvore puderem ser controlados por um agente não confiável, será necessário também validar o destino real com fs.realpath e considerar condições de corrida.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1087,
+  "tokens_saida": 504,
+  "latencia_s": 6.058,
+  "custo_usd": 0.000388,
+  "hash_prompt": "746aeba5b7f2aeb23ed5ddf50e1e7b31a686fe2d359b491a0930a8d106ccbf8a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1084
+}

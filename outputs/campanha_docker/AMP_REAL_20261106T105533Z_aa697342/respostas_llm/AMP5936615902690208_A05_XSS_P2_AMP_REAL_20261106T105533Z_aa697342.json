@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado/refletido no conteúdo das legendas do vídeo promocional.\",\n  \"causa_da_vulnerabilidade\": \"O conteúdo das legendas é lido de um arquivo selecionado pela configuração e concatenado diretamente dentro de um elemento <script> como texto HTML. O valor não é escapado para o contexto HTML/script. Assim, conteúdo contendo uma sequência como </script><script>...</script> encerra o elemento e injeta código executável no navegador.\",\n  \"estrategia_de_correcao\": \"Codificar as legendas como entidades HTML antes de inseri-las no documento, impedindo que caracteres como < e > sejam interpretados como marcação pelo parser HTML.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/videoHandler.ts\",\n      \"trecho_original\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\n      \"trecho_corrigido\": \"      compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + entities.encode(subs) + '</script>')\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A codificação transforma os caracteres de marcação das legendas em entidades HTML, de modo que uma sequência fornecida como </script> não encerre o elemento script nem crie um novo elemento executável. O conteúdo continua sendo entregue no elemento de legendas, mas é tratado como texto, não como HTML.\",\n  \"limitacoes_da_correcao\": \"A codificação HTML pode alterar a forma como consumidores que leem diretamente o conteúdo textual do elemento interpretam as legendas. A correção protege a inserção no documento HTML; não valida a sintaxe nem a semântica do arquivo VTT.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1512,
+  "tokens_saida": 433,
+  "latencia_s": 5.692,
+  "custo_usd": 0.000232,
+  "hash_prompt": "afc5fa55bc721c4be5fbb9882455247ad0628ae56c2b9c005ac306fc8251ab9c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1509,
+  "tokens_escrita_cache": 0
+}

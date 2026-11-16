@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Rate limiter de redefinição de senha vulnerável à falsificação do endereço IP por meio do cabeçalho X-Forwarded-For.\",\"causa_da_vulnerabilidade\":\"A aplicação habilita trust proxy globalmente com app.enable('trust proxy') e usa diretamente headers['X-Forwarded-For'] como chave do rate limiter. Assim, um cliente pode fornecer valores arbitrários e contornar o limite de tentativas quando o proxy de borda não normaliza esse cabeçalho.\",\"estrategia_de_correcao\":\"Restringir a confiança a um número explícito de proxies conhecidos, em vez de confiar em todos os proxies, e usar o IP resolvido pelo Express como chave do rate limiter, evitando aceitar diretamente um cabeçalho controlado pelo cliente.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.enable('trust proxy')\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\",\"trecho_corrigido\":\"  app.set('trust proxy', 1)\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ ip }: { ip: any }) { return ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\"}],\"justificativa_tecnica\":\"O valor 1 faz o Express confiar somente no proxy imediatamente anterior, em vez de confiar indiscriminadamente em toda a cadeia. O rate limiter passa a usar req.ip, que é calculado pelo Express conforme essa política de confiança, e não um cabeçalho lido diretamente da requisição. Isso impede que o cliente escolha livremente a chave do limitador por meio de X-Forwarded-For, preservando o limite de tentativas por origem na topologia esperada de um único proxy confiável.\",\"limitacoes_da_correcao\":\"A configuração pressupõe exatamente um proxy reverso confiável entre o cliente e a aplicação. Se a implantação usar uma quantidade diferente de proxies, o valor deve ser ajustado para a topologia real ou substituído por uma lista de endereços/IPs confiáveis. O proxy de borda também deve remover e reconstruir os cabeçalhos de encaminhamento; caso contrário, a configuração numérica pode continuar sujeita a ambiguidades em topologias variáveis.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2649,
+  "tokens_saida": 573,
+  "latencia_s": 7.523,
+  "custo_usd": 0.00135,
+  "hash_prompt": "03d0a58df4c1c5bd874ab1873e97adeb84d175ec8263a67fb22fa830fa6a6d4e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2646
+}

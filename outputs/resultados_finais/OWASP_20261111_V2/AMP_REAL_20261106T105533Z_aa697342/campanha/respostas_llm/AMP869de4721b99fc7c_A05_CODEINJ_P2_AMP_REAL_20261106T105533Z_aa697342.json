@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de eval() para calcular a resposta do CAPTCHA, criando risco de execução de código (CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code).\",\n  \"causa_da_vulnerabilidade\": \"A expressão aritmética é montada como texto e passada a eval(). Embora os termos e operadores sejam atualmente escolhidos de listas fixas, eval executa o conteúdo como código JavaScript e torna a segurança dependente de que toda entrada futura permaneça estritamente controlada.\",\n  \"estrategia_de_correcao\": \"Substituir eval() por cálculo aritmético explícito, preservando os operadores e a precedência de multiplicação do comportamento atual.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/captcha.ts\",\n      \"trecho_original\": \"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const answer = eval(expression).toString() // eslint-disable-line no-eval\",\n      \"trecho_corrigido\": \"    const expression = firstTerm.toString() + firstOperator + secondTerm.toString() + secondOperator + thirdTerm.toString()\\n    const calculate = (left: number, operator: string, right: number) => {\\n      switch (operator) {\\n        case '*': return left * right\\n        case '+': return left + right\\n        case '-': return left - right\\n        default: return 0\\n      }\\n    }\\n    const answer = (secondOperator === '*'\\n      ? calculate(firstTerm, firstOperator, calculate(secondTerm, secondOperator, thirdTerm))\\n      : calculate(calculate(firstTerm, firstOperator, secondTerm), secondOperator, thirdTerm)).toString()\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O cálculo passa a usar somente operações numéricas explícitas sobre os termos e operadores selecionados pelo código, sem interpretar ou executar uma string como JavaScript. A ordem de avaliação reproduz a precedência usual: quando o segundo operador é multiplicação, ela é calculada antes; nos demais casos, a expressão é avaliada da esquerda para a direita. A expressão enviada ao cliente e o formato textual da resposta permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A correção elimina a execução dinâmica de código neste cálculo, mas não altera outras propriedades do CAPTCHA, como a previsibilidade dos valores gerados por Math.random() ou a exposição da expressão e do identificador na resposta.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1028,
+  "tokens_saida": 548,
+  "latencia_s": 5.686,
+  "custo_usd": 0.000402,
+  "hash_prompt": "2d95a9b9c8754828bdd2b1d93168cacd2876158d89a41cc0443cda9f7632d433",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1025
+}

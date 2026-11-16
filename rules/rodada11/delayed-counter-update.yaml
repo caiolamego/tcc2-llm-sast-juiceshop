@@ -1,0 +1,16 @@
+rules:
+  - id: tcc.concurrency.security.delayed-counter-update
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: Contador atualizado antes de espera assincrona; revisar atomicidade da verificacao e registro de elegibilidade.
+    metadata:
+      confidence: LOW
+      category: security
+      cwe: ['CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization']
+    patterns:
+      - pattern: 'await $COL.update($FILTER, {$inc: $INC})'
+      - pattern-inside: |
+          await $COL.update($FILTER, {$inc: $INC});
+          ...
+          await $WAIT(...);
+          ...

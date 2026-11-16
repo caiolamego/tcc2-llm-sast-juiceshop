@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Token JWT hard-coded detectado no teste, contendo uma chave de assinatura HS256 potencialmente reutilizável.\",\"causa_da_vulnerabilidade\":\"O teste utiliza um JWT literal completo, incluindo uma assinatura criptográfica fixa. Mesmo sendo um valor de teste, ele pode ser interpretado como segredo hard-coded e reutilizado indevidamente.\",\"estrategia_de_correcao\":\"Substituir o JWT literal por um token de teste gerado em tempo de execução com payload equivalente e assinatura produzida por uma chave aleatória, mantendo o comportamento funcional do teste de decodificação.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/app.guard.spec.ts\",\"trecho_original\":\"    it('returns payload from decoding a valid JWT', () => {\\n        const guard = TestBed.inject(LoginGuard)\\n\\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')\\n        expect(guard.tokenDecode()).toEqual({\\n            sub: '1234567890',\\n            name: 'John Doe',\\n            iat: 1516239022\\n        })\\n    })\",\"trecho_corrigido\":\"    it('returns payload from decoding a valid JWT', () => {\\n        const guard = TestBed.inject(LoginGuard)\\n\\n        const base64Url = (value: string) => Buffer.from(value).toString('base64url')\\n        const header = base64Url(JSON.stringify({ alg: 'none', typ: 'JWT' }))\\n        const payload = base64Url(JSON.stringify({ sub: '1234567890', name: 'John Doe', iat: 1516239022 }))\\n        localStorage.setItem('token', `${header}.${payload}.test-signature`)\\n        expect(guard.tokenDecode()).toEqual({\\n            sub: '1234567890',\\n            name: 'John Doe',\\n            iat: 1516239022\\n        })\\n    })\"}],\"justificativa_tecnica\":\"O valor removido era um JWT completo hard-coded e acionava a regra de detecção de tokens. O novo valor é montado durante a execução do teste, não contém uma chave criptográfica fixa e preserva o payload validado por tokenDecode(). Como o teste verifica apenas a decodificação do payload, a assinatura não precisa ser criptograficamente válida.\",\"limitacoes_da_correcao\":\"A correção remove o segredo literal do teste, mas não substitui a necessidade de validar assinaturas JWT no código de produção. A solução também pressupõe que o ambiente de testes disponibilize Buffer com suporte a base64url, conforme normalmente ocorre em testes Angular executados em ambiente Node.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2889,
+  "tokens_saida": 671,
+  "latencia_s": 7.253,
+  "custo_usd": 0.001527,
+  "hash_prompt": "1b807066bfe06228cb51fa02b91d436933c0f1ca3cf47de588031e3fb9ea4f61",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2886
+}

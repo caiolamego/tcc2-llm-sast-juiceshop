@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-611: Improper Restriction of XML External Entity Reference (XXE)\",\"causa_da_vulnerabilidade\":\"O parser XML está configurado com as opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD habilitadas, o que permite a substituição de entidades e o carregamento de DTDs externas. Isso possibilita ataques XXE, onde um atacante pode incluir entidades externas maliciosas para acessar arquivos locais ou causar negação de serviço.\",\"estrategia_de_correcao\":\"Remover as opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD da configuração do parser para desabilitar a substituição de entidades e o carregamento de DTDs externas, evitando assim a exploração de XXE. Manter as demais opções para preservar o comportamento funcional esperado.\",\"edicoes\":[{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\"trecho_corrigido\":\"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"}],\"justificativa_tecnica\":\"As opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD habilitam a resolução e substituição de entidades externas, que são a raiz da vulnerabilidade XXE. Ao removê-las, o parser não processará entidades externas nem DTDs, mitigando o risco de exposição de arquivos locais ou ataques de negação de serviço via expansão de entidades. O restante do código permanece funcional e seguro para processar XML confiável.\",\"limitacoes_da_correcao\":\"Esta correção desabilita intencionalmente funcionalidades que podem ser necessárias para desafios específicos relacionados a XXE no contexto original do projeto. Portanto, para casos onde a substituição de entidades externas é requerida, esta mitigação pode impedir o funcionamento esperado. Além disso, a proteção depende da correta validação e confiança dos dados XML de entrada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1633,
+  "tokens_saida": 432,
+  "latencia_s": 3.186,
+  "custo_usd": 0.001344,
+  "hash_prompt": "03678352f19ac99baaa02b2add8f6e15a923d36615f2e7ac49c544b7b07a4f90",
+  "do_cache": true
+}

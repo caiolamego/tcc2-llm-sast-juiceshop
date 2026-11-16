@@ -1,0 +1,13 @@
+rules:
+  - id: tcc.mongodb.security.untrusted-id-multi-update
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Um identificador vindo da requisicao seleciona documentos em uma atualizacao
+      multipla. Valide o tipo/valor e limite a atualizacao ao registro autorizado.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
+      confidence: MEDIUM
+    pattern: '$COLLECTION.update({ _id: $REQUEST.body.$FIELD }, $CHANGE, { multi: true })'

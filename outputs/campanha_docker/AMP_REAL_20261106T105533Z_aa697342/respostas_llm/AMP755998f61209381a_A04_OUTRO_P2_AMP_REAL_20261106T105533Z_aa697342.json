@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso inseguro de `bypassSecurityTrustHtml` para marcar como confiável HTML que contém um valor derivado do token JWT.\",\n  \"causa_da_vulnerabilidade\": \"O teste configura `sanitizer.bypassSecurityTrustHtml` e espera que seja chamado com `<small>1.2.3.4</small>`. Esse método ignora a sanitização de segurança do Angular. Se o valor `lastLoginIp` puder ser controlado ou adulterado, conteúdo HTML ou JavaScript malicioso pode ser tratado como confiável. Como o arquivo fornecido é um teste, não contém a implementação vulnerável nem permite corrigir o fluxo de produção sem alterar o teste.\",\n  \"estrategia_de_correcao\": \"Não é possível propor uma edição segura neste arquivo respeitando a restrição de não alterar arquivos de teste. A correção deve ser aplicada no componente de produção: renderizar o endereço IP como texto interpolado, sem `bypassSecurityTrustHtml`, ou validar estritamente o valor como endereço IP antes de qualquer uso.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"Alterar este teste não removeria a vulnerabilidade no código executado pela aplicação e violaria a restrição explícita. A correção efetiva exige modificar o componente que consome o JWT e cria o HTML confiável; esse arquivo não foi fornecido, portanto não há trecho de produção que possa ser editado com segurança.\",\n  \"limitacoes_da_correcao\": \"Nenhuma alteração foi feita. Para corrigir a vulnerabilidade, é necessário fornecer o código de `frontend/src/app/last-login-ip/last-login-ip.component.ts` e, se aplicável, seu template.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1421,
+  "tokens_saida": 369,
+  "latencia_s": 4.692,
+  "custo_usd": 0.000199,
+  "hash_prompt": "15582025ded5b54c81508487a5c20b621f70a4b6c0806f83a707dfb577a43239",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1418,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Execução de código controlado pelo cliente (CWE-95) no processamento de pedidos B2B.\",\n  \"causa_da_vulnerabilidade\": \"O valor `body.orderLinesData`, fornecido pela requisição, é passado a `safeEval` como código executável. A avaliação ocorre dentro de `node:vm`, mas esse contexto não é uma fronteira de segurança; o timeout limita a duração da execução, não impede a interpretação de instruções não confiáveis.\",\n  \"estrategia_de_correcao\": \"Remover a avaliação dinâmica e interpretar `orderLinesData` como dados JSON. Manter o tratamento de erros existente e a resposta de pedido para entradas JSON válidas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/b2bOrder.ts\",\n      \"trecho_original\": \"import vm from 'node:vm'\\nimport { type Request, type Response, type NextFunction } from 'express'\\n// @ts-expect-error FIXME due to non-existing type definitions for notevil\\nimport { eval as safeEval } from 'notevil'\\n\",\n      \"trecho_corrigido\": \"import { type Request, type Response, type NextFunction } from 'express'\\n\"\n    },\n    {\n      \"arquivo\": \"routes/b2bOrder.ts\",\n      \"trecho_original\": \"        const sandbox = { safeEval, orderLinesData }\\n        vm.createContext(sandbox)\\n        vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })\",\n      \"trecho_corrigido\": \"        JSON.parse(orderLinesData)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"JSON.parse interpreta a entrada como dados JSON, não como código JavaScript, eliminando a execução de instruções fornecidas pelo cliente. A alteração preserva a resposta de sucesso para entradas JSON válidas e mantém o bloco catch e seu tratamento de erros. A remoção dos imports evita manter dependências de VM e de avaliação dinâmica que deixam de ser usadas.\",\n  \"limitacoes_da_correcao\": \"Entradas que antes eram aceitas como expressões JavaScript, mas não são JSON válido, passarão a gerar erro; isso é necessário para impedir a execução de código. JSON.parse não impõe, por si só, limites de tamanho ou complexidade da entrada, portanto limites de corpo da requisição devem ser configurados separadamente para mitigar consumo excessivo de recursos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2522,
+  "tokens_saida": 526,
+  "latencia_s": 5.789,
+  "custo_usd": 0.000578,
+  "hash_prompt": "65b2a490c251b2016ef603c020a5522fda0df17a8716df82c48d06f0d74028ec",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2519
+}

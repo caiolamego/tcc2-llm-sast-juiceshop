@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de consulta NoSQL no uso de $where em getProductReviews, permitindo que o valor controlado pelo usuário seja concatenado diretamente em código JavaScript executado pelo banco.\",\"causa_da_vulnerabilidade\":\"O parâmetro id é recebido do modelo e convertido para Number, mas a consulta ainda constrói uma expressão JavaScript com concatenação: '$where: this.product == ' + productId. O operador $where avalia essa expressão no contexto do MongoDB, tornando a consulta dependente de código em vez de uma comparação estruturada e segura.\",\"estrategia_de_correcao\":\"Substituir a consulta baseada em $where por uma consulta estruturada usando igualdade no campo product, mantendo a conversão numérica existente e o comportamento funcional de retornar as avaliações do produto.\",\"edicoes\":[{\"arquivo\":\"routes/chat.ts\",\"trecho_original\":\"          const productId = Number(id)\\n          return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]\",\"trecho_corrigido\":\"          const productId = Number(id)\\n          return await db.reviewsCollection.find({ product: productId }) as Review[]\"}],\"justificativa_tecnica\":\"A consulta estruturada não interpreta o valor recebido como código JavaScript e elimina o uso de $where, removendo a superfície de injeção. O valor continua sendo convertido para número, e a busca permanece limitada às avaliações cujo campo product corresponde ao ID informado.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o campo product seja armazenado como número, como indicado pela conversão existente. Ela corrige a injeção nessa consulta, mas não substitui validações adicionais de autorização ou de existência do produto caso sejam necessárias em outros fluxos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1997,
+  "tokens_saida": 378,
+  "latencia_s": 5.011,
+  "custo_usd": 0.000953,
+  "hash_prompt": "09d010144c480a645f5df378da9434b531d1742688f1cf79ffe78333fc99374e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1994
+}

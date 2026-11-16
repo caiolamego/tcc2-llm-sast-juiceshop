@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"A autenticidade do desconto de um cupom não é verificada. O valor numérico é obtido de dados codificados em Z85, que qualquer cliente pode criar ou alterar, e é aceito após apenas uma validação de formato e validade temporal.\",\n  \"causa_da_vulnerabilidade\": \"Em `discountFromCoupon`, `z85.decode(coupon)` decodifica uma representação sem chave nem assinatura. `hasValidFormat` verifica somente a estrutura do texto; não comprova que o cupom foi emitido pelo servidor. Assim, um atacante pode codificar um cupom com o mês atual e um desconto escolhido por ele.\",\n  \"estrategia_de_correcao\": \"Validar o cupom decodificado contra o valor que o servidor gera para o desconto extraído. A comparação com `generateCoupon` exige que o conteúdo corresponda ao formato e à codificação canônicos produzidos pelo gerador existente, sem introduzir um formato de assinatura incompatível.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/insecurity.ts\",\n      \"trecho_original\": \"    if (utils.toMMMYY(new Date()) === validity) {\\n      const discount = parts[1]\\n      return parseInt(discount)\\n    }\",\n      \"trecho_corrigido\": \"    if (utils.toMMMYY(new Date()) === validity) {\\n      const discount = parts[1]\\n      const parsedDiscount = parseInt(discount)\\n      if (generateCoupon(parsedDiscount) === coupon) {\\n        return parsedDiscount\\n      }\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação com `generateCoupon(parsedDiscount)` impede aceitar uma string Z85 arbitrária apenas por ela conter mês e número no formato esperado: o cupom precisa ser exatamente o que o gerador atual produz para o desconto e a data corrente. Isso mitiga a adulteração do valor numérico sem alterar a assinatura da função nem o formato dos cupons legítimos. A validação de formato existente também permanece.\",\n  \"limitacoes_da_correcao\": \"Esta alteração não adiciona uma assinatura criptográfica nem torna o cupom secreto. Ela depende de o gerador e o validador usarem a mesma representação canônica e de a data de validade continuar sendo verificada. Se for necessário autenticar cupons independentemente do formato gerado, será preciso introduzir um mecanismo autenticado e atualizar conjuntamente a emissão e a validação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3577,
+  "tokens_saida": 531,
+  "latencia_s": 6.449,
+  "custo_usd": 0.000713,
+  "hash_prompt": "058ff2dff11276852e6f47a198f51dbfe9a21536c194f977a6fc6106625ab694",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3574
+}

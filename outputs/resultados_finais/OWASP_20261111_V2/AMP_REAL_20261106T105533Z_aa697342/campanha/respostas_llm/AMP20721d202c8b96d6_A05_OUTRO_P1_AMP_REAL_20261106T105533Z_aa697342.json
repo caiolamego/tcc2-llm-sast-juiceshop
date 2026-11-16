@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL por meio de JavaScript executado pelo operador MongoDB $where.\",\n  \"causa_da_vulnerabilidade\": \"O valor de id, controlado pela requisição, é interpolado diretamente em uma expressão JavaScript passada a $where. A sanitização condicional não é uma defesa confiável contra injeção e, no modo do desafio de XSS, permite caracteres que podem alterar a expressão.\",\n  \"estrategia_de_correcao\": \"Substituir a consulta com $where por uma consulta MongoDB por igualdade no campo orderId, passando id como valor, não como código. Manter o restante do fluxo e a lógica de desafios existentes.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/trackOrder.ts\",\n      \"trecho_original\": \"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\n      \"trecho_corrigido\": \"    db.ordersCollection.find({ orderId: id }).then((order: any) => {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A consulta por igualdade trata id como dado e impede que seu conteúdo seja interpretado como JavaScript pelo MongoDB. Isso elimina a superfície de injeção associada a $where e preserva a busca por orderId e o tratamento subsequente dos resultados.\",\n  \"limitacoes_da_correcao\": \"A alteração corrige a injeção na consulta, mas não modifica a sanitização ou o comportamento do desafio de XSS, conforme a restrição de preservar o restante do código.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 841,
+  "tokens_saida": 355,
+  "latencia_s": 4.213,
+  "custo_usd": 0.000262,
+  "hash_prompt": "69343841adadc986502cea1557cf039e5c5a39a02d73109db5226feb58f68a4c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Segredo criptográfico hard-coded utilizado para gerar tokens deluxe, identificado na linha 54 pela chave literal passada a crypto.createHmac.\",\"causa_da_vulnerabilidade\":\"A função hmac usa a string literal 'pa4qacea4VK9t9nGv7yZtwmj' como chave fixa no código-fonte. Qualquer pessoa com acesso ao repositório, artefato distribuído ou histórico de versões pode obter essa chave e reproduzir os HMACs, comprometendo a confidencialidade do segredo e permitindo falsificação de valores que dependam dele.\",\"estrategia_de_correcao\":\"Obter a chave por variável de ambiente obrigatória, falhando durante a inicialização quando ela não estiver configurada, sem fornecer fallback embutido. A assinatura e o comportamento funcional da função permanecem inalterados quando a configuração válida é fornecida.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const hmac = (data: string) => crypto.createHmac('sha256', 'pa4qacea4VK9t9nGv7yZtwmj').update(data).digest('hex')\",\"trecho_corrigido\":\"const hmacSecret = process.env.HMAC_SECRET\\nif (!hmacSecret) {\\n  throw new Error('Missing HMAC secret configuration')\\n}\\n\\nexport const hmac = (data: string) => crypto.createHmac('sha256', hmacSecret).update(data).digest('hex')\"}],\"justificativa_tecnica\":\"A chave deixa de existir no código-fonte e passa a ser fornecida pelo ambiente de execução, reduzindo o risco de exposição por controle de versão, revisão de código ou distribuição do código. A validação obrigatória impede que a aplicação opere silenciosamente com uma chave previsível ou conhecida quando a configuração estiver ausente. O algoritmo SHA-256 com HMAC e a assinatura pública da função não são alterados, preservando o contrato funcional existente para ambientes corretamente configurados.\",\"limitacoes_da_correcao\":\"A variável de ambiente ainda precisa ser protegida operacionalmente, com controle de acesso, armazenamento seguro e rotação. A chave antiga deve ser considerada comprometida e substituída; valores ou tokens gerados com ela podem exigir invalidação ou migração. A correção não altera outros segredos hard-coded presentes no arquivo, como a chave privada RSA, que constituem um problema separado e devem ser tratados em mudança independente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3677,
+  "tokens_saida": 525,
+  "latencia_s": 6.76,
+  "custo_usd": 0.001549,
+  "hash_prompt": "92794629feffc5c935c21032298745dbed889b10e467c9ccd09061068fc538e0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3674
+}

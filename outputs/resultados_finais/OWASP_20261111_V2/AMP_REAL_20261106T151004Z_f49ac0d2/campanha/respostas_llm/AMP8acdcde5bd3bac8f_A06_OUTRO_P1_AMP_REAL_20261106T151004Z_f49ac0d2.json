@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Escalada de privilégio por falta de verificação de autenticação e autorização na rota upgradeToDeluxe.\",\"causa_da_vulnerabilidade\":\"O endpoint upgradeToDeluxe permite que qualquer usuário envie uma requisição com um UserId arbitrário no corpo da requisição para atualizar o papel (role) desse usuário para 'deluxe' sem verificar se o usuário autenticado tem permissão para fazer essa alteração. Isso permite que um atacante promova qualquer usuário a deluxe sem pagar.\",\"estrategia_de_correcao\":\"Adicionar verificação para garantir que o usuário autenticado (extraído do token JWT) seja o mesmo que o UserId informado no corpo da requisição, impedindo que um usuário altere o papel de outro. Caso não seja o mesmo usuário, retornar erro de autorização.\",\"edicoes\":[{\"arquivo\":\"routes/deluxe.ts\",\"trecho_original\":\"export function upgradeToDeluxe () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    try {\\n      const user = await UserModel.findOne({ where: { id: req.body.UserId, role: security.roles.customer } })\",\"trecho_corrigido\":\"export function upgradeToDeluxe () {\\n  return async (req: Request, res: Response, next: NextFunction) => {\\n    try {\\n      const authenticatedUser = utils.queryResultToJson(security.authenticatedUsers.get(utils.jwtFrom(req)))\\n      if (!authenticatedUser || authenticatedUser.id !== req.body.UserId) {\\n        res.status(403).json({ status: 'error', error: 'Unauthorized' })\\n        return\\n      }\\n      const user = await UserModel.findOne({ where: { id: req.body.UserId, role: security.roles.customer } })\"}] ,\"justificativa_tecnica\":\"A correção impede que um usuário autenticado altere o papel de outro usuário, garantindo que apenas o próprio usuário possa solicitar a atualização para deluxe. Isso elimina a possibilidade de escalada de privilégio via manipulação do UserId no corpo da requisição.\",\"limitacoes_da_correcao\":\"A correção assume que o token JWT está corretamente validado e que o objeto authenticatedUsers contém o usuário autenticado. Se o sistema de autenticação for comprometido, a vulnerabilidade pode persistir. Além disso, a resposta de erro genérica 'Unauthorized' foi adicionada, o que pode ser ajustado conforme políticas de segurança da aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 1321,
+  "tokens_saida": 516,
+  "latencia_s": 8.446,
+  "custo_usd": 0.001354,
+  "hash_prompt": "633b1188711dde410a7a9112ad0fed86d1d5a50410e7b1ff96e19f6d3f071d93",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

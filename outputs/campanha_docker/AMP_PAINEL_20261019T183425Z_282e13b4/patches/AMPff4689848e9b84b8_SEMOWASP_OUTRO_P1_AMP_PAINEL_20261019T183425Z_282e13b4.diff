@@ -1,0 +1,13 @@
+diff --git a/models/feedback.ts b/models/feedback.ts
+index 4790dbf00..baa02e238 100644
+--- a/models/feedback.ts
++++ b/models/feedback.ts
+@@ -41,7 +41,7 @@ const FeedbackModelInit = (sequelize: Sequelize) => {
+         set (comment: string) {
+           let sanitizedComment: string
+           if (utils.isChallengeEnabled(challenges.persistedXssFeedbackChallenge)) {
+-            sanitizedComment = security.sanitizeHtml(comment)
++            sanitizedComment = security.sanitizeSecure(comment)
+             challengeUtils.solveIf(challenges.persistedXssFeedbackChallenge, () => {
+               return utils.contains(
+                 sanitizedComment,

@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Server-Side Request Forgery (SSRF) devido à falta de validação adequada da URL fornecida pelo usuário antes de realizar a requisição fetch.\",\"causa_da_vulnerabilidade\":\"O código aceita uma URL arbitrária do corpo da requisição (req.body.imageUrl) e realiza uma requisição fetch diretamente para essa URL sem validação ou restrição, permitindo que um atacante faça o servidor realizar requisições para recursos internos ou externos arbitrários.\",\"estrategia_de_correcao\":\"Implementar uma validação da URL para garantir que apenas URLs externas legítimas e seguras sejam aceitas, bloqueando URLs locais (localhost, 127.0.0.1, endereços privados) e protocolos não suportados. Caso a URL não seja válida, rejeitar a requisição ou não realizar o fetch.\",\"edicoes\":[{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"      const response = await fetch(url)\",\"trecho_corrigido\":\"      const parsedUrl = new URL(url)\\n      const hostname = parsedUrl.hostname\\n      const blockedHosts = ['localhost', '127.0.0.1', '::1']\\n      const isPrivateIp = (host) => {\\n        // Simples verificação para IPs privados (10.x.x.x, 172.16.x.x - 172.31.x.x, 192.168.x.x)\\n        return /^10\\\\./.test(host) || /^192\\\\.168\\\\./.test(host) || /^172\\\\.(1[6-9]|2[0-9]|3[0-1])\\\\./.test(host)\\n      }\\n      if (blockedHosts.includes(hostname) || isPrivateIp(hostname)) {\\n        throw new Error('Blocked URL due to security policy')\\n      }\\n      const response = await fetch(url)\"}],\"justificativa_tecnica\":\"A validação da URL antes de realizar a requisição fetch impede que o servidor faça requisições para endereços internos ou locais, mitigando a vulnerabilidade SSRF. Ao bloquear hosts locais e IPs privados, evita-se que um atacante explore recursos internos da rede ou do próprio servidor.\",\"limitacoes_da_correcao\":\"A validação implementada é simples e pode não cobrir todos os casos de endereços internos ou maliciosos, podendo ser necessário um filtro mais robusto dependendo do ambiente. Além disso, URLs externas maliciosas ainda podem ser acessadas, o que pode representar riscos dependendo do contexto da aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1170,
+  "tokens_saida": 532,
+  "latencia_s": 4.776,
+  "custo_usd": 0.001319,
+  "hash_prompt": "4de962a35118e1a48a3b37a035dbc5d839f757f504eb384ff3b6b9599e2baba3",
+  "do_cache": false
+}

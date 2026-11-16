@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Execução arbitrária de código no servidor (Server-Side Template Injection/RCE) por meio de `eval(code)` controlado pelo nome de usuário.\",\"causa_da_vulnerabilidade\":\"O valor de `username`, potencialmente influenciado por um usuário, é interpretado como código JavaScript quando corresponde ao padrão `#{...}`. A chamada a `eval` permite executar operações arbitrárias com os privilégios do processo Node.js.\",\"estrategia_de_correcao\":\"Remover a avaliação dinâmica e tratar o valor correspondente como texto literal, preservando o fluxo existente e a lógica de escape aplicada ao nome de usuário.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\",\"trecho_corrigido\":\"      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = code\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\"}],\"justificativa_tecnica\":\"A substituição elimina a única operação que interpreta entrada derivada do usuário como código executável. O valor passa a ser apenas uma string, impedindo acesso arbitrário a módulos, sistema de arquivos, processo e demais recursos disponíveis ao servidor. A alteração é mínima, mantém as assinaturas, mensagens, identificadores e o restante do comportamento do endpoint, inclusive o tratamento de erro e a renderização posterior.\",\"limitacoes_da_correcao\":\"A correção impede a execução de JavaScript no servidor, mas não constitui, por si só, uma estratégia completa de escaping para todos os contextos de saída. O código ainda monta o template por substituições de strings e compila Pug dinamicamente; esses mecanismos devem permanecer sob revisão caso valores controlados pelo usuário sejam inseridos em outros contextos. Além disso, a lógica específica do desafio de SSTI deixará de executar código, portanto o comportamento intencionalmente vulnerável desse desafio não será preservado.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1372,
+  "tokens_saida": 472,
+  "latencia_s": 7.764,
+  "custo_usd": 0.000909,
+  "hash_prompt": "e1cdc7d32616fd9a02e60ad5cf1cc0756eb378eff5d7183b44e5238a2d9dbcb1",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1369
+}

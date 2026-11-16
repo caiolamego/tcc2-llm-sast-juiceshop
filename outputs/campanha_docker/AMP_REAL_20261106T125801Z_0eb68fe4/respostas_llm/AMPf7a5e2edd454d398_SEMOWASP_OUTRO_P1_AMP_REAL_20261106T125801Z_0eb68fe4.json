@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"XXE (XML External Entity), permitindo a resolução de entidades externas e potencial leitura arbitrária de arquivos locais, além de ataques de expansão de entidades.\",\"causa_da_vulnerabilidade\":\"A configuração do parser habilita explicitamente XML_PARSE_NOENT e XML_PARSE_DTDLOAD. Além disso, xmlRegisterFsInputProviders() concede acesso ao sistema de arquivos para resolução de entidades externas.\",\"estrategia_de_correcao\":\"Desabilitar o carregamento de DTDs e a substituição de entidades durante o parsing, removendo as opções XML_PARSE_NOENT e XML_PARSE_DTDLOAD. Manter as demais opções e o restante do fluxo inalterados.\",\"edicoes\":[{\"arquivo\":\"lib/xml.ts\",\"trecho_original\":\"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\",\"trecho_corrigido\":\"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\"}],\"justificativa_tecnica\":\"Sem XML_PARSE_DTDLOAD, o parser não carrega DTDs externos; sem XML_PARSE_NOENT, não substitui entidades. Assim, declarações como <!ENTITY xxe SYSTEM \\\"file:///etc/passwd\\\"> não resultam na leitura e inclusão do conteúdo do arquivo. A alteração é mínima, preserva a assinatura, o fluxo de execução, a serialização e as opções não relacionadas à vulnerabilidade.\",\"limitacoes_da_correcao\":\"A chamada xmlRegisterFsInputProviders() continua habilitando provedores de filesystem, embora eles não sejam utilizados para entidades externas com as opções de DTD e substituição desabilitadas. Se o comportamento seguro puder ser priorizado acima da compatibilidade com desafios que dependam de XXE, essa chamada também deveria ser removida; contudo, a alteração proposta limita-se ao necessário para impedir a resolução de entidades externas no parsing.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1023,
+  "tokens_saida": 429,
+  "latencia_s": 5.827,
+  "custo_usd": 0.000719,
+  "hash_prompt": "a41004ea4e52ae9abb0079c8b54a08532871e962074e8312da40bba472f6e1a1",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

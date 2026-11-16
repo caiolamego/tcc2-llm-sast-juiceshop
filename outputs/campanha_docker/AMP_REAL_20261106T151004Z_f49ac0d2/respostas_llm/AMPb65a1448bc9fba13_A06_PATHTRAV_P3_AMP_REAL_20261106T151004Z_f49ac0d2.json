@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: External Control of File Name or Path - A entrada do usuário é usada diretamente em res.sendFile sem validação adequada, permitindo path traversal e leitura arbitrária de arquivos.\",\"causa_da_vulnerabilidade\":\"O parâmetro 'file' da requisição é usado diretamente para construir o caminho do arquivo a ser servido, sem garantir que o caminho resultante esteja confinado ao diretório 'logs/'. A simples verificação de ausência de '/' não impede outras formas de traversal, como '..' ou codificações.\",\"estrategia_de_correcao\":\"Utilizar a opção 'root' do método res.sendFile para definir o diretório raiz 'logs/' e passar apenas o nome do arquivo como caminho relativo. Isso faz com que o Express valide automaticamente se o arquivo está dentro do diretório raiz, prevenindo path traversal. Manter a verificação atual para rejeitar nomes com '/' para preservar a lógica existente.\",\"edicoes\":[{\"arquivo\":\"routes/logfileServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('logs/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    if (!file.includes('/')) {\\n      res.sendFile(file, { root: path.resolve('logs/') })\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"Ao usar a opção 'root' do Express em res.sendFile, o framework garante que o arquivo solicitado esteja dentro do diretório especificado, mitigando ataques de path traversal. A verificação adicional de '/' impede nomes com subdiretórios, mantendo a lógica original e evitando exposição indevida de arquivos.\",\"limitacoes_da_correcao\":\"A correção assume que os arquivos legítimos estão diretamente dentro do diretório 'logs/' e não em subdiretórios, conforme a restrição atual de não permitir '/' no nome do arquivo. Não trata links simbólicos ou outras formas avançadas de bypass. A autorização de acesso a arquivos continua sendo responsabilidade de outra camada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1727,
+  "tokens_saida": 470,
+  "latencia_s": 4.573,
+  "custo_usd": 0.001443,
+  "hash_prompt": "0c67cd64f9bcd3994fb10938ae2dad4795dbfdd333a554506e7be6895ad59053",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

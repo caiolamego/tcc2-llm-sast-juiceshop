@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site Scripting (XSS) devido à inserção direta de conteúdo não sanitizado dentro de uma tag <script> no HTML gerado.\",\"causa_da_vulnerabilidade\":\"O conteúdo da variável 'subs', que é lido de um arquivo externo e pode conter dados não confiáveis, é inserido diretamente dentro de uma tag <script> no template HTML sem qualquer sanitização ou escape, permitindo que código JavaScript malicioso seja executado no navegador do usuário.\",\"estrategia_de_correcao\":\"Modificar a forma como o conteúdo 'subs' é inserido no HTML para evitar que seja interpretado como código JavaScript. Em vez de inserir 'subs' diretamente dentro de uma tag <script>, inserir o conteúdo dentro de um elemento HTML seguro (como uma <pre> ou <div>) com o conteúdo escapado para texto, ou usar um atributo data- para armazenar o conteúdo e recuperá-lo via JavaScript de forma segura. No contexto atual, substituir a tag <script> por um elemento que contenha o texto escapado, evitando execução de scripts.\",\"edicoes\":[{\"arquivo\":\"routes/videoHandler.ts\",\"trecho_original\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<script id=\\\"subtitle\\\" type=\\\"text/vtt\\\" data-label=\\\"English\\\" data-lang=\\\"en\\\">' + subs + '</script>')\",\"trecho_corrigido\":\"compiledTemplate = compiledTemplate.replace('<script id=\\\"subtitle\\\"></script>', '<pre id=\\\"subtitle\\\" aria-label=\\\"English subtitles\\\" lang=\\\"en\\\">' + entities.encode(subs) + '</pre>')\"}],\"justificativa_tecnica\":\"Ao substituir a tag <script> por um elemento <pre> e escapando o conteúdo com 'entities.encode', o conteúdo dos subtitles é exibido como texto puro, impedindo a execução de qualquer código JavaScript malicioso que possa estar presente. Isso elimina a possibilidade de XSS via injeção de scripts no conteúdo dos subtitles.\",\"limitacoes_da_correcao\":\"A correção altera a forma como as legendas são inseridas no HTML, o que pode impactar a forma como o cliente processa ou estiliza as legendas se dependia do elemento <script> com tipo 'text/vtt'. Caso o cliente espere especificamente um elemento <script> para processar legendas, será necessário adaptar o código cliente para ler o conteúdo do novo elemento. Além disso, a formatação original das legendas pode ser exibida como texto literal, não como legendas formatadas, a menos que o cliente implemente a leitura e interpretação do conteúdo do elemento <pre>.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2596,
+  "tokens_saida": 541,
+  "latencia_s": 5.399,
+  "custo_usd": 0.001328,
+  "hash_prompt": "bbd71223cc1b1b6a99c5885dc31d409e4adff948b50a4f5b42d7c7ca1b0d279f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: External Control of File Name or Path via parâmetro 'layout' no corpo da requisição que é propagado diretamente para o método res.render, permitindo potencialmente a seleção de templates arbitrários.\",\"causa_da_vulnerabilidade\":\"O código aceita o valor do parâmetro 'layout' enviado pelo cliente e o utiliza diretamente como parte das opções para o método res.render, sem validação adequada para garantir que o template solicitado seja permitido ou esteja dentro de uma lista segura. A única verificação feita é a ausência de certas strings proibidas no caminho, o que é insuficiente para prevenir ataques de path traversal ou seleção arbitrária de templates.\",\"estrategia_de_correcao\":\"Implementar uma lista branca (whitelist) de nomes de templates permitidos para o parâmetro 'layout'. O valor enviado pelo cliente será comparado com essa lista e somente se estiver presente será aceito para renderização. Caso contrário, a requisição será rejeitada com erro. Isso evita que o cliente controle arbitrariamente o template a ser renderizado.\",\"edicoes\":[{\"arquivo\":\"routes/dataErasure.ts\",\"trecho_original\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\",\"trecho_corrigido\":\"      const allowedLayouts = ['default', 'alternative', 'compact']\\n      if (req.body.layout) {\\n        if (!allowedLayouts.includes(req.body.layout)) {\\n          next(new Error('File access not allowed'))\\n          return\\n        }\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        }, (error, html) => {\\n          if (!html || error) {\\n            next(new Error(error.message))\\n          } else {\\n            const sendlfrResponse: string = html.slice(0, 100) + '......'\\n            res.send(sendlfrResponse)\\n            challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n          }\\n        })\\n      } else {\"}],\"justificativa_tecnica\":\"Ao restringir o parâmetro 'layout' a uma lista explícita de valores permitidos, eliminamos a possibilidade de um atacante especificar caminhos arbitrários ou nomes de arquivos que possam levar à exposição de templates sensíveis ou arquivos fora do escopo esperado. Essa abordagem de whitelist é mais segura do que tentar filtrar strings proibidas, pois evita bypasses por codificações ou variações de path traversal. Assim, o motor de templates só renderizará arquivos conhecidos e autorizados, mitigando a vulnerabilidade CWE-73.\",\"limitacoes_da_correcao\":\"A correção depende da manutenção da lista de templates permitidos atualizada conforme novos templates sejam adicionados. Caso haja necessidade de suportar templates dinâmicos ou múltiplos, a lista deve ser gerenciada cuidadosamente. Além disso, a solução não impede que outros parâmetros do corpo da requisição possam conter dados maliciosos, mas foca especificamente na proteção contra controle externo do nome do template.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 2697,
+  "tokens_saida": 825,
+  "latencia_s": 10.925,
+  "custo_usd": 0.001823,
+  "hash_prompt": "205b9d359efd68af4a9847476b2158939c4162d615782221fdb8e9aabbe45422",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Improper Restriction of Excessive Authentication Attempts (CWE-307) devido à confiança irrestrita em todos os proxies para obtenção do IP do cliente no rate limiter.\",\"causa_da_vulnerabilidade\":\"A aplicação habilita 'trust proxy' sem restringir quais proxies são confiáveis, e utiliza o cabeçalho 'X-Forwarded-For' diretamente para identificar o cliente no rate limiter. Isso permite que um atacante controle o cabeçalho e contorne a limitação de taxa, causando tentativas ilimitadas de redefinição de senha.\",\"estrategia_de_correcao\":\"Restringir a configuração 'trust proxy' para aceitar apenas proxies confiáveis, especificando explicitamente os endereços IP dos proxies de borda confiáveis. Dessa forma, o Express normalizará corretamente o IP do cliente e o cabeçalho 'X-Forwarded-For' não poderá ser manipulado por clientes externos para burlar o rate limiter.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  app.enable('trust proxy')\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\",\"trecho_corrigido\":\"  app.set('trust proxy', ['127.0.0.1', '::1'])\\n  app.use('/rest/user/reset-password', rateLimit({\\n    windowMs: 5 * 60 * 1000,\\n    max: 100,\\n    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge\\n  }))\"}],\"justificativa_tecnica\":\"Ao restringir 'trust proxy' para aceitar apenas proxies confiáveis (por exemplo, localhost), o Express passa a confiar apenas nos cabeçalhos 'X-Forwarded-For' inseridos por esses proxies, evitando que clientes externos manipulem esse cabeçalho. Além disso, alterando o 'keyGenerator' para usar apenas o IP fornecido pelo Express (que já considera a configuração de proxies confiáveis), evita-se o uso direto do cabeçalho 'X-Forwarded-For' não confiável. Isso impede que atacantes contornem o rate limiter por meio da falsificação do cabeçalho, mitigando a vulnerabilidade de tentativas excessivas de autenticação.\",\"limitacoes_da_correcao\":\"É necessário conhecer e configurar corretamente os endereços IP dos proxies confiáveis para que a aplicação funcione corretamente atrás de proxies reversos. Caso a aplicação esteja atrás de múltiplos proxies ou em ambientes dinâmicos, a configuração pode precisar ser ajustada. Essa correção não impede ataques originados de IPs legítimos, mas mitiga a manipulação do cabeçalho 'X-Forwarded-For' por clientes maliciosos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2652,
+  "tokens_saida": 655,
+  "latencia_s": 6.957,
+  "custo_usd": 0.002109,
+  "hash_prompt": "22360ef550e7442116d0b0e413f29745f62dddf9b613a3018c4f9486384f3049",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

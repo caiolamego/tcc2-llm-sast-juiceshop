@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição não autorizada do endpoint /metrics, que pode revelar métricas operacionais e informações internas do servidor.\",\n  \"causa_da_vulnerabilidade\": \"A rota /metrics é registrada sem autenticação ou controle de acesso. Além disso, o trecho mostra uma segunda declaração dessa rota, também sem proteção.\",\n  \"estrategia_de_correcao\": \"Remover a declaração vulnerável duplicada no trecho identificado. A rota /metrics já é registrada anteriormente em configureApp, antes do catch-all, portanto a remoção preserva a disponibilidade funcional do endpoint sem manter a declaração adicional exposta.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"// vuln-code-snippet start exposedMetricsChallenge\\n/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`\",\n      \"trecho_corrigido\": \"// vuln-code-snippet start exposedMetricsChallenge\\n/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A rota /metrics já aparece anteriormente no código mostrado, dentro de configureApp, e é registrada antes do Angular catch-all. A declaração removida é redundante e não adiciona autenticação nem outra proteção; removê-la evita manter uma segunda rota pública e preserva a rota já configurada.\",\n  \"limitacoes_da_correcao\": \"A rota /metrics registrada anteriormente continua acessível sem autenticação. Se as métricas não forem destinadas ao público, será necessário aplicar controle de acesso à declaração efetiva, cujo contexto de configuração não está incluído integralmente no trecho fornecido.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1714,
+  "tokens_saida": 455,
+  "latencia_s": 5.445,
+  "custo_usd": 0.000442,
+  "hash_prompt": "91de6e99931cc4c221f05b1d013aee8d44bdff54cc9417bde73e224487dd93cc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1711
+}

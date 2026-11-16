@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possibilidade de ReDoS (CWE-1333) ao construir expressões regulares com o valor variável challengeKey.\",\n  \"causa_da_vulnerabilidade\": \"challengeKey é extraído do conteúdo dos arquivos e interpolado sem escape em chamadas a new RegExp. Metacaracteres presentes no valor podem alterar o padrão e, em combinação com o restante da expressão, causar processamento excessivo. Embora a origem atual seja conteúdo de arquivos locais, esse conteúdo pode ser alterado por quem tiver permissão de escrita nos arquivos examinados.\",\n  \"estrategia_de_correcao\": \"Escapar os caracteres especiais de challengeKey antes de interpolá-lo nas duas expressões regulares usadas para identificar linhas vulneráveis e neutras, preservando a correspondência literal do identificador.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/codingChallenges.ts\",\n      \"trecho_original\": \"  const vulnLines = []\\n  const neutralLines = []\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`).exec(lines[i]) != null) {\",\n      \"trecho_corrigido\": \"  const vulnLines = []\\n  const neutralLines = []\\n  const escapedChallengeKey = challengeKey.replace(/[.*+?^${}()|[\\\\]\\\\\\\\]/g, '\\\\\\\\$&')\\n  for (let i = 0; i < lines.length; i++) {\\n    if (new RegExp(`vuln-code-snippet vuln-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\\n      vulnLines.push(i + 1)\\n    } else if (new RegExp(`vuln-code-snippet neutral-line.*${escapedChallengeKey}`).exec(lines[i]) != null) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O escape converte metacaracteres de challengeKey em caracteres literais antes da interpolação, impedindo que o valor modifique a estrutura das expressões regulares. Assim, os padrões continuam procurando os mesmos marcadores e identificador, mas o identificador não pode introduzir operadores ou quantificadores que provoquem backtracking excessivo.\",\n  \"limitacoes_da_correcao\": \"A correção protege as duas expressões regulares sinalizadas. Ela não limita o tamanho dos arquivos ou do conteúdo processado, nem altera outras expressões regulares que usam challengeKey; a expressão de extração do snippet também interpola esse valor e deve ser avaliada separadamente se o conteúdo dos arquivos puder ser controlado por agentes não confiáveis.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3042,
+  "tokens_saida": 622,
+  "latencia_s": 5.928,
+  "custo_usd": 0.000691,
+  "hash_prompt": "69867daaec1d3cf336d588993f4da7bbe195cb939bfd3c424463d711e0b3da79",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3039
+}

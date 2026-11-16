@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) ao renderizar comentários de feedback como HTML confiável sem sanitização.\",\n  \"causa_da_vulnerabilidade\": \"O comentário vem de feedbacks e pode ser controlado por um usuário. Ele é interpolado diretamente em uma string HTML e passado a bypassSecurityTrustHtml, que instrui o Angular a não sanitizar o conteúdo. Assim, markup ou atributos maliciosos podem ser interpretados pelo navegador.\",\n  \"estrategia_de_correcao\": \"Remover o bypass de confiança e manter o comentário como string HTML. O Angular sanitiza o conteúdo quando ele é renderizado por um binding HTML, preservando formatação permitida e removendo conteúdo perigoso.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/about/about.component.ts\",\n      \"trecho_original\": \"          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\",\n      \"trecho_corrigido\": \"          feedbacks[i].comment = feedbacks[i].comment\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A remoção do bypass evita marcar conteúdo não confiável como seguro. Ao ser consumido como HTML pelo componente de galeria, o valor permanece sujeito à sanitização contextual do Angular, que remove construções perigosas, como manipuladores de eventos, sem exigir a desativação das proteções do framework.\",\n  \"limitacoes_da_correcao\": \"A sanitização do Angular só protege se o componente de galeria renderizar o valor por um mecanismo Angular sanitizado, como um binding [innerHTML]. Se a galeria inserir o valor diretamente no DOM sem sanitização, será necessário sanitizar o HTML com uma biblioteca apropriada antes de entregá-lo. A atribuição redundante mantém a alteração mínima e o tipo existente, mas pode ser removida em uma alteração posterior.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2951,
+  "tokens_saida": 412,
+  "latencia_s": 5.39,
+  "custo_usd": 0.000575,
+  "hash_prompt": "fb15982880db1cb0b2846950bb42f9e7d9d215724560d0c218119543e5bf782c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2948
+}

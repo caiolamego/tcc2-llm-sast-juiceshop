@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (XSS) por desativação da sanitização HTML do Angular ao usar bypassSecurityTrustHtml com um valor derivado da resposta do serviço de rastreamento.\",\"causa_da_vulnerabilidade\":\"O código concatena results.data[0].orderId em uma string HTML e a marca como confiável por meio de bypassSecurityTrustHtml. Como orderId é obtido de dados externos e não há garantia, neste componente, de que contenha apenas caracteres seguros, conteúdo HTML ou atributos maliciosos pode ser interpretado pelo binding do template.\",\"estrategia_de_correcao\":\"Remover o bypass de segurança e armazenar o identificador como texto simples. A interpolação Angular exibirá o valor com escape contextual; caso o template exija HTML para a formatação do código, o binding [innerHTML] poderá aplicar a sanitização padrão do Angular sem usar um valor SafeHtml.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"import { DomSanitizer } from '@angular/platform-browser'\\n\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"  private readonly sanitizer = inject(DomSanitizer)\\n\",\"trecho_corrigido\":\"\"},{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n\",\"trecho_corrigido\":\"      this.results.orderNo = results.data[0].orderId\\n\"}],\"justificativa_tecnica\":\"O valor deixa de ser convertido em SafeHtml e deixa de conter markup construído por concatenação. Ao ser usado como interpolação no template, o Angular trata orderNo como texto e escapa caracteres especiais, impedindo que tags, atributos ou handlers fornecidos pelo atacante sejam interpretados como HTML executável. A remoção do import e da injeção também elimina código não utilizado, sem alterar nomes, assinaturas ou o fluxo de obtenção dos dados.\",\"limitacoes_da_correcao\":\"A formatação visual com a tag <code> deixará de ser preservada se o template depender de orderNo como HTML confiável. Se essa formatação for funcionalmente necessária, o template deve usar um elemento code ao redor de uma interpolação escapada, ou usar [innerHTML] diretamente com o texto não confiável para que o Angular aplique sua sanitização padrão. A correção pressupõe que o template não use orderNo em outro contexto inseguro, como construção manual de scripts ou acesso direto ao DOM.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2355,
+  "tokens_saida": 568,
+  "latencia_s": 5.935,
+  "custo_usd": 0.00127,
+  "hash_prompt": "477994018ae197cdd3ac7cbbde63e162fea65d6dec6bfa27d3be69d2fe0afe6f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2352
+}

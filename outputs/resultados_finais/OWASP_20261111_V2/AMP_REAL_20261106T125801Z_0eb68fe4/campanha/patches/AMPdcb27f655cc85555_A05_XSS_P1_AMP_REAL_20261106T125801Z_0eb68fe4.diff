@@ -1,0 +1,16 @@
+diff --git a/frontend/src/app/data-export/data-export.component.ts b/frontend/src/app/data-export/data-export.component.ts
+index fd2306882..d88d90206 100644
+--- a/frontend/src/app/data-export/data-export.component.ts
++++ b/frontend/src/app/data-export/data-export.component.ts
+@@ -68,7 +68,10 @@ export class DataExportComponent implements OnInit {
+         this.error = null
+         this.confirmation = data.confirmation
+         this.userData = data.userData
+-        window.open('', '_blank', 'width=500')?.document.write(this.userData)
++        const exportWindow = window.open('', '_blank', 'width=500')
++        if (exportWindow) {
++          exportWindow.document.body.textContent = this.userData
++        }
+         this.lastSuccessfulTry = new Date()
+         localStorage.setItem('lstdtxprt', JSON.stringify(this.lastSuccessfulTry))
+         this.ngOnInit()

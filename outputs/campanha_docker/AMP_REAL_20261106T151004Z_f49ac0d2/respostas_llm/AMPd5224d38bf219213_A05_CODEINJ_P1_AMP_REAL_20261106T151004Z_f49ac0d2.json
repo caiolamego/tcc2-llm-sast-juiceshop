@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Execução de código arbitrário via eval() em username (Server-Side Template Injection - SSTI)\",\"causa_da_vulnerabilidade\":\"O código utiliza eval() para executar conteúdo extraído do nome de usuário, que pode ser controlado por um atacante, permitindo execução arbitrária de código no servidor.\",\"estrategia_de_correcao\":\"Remover o uso de eval() para processar o nome de usuário. Em vez disso, tratar o nome de usuário como texto simples, escapando caracteres especiais para evitar injeção de código.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      const code = username?.substring(2, username.length - 1)\\n      try {\\n        if (!code) {\\n          throw new Error('Username is null')\\n        }\\n        username = eval(code) // eslint-disable-line no-eval\\n      } catch (err) {\\n        username = '\\\\\\\\' + username\\n      }\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\",\"trecho_corrigido\":\"    if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n      req.app.locals.abused_ssti_bug = true\\n      // Removido uso de eval para evitar execução de código arbitrário\\n      username = '\\\\\\\\' + username\\n    } else {\\n      username = '\\\\\\\\' + username\\n    }\"}],\"justificativa_tecnica\":\"O uso de eval() em dados controlados pelo usuário é uma vulnerabilidade crítica que permite execução arbitrária de código no servidor, podendo comprometer todo o sistema. Ao remover o eval() e tratar o nome de usuário como texto simples, eliminamos essa possibilidade sem alterar o fluxo funcional da aplicação.\",\"limitacoes_da_correcao\":\"A correção impede a exploração da vulnerabilidade SSTI via eval(), mas o código ainda mantém a lógica de marcação do nome de usuário com '\\\\\\\\' para evitar outros problemas. Caso existam outras formas de injeção ou XSS, elas devem ser tratadas separadamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1375,
+  "tokens_saida": 488,
+  "latencia_s": 4.549,
+  "custo_usd": 0.001331,
+  "hash_prompt": "52b805701e624f37c98604759e7bfa5567a3dcb4eb823a5cc136bd9a50f0cace",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

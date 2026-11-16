@@ -1,0 +1,20 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..b500ef084 100644
+--- a/server.ts
++++ b/server.ts
+@@ -508,6 +508,15 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+ 
+     // create a wallet when a new user is registered using API
+     if (name === 'User') { // vuln-code-snippet neutral-line registerAdminChallenge
++      resource.write.before((req: Request, res: Response, context: any) => {
++        const allowedFields = ['email', 'username', 'password', 'role', 'active']
++        Object.keys(req.body).forEach(key => {
++          if (!allowedFields.includes(key)) {
++            delete req.body[key]
++          }
++        })
++        return context.continue
++      })
+       resource.create.send.before((req: Request, res: Response, context: { instance: { id: any }, continue: any }) => { // vuln-code-snippet vuln-line registerAdminChallenge
+         WalletModel.create({ UserId: context.instance.id }).catch((err: unknown) => {
+           console.log(err)

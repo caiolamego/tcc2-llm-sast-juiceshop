@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (XSS) na renderização dos comentários de feedback por meio de HTML confiável criado com conteúdo externo.\",\"causa_da_vulnerabilidade\":\"O comentário de feedback, potencialmente controlável por um usuário, é concatenado em uma string HTML e passado a sanitizer.bypassSecurityTrustHtml. Esse método desativa a sanitização contextual do Angular, permitindo que marcações ou atributos maliciosos presentes no comentário sejam interpretados como HTML no componente de galeria.\",\"estrategia_de_correcao\":\"Remover o bypass de segurança e manter o comentário como string HTML para que o binding consumidor aplique a sanitização padrão do Angular. A estrutura visual legítima das estrelas permanece, enquanto conteúdo perigoso inserido no comentário é sanitizado.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\\n\",\"trecho_corrigido\":\"\"}],\"justificativa_tecnica\":\"A remoção da chamada a bypassSecurityTrustHtml impede que conteúdo não confiável seja marcado como SafeHtml. O valor continua contendo a estrutura necessária para a legenda e as estrelas, mas, ao ser consumido pelo binding HTML da galeria, volta a passar pela sanitização padrão do Angular, que neutraliza elementos e atributos perigosos, como scripts e handlers de eventos. A alteração é mínima e preserva o fluxo funcional existente. O import e a propriedade sanitizer permanecem sem uso após essa edição e podem gerar apenas um aviso de lint, mas não são removidos para respeitar a alteração mínima e as restrições de não refatoração.\",\"limitacoes_da_correcao\":\"A eficácia depende de o componente Gallery respeitar a sanitização do Angular ao renderizar args. Se a biblioteca inserir esse valor diretamente em innerHTML fora do mecanismo de binding do Angular, será necessário sanitizar explicitamente com DomSanitizer.sanitize(SecurityContext.HTML, valor) ou usar uma biblioteca de sanitização apropriada antes da inserção. Também devem ser realizados testes com payloads como <script>, <img src=x onerror=alert(1)> e formatação legítima.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2951,
+  "tokens_saida": 467,
+  "latencia_s": 5.316,
+  "custo_usd": 0.001298,
+  "hash_prompt": "8e729104669c819626892ecb63aea9a27c5ef5cc5b52d2bf2704a6867a7534ea",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2948
+}

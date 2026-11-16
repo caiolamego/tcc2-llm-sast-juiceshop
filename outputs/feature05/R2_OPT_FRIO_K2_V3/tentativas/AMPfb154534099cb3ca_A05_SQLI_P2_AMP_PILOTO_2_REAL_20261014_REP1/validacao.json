@@ -1,0 +1,265 @@
+{
+  "F_criterio": true,
+  "F_marcador": false,
+  "F_sem_separacao": false,
+  "duracao_s": 186.66,
+  "duracao_selecao_s": 0.15665991399873747,
+  "etapas": [
+    {
+      "duracao_s": 28.8,
+      "status": "executada",
+      "tier": "T0"
+    },
+    {
+      "duracao_s": 10.38,
+      "status": "executada",
+      "tier": "T2_API"
+    },
+    {
+      "duracao_s": 7.86,
+      "status": "executada",
+      "tier": "T3"
+    },
+    {
+      "duracao_s": 131.57,
+      "status": "executada",
+      "tier": "T4"
+    }
+  ],
+  "linha_de_base": "outputs/feature02/validacao/baseline_testes.json",
+  "passou": true,
+  "reexecucoes": 2,
+  "selecao": {
+    "api": [
+      "test/api/login.test.ts"
+    ],
+    "arquivos": [
+      "routes/login.ts"
+    ],
+    "fallback": false,
+    "motivos": [],
+    "unitarios": []
+  },
+  "t2_pulado": true,
+  "testes_falhos_d_criterio": [
+    "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+  ],
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+  ],
+  "testes_falhos_intermitentes": [],
+  "testes_falhos_novos": [
+    "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+    "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+  ],
+  "testes_t2": [],
+  "tier_falha": null,
+  "tier_falha_criterio": null,
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_sem_separacao": "T2_API",
+  "tiers": [
+    {
+      "codigo_saida": 0,
+      "comando": [
+        "npx",
+        "tsc",
+        "--noEmit"
+      ],
+      "duracao_s": 28.8,
+      "espera_api_s": 0.0,
+      "motivo": null,
+      "passou": true,
+      "reexecucoes": 0,
+      "repeticao_seletiva": null,
+      "saida": "",
+      "saida_reexecucao": "",
+      "testes_falhos": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [],
+      "testes_falhos_reexecucao": [],
+      "tier": "T0",
+      "timeout_na_primeira_rodada": false
+    },
+    {
+      "codigo_saida": 1,
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/api/login.test.ts"
+      ],
+      "duracao_s": 10.38,
+      "espera_api_s": 7.8486591820001195,
+      "motivo": "falha",
+      "passou": false,
+      "reexecucoes": 1,
+      "repeticao_seletiva": null,
+      "saida": "ast login IP will be saved as remote IP when True-Client-IP is not present (72.822238ms)\n  ✔ GET last login IP returns 401 Unauthorized when no token is provided (16.675731ms)\n✔ /rest/saveLoginIp (189.780851ms)\nℹ tests 18\nℹ suites 2\nℹ pass 13\nℹ fail 5\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5177.265022\n\n✖ failing tests:\n\ntest at test/api/login.test.ts:2:5627\n✖ POST login with WHERE-clause disabling SQL injection attack (19.621987ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:164:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:6090\n✖ POST login with known email \"admin@juice-sh.op\" in SQL injection attack (28.709105ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:178:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:6615\n✖ POST login with known email \"jim@juice-sh.op\" in SQL injection attack (54.660509ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:192:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:7136\n✖ POST login with known email \"bender@juice-sh.op\" in SQL injection attack (33.715449ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:206:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:7663\n✖ POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack (32.464117ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:220:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "ast login IP will be saved as remote IP when True-Client-IP is not present (72.896561ms)\n  ✔ GET last login IP returns 401 Unauthorized when no token is provided (17.862476ms)\n✔ /rest/saveLoginIp (190.524453ms)\nℹ tests 18\nℹ suites 2\nℹ pass 13\nℹ fail 5\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5036.267493\n\n✖ failing tests:\n\ntest at test/api/login.test.ts:2:5627\n✖ POST login with WHERE-clause disabling SQL injection attack (19.921384ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:164:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:6090\n✖ POST login with known email \"admin@juice-sh.op\" in SQL injection attack (28.554187ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:178:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:6615\n✖ POST login with known email \"jim@juice-sh.op\" in SQL injection attack (58.560971ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:192:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:7136\n✖ POST login with known email \"bender@juice-sh.op\" in SQL injection attack (36.488207ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:206:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:7663\n✖ POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack (33.381179ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:220:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "testes_falhos": [
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "testes_falhos_d_criterio": [
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "testes_falhos_reexecucao": [
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "tier": "T2_API",
+      "timeout_na_primeira_rodada": false
+    },
+    {
+      "codigo_saida": 0,
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/**/*.unit.test.ts"
+      ],
+      "duracao_s": 7.86,
+      "espera_api_s": 0.0,
+      "motivo": null,
+      "passou": true,
+      "reexecucoes": 0,
+      "repeticao_seletiva": null,
+      "saida": " when the 56px.png transpixel is requested (0.374258ms)\n    ✔ \"extraLanguageChallenge\" is solved when the Klingon translation file is requested (0.539357ms)\n    ✔ \"retrieveBlueprintChallenge\" is solved when the blueprint file is requested (0.534946ms)\n    ✔ \"missingEncodingChallenge\" is solved when the crazy cat photo is requested (0.572193ms)\n    ✔ \"accessLogDisclosureChallenge\" is solved when any server access log file is requested (0.522572ms)\n  ✔ accessControlChallenges (5.231477ms)\n  ▶ \"errorHandlingChallenge\"\n    ✔ is solved when an error occurs on a response with OK 200 status code (0.614285ms)\n    ▶ is solved when an error occurs on a response with error\n      ✔ 402 status code (0.418681ms)\n      ✔ 403 status code (0.230718ms)\n      ✔ 404 status code (0.558778ms)\n      ✔ 500 status code (0.369968ms)\n    ✔ is solved when an error occurs on a response with error (1.89728ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.313124ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.409976ms)\n      ✔ 402 status code (0.32233ms)\n      ✔ 404 status code (0.353346ms)\n      ✔ 500 status code (0.206833ms)\n    ✔ is not solved when no error occurs on a response with error (1.555431ms)\n    ✔ should pass occurred error on to next route (0.704975ms)\n  ✔ \"errorHandlingChallenge\" (5.433368ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (1.109665ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.344478ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.696462ms)\n    ✔ \"changeProductChallenge\" (2.369493ms)\n  ✔ databaseRelatedChallenges (2.512917ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (3.578197ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (0.956616ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (4.768186ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (1.566255ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (1.341233ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (2.729496ms)\n  ✔ jwtChallenges (15.439806ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.735408ms)\n    ✔ should return 1 for identical strings even if they are short (0.324413ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.334602ms)\n    ✔ should return 0 for completely different strings (0.200036ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.213548ms)\n  ✔ diceCoefficient (2.151743ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.459078ms)\n    ✔ should return false if similarity is below threshold (0.252092ms)\n  ✔ checkSystemPromptSimilarity (0.899074ms)\n✔ verify (41.729138ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (1.792915ms)\n    ✔ fails when supplied webhook is not a valid URL (37.948294ms)\n    ✔ submits POST with payload to existing URL (81.24981ms)\n  ✔ notify (123.471109ms)\n✔ webhook (124.49755ms)\n▶ xml\n  ✔ should parse a simple XML string (1310.137852ms)\n  ✔ should expand internal entities (9.500252ms)\n  ✔ should throw error on malformed XML (20.824665ms)\n  ✔ should timeout on entity expansion bomb (9.608343ms)\n✔ xml (1353.920149ms)\nℹ tests 335\nℹ suites 109\nℹ pass 333\nℹ fail 0\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 7772.721618\n",
+      "saida_reexecucao": "",
+      "testes_falhos": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [],
+      "testes_falhos_reexecucao": [],
+      "tier": "T3",
+      "timeout_na_primeira_rodada": false
+    },
+    {
+      "codigo_saida": 1,
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/api/**/*.test.ts"
+      ],
+      "duracao_s": 131.57,
+      "espera_api_s": 4.3099971662741154e-06,
+      "motivo": "falha",
+      "passou": false,
+      "reexecucoes": 1,
+      "repeticao_seletiva": null,
+      "saida": "internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 403,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:5627\n✖ POST login with WHERE-clause disabling SQL injection attack (65.876006ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:164:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:6090\n✖ POST login with known email \"admin@juice-sh.op\" in SQL injection attack (132.151129ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:178:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:6615\n✖ POST login with known email \"jim@juice-sh.op\" in SQL injection attack (101.491011ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:192:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:7136\n✖ POST login with known email \"bender@juice-sh.op\" in SQL injection attack (99.111114ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:206:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:7663\n✖ POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack (175.705109ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:220:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "nternal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 403,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:5627\n✖ POST login with WHERE-clause disabling SQL injection attack (59.477589ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:164:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:6090\n✖ POST login with known email \"admin@juice-sh.op\" in SQL injection attack (190.689639ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:178:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:6615\n✖ POST login with known email \"jim@juice-sh.op\" in SQL injection attack (173.519645ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:192:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:7136\n✖ POST login with known email \"bender@juice-sh.op\" in SQL injection attack (145.370763ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:206:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/login.test.ts:2:7663\n✖ POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack (217.701138ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  401 !== 200\n  \n      at TestContext.<anonymous> (test/api/login.test.ts:220:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 401,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "testes_falhos": [
+        "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available",
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "testes_falhos_d_criterio": [
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "testes_falhos_reexecucao": [
+        "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available",
+        "test/api/login.test.ts :: /rest/user/login > POST login with WHERE-clause disabling SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"admin@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"bender@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with known email \"jim@juice-sh.op\" in SQL injection attack",
+        "test/api/login.test.ts :: /rest/user/login > POST login with non-existing email \"acc0unt4nt@juice-sh.op\" via UNION SELECT injection attack"
+      ],
+      "tier": "T4",
+      "timeout_na_primeira_rodada": false
+    }
+  ]
+}

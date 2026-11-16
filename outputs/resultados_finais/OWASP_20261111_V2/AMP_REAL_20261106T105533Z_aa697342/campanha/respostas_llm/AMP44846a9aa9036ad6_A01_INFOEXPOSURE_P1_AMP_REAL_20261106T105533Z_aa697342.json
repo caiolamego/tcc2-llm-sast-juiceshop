@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de arquivos e listagem de diretórios em /ftp, incluindo possível acesso a arquivos fora do diretório pretendido por meio de caminhos manipulados.\",\n  \"causa_da_vulnerabilidade\": \"O código habilita listagem pública do diretório ftp e encaminha arquivos solicitados a servePublicFiles() sem que o trecho mostrado aplique uma verificação de autorização ou restrinja explicitamente os caminhos aos arquivos públicos permitidos. A rota de listagem também expõe nomes e estrutura dos arquivos.\",\n  \"estrategia_de_correcao\": \"Remover a listagem pública de /ftp e exigir o middleware de controle de acesso antes de servir arquivos. Manter a exclusão de /ftp/quarantine da rota genérica e preservar a rota específica de quarentena.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\",\n      \"trecho_corrigido\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', verify.accessControlChallenges(), servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A remoção de serveIndex impede a enumeração pública do conteúdo de /ftp. A inclusão de verify.accessControlChallenges() antes de servePublicFiles() aplica o controle de acesso existente antes do envio do arquivo, sem alterar a rota específica de quarentena nem a lógica de entrega dos arquivos autorizados.\",\n  \"limitacoes_da_correcao\": \"A correção depende de verify.accessControlChallenges() implementar a política de autorização adequada para os arquivos de /ftp. O trecho fornecido não permite verificar se servePublicFiles() também restringe caminhos e nomes de arquivo de forma segura.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1931,
+  "tokens_saida": 529,
+  "latencia_s": 5.421,
+  "custo_usd": 0.000506,
+  "hash_prompt": "827eee16f85da4876cb20a62f383e57a4056e05e24885c5cf31abc1d3c10e645",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1928
+}

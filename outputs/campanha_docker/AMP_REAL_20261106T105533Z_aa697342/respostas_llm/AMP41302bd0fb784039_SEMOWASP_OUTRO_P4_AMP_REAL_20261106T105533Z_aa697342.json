@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Uso de MD5 na função hash, sinalizado como inadequado para armazenamento de senhas (CWE-916). No código fornecido, porém, hash é uma função genérica e não há evidência de que seu resultado seja usado para armazenar ou verificar senhas.\",\n  \"causa_da_vulnerabilidade\": \"A função hash calcula um digest MD5 rápido e sem salt. Se esse digest for usado para armazenar senhas, um atacante que obtenha os valores poderá testar grandes quantidades de candidatos com baixo custo. A ocorrência do algoritmo, por si só, não demonstra que esse seja o uso: a função pode servir a finalidades não relacionadas a senhas.\",\n  \"estrategia_de_correcao\": \"Não substituir MD5 por uma função de derivação de senhas sem confirmar que hash participa de um fluxo de senhas: isso mudaria o contrato e poderia quebrar usos existentes. A correção mínima e segura para o alerta, com as informações disponíveis, é não alterar o código e verificar os chamadores de hash. Se houver uso para senhas, migrar esse fluxo para Argon2id com salt e custo apropriado, preservando a verificação dos hashes legados durante uma migração planejada.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"A função apresentada não recebe contexto de senha nem implementa armazenamento ou verificação de credenciais. Trocar seu algoritmo globalmente poderia afetar consumidores não relacionados a senhas e não constitui uma migração compatível. A mitigação correta depende de confirmar o uso nos chamadores; para senhas, uma função especializada, lenta e com salt individual reduz a viabilidade de ataques offline.\",\n  \"limitacoes_da_correcao\": \"Nenhuma alteração de código foi proposta porque o trecho não comprova uso de hash para senhas. É necessário inspecionar os chamadores e os dados persistidos. Se houver armazenamento de senhas baseado nessa função, a vulnerabilidade permanece até que esse fluxo seja migrado e os hashes existentes sejam tratados com compatibilidade e rotação apropriadas.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3650,
+  "tokens_saida": 444,
+  "latencia_s": 5.92,
+  "custo_usd": 0.000678,
+  "hash_prompt": "6b4ee709ab2dcdef9fdfa1d1aa4c4bf5134be29a08a259eba7d7d645ba6ef26e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3647
+}

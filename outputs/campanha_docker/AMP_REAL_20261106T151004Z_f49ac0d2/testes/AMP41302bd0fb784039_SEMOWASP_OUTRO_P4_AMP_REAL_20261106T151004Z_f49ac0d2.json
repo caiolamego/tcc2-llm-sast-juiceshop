@@ -1,0 +1,668 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 21.220480718002364,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2",
+  "tier_falha_marcador": "T2",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 10.33,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_kr1vwdck/insecurity/primeira.xml",
+        "test/server/insecurity.unit.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 4.9,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string"
+      ],
+      "testes_falhos_novos": [
+        "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": ".707375ms)\n  ▶ generateCoupon\n    ✔ returns base85-encoded month, year and discount as coupon code (6.591ms)\n    ✔ uses current month and year if not specified (1.214459ms)\n    ✔ does not encode day of month or time into coupon code (0.43525ms)\n  ✔ generateCoupon (9.194542ms)\n  ▶ discountFromCoupon\n    ✔ returns undefined when not passing in a coupon code (1.889583ms)\n    ✔ returns undefined for malformed coupon code (2.246291ms)\n    ✔ returns undefined for coupon code not according to expected pattern (3.13775ms)\n    ✔ returns undefined for expired coupon code (0.71ms)\n    ✔ returns discount from valid coupon code (0.202958ms)\n  ✔ discountFromCoupon (9.895875ms)\n  ▶ authenticatedUsers\n    ✔ returns user by associated token (4.643125ms)\n    ✔ returns undefined if no token is passed in (0.342625ms)\n    ✔ returns token by associated user (0.199166ms)\n    ✔ returns user by associated token from request (0.28425ms)\n    ✔ returns undefined if no token is present in request (0.096708ms)\n  ✔ authenticatedUsers (5.787334ms)\n  ▶ sanitizeHtml\n    ✔ handles empty inputs by returning their string representation (1.255291ms)\n    ✔ returns input unchanged for plain text input (0.384833ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (1.726709ms)\n    ✔ returns input unchanged for HTML input with only harmless links (1.37725ms)\n    ✔ removes all Javascript from HTML input (1.025333ms)\n    ✔ can be bypassed by exploiting lack of recursive sanitization (0.18025ms)\n  ✔ sanitizeHtml (6.297792ms)\n  ▶ sanitizeLegacy\n    ✔ returns empty string for undefined input (0.452708ms)\n    ✔ returns input unchanged for plain text input (0.131959ms)\n    ✔ removes all opening tags and subsequent character from HTML input (0.11025ms)\n    ✔ can be bypassed to allow working HTML payload to be returned (0.117375ms)\n  ✔ sanitizeLegacy (0.995084ms)\n  ▶ sanitizeSecure\n    ✔ handles empty inputs by returning their string representation (1.037375ms)\n    ✔ returns input unchanged for plain text input (0.915208ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.579959ms)\n    ✔ returns input unchanged for HTML input with only harmless links (1.140291ms)\n    ✔ removes all Javascript from HTML input (0.519792ms)\n    ✔ cannot be bypassed by exploiting lack of recursive sanitization (1.473459ms)\n  ✔ sanitizeSecure (6.08275ms)\n  ▶ hash\n    ✖ returns MD5 hash for any input string (65.218ms)\n  ✖ hash (65.550875ms)\n  ▶ hmac\n    ✔ returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string (0.999667ms)\n  ✔ hmac (1.242667ms)\n✖ insecurity (112.794833ms)\nℹ tests 35\nℹ suites 11\nℹ pass 34\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1996.000459\n\n✖ failing tests:\n\ntest at test/server/insecurity.unit.test.ts:2:9983\n✖ returns MD5 hash for any input string (65.218ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'\n  - '0192023a7bbd73250516f069df18b500'\n  \n      at TestContext.<anonymous> (test/server/insecurity.unit.test.ts:193:14)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Test.start (node:internal/test_runner/test:1015:17)\n      at node:internal/test_runner/test:1531:71\n      at node:internal/per_context/primordials:466:82\n      at new Promise (<anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:435:3)\n      at node:internal/per_context/primordials:466:9\n      at Array.map (<anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c',\n    expected: '0192023a7bbd73250516f069df18b500',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 4.999994416721165e-06,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2",
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_kr1vwdck/insecurity_extra/primeira.xml",
+        "test/server/tcc_coverage_insecurity.unit.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 2.03,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ TCC shared security contracts\n  ✔ preserves authenticated token roundtrip (14.208459ms)\n  ✔ preserves deterministic distinct digests without pinning a secret (161.108083ms)\n  ✔ preserves coupon amount roundtrip and approved redirect (4.033917ms)\n  ✔ preserves deluxe tokens as deterministic user specific values (0.513291ms)\n✔ TCC shared security contracts (182.145125ms)\nℹ tests 4\nℹ suites 1\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1645.835667\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 2.0000006770715117e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "lib/insecurity.ts"
+    ],
+    "grupos": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "dominios": [
+      "servidor"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 10.33
+    },
+    {
+      "tier": "T2",
+      "grupo": "insecurity",
+      "status": "executada",
+      "duracao_s": 4.9
+    },
+    {
+      "tier": "T2",
+      "grupo": "insecurity_extra",
+      "status": "executada",
+      "duracao_s": 2.03
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "servidor"
+    ],
+    "grupos_selecionados": [
+      "insecurity",
+      "insecurity_extra"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 10.33
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "insecurity",
+        "dominio": "servidor",
+        "testes": [
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns token by associated user",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > authenticatedUsers > returns token by associated user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns undefined if no token is passed in",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > authenticatedUsers > returns undefined if no token is passed in",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns undefined if no token is present in request",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > authenticatedUsers > returns undefined if no token is present in request",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns user by associated token",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > authenticatedUsers > returns user by associated token",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns user by associated token from request",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > authenticatedUsers > returns user by associated token from request",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > cutOffPoisonNullByte > returns string unchanged if it contains no null byte",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > cutOffPoisonNullByte > returns string unchanged if it contains no null byte",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > cutOffPoisonNullByte > returns string up to null byte",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > cutOffPoisonNullByte > returns string up to null byte",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns discount from valid coupon code",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > discountFromCoupon > returns discount from valid coupon code",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for coupon code not according to expected pattern",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > discountFromCoupon > returns undefined for coupon code not according to expected pattern",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for expired coupon code",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > discountFromCoupon > returns undefined for expired coupon code",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for malformed coupon code",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > discountFromCoupon > returns undefined for malformed coupon code",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined when not passing in a coupon code",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > discountFromCoupon > returns undefined when not passing in a coupon code",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > does not encode day of month or time into coupon code",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > generateCoupon > does not encode day of month or time into coupon code",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > returns base85-encoded month, year and discount as coupon code",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > generateCoupon > returns base85-encoded month, year and discount as coupon code",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > uses current month and year if not specified",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > generateCoupon > uses current month and year if not specified",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > hash > returns MD5 hash for any input string",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > can be bypassed by exploiting lack of recursive sanitization",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeHtml > can be bypassed by exploiting lack of recursive sanitization",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > handles empty inputs by returning their string representation",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeHtml > handles empty inputs by returning their string representation",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > removes all Javascript from HTML input",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeHtml > removes all Javascript from HTML input",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless links",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless links",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless text formatting",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless text formatting",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for plain text input",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeHtml > returns input unchanged for plain text input",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > can be bypassed to allow working HTML payload to be returned",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeLegacy > can be bypassed to allow working HTML payload to be returned",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > removes all opening tags and subsequent character from HTML input",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeLegacy > removes all opening tags and subsequent character from HTML input",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > returns empty string for undefined input",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeLegacy > returns empty string for undefined input",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > returns input unchanged for plain text input",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeLegacy > returns input unchanged for plain text input",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > cannot be bypassed by exploiting lack of recursive sanitization",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeSecure > cannot be bypassed by exploiting lack of recursive sanitization",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > handles empty inputs by returning their string representation",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeSecure > handles empty inputs by returning their string representation",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > removes all Javascript from HTML input",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeSecure > removes all Javascript from HTML input",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless links",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless links",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless text formatting",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless text formatting",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for plain text input",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > sanitizeSecure > returns input unchanged for plain text input",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > userEmailFrom > returns content of \"x-user-email\" header if present",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > userEmailFrom > returns content of \"x-user-email\" header if present",
+            "estado": "passou"
+          },
+          {
+            "id": "test/server/insecurity.unit.test.ts :: insecurity > userEmailFrom > returns undefined if header \"x-user-email\" is not present",
+            "arquivo": "test/server/insecurity.unit.test.ts",
+            "nome": "insecurity > userEmailFrom > returns undefined if header \"x-user-email\" is not present",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string"
+        ],
+        "falhos_novos": [
+          "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string"
+        ],
+        "falhos_novos_observados": [
+          "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns token by associated user",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns undefined if no token is passed in",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns undefined if no token is present in request",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns user by associated token",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns user by associated token from request",
+          "test/server/insecurity.unit.test.ts :: insecurity > cutOffPoisonNullByte > returns string unchanged if it contains no null byte",
+          "test/server/insecurity.unit.test.ts :: insecurity > cutOffPoisonNullByte > returns string up to null byte",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns discount from valid coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for coupon code not according to expected pattern",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for expired coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for malformed coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined when not passing in a coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > does not encode day of month or time into coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > returns base85-encoded month, year and discount as coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > uses current month and year if not specified",
+          "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string",
+          "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > can be bypassed by exploiting lack of recursive sanitization",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > handles empty inputs by returning their string representation",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > removes all Javascript from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless links",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless text formatting",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > can be bypassed to allow working HTML payload to be returned",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > removes all opening tags and subsequent character from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > returns empty string for undefined input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > cannot be bypassed by exploiting lack of recursive sanitization",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > handles empty inputs by returning their string representation",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > removes all Javascript from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless links",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless text formatting",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > userEmailFrom > returns content of \"x-user-email\" header if present",
+          "test/server/insecurity.unit.test.ts :: insecurity > userEmailFrom > returns undefined if header \"x-user-email\" is not present"
+        ],
+        "esperados": [
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns token by associated user",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns undefined if no token is passed in",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns undefined if no token is present in request",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns user by associated token",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns user by associated token from request",
+          "test/server/insecurity.unit.test.ts :: insecurity > cutOffPoisonNullByte > returns string unchanged if it contains no null byte",
+          "test/server/insecurity.unit.test.ts :: insecurity > cutOffPoisonNullByte > returns string up to null byte",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns discount from valid coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for coupon code not according to expected pattern",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for expired coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for malformed coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined when not passing in a coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > does not encode day of month or time into coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > returns base85-encoded month, year and discount as coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > uses current month and year if not specified",
+          "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string",
+          "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > can be bypassed by exploiting lack of recursive sanitization",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > handles empty inputs by returning their string representation",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > removes all Javascript from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless links",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless text formatting",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > can be bypassed to allow working HTML payload to be returned",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > removes all opening tags and subsequent character from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > returns empty string for undefined input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > cannot be bypassed by exploiting lack of recursive sanitization",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > handles empty inputs by returning their string representation",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > removes all Javascript from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless links",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless text formatting",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > userEmailFrom > returns content of \"x-user-email\" header if present",
+          "test/server/insecurity.unit.test.ts :: insecurity > userEmailFrom > returns undefined if header \"x-user-email\" is not present"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns token by associated user",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns undefined if no token is passed in",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns undefined if no token is present in request",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns user by associated token",
+          "test/server/insecurity.unit.test.ts :: insecurity > authenticatedUsers > returns user by associated token from request",
+          "test/server/insecurity.unit.test.ts :: insecurity > cutOffPoisonNullByte > returns string unchanged if it contains no null byte",
+          "test/server/insecurity.unit.test.ts :: insecurity > cutOffPoisonNullByte > returns string up to null byte",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns discount from valid coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for coupon code not according to expected pattern",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for expired coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined for malformed coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > discountFromCoupon > returns undefined when not passing in a coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > does not encode day of month or time into coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > returns base85-encoded month, year and discount as coupon code",
+          "test/server/insecurity.unit.test.ts :: insecurity > generateCoupon > uses current month and year if not specified",
+          "test/server/insecurity.unit.test.ts :: insecurity > hash > returns MD5 hash for any input string",
+          "test/server/insecurity.unit.test.ts :: insecurity > hmac > returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > can be bypassed by exploiting lack of recursive sanitization",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > handles empty inputs by returning their string representation",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > removes all Javascript from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless links",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for HTML input with only harmless text formatting",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeHtml > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > can be bypassed to allow working HTML payload to be returned",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > removes all opening tags and subsequent character from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > returns empty string for undefined input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeLegacy > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > cannot be bypassed by exploiting lack of recursive sanitization",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > handles empty inputs by returning their string representation",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > removes all Javascript from HTML input",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless links",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for HTML input with only harmless text formatting",
+          "test/server/insecurity.unit.test.ts :: insecurity > sanitizeSecure > returns input unchanged for plain text input",
+          "test/server/insecurity.unit.test.ts :: insecurity > userEmailFrom > returns content of \"x-user-email\" header if present",
+          "test/server/insecurity.unit.test.ts :: insecurity > userEmailFrom > returns undefined if header \"x-user-email\" is not present"
+        ],
+        "obrigatorios_aprovados": [],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 4.9,
+        "espera_api_s": 4.999994416721165e-06,
+        "resultado": {
+          "tier": "T2",
+          "comando": [
+            "node",
+            "--import",
+            "./test/server/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_kr1vwdck/insecurity/primeira.xml",
+            "test/server/insecurity.unit.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 4.9,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": ".707375ms)\n  ▶ generateCoupon\n    ✔ returns base85-encoded month, year and discount as coupon code (6.591ms)\n    ✔ uses current month and year if not specified (1.214459ms)\n    ✔ does not encode day of month or time into coupon code (0.43525ms)\n  ✔ generateCoupon (9.194542ms)\n  ▶ discountFromCoupon\n    ✔ returns undefined when not passing in a coupon code (1.889583ms)\n    ✔ returns undefined for malformed coupon code (2.246291ms)\n    ✔ returns undefined for coupon code not according to expected pattern (3.13775ms)\n    ✔ returns undefined for expired coupon code (0.71ms)\n    ✔ returns discount from valid coupon code (0.202958ms)\n  ✔ discountFromCoupon (9.895875ms)\n  ▶ authenticatedUsers\n    ✔ returns user by associated token (4.643125ms)\n    ✔ returns undefined if no token is passed in (0.342625ms)\n    ✔ returns token by associated user (0.199166ms)\n    ✔ returns user by associated token from request (0.28425ms)\n    ✔ returns undefined if no token is present in request (0.096708ms)\n  ✔ authenticatedUsers (5.787334ms)\n  ▶ sanitizeHtml\n    ✔ handles empty inputs by returning their string representation (1.255291ms)\n    ✔ returns input unchanged for plain text input (0.384833ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (1.726709ms)\n    ✔ returns input unchanged for HTML input with only harmless links (1.37725ms)\n    ✔ removes all Javascript from HTML input (1.025333ms)\n    ✔ can be bypassed by exploiting lack of recursive sanitization (0.18025ms)\n  ✔ sanitizeHtml (6.297792ms)\n  ▶ sanitizeLegacy\n    ✔ returns empty string for undefined input (0.452708ms)\n    ✔ returns input unchanged for plain text input (0.131959ms)\n    ✔ removes all opening tags and subsequent character from HTML input (0.11025ms)\n    ✔ can be bypassed to allow working HTML payload to be returned (0.117375ms)\n  ✔ sanitizeLegacy (0.995084ms)\n  ▶ sanitizeSecure\n    ✔ handles empty inputs by returning their string representation (1.037375ms)\n    ✔ returns input unchanged for plain text input (0.915208ms)\n    ✔ returns input unchanged for HTML input with only harmless text formatting (0.579959ms)\n    ✔ returns input unchanged for HTML input with only harmless links (1.140291ms)\n    ✔ removes all Javascript from HTML input (0.519792ms)\n    ✔ cannot be bypassed by exploiting lack of recursive sanitization (1.473459ms)\n  ✔ sanitizeSecure (6.08275ms)\n  ▶ hash\n    ✖ returns MD5 hash for any input string (65.218ms)\n  ✖ hash (65.550875ms)\n  ▶ hmac\n    ✔ returns SHA-256 HMAC with \"pa4qacea4VK9t9nGv7yZtwmj\" as salt any input string (0.999667ms)\n  ✔ hmac (1.242667ms)\n✖ insecurity (112.794833ms)\nℹ tests 35\nℹ suites 11\nℹ pass 34\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1996.000459\n\n✖ failing tests:\n\ntest at test/server/insecurity.unit.test.ts:2:9983\n✖ returns MD5 hash for any input string (65.218ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'\n  - '0192023a7bbd73250516f069df18b500'\n  \n      at TestContext.<anonymous> (test/server/insecurity.unit.test.ts:193:14)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Test.start (node:internal/test_runner/test:1015:17)\n      at node:internal/test_runner/test:1531:71\n      at node:internal/per_context/primordials:466:82\n      at new Promise (<anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:435:3)\n      at node:internal/per_context/primordials:466:9\n      at Array.map (<anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c',\n    expected: '0192023a7bbd73250516f069df18b500',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"insecurity\" time=\"0.112795\" disabled=\"0\" errors=\"0\" tests=\"10\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testsuite name=\"cutOffPoisonNullByte\" time=\"0.003954\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns string unchanged if it contains no null byte\" time=\"0.001865\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns string up to null byte\" time=\"0.000260\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"userEmailFrom\" time=\"0.000707\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns content of &amp;quot;x-user-email&amp;quot; header if present\" time=\"0.000207\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined if header &amp;quot;x-user-email&amp;quot; is not present\" time=\"0.000312\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"generateCoupon\" time=\"0.009195\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns base85-encoded month, year and discount as coupon code\" time=\"0.006591\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"uses current month and year if not specified\" time=\"0.001214\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"does not encode day of month or time into coupon code\" time=\"0.000435\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"discountFromCoupon\" time=\"0.009896\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns undefined when not passing in a coupon code\" time=\"0.001890\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined for malformed coupon code\" time=\"0.002246\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined for coupon code not according to expected pattern\" time=\"0.003138\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined for expired coupon code\" time=\"0.000710\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns discount from valid coupon code\" time=\"0.000203\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"authenticatedUsers\" time=\"0.005787\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns user by associated token\" time=\"0.004643\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined if no token is passed in\" time=\"0.000343\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns token by associated user\" time=\"0.000199\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns user by associated token from request\" time=\"0.000284\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined if no token is present in request\" time=\"0.000097\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"sanitizeHtml\" time=\"0.006298\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"handles empty inputs by returning their string representation\" time=\"0.001255\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for plain text input\" time=\"0.000385\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for HTML input with only harmless text formatting\" time=\"0.001727\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for HTML input with only harmless links\" time=\"0.001377\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"removes all Javascript from HTML input\" time=\"0.001025\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"can be bypassed by exploiting lack of recursive sanitization\" time=\"0.000180\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"sanitizeLegacy\" time=\"0.000995\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns empty string for undefined input\" time=\"0.000453\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for plain text input\" time=\"0.000132\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"removes all opening tags and subsequent character from HTML input\" time=\"0.000110\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"can be bypassed to allow working HTML payload to be returned\" time=\"0.000117\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"sanitizeSecure\" time=\"0.006083\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"handles empty inputs by returning their string representation\" time=\"0.001037\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for plain text input\" time=\"0.000915\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for HTML input with only harmless text formatting\" time=\"0.000580\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for HTML input with only harmless links\" time=\"0.001140\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"removes all Javascript from HTML input\" time=\"0.000520\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"cannot be bypassed by exploiting lack of recursive sanitization\" time=\"0.001473\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"hash\" time=\"0.065551\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns MD5 hash for any input string\" time=\"0.065218\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\" failure=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'&#10;- '0192023a7bbd73250516f069df18b500'&#10;\">\n\t\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'&#10;- '0192023a7bbd73250516f069df18b500'\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'\n- '0192023a7bbd73250516f069df18b500'\n\n    at new Promise (&lt;anonymous>)\n    at Array.map (&lt;anonymous>) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'\n  - '0192023a7bbd73250516f069df18b500'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/insecurity.unit.test.ts:193:14)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Test.start (node:internal/test_runner/test:1015:17)\n      at node:internal/test_runner/test:1531:71\n      at node:internal/per_context/primordials:466:82\n      at new Promise (&lt;anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:435:3)\n      at node:internal/per_context/primordials:466:9\n      at Array.map (&lt;anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c',\n    expected: '0192023a7bbd73250516f069df18b500',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t\t</failure>\n\t\t\t</testcase>\n\t\t</testsuite>\n\t\t<testsuite name=\"hmac\" time=\"0.001243\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns SHA-256 HMAC with &amp;quot;pa4qacea4VK9t9nGv7yZtwmj&amp;quot; as salt any input string\" time=\"0.001000\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<!-- tests 35 -->\n\t<!-- suites 11 -->\n\t<!-- pass 34 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1996.000459 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"insecurity\" time=\"0.096867\" disabled=\"0\" errors=\"0\" tests=\"10\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testsuite name=\"cutOffPoisonNullByte\" time=\"0.003534\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns string unchanged if it contains no null byte\" time=\"0.001694\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns string up to null byte\" time=\"0.000257\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"userEmailFrom\" time=\"0.000965\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns content of &amp;quot;x-user-email&amp;quot; header if present\" time=\"0.000182\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined if header &amp;quot;x-user-email&amp;quot; is not present\" time=\"0.000276\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"generateCoupon\" time=\"0.007725\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns base85-encoded month, year and discount as coupon code\" time=\"0.005525\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"uses current month and year if not specified\" time=\"0.000770\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"does not encode day of month or time into coupon code\" time=\"0.000294\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"discountFromCoupon\" time=\"0.007138\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns undefined when not passing in a coupon code\" time=\"0.001782\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined for malformed coupon code\" time=\"0.000503\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined for coupon code not according to expected pattern\" time=\"0.002817\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined for expired coupon code\" time=\"0.000637\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns discount from valid coupon code\" time=\"0.000179\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"authenticatedUsers\" time=\"0.002359\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns user by associated token\" time=\"0.001741\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined if no token is passed in\" time=\"0.000075\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns token by associated user\" time=\"0.000130\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns user by associated token from request\" time=\"0.000181\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns undefined if no token is present in request\" time=\"0.000086\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"sanitizeHtml\" time=\"0.005025\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"handles empty inputs by returning their string representation\" time=\"0.000915\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for plain text input\" time=\"0.000228\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for HTML input with only harmless text formatting\" time=\"0.001261\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for HTML input with only harmless links\" time=\"0.001375\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"removes all Javascript from HTML input\" time=\"0.000906\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"can be bypassed by exploiting lack of recursive sanitization\" time=\"0.000115\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"sanitizeLegacy\" time=\"0.000572\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns empty string for undefined input\" time=\"0.000281\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for plain text input\" time=\"0.000056\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"removes all opening tags and subsequent character from HTML input\" time=\"0.000059\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"can be bypassed to allow working HTML payload to be returned\" time=\"0.000079\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"sanitizeSecure\" time=\"0.003532\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"handles empty inputs by returning their string representation\" time=\"0.000301\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for plain text input\" time=\"0.000587\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for HTML input with only harmless text formatting\" time=\"0.000320\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"returns input unchanged for HTML input with only harmless links\" time=\"0.000887\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"removes all Javascript from HTML input\" time=\"0.000856\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t\t<testcase name=\"cannot be bypassed by exploiting lack of recursive sanitization\" time=\"0.000368\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t\t<testsuite name=\"hash\" time=\"0.061341\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns MD5 hash for any input string\" time=\"0.061001\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\" failure=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'&#10;- '0192023a7bbd73250516f069df18b500'&#10;\">\n\t\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'&#10;- '0192023a7bbd73250516f069df18b500'\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'\n- '0192023a7bbd73250516f069df18b500'\n\n    at new Promise (&lt;anonymous>)\n    at Array.map (&lt;anonymous>) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c'\n  - '0192023a7bbd73250516f069df18b500'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/server/insecurity.unit.test.ts:193:14)\n      at Test.runInAsyncScope (node:async_hooks:228:14)\n      at Test.run (node:internal/test_runner/test:1118:25)\n      at Test.start (node:internal/test_runner/test:1015:17)\n      at node:internal/test_runner/test:1531:71\n      at node:internal/per_context/primordials:466:82\n      at new Promise (&lt;anonymous>)\n      at new SafePromise (node:internal/per_context/primordials:435:3)\n      at node:internal/per_context/primordials:466:9\n      at Array.map (&lt;anonymous>) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: '4f7f390e691dd59274bccf8e6551b8d887faf2687fe4cd83da8ccbdf3c921569c2f8f3e611b481a1ca127c7f7a8a47dd272ae34cb06c48bee89c9be5469dc66c',\n    expected: '0192023a7bbd73250516f069df18b500',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t\t</failure>\n\t\t\t</testcase>\n\t\t</testsuite>\n\t\t<testsuite name=\"hmac\" time=\"0.001436\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t\t<testcase name=\"returns SHA-256 HMAC with &amp;quot;pa4qacea4VK9t9nGv7yZtwmj&amp;quot; as salt any input string\" time=\"0.001136\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/insecurity.unit.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<!-- tests 35 -->\n\t<!-- suites 11 -->\n\t<!-- pass 34 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1923.200876 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "insecurity_extra",
+        "dominio": "servidor",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves authenticated token roundtrip",
+            "arquivo": "tests/functional/juice_shop/insecurity.unit.test.ts",
+            "nome": "TCC shared security contracts > preserves authenticated token roundtrip",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves coupon amount roundtrip and approved redirect",
+            "arquivo": "tests/functional/juice_shop/insecurity.unit.test.ts",
+            "nome": "TCC shared security contracts > preserves coupon amount roundtrip and approved redirect",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deluxe tokens as deterministic user specific values",
+            "arquivo": "tests/functional/juice_shop/insecurity.unit.test.ts",
+            "nome": "TCC shared security contracts > preserves deluxe tokens as deterministic user specific values",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deterministic distinct digests without pinning a secret",
+            "arquivo": "tests/functional/juice_shop/insecurity.unit.test.ts",
+            "nome": "TCC shared security contracts > preserves deterministic distinct digests without pinning a secret",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves authenticated token roundtrip",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves coupon amount roundtrip and approved redirect",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deluxe tokens as deterministic user specific values",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deterministic distinct digests without pinning a secret"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves authenticated token roundtrip",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves coupon amount roundtrip and approved redirect",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deluxe tokens as deterministic user specific values",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deterministic distinct digests without pinning a secret"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves authenticated token roundtrip",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves coupon amount roundtrip and approved redirect",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deluxe tokens as deterministic user specific values",
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deterministic distinct digests without pinning a secret"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/insecurity.unit.test.ts :: TCC shared security contracts > preserves deluxe tokens as deterministic user specific values"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 2.03,
+        "espera_api_s": 2.0000006770715117e-06,
+        "resultado": {
+          "tier": "T2",
+          "comando": [
+            "node",
+            "--import",
+            "./test/server/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_kr1vwdck/insecurity_extra/primeira.xml",
+            "test/server/tcc_coverage_insecurity.unit.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 2.03,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ TCC shared security contracts\n  ✔ preserves authenticated token roundtrip (14.208459ms)\n  ✔ preserves deterministic distinct digests without pinning a secret (161.108083ms)\n  ✔ preserves coupon amount roundtrip and approved redirect (4.033917ms)\n  ✔ preserves deluxe tokens as deterministic user specific values (0.513291ms)\n✔ TCC shared security contracts (182.145125ms)\nℹ tests 4\nℹ suites 1\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1645.835667\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC shared security contracts\" time=\"0.182145\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"preserves authenticated token roundtrip\" time=\"0.014208\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_insecurity.unit.test.ts\"/>\n\t\t<testcase name=\"preserves deterministic distinct digests without pinning a secret\" time=\"0.161108\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_insecurity.unit.test.ts\"/>\n\t\t<testcase name=\"preserves coupon amount roundtrip and approved redirect\" time=\"0.004034\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_insecurity.unit.test.ts\"/>\n\t\t<testcase name=\"preserves deluxe tokens as deterministic user specific values\" time=\"0.000513\" classname=\"test\" file=\"/repo/workspace/wt-2/test/server/tcc_coverage_insecurity.unit.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 4 -->\n\t<!-- suites 1 -->\n\t<!-- pass 4 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 1645.835667 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

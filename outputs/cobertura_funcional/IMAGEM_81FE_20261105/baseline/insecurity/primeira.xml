@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="insecurity" time="0.020056" disabled="0" errors="0" tests="10" failures="0" skipped="0" hostname="fe01c1e73f3b">
+		<testsuite name="cutOffPoisonNullByte" time="0.001733" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="returns string unchanged if it contains no null byte" time="0.000935" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns string up to null byte" time="0.000119" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="userEmailFrom" time="0.000334" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="returns content of &amp;quot;x-user-email&amp;quot; header if present" time="0.000090" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined if header &amp;quot;x-user-email&amp;quot; is not present" time="0.000147" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="generateCoupon" time="0.004112" disabled="0" errors="0" tests="3" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="returns base85-encoded month, year and discount as coupon code" time="0.003222" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="uses current month and year if not specified" time="0.000397" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="does not encode day of month or time into coupon code" time="0.000127" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="discountFromCoupon" time="0.003749" disabled="0" errors="0" tests="5" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="returns undefined when not passing in a coupon code" time="0.000663" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined for malformed coupon code" time="0.000384" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined for coupon code not according to expected pattern" time="0.001212" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined for expired coupon code" time="0.000349" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns discount from valid coupon code" time="0.000114" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="authenticatedUsers" time="0.001118" disabled="0" errors="0" tests="5" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="returns user by associated token" time="0.000798" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined if no token is passed in" time="0.000035" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns token by associated user" time="0.000059" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns user by associated token from request" time="0.000128" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns undefined if no token is present in request" time="0.000030" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="sanitizeHtml" time="0.002874" disabled="0" errors="0" tests="6" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="handles empty inputs by returning their string representation" time="0.000428" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for plain text input" time="0.000125" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for HTML input with only harmless text formatting" time="0.000950" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for HTML input with only harmless links" time="0.000798" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="removes all Javascript from HTML input" time="0.000398" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="can be bypassed by exploiting lack of recursive sanitization" time="0.000057" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="sanitizeLegacy" time="0.000305" disabled="0" errors="0" tests="4" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="returns empty string for undefined input" time="0.000147" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for plain text input" time="0.000031" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="removes all opening tags and subsequent character from HTML input" time="0.000032" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="can be bypassed to allow working HTML payload to be returned" time="0.000042" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="sanitizeSecure" time="0.002219" disabled="0" errors="0" tests="6" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="handles empty inputs by returning their string representation" time="0.000208" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for plain text input" time="0.000304" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for HTML input with only harmless text formatting" time="0.000232" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="returns input unchanged for HTML input with only harmless links" time="0.000559" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="removes all Javascript from HTML input" time="0.000446" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+			<testcase name="cannot be bypassed by exploiting lack of recursive sanitization" time="0.000117" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="hash" time="0.000690" disabled="0" errors="0" tests="1" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="returns MD5 hash for any input string" time="0.000570" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+		<testsuite name="hmac" time="0.001271" disabled="0" errors="0" tests="1" failures="0" skipped="0" hostname="fe01c1e73f3b">
+			<testcase name="returns SHA-256 HMAC with &amp;quot;pa4qacea4VK9t9nGv7yZtwmj&amp;quot; as salt any input string" time="0.001148" classname="test" file="/repo/workspace/wt-1/test/server/insecurity.unit.test.ts"/>
+		</testsuite>
+	</testsuite>
+	<!-- tests 35 -->
+	<!-- suites 11 -->
+	<!-- pass 35 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 951.59975 -->
+</testsuites>

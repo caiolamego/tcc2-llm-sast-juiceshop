@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key (IDOR) na consulta do cesto de compras pelo ID fornecido na URL sem verificar se o usuário autenticado é o proprietário do cesto.\",\"causa_da_vulnerabilidade\":\"A consulta ao modelo BasketModel é feita apenas com base no ID fornecido na requisição (req.params.id), sem verificar se o usuário autenticado tem permissão para acessar aquele recurso, permitindo que um usuário acesse cestos de outros usuários.\",\"estrategia_de_correcao\":\"Adicionar uma restrição na consulta para garantir que o cesto retornado pertença ao usuário autenticado, comparando o campo de proprietário (por exemplo, user.bid) com o ID do cesto, evitando assim o acesso não autorizado a cestos de outros usuários.\",\"edicoes\":[{\"arquivo\":\"routes/basket.ts\",\"trecho_original\":\"      const id = req.params.id\\n      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"      const id = req.params.id\\n      const user = security.authenticatedUsers.from(req)\\n      const basket = await BasketModel.findOne({ where: { id, UserId: user?.id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"}],\"justificativa_tecnica\":\"A correção adiciona uma cláusula 'where' que restringe a consulta ao cesto cujo ID corresponde ao parâmetro da requisição e que pertence ao usuário autenticado (identificado por user.id). Isso impede que usuários acessem cestos que não lhes pertencem, mitigando a vulnerabilidade de IDOR sem alterar a lógica funcional da rota.\",\"limitacoes_da_correcao\":\"A correção assume que o modelo BasketModel possui um campo UserId que referencia o proprietário do cesto e que a função security.authenticatedUsers.from(req) retorna um objeto de usuário com o campo 'id' corretamente preenchido. Se a estrutura do modelo ou do usuário for diferente, ajustes adicionais podem ser necessários.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1446,
+  "tokens_saida": 443,
+  "latencia_s": 3.373,
+  "custo_usd": 0.001287,
+  "hash_prompt": "e2389b53fbcc6a5306d4910ce714488239eab80e653d5290c5ebaa7c0b394878",
+  "do_cache": true
+}

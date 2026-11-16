@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de SQL via parâmetro 'id' não validado em getDeliveryMethod\",\"causa_da_vulnerabilidade\":\"O parâmetro 'id' é utilizado diretamente na consulta ao banco de dados sem validação ou sanitização, permitindo que um atacante injete código malicioso na consulta.\",\"estrategia_de_correcao\":\"Validar e sanitizar o parâmetro 'id' para garantir que seja um número inteiro válido antes de utilizá-lo na consulta ao banco de dados.\",\"edicoes\":[{\"arquivo\":\"routes/delivery.ts\",\"trecho_original\":\"    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\",\"trecho_corrigido\":\"    const id = Number(req.params.id)\\n    if (isNaN(id)) {\\n      res.status(400).json({ status: 'error' })\\n      return\\n    }\\n    const method = await DeliveryModel.findOne({ where: { id: id } })\"}],\"justificativa_tecnica\":\"Ao converter explicitamente o parâmetro 'id' para um número e verificar se é um valor válido, evitamos que valores maliciosos sejam passados para a consulta, prevenindo injeção de SQL e garantindo que apenas IDs numéricos sejam aceitos.\",\"limitacoes_da_correcao\":\"A correção assume que os IDs de métodos de entrega são sempre números inteiros. Se futuramente IDs alfanuméricos forem usados, a validação precisará ser ajustada.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 893,
+  "tokens_saida": 316,
+  "latencia_s": 4.126,
+  "custo_usd": 0.000863,
+  "hash_prompt": "b8856237536726aef08802e39d2b7daa153a2354753a656323c719d24110a355",
+  "do_cache": false
+}

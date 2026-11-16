@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de chave HMAC codificada diretamente no código fonte (hardcoded key) na função deluxeToken.\",\"causa_da_vulnerabilidade\":\"A chave secreta usada para gerar o HMAC na função deluxeToken está codificada diretamente no código fonte como a variável 'privateKey'. Isso expõe a chave a qualquer pessoa que tenha acesso ao código, facilitando ataques de falsificação de tokens.\",\"estrategia_de_correcao\":\"Remover a chave secreta hardcoded do código e carregá-la a partir de uma variável de ambiente segura. Isso evita que a chave fique exposta no código fonte e permite a rotação e gerenciamento seguro da chave.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const deluxeToken = (email: string) => {\\n  const hmac = crypto.createHmac('sha256', privateKey)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\",\"trecho_corrigido\":\"export const deluxeToken = (email: string) => {\\n  const secret = process.env.DELUXE_TOKEN_SECRET\\n  if (!secret) {\\n    throw new Error('Missing DELUXE_TOKEN_SECRET environment variable')\\n  }\\n  const hmac = crypto.createHmac('sha256', secret)\\n  return hmac.update(email + roles.deluxe).digest('hex')\\n}\"}],\"justificativa_tecnica\":\"Ao retirar a chave secreta do código fonte e carregá-la de uma variável de ambiente, a chave não fica exposta no repositório de código, reduzindo o risco de comprometimento. Além disso, permite que a chave seja gerenciada e rotacionada de forma segura sem necessidade de alterar o código.\",\"limitacoes_da_correcao\":\"É necessário garantir que a variável de ambiente DELUXE_TOKEN_SECRET esteja corretamente configurada em todos os ambientes onde a aplicação roda. Caso contrário, a função lançará erro e poderá causar falhas na autenticação de usuários deluxe. A migração deve ser planejada para evitar interrupções.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3655,
+  "tokens_saida": 433,
+  "latencia_s": 4.284,
+  "custo_usd": 0.001272,
+  "hash_prompt": "09b6c26e3e2400b8c6032f4df11be4f09967b98f16fb74dd36a76a07728dba09",
+  "do_cache": false
+}

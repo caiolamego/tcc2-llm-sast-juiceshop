@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Não é possível identificar uma vulnerabilidade de produção no arquivo fornecido: ele é um teste unitário e não contém a implementação do componente. O teste, porém, codifica como comportamento esperado o uso de bypassSecurityTrustHtml com um valor derivado do JWT.\",\n  \"causa_da_vulnerabilidade\": \"O teste espera que o IP extraído do token seja marcado como HTML confiável. Se a implementação correspondente renderizar esse valor como HTML, dados controláveis pelo cliente podem resultar em XSS. O arquivo de teste, isoladamente, não permite confirmar nem corrigir essa implementação.\",\n  \"estrategia_de_correcao\": \"Não alterar o arquivo de teste, conforme a restrição explícita. Para corrigir a vulnerabilidade, é necessário inspecionar e modificar last-login-ip.component.ts: tratar o IP como texto não confiável, sem bypassSecurityTrustHtml, e ajustar os testes em uma tarefa que permita alterações de testes.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"O arquivo informado contém apenas configuração e casos de teste. Alterá-lo não corrige o código executado pela aplicação e violaria a instrução de não alterar arquivos de teste. A correção segura deve ocorrer no componente que consome o valor do JWT e o apresenta na interface.\",\n  \"limitacoes_da_correcao\": \"Nenhuma edição foi feita porque o único arquivo fornecido é um teste e a implementação vulnerável não foi incluída. É necessário fornecer frontend/src/app/last-login-ip/last-login-ip.component.ts para propor uma correção efetiva.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1313,
+  "tokens_saida": 341,
+  "latencia_s": 4.582,
+  "custo_usd": 0.000335,
+  "hash_prompt": "7a84e179120a3d97a1c07214bfe383ba3197f90014a7dfbd9ee50466780ac962",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1310
+}

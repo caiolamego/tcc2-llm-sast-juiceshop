@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição potencial de informações sensíveis por meio do endpoint público de métricas, registrado em /metrics sem middleware explícito de autorização.\",\"causa_da_vulnerabilidade\":\"A rota é registrada diretamente com app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())), permitindo que qualquer cliente que alcance a aplicação consulte as métricas. O conteúdo pode revelar nomes de métricas, contadores, estado operacional e outros detalhes internos da aplicação.\",\"estrategia_de_correcao\":\"Adicionar o middleware de autorização já utilizado pela aplicação, security.isAuthorized(), à rota vulnerável, preservando o handler existente e o comportamento funcional para usuários autenticados.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"/* vuln-code-snippet start exposedMetricsChallenge */\\n/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`\",\"trecho_corrigido\":\"/* vuln-code-snippet start exposedMetricsChallenge */\\n/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`\"}],\"justificativa_tecnica\":\"O middleware security.isAuthorized() passa a ser executado antes do handler de métricas e impede o acesso de clientes não autenticados, reduzindo a exposição de informações operacionais a atores autorizados. A alteração é mínima, mantém a rota, o método HTTP e o handler existentes, e não modifica o formato das métricas para consumidores autenticados.\",\"limitacoes_da_correcao\":\"A eficácia depende da implementação correta de security.isAuthorized() e da configuração da autenticação. A correção restringe o acesso a usuários autenticados, mas não necessariamente a todos os usuários autorizados por função; caso as métricas sejam administrativas ou contenham dados especialmente sensíveis, deve-se aplicar também uma autorização baseada em privilégio específico. O trecho mostrado contém outra declaração de /metrics antes desta rota; ela também deve ser revisada no arquivo completo para garantir que não permaneça uma rota pública equivalente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3273,
+  "tokens_saida": 533,
+  "latencia_s": 7.46,
+  "custo_usd": 0.001458,
+  "hash_prompt": "9d65ee87d985d173e6c00d69fa9f10f7a76cd15829009ef7ac2b90e71f690ed9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3270
+}

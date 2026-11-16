@@ -1,0 +1,283 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 41.86682283200025,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_f_marcador": [
+    "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 8.04,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_kvihaqy4/history/primeira.xml",
+        "test/api/order-history.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 10.350000000000001,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant"
+      ],
+      "testes_falhos_novos": [
+        "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /rest/order-history\n  ✔ GET own previous orders (147.675207ms)\n✔ /rest/order-history (921.29319ms)\n▶ /rest/order-history/orders\n  ✔ GET all orders is forbidden for customers (77.211392ms)\n  ✔ GET all orders is forbidden for admin (73.276841ms)\n  ✔ GET all orders for accountant (74.9359ms)\n✔ /rest/order-history/orders (226.18336ms)\n▶ /rest/order-history/:id/delivery-status\n  ✔ PUT delivery status is forbidden for admin (91.360122ms)\n  ✔ PUT delivery status is forbidden for customer (65.009623ms)\n  ✖ PUT delivery status is allowed for accountant (73.338817ms)\n✖ /rest/order-history/:id/delivery-status (232.386875ms)\nℹ tests 7\nℹ suites 3\nℹ pass 6\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5039.448372\n\n✖ failing tests:\n\ntest at test/api/order-history.test.ts:2:5068\n✖ PUT delivery status is allowed for accountant (73.338817ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.<anonymous> (test/api/order-history.test.ts:133:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 4.0169998101191595e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/orderHistory.ts"
+    ],
+    "grupos": [
+      "history"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 8.04
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "history",
+      "status": "executada",
+      "duracao_s": 10.350000000000001
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "history"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 8.04
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "history",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history > GET own previous orders",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders for accountant",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/orders > GET all orders for accountant",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for admin",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/orders > GET all orders is forbidden for admin",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for customers",
+            "arquivo": "test/api/order-history.test.ts",
+            "nome": "/rest/order-history/orders > GET all orders is forbidden for customers",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant"
+        ],
+        "falhos_novos": [
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant"
+        ],
+        "falhos_novos_observados": [
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for customers"
+        ],
+        "esperados": [
+          "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for customers"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is allowed for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/:id/delivery-status > PUT delivery status is forbidden for customer",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders for accountant",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for admin",
+          "test/api/order-history.test.ts :: /rest/order-history/orders > GET all orders is forbidden for customers"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/order-history.test.ts :: /rest/order-history > GET own previous orders"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 10.350000000000001,
+        "espera_api_s": 4.0169998101191595e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_kvihaqy4/history/primeira.xml",
+            "test/api/order-history.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 10.350000000000001,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /rest/order-history\n  ✔ GET own previous orders (147.675207ms)\n✔ /rest/order-history (921.29319ms)\n▶ /rest/order-history/orders\n  ✔ GET all orders is forbidden for customers (77.211392ms)\n  ✔ GET all orders is forbidden for admin (73.276841ms)\n  ✔ GET all orders for accountant (74.9359ms)\n✔ /rest/order-history/orders (226.18336ms)\n▶ /rest/order-history/:id/delivery-status\n  ✔ PUT delivery status is forbidden for admin (91.360122ms)\n  ✔ PUT delivery status is forbidden for customer (65.009623ms)\n  ✖ PUT delivery status is allowed for accountant (73.338817ms)\n✖ /rest/order-history/:id/delivery-status (232.386875ms)\nℹ tests 7\nℹ suites 3\nℹ pass 6\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5039.448372\n\n✖ failing tests:\n\ntest at test/api/order-history.test.ts:2:5068\n✖ PUT delivery status is allowed for accountant (73.338817ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.<anonymous> (test/api/order-history.test.ts:133:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/order-history\" time=\"0.921293\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET own previous orders\" time=\"0.147675\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/order-history/orders\" time=\"0.226183\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET all orders is forbidden for customers\" time=\"0.077211\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"GET all orders is forbidden for admin\" time=\"0.073277\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"GET all orders for accountant\" time=\"0.074936\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/order-history/:id/delivery-status\" time=\"0.232387\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"PUT delivery status is forbidden for admin\" time=\"0.091360\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"PUT delivery status is forbidden for customer\" time=\"0.065010\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"PUT delivery status is allowed for accountant\" time=\"0.073339\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/order-history.test.ts:133:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 7 -->\n\t<!-- suites 3 -->\n\t<!-- pass 6 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5039.448372 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/order-history\" time=\"0.960911\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET own previous orders\" time=\"0.167826\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/order-history/orders\" time=\"0.284650\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET all orders is forbidden for customers\" time=\"0.110850\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"GET all orders is forbidden for admin\" time=\"0.087675\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"GET all orders for accountant\" time=\"0.085284\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/order-history/:id/delivery-status\" time=\"0.201018\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"PUT delivery status is forbidden for admin\" time=\"0.066598\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"PUT delivery status is forbidden for customer\" time=\"0.061437\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\"/>\n\t\t<testcase name=\"PUT delivery status is allowed for accountant\" time=\"0.070999\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/order-history.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/order-history.test.ts:133:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 7 -->\n\t<!-- suites 3 -->\n\t<!-- pass 6 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5146.149039 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

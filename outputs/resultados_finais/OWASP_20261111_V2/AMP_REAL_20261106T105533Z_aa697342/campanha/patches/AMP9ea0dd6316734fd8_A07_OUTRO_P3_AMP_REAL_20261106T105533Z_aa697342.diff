@@ -1,0 +1,13 @@
+diff --git a/routes/changePassword.ts b/routes/changePassword.ts
+index bef4d8e10..ffd56fa9f 100644
+--- a/routes/changePassword.ts
++++ b/routes/changePassword.ts
+@@ -36,7 +36,7 @@ export function changePassword () {
+       return
+     }
+ 
+-    if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {
++    if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {
+       res.status(401).send(res.__('Current password is not correct.'))
+       return
+     }

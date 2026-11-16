@@ -1,0 +1,14 @@
+diff --git a/models/feedback.ts b/models/feedback.ts
+index 4790dbf00..847fb5ff9 100644
+--- a/models/feedback.ts
++++ b/models/feedback.ts
+@@ -58,6 +58,9 @@ const FeedbackModelInit = (sequelize: Sequelize) => {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         set (rating: number) {
++          if (!Number.isInteger(rating) || (rating !== 0 && (rating < 1 || rating > 5))) {
++            throw new Error('Invalid rating')
++          }
+           this.setDataValue('rating', rating)
+           challengeUtils.solveIf(challenges.zeroStarsChallenge, () => {
+             return Number(rating) === 0

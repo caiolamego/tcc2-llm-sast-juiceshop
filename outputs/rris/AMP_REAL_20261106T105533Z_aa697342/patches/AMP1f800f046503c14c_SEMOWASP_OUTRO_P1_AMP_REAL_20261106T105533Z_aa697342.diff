@@ -1,0 +1,14 @@
+diff --git a/routes/chat.ts b/routes/chat.ts
+index 99f8e728f..14192f315 100644
+--- a/routes/chat.ts
++++ b/routes/chat.ts
+@@ -146,7 +146,8 @@ export function chat () {
+         }),
+         execute: async ({ id }) => {
+           const productId = Number(id)
+-          return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]
++          if (!Number.isSafeInteger(productId)) return []
++          return await db.reviewsCollection.find({ product: productId }) as Review[]
+         }
+       }),
+ 

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) armazenado na exibição de comentários de feedback.\",\n  \"causa_da_vulnerabilidade\": \"O conteúdo de feedback recebido do serviço é passado diretamente para bypassSecurityTrustHtml e, assim, marcado como HTML confiável sem sanitização. Comentários controlados por um usuário podem conter marcação ou código malicioso que será interpretado pelo navegador.\",\n  \"estrategia_de_correcao\": \"Remover a confiança explícita no HTML do comentário e manter o valor original como texto. O Angular escapará o conteúdo ao renderizá-lo em um contexto de texto.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/administration/administration.component.ts\",\n      \"trecho_original\": \"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = this.sanitizer.bypassSecurityTrustHtml(feedback.comment)\\n        }\",\n      \"trecho_corrigido\": \"        for (const feedback of this.feedbackDataSource) {\\n          feedback.comment = feedback.comment\\n        }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"bypassSecurityTrustHtml desativa a proteção contextual do Angular e permite que conteúdo não confiável seja interpretado como HTML. Ao não marcar o comentário como confiável, a interpolação Angular o trata como texto e escapa caracteres especiais, impedindo a execução de marcação ou scripts injetados. A alteração preserva o valor exibido e limita-se ao ponto vulnerável.\",\n  \"limitacoes_da_correcao\": \"A proteção depende de o template exibir feedback.comment em um contexto de texto Angular, como interpolação. Se o template usar [innerHTML] ou outro mecanismo que interprete HTML, esse ponto também deve ser corrigido para não confiar no conteúdo.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1767,
+  "tokens_saida": 390,
+  "latencia_s": 4.524,
+  "custo_usd": 0.000416,
+  "hash_prompt": "60f97920ccc8611629ec0d5bf08e1e29c9d2e35370311acd33fb1666ea0dc9e7",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1764
+}

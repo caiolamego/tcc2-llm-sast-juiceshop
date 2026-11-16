@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"IDOR (Insecure Direct Object Reference) no acesso ao carrinho durante a finalização do pedido.\",\"causa_da_vulnerabilidade\":\"O identificador do carrinho é obtido diretamente de req.params.id e usado em BasketModel.findOne({ where: { id }, ... }) sem verificar se o carrinho pertence ao usuário autenticado. Além disso, a operação posterior remove itens e atualiza o cupom desse mesmo carrinho, permitindo que um usuário autenticado manipule o carrinho de outro usuário conhecendo ou enumerando seu ID.\",\"estrategia_de_correcao\":\"Restringir a consulta do carrinho ao identificador informado e ao usuário autenticado, usando a associação entre Basket e User. Quando não houver usuário autenticado, usar uma condição impossível para impedir acesso a carrinhos de terceiros sem alterar mensagens, assinaturas ou o fluxo existente.\",\"edicoes\":[{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"    const id = req.params.id\\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\"trecho_corrigido\":\"    const id = req.params.id\\n    const customer = security.authenticatedUsers.from(req)\\n    const userId = customer?.data?.id\\n    BasketModel.findOne({ where: { id, UserId: userId ?? -1 }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"},{\"arquivo\":\"routes/order.ts\",\"trecho_original\":\"          const customer = security.authenticatedUsers.from(req)\\n          const email = customer ? customer.data ? customer.data.email : '' : ''\",\"trecho_corrigido\":\"          const email = customer ? customer.data ? customer.data.email : '' : ''\"}],\"justificativa_tecnica\":\"A consulta passa a exigir simultaneamente o ID do carrinho e o UserId do usuário autenticado. Assim, mesmo que o atacante altere req.params.id, o ORM não retornará um carrinho pertencente a outro usuário. O valor -1 impede que uma requisição sem usuário autenticado corresponda acidentalmente a um carrinho válido, assumindo IDs de usuário positivos, como normalmente ocorre neste modelo. A variável customer é obtida antes da consulta e reutilizada no trecho original, evitando uma segunda leitura da autenticação e preservando o restante do comportamento.\",\"limitacoes_da_correcao\":\"A correção pressupõe que o modelo BasketModel possua a coluna UserId e que customer.data.id contenha o identificador numérico do usuário autenticado, conforme a associação usada pelo sistema. Ela não corrige outras questões independentes do fluxo, como ausência de transação entre débito, estoque, limpeza do carrinho e criação do pedido, nem validações de autorização sobre addressId, paymentId ou UserId enviados no corpo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3045,
+  "tokens_saida": 600,
+  "latencia_s": 8.548,
+  "custo_usd": 0.000781,
+  "hash_prompt": "4aa591215b85e2fe8c0ee9b6d6a3aa93f78cd2c95c6c51c0d9fe0141a9f7ce58",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 3042,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Cross-site scripting (XSS) ao renderizar o IP do último login como HTML sem sanitização.\",\n  \"causa_da_vulnerabilidade\": \"O valor payload.data.lastLoginIp é obtido de um token armazenado no navegador e interpolado em uma string HTML entregue a bypassSecurityTrustHtml. Essa chamada desativa a sanitização contextual do Angular, permitindo que conteúdo malicioso seja interpretado como markup.\",\n  \"estrategia_de_correcao\": \"Remover o bypass e atribuir o valor como texto simples. Manter o elemento <small> no template, se necessário para a apresentação, em vez de construí-lo como HTML no componente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\n      \"trecho_original\": \"import { DomSanitizer } from '@angular/platform-browser'\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\n      \"trecho_original\": \"  private readonly sanitizer = inject(DomSanitizer)\\n\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\n      \"trecho_original\": \"        this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)\",\n      \"trecho_corrigido\": \"        this.lastLoginIp = payload.data.lastLoginIp\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A atribuição mantém o valor do IP disponível para exibição, mas deixa de marcá-lo como HTML confiável. Quando usado em interpolação Angular ({{ }}), o valor é escapado e exibido como texto, impedindo que tags ou atributos fornecidos no token sejam executados. A remoção do import e da propriedade injetada evita código não utilizado.\",\n  \"limitacoes_da_correcao\": \"O template não foi fornecido. Se ele usa [innerHTML] para exibir lastLoginIp, esse binding deve ser substituído por interpolação de texto; caso contrário, a remoção do bypass pode alterar a formatação ou o comportamento de exibição. A correção pressupõe que o requisito funcional é mostrar o IP como texto, não permitir markup dinâmico.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1889,
+  "tokens_saida": 518,
+  "latencia_s": 5.115,
+  "custo_usd": 0.000495,
+  "hash_prompt": "c76d3b119075fc549e0966e83cad04124b0b5415da4ffa3b18626f9b65d663e4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1886
+}

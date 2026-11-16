@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Consulta de BasketItem pelo ID fornecido na requisição sem escopo de proprietário, permitindo potencial acesso ou alteração de item pertencente a outro usuário (CWE-639/IDOR).\",\"causa_da_vulnerabilidade\":\"A função quantityCheckBeforeBasketItemUpdate executa BasketItemModel.findOne({ where: { id: req.params.id } }) usando somente o identificador controlado pelo cliente. A verificação posterior considera apenas BasketId enviado no corpo e não valida o proprietário do item recuperado.\",\"estrategia_de_correcao\":\"Restringir a consulta do BasketItem ao basket associado ao usuário autenticado, usando a identidade validada pelo servidor. Quando não houver usuário autenticado ou o item não pertencer ao basket do usuário, a consulta não deve retornar o recurso; a lógica existente de tratamento de item inexistente permanece aplicável.\",\"edicoes\":[{\"arquivo\":\"routes/basketItems.ts\",\"trecho_original\":\"      const item = await BasketItemModel.findOne({ where: { id: req.params.id } })\\n      const user = security.authenticatedUsers.from(req)\",\"trecho_corrigido\":\"      const user = security.authenticatedUsers.from(req)\\n      const item = await BasketItemModel.findOne({ where: { id: req.params.id, BasketId: user?.bid } })\"}],\"justificativa_tecnica\":\"A consulta passa a aplicar autorização no próprio acesso ao banco, combinando o ID solicitado com o BasketId derivado da sessão autenticada no servidor. Assim, um usuário não consegue obter o item de outro basket apenas alterando req.params.id. O uso de user?.bid também impede que uma requisição sem identidade autenticada obtenha um item por essa consulta. A resposta e as mensagens existentes não foram alteradas, e a lógica posterior continua tratando item inexistente como erro.\",\"limitacoes_da_correcao\":\"A correção pressupõe que security.authenticatedUsers.from(req) forneça uma identidade confiável e que user.bid seja o identificador do basket proprietário. Ela protege especificamente a consulta de atualização analisada; as demais operações de leitura, criação ou exclusão devem ser verificadas nas respectivas rotas. Também pressupõe que o ORM aceite a chave BasketId no filtro conforme o modelo existente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2355,
+  "tokens_saida": 475,
+  "latencia_s": 6.283,
+  "custo_usd": 0.001159,
+  "hash_prompt": "eb0e1060fb946010003062194c25ff6c62edf420f5ce9ef9d536369922745b07",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2352
+}

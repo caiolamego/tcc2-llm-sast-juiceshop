@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"CWE-22: traversal de caminho (path traversal) durante a extração de arquivos ZIP, permitindo escrita fora do diretório destinado aos uploads.\",\n  \"causa_da_vulnerabilidade\": \"O caminho controlado pelo conteúdo do arquivo ZIP é concatenado com `uploads/complaints/` e usado para criar o arquivo. A verificação `absolutePath.includes(path.resolve('.'))` não confina o destino ao diretório de extração: ela apenas procura a raiz atual em qualquer posição do caminho. Um caminho com segmentos `..` pode, portanto, resolver para fora de `uploads/complaints/` e ainda passar pela verificação.\",\n  \"estrategia_de_correcao\": \"Resolver uma raiz absoluta fixa para `uploads/complaints/`, resolver cada entrada relativamente a essa raiz e verificar com `path.relative` que o destino permanece estritamente dentro dela. Usar o destino validado também na criação do arquivo; rejeitar entradas fora da raiz pelo caminho de erro já existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/fileUpload.ts\",\n      \"trecho_original\": \"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve('uploads/complaints/' + fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.includes(path.resolve('.'))) {\\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\\n    }\\n  }\\n}\",\n      \"trecho_corrigido\": \"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  const extractionRoot = path.resolve('uploads/complaints')\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve(extractionRoot, fileName)\\n    const relativePath = path.relative(extractionRoot, absolutePath)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (relativePath !== '' && relativePath !== '..' && !relativePath.startsWith('..' + path.sep) && !path.isAbsolute(relativePath)) {\\n      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))\\n    } else {\\n      throw new Error('Invalid archive entry path')\\n    }\\n  }\\n}\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A comparação por `path.relative` verifica a relação entre o destino resolvido e a raiz de extração, em vez de depender de uma busca por substring. Entradas que resolvam para a própria raiz, para `..`, para um caminho relativo iniciado por `..` ou para um caminho relativo absoluto são recusadas antes da escrita. O destino validado é o mesmo passado a `fs.createWriteStream`, impedindo que a validação e a operação usem caminhos diferentes. Entradas legítimas em subpastas continuam aceitas.\",\n  \"limitacoes_da_correcao\": \"A validação lexical não impede que links simbólicos preexistentes dentro de `uploads/complaints/` redirecionem a escrita para fora da raiz. Se usuários não confiáveis puderem criar links simbólicos nesse diretório, será necessário também controlar essa possibilidade, por exemplo usando uma raiz sem links simbólicos e permissões restritas. A correção também não altera a política de sobrescrita de arquivos existentes.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3066,
+  "tokens_saida": 797,
+  "latencia_s": 7.87,
+  "custo_usd": 0.000782,
+  "hash_prompt": "cd7a7b5a17e9762d1fd4b551a5287d57301749bda56ed95ddba5f86037999b31",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3063
+}

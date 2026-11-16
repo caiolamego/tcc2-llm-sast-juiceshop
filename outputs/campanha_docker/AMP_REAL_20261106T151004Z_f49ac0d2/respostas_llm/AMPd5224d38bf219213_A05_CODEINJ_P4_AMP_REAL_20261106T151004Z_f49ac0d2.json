@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de eval() para executar código dinâmico extraído do nome de usuário, permitindo execução arbitrária de código (CWE-95: Eval Injection).\",\"causa_da_vulnerabilidade\":\"O código extrai um trecho do nome de usuário que corresponde a uma expressão JavaScript e o executa diretamente com eval(), sem validação ou sanitização adequada. Como o nome de usuário pode ser controlado por um atacante, isso permite injeção e execução arbitrária de código no servidor.\",\"estrategia_de_correcao\":\"Remover o uso de eval() e substituir por uma abordagem segura que não execute código arbitrário. Como o código avaliado é extraído do nome de usuário para o desafio de XSS, a correção consiste em desabilitar a execução do código e tratar o nome de usuário como texto literal, escapando-o para evitar injeção.\",\"edicoes\":[{\"arquivo\":\"routes/userProfile.ts\",\"trecho_original\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  const code = username?.substring(2, username.length - 1)\\n  try {\\n    if (!code) {\\n      throw new Error('Username is null')\\n    }\\n    username = eval(code) // eslint-disable-line no-eval\\n  } catch (err) {\\n    username = '\\\\\\\\' + username\\n  }\\n} else {\\n  username = '\\\\\\\\' + username\\n}\",\"trecho_corrigido\":\"if (username?.match(/#{(.*)}/) !== null && utils.isChallengeEnabled(challenges.usernameXssChallenge)) {\\n  req.app.locals.abused_ssti_bug = true\\n  // Removido uso de eval para evitar execução de código arbitrário\\n  username = '\\\\\\\\' + username\\n} else {\\n  username = '\\\\\\\\' + username\\n}\"}],\"justificativa_tecnica\":\"O uso de eval() permite que um atacante injete e execute código JavaScript arbitrário no servidor, o que é uma vulnerabilidade crítica. Ao remover o eval() e tratar o conteúdo como texto literal, eliminamos a possibilidade de execução de código arbitrário, mitigando a vulnerabilidade de injeção de código. A funcionalidade do desafio é preservada ao marcar que o bug foi abusado, mas sem executar código dinâmico.\",\"limitacoes_da_correcao\":\"A correção desabilita a funcionalidade específica do desafio que dependia da execução dinâmica do código no nome de usuário, o que pode alterar o comportamento esperado do desafio usernameXssChallenge. No entanto, essa alteração é necessária para garantir a segurança da aplicação e evitar execução arbitrária de código.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2896,
+  "tokens_saida": 584,
+  "latencia_s": 7.875,
+  "custo_usd": 0.001517,
+  "hash_prompt": "446fa17b3d9abeda8cd1efc666415eafec63fc7f8310f25bbf6a122d6a6bb1ed",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1920,
+  "tokens_escrita_cache": 0
+}

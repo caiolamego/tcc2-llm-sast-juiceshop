@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Alteração de senha sem exigir a senha atual. O parâmetro currentPassword é opcional, portanto um usuário autenticado pode enviar apenas new e repeat e substituir a própria senha sem comprovar conhecimento da senha existente.\",\"causa_da_vulnerabilidade\":\"A verificação da senha atual está condicionada a `if (currentPassword && ...)`. Quando currentPassword não é fornecida, a condição é falsa e o fluxo prossegue diretamente para `user.update({ password: newPasswordInString })`. A autenticação por token comprova apenas a posse do token, não a posse da senha atual.\",\"estrategia_de_correcao\":\"Exigir que currentPassword esteja presente e seja igual ao hash armazenado antes de permitir a atualização. A mensagem de erro existente é preservada e a alteração fica restrita à condição de validação.\",\"edicoes\":[{\"arquivo\":\"routes/changePassword.ts\",\"trecho_original\":\"    if (currentPassword && security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\",\"trecho_corrigido\":\"    if (!currentPassword || security.hash(currentPassword) !== loggedInUser.data.password) {\\n      res.status(401).send(res.__('Current password is not correct.'))\\n      return\\n    }\"}],\"justificativa_tecnica\":\"Com `!currentPassword || ...`, a ausência da senha atual passa a resultar imediatamente em HTTP 401, assim como uma senha incorreta. A atualização da senha só ocorre quando o solicitante fornece a senha atual e seu hash corresponde ao valor armazenado para o usuário autenticado. Isso elimina o bypass causado pela validação condicional anterior, sem alterar mensagens, assinaturas, identificadores ou o restante do fluxo.\",\"limitacoes_da_correcao\":\"A correção exige a senha atual para toda alteração de senha e, portanto, impede o fluxo intencional de redefinição sem senha atual, caso exista. Ela não altera outros aspectos do mecanismo de autenticação por token, como expiração, revogação ou proteção contra roubo de tokens; esses controles devem ser avaliados separadamente.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1112,
+  "tokens_saida": 462,
+  "latencia_s": 6.602,
+  "custo_usd": 0.000832,
+  "hash_prompt": "b60571ff6a0604a68ef0c864b129c74d6a22e28fe4200f8e59fed9e709275219",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1109
+}

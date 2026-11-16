@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL no identificador da avaliação, permitindo também a alteração em massa de avaliações.\",\n  \"causa_da_vulnerabilidade\": \"O valor não validado req.body.id é usado diretamente como filtro MongoDB em { _id: req.body.id }. Se o cliente enviar um objeto com operadores MongoDB em vez de um identificador escalar, o filtro pode adquirir semântica diferente da pretendida. Além disso, a opção multi: true permite atualizar todos os documentos que correspondam ao filtro.\",\n  \"estrategia_de_correcao\": \"Aceitar somente um identificador escalar em formato válido de ObjectId e convertê-lo para ObjectId antes de construir o filtro. Remover a opção multi para limitar a operação a uma única avaliação. Rejeitar entradas inválidas com resposta 400.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/updateProductReviews.ts\",\n      \"trecho_original\": \"    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\\n    ).then(\",\n      \"trecho_corrigido\": \"    if (typeof req.body.id !== 'string' || !/^[a-fA-F0-9]{24}$/.test(req.body.id)) {\\n      return res.sendStatus(400)\\n    }\\n    db.reviewsCollection.update(\\n      { _id: new db.ObjectId(req.body.id) },\\n      { $set: { message: req.body.message } }\\n    ).then(\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação de tipo e formato impede que objetos contendo operadores NoSQL sejam usados como filtro, e a conversão produz um identificador BSON escalar. A remoção de multi impede que uma única requisição atualize vários documentos. Assim, a operação fica restrita a uma avaliação identificada por um ObjectId válido, preservando a atualização da mensagem para entradas legítimas.\",\n  \"limitacoes_da_correcao\": \"A alteração pressupõe que db.ObjectId esteja exportado pelo módulo ../data/mongodb. Se esse módulo não o exportar, deve-se importar ObjectId do driver MongoDB já utilizado pelo projeto. A correção não acrescenta autorização para garantir que o usuário autenticado seja o autor da avaliação; essa verificação é uma questão distinta da injeção NoSQL.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1005,
+  "tokens_saida": 561,
+  "latencia_s": 6.315,
+  "custo_usd": 0.000381,
+  "hash_prompt": "4fdd0f21558296b89fc7352239fbeb32e7339f4ad62575a17b80d13d33e59f54",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

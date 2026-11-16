@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações sensíveis por meio de listagem de diretórios habilitada em rotas que não deveriam ser públicas.\",\"causa_da_vulnerabilidade\":\"O uso do middleware 'serveIndex' em diretórios como '/ftp' e '/support/logs' permite que qualquer usuário acesse a listagem completa dos arquivos presentes nesses diretórios, expondo informações potencialmente sensíveis ou internas.\",\"estrategia_de_correcao\":\"Remover o middleware 'serveIndex' das rotas que expõem listagem de diretórios sensíveis, mantendo apenas o middleware 'express.static' para permitir o download direto dos arquivos quando o caminho exato for conhecido. Para diretórios que precisam de listagem, implementar controle de acesso adequado ou filtros para limitar os arquivos exibidos.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\\n  app.use('/.well-known', express.static('.well-known'))\\n\\n  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\\n\\n  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true, view: 'details' })) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\",\"trecho_corrigido\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', express.static('ftp')) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\\n\\n  app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))\\n  app.use('/.well-known', express.static('.well-known'))\\n\\n  /* /encryptionkeys directory browsing */\\n  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))\\n  app.use('/encryptionkeys/:file', serveKeyFiles())\\n\\n  /* /logs directory browsing */ // vuln-code-snippet neutral-line accessLogDisclosureChallenge\\n  app.use('/support/logs', verify.accessControlChallenges()) // vuln-code-snippet hide-line\\n  app.use('/support/logs', express.static('logs')) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\\n  app.use('/support/logs/:file', serveLogFiles()) // vuln-code-snippet vuln-line accessLogDisclosureChallenge\"}],\"justificativa_tecnica\":\"A listagem de diretórios via 'serveIndex' expõe nomes e estrutura de arquivos que podem conter informações sensíveis, facilitando ataques ou vazamentos. Ao remover 'serveIndex' e manter apenas 'express.static', os arquivos continuam acessíveis via URL direta, mas a listagem dos conteúdos é impedida, reduzindo a exposição de informações. Para diretórios que requerem listagem, deve-se implementar controle de acesso ou filtros específicos para limitar o conteúdo exibido.\",\"limitacoes_da_correcao\":\"Esta correção remove a funcionalidade de listagem de diretórios para '/ftp' e '/support/logs', o que pode impactar usuários que dependem da navegação visual desses diretórios. Caso a listagem seja necessária, deve-se implementar autenticação e filtros adequados. A correção não altera outras rotas que já possuem controle de acesso ou não apresentam risco de exposição sensível.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3198,
+  "tokens_saida": 993,
+  "latencia_s": 9.006,
+  "custo_usd": 0.002868,
+  "hash_prompt": "f7894ef3219c64ad14b0594a63aaede82023562a9eb87d545a07089bb4a475bc",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Redirecionamento aberto (CWE-601): o destino do redirecionamento é controlado pelo usuário e pode direcionar a vítima para um site externo malicioso.\",\n  \"causa_da_vulnerabilidade\": \"O valor de query.to é convertido para string e passado a res.redirect(toUrl). A validação existente por security.isRedirectAllowed não é suficiente para garantir que o destino corresponda a um host permitido de forma segura; a rota ainda redireciona diretamente para a entrada fornecida.\",\n  \"estrategia_de_correcao\": \"Validar o destino com o parser URL e permitir somente URLs HTTPS sem credenciais cujo hostname corresponda exatamente a um dos hosts já presentes na lista de redirecionamento. Passar ao res.redirect a URL canônica validada e manter o tratamento de erro existente para destinos recusados.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/redirect.ts\",\n      \"trecho_original\": \"    const toUrl: string = query.to as string\\n    if (security.isRedirectAllowed(toUrl)) {\",\n      \"trecho_corrigido\": \"    const toUrl: string = query.to as string\\n    let parsedUrl: URL\\n    try {\\n      parsedUrl = new URL(toUrl)\\n    } catch {\\n      parsedUrl = new URL('https://invalid.invalid')\\n    }\\n    const allowedHosts = security.redirectAllowlist.flatMap((allowedUrl) => {\\n      try {\\n        return [new URL(allowedUrl).hostname]\\n      } catch {\\n        return []\\n      }\\n    })\\n    if (security.isRedirectAllowed(toUrl) && parsedUrl.protocol === 'https:' && parsedUrl.username === '' && parsedUrl.password === '' && allowedHosts.includes(parsedUrl.hostname)) {\"\n    },\n    {\n      \"arquivo\": \"routes/redirect.ts\",\n      \"trecho_original\": \"      res.redirect(toUrl)\",\n      \"trecho_corrigido\": \"      res.redirect(parsedUrl.href)\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação analisa a URL e compara o hostname canônico por igualdade com os hosts derivados da lista existente, em vez de confiar em correspondências por prefixo. Exige HTTPS e rejeita credenciais embutidas, reduzindo riscos de URLs ambíguas como https://host-permitido.example@atacante.example. O redirecionamento usa a URL analisada e validada. URLs inválidas ou não permitidas seguem o ramo de erro já existente, preservando o status e a mensagem.\",\n  \"limitacoes_da_correcao\": \"A solução depende de security.redirectAllowlist conter os destinos externos legítimos e de security.isRedirectAllowed continuar compatível com eles. A lista de hosts permite qualquer caminho e porta HTTPS nesses hosts; se isso não for desejado, a política deve comparar também a porta e restringir caminhos. A conversão de query.to para string não é alterada, portanto valores ausentes ou com formato inesperado são recusados pelo fluxo de validação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1905,
+  "tokens_saida": 656,
+  "latencia_s": 7.115,
+  "custo_usd": 0.000566,
+  "hash_prompt": "38b716b395caf0373f2d089472adbc42b20d996478e83435f5fed408a9948dfe",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1902
+}

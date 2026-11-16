@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de dados de pedidos de outros usuários devido à manipulação insegura do email para consulta no banco de dados.\",\"causa_da_vulnerabilidade\":\"O código substitui as vogais do email do usuário por asteriscos antes de realizar a consulta no banco de dados, o que resulta em uma busca imprecisa e pode retornar pedidos de outros usuários com emails semelhantes, causando vazamento de dados.\",\"estrategia_de_correcao\":\"Utilizar o email original do usuário autenticado para realizar a consulta no banco de dados, garantindo que apenas os pedidos pertencentes ao usuário sejam retornados.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ email: updatedEmail })\",\"trecho_corrigido\":\"      const email = loggedInUser.data.email\\n      const order = await ordersCollection.find({ email: email })\"}],\"justificativa_tecnica\":\"A correção remove a manipulação insegura do email que alterava seu valor para uma forma mascarada, o que causava buscas imprecisas no banco de dados e potencial vazamento de dados de outros usuários. Usar o email original garante que a consulta seja precisa e restrita aos dados do usuário autenticado.\",\"limitacoes_da_correcao\":\"A correção assume que o campo 'email' no banco de dados está armazenado de forma consistente e que a autenticação do usuário é confiável. Não aborda outras possíveis vulnerabilidades relacionadas à autenticação ou autorização em outras partes do sistema.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 893,
+  "tokens_saida": 344,
+  "latencia_s": 3.365,
+  "custo_usd": 0.000908,
+  "hash_prompt": "38d475af4441a59029dd082395b1a63f853e64b0e10f96977ee2444c8fa6f2a4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

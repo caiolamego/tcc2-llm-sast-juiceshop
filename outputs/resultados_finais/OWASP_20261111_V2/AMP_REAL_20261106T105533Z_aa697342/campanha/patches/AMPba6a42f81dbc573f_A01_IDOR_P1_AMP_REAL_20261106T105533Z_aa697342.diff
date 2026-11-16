@@ -1,0 +1,13 @@
+diff --git a/routes/basketItems.ts b/routes/basketItems.ts
+index 077a0d4d2..a58e6a5de 100644
+--- a/routes/basketItems.ts
++++ b/routes/basketItems.ts
+@@ -35,7 +35,7 @@ export function addBasketItem () {
+ 
+     const user = security.authenticatedUsers.from(req)
+     if (user && basketIds[0] && basketIds[0] !== 'undefined' && Number(user.bid) != Number(basketIds[0])) { // eslint-disable-line eqeqeq
+-      res.status(401).send('{\'error\' : \'Invalid BasketId\'}')
++      return res.status(401).send('{\'error\' : \'Invalid BasketId\'}')
+     } else {
+       const basketItem = {
+         ProductId: productIds[productIds.length - 1],

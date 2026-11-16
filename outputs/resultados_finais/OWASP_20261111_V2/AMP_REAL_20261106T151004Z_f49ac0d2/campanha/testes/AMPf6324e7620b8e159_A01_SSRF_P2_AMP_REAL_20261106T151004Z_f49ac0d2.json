@@ -1,0 +1,499 @@
+{
+  "passou": false,
+  "tier_falha": "T2_API",
+  "duracao_s": 40.74427139299223,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": false,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": "T2_API",
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+    "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+  ],
+  "testes_falhos_f_criterio": [
+    "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+  ],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 11.14,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_r9_nr5al/contratos_legitimos/primeira.xml",
+        "test/api/tcc_coverage_contratos_legitimos.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 12.34,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ TCC legitimate behaviour contracts\n  ✔ lets the author edit their own review (68.774208ms)\n  ✔ answers an error without a location to a redirect without target (47.464041ms)\n  ✔ stores the image of a public URL as the profile image (288.604416ms)\n✔ TCC legitimate behaviour contracts (3874.672585ms)\nℹ tests 3\nℹ suites 1\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 11762.190589\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 5.875001079402864e-06,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_r9_nr5al/profile_upload/primeira.xml",
+        "test/api/profile-image-upload.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 13.82,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+        "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+        "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+        "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+      ],
+      "testes_falhos_novos": [
+        "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+        "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+        "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+        "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "ailable online (47.5155ms)\n  ✔ POST profile image URL redirects even for invalid image URL (869.959542ms)\n  ﹣ POST profile image URL forbidden for anonymous user (0.576709ms) # FIXME runs into \"socket hang up\"\n  ﹣ POST valid image with tampered content length (0.418042ms) # Fails on CI/CD pipeline\n✖ /profile/image/url (919.507417ms)\n▶ /profile/image/url (with local mock server)\n  ✖ POST with non-OK response falls back to storing URL as profile image (5.862916ms)\n  ✖ POST with empty-body response (204) falls back to storing URL as profile image (5.097625ms)\n  ✖ POST with valid response writes file and redirects to profile (3.681667ms)\n  ✔ POST with PNG URL extension saves file using PNG extension (5.745167ms)\n  ✔ POST with unrecognised URL extension defaults to JPG extension (7.656125ms)\n✖ /profile/image/url (with local mock server) (54.709375ms)\nℹ tests 13\nℹ suites 3\nℹ pass 7\nℹ fail 4\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 9354.524088\n\n✖ failing tests:\n\ntest at test/api/profile-image-upload.test.ts:2:3823\n✖ POST profile image URL valid for image available online (47.5155ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:104:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/profile-image-upload.test.ts:2:6822\n✖ POST with non-OK response falls back to storing URL as profile image (5.862916ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:198:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/profile-image-upload.test.ts:2:7157\n✖ POST with empty-body response (204) falls back to storing URL as profile image (5.097625ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:208:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/profile-image-upload.test.ts:2:7503\n✖ POST with valid response writes file and redirects to profile (3.681667ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:218:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 6.791000487282872e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+    "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+    "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/profileImageUrlUpload.ts"
+    ],
+    "grupos": [
+      "contratos_legitimos",
+      "profile_upload"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 11.14
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "contratos_legitimos",
+      "status": "executada",
+      "duracao_s": 12.34
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "profile_upload",
+      "status": "executada",
+      "duracao_s": 13.82
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "contratos_legitimos",
+      "profile_upload"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 11.14
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "contratos_legitimos",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+            "arquivo": "tests/functional/juice_shop/contratos_legitimos.test.ts",
+            "nome": "TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+            "arquivo": "tests/functional/juice_shop/contratos_legitimos.test.ts",
+            "nome": "TCC legitimate behaviour contracts > lets the author edit their own review",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image",
+            "arquivo": "tests/functional/juice_shop/contratos_legitimos.test.ts",
+            "nome": "TCC legitimate behaviour contracts > stores the image of a public URL as the profile image",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > lets the author edit their own review",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > answers an error without a location to a redirect without target",
+          "tests/functional/juice_shop/contratos_legitimos.test.ts :: TCC legitimate behaviour contracts > stores the image of a public URL as the profile image"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 12.34,
+        "espera_api_s": 5.875001079402864e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_r9_nr5al/contratos_legitimos/primeira.xml",
+            "test/api/tcc_coverage_contratos_legitimos.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 12.34,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ TCC legitimate behaviour contracts\n  ✔ lets the author edit their own review (68.774208ms)\n  ✔ answers an error without a location to a redirect without target (47.464041ms)\n  ✔ stores the image of a public URL as the profile image (288.604416ms)\n✔ TCC legitimate behaviour contracts (3874.672585ms)\nℹ tests 3\nℹ suites 1\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 11762.190589\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC legitimate behaviour contracts\" time=\"3.874673\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"lets the author edit their own review\" time=\"0.068774\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_contratos_legitimos.test.ts\"/>\n\t\t<testcase name=\"answers an error without a location to a redirect without target\" time=\"0.047464\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_contratos_legitimos.test.ts\"/>\n\t\t<testcase name=\"stores the image of a public URL as the profile image\" time=\"0.288604\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_contratos_legitimos.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 3 -->\n\t<!-- suites 1 -->\n\t<!-- pass 3 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 11762.190589 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "profile_upload",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file forbidden for anonymous user",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/file > POST profile image file forbidden for anonymous user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file invalid type",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/file > POST profile image file invalid type",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file rejected for unrecognizable file content",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/file > POST profile image file rejected for unrecognizable file content",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file valid for JPG format",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/file > POST profile image file valid for JPG format",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL forbidden for anonymous user",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url > POST profile image URL forbidden for anonymous user",
+            "estado": "ignorado"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL redirects even for invalid image URL",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url > POST profile image URL redirects even for invalid image URL",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url > POST profile image URL valid for image available online",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/profile-image-upload.test.ts :: /profile/image/url > POST valid image with tampered content length",
+            "arquivo": "test/api/profile-image-upload.test.ts",
+            "nome": "/profile/image/url > POST valid image with tampered content length",
+            "estado": "ignorado"
+          }
+        ],
+        "falhos": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+        ],
+        "falhos_novos": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+        ],
+        "falhos_novos_observados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file invalid type",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file rejected for unrecognizable file content",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file valid for JPG format",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL redirects even for invalid image URL",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST valid image with tampered content length"
+        ],
+        "esperados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file invalid type",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file rejected for unrecognizable file content",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file valid for JPG format",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL redirects even for invalid image URL",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+        ],
+        "ignorados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST valid image with tampered content length"
+        ],
+        "executados": [
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file forbidden for anonymous user",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file invalid type",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file rejected for unrecognizable file content",
+          "test/api/profile-image-upload.test.ts :: /profile/image/file > POST profile image file valid for JPG format",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with PNG URL extension saves file using PNG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with empty-body response (204) falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with non-OK response falls back to storing URL as profile image",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with unrecognised URL extension defaults to JPG extension",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url (with local mock server) > POST with valid response writes file and redirects to profile",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL redirects even for invalid image URL",
+          "test/api/profile-image-upload.test.ts :: /profile/image/url > POST profile image URL valid for image available online"
+        ],
+        "obrigatorios_aprovados": [],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 13.82,
+        "espera_api_s": 6.791000487282872e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_r9_nr5al/profile_upload/primeira.xml",
+            "test/api/profile-image-upload.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 13.82,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "ailable online (47.5155ms)\n  ✔ POST profile image URL redirects even for invalid image URL (869.959542ms)\n  ﹣ POST profile image URL forbidden for anonymous user (0.576709ms) # FIXME runs into \"socket hang up\"\n  ﹣ POST valid image with tampered content length (0.418042ms) # Fails on CI/CD pipeline\n✖ /profile/image/url (919.507417ms)\n▶ /profile/image/url (with local mock server)\n  ✖ POST with non-OK response falls back to storing URL as profile image (5.862916ms)\n  ✖ POST with empty-body response (204) falls back to storing URL as profile image (5.097625ms)\n  ✖ POST with valid response writes file and redirects to profile (3.681667ms)\n  ✔ POST with PNG URL extension saves file using PNG extension (5.745167ms)\n  ✔ POST with unrecognised URL extension defaults to JPG extension (7.656125ms)\n✖ /profile/image/url (with local mock server) (54.709375ms)\nℹ tests 13\nℹ suites 3\nℹ pass 7\nℹ fail 4\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 9354.524088\n\n✖ failing tests:\n\ntest at test/api/profile-image-upload.test.ts:2:3823\n✖ POST profile image URL valid for image available online (47.5155ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:104:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/profile-image-upload.test.ts:2:6822\n✖ POST with non-OK response falls back to storing URL as profile image (5.862916ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:198:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/profile-image-upload.test.ts:2:7157\n✖ POST with empty-body response (204) falls back to storing URL as profile image (5.097625ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:208:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/profile-image-upload.test.ts:2:7503\n✖ POST with valid response writes file and redirects to profile (3.681667ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.<anonymous> (test/api/profile-image-upload.test.ts:218:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/profile/image/file\" time=\"1.867605\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"POST profile image file valid for JPG format\" time=\"0.155240\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file invalid type\" time=\"0.065552\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file forbidden for anonymous user\" time=\"0.015592\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file rejected for unrecognizable file content\" time=\"0.039247\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/profile/image/url\" time=\"0.919507\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"1\" skipped=\"2\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"POST profile image URL valid for image available online\" time=\"0.047516\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 302&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 302\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 302\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/profile-image-upload.test.ts:104:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST profile image URL redirects even for invalid image URL\" time=\"0.869960\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image URL forbidden for anonymous user\" time=\"0.000577\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"FIXME runs into &amp;quot;socket hang up&amp;quot;\"/>\n\t\t</testcase>\n\t\t<testcase name=\"POST valid image with tampered content length\" time=\"0.000418\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"Fails on CI/CD pipeline\"/>\n\t\t</testcase>\n\t</testsuite>\n\t<testsuite name=\"/profile/image/url (with local mock server)\" time=\"0.054709\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"3\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"POST with non-OK response falls back to storing URL as profile image\" time=\"0.005863\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 302&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 302\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 302\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/profile-image-upload.test.ts:198:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST with empty-body response (204) falls back to storing URL as profile image\" time=\"0.005098\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 302&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 302\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 302\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/profile-image-upload.test.ts:208:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST with valid response writes file and redirects to profile\" time=\"0.003682\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 302&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 302\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 302\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/profile-image-upload.test.ts:218:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST with PNG URL extension saves file using PNG extension\" time=\"0.005745\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST with unrecognised URL extension defaults to JPG extension\" time=\"0.007656\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 13 -->\n\t<!-- suites 3 -->\n\t<!-- pass 7 -->\n\t<!-- fail 4 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 2 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 9354.524088 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/profile/image/file\" time=\"0.719150\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"POST profile image file valid for JPG format\" time=\"0.100926\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file invalid type\" time=\"0.036928\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file forbidden for anonymous user\" time=\"0.008788\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image file rejected for unrecognizable file content\" time=\"0.021353\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/profile/image/url\" time=\"0.062681\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"1\" skipped=\"2\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"POST profile image URL valid for image available online\" time=\"0.023027\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 302&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 302\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 302\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/profile-image-upload.test.ts:104:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST profile image URL redirects even for invalid image URL\" time=\"0.037580\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST profile image URL forbidden for anonymous user\" time=\"0.000568\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"FIXME runs into &amp;quot;socket hang up&amp;quot;\"/>\n\t\t</testcase>\n\t\t<testcase name=\"POST valid image with tampered content length\" time=\"0.000631\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\">\n\t\t\t<skipped type=\"skipped\" message=\"Fails on CI/CD pipeline\"/>\n\t\t</testcase>\n\t</testsuite>\n\t<testsuite name=\"/profile/image/url (with local mock server)\" time=\"0.034913\" disabled=\"0\" errors=\"0\" tests=\"5\" failures=\"3\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"POST with non-OK response falls back to storing URL as profile image\" time=\"0.003980\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 302&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 302\">\nError [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 302\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/profile-image-upload.test.ts:198:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST with empty-body response (204) falls back to storing URL as profile image\" time=\"0.003901\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 302&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 302\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 302\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/profile-image-upload.test.ts:208:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST with valid response writes file and redirects to profile\" time=\"0.002890\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 302&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 302\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 302\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 302\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/profile-image-upload.test.ts:218:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 302,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST with PNG URL extension saves file using PNG extension\" time=\"0.003828\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t\t<testcase name=\"POST with unrecognised URL extension defaults to JPG extension\" time=\"0.002819\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/profile-image-upload.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 13 -->\n\t<!-- suites 3 -->\n\t<!-- pass 7 -->\n\t<!-- fail 4 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 2 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 3546.878752 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

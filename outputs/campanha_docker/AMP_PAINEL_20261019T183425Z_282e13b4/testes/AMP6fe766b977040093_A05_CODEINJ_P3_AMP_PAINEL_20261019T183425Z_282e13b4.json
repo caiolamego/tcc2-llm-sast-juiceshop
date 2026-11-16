@@ -1,0 +1,301 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 31.77617230999931,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 11.83,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_4ouj7ssy/profile/primeira.xml",
+        "test/api/user-profile.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 13.53,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+      ],
+      "testes_falhos_novos": [
+        "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /profile\n  ✔ GET user profile is forbidden for unauthenticated user (40.437016ms)\n  ✔ GET user profile of authenticated user (394.945919ms)\n  ✔ POST update username of authenticated user (42.6003ms)\n  ✔ POST update profile is forbidden for unauthenticated user (24.028774ms)\n  ✖ GET user profile renders evaluated SSTI payload for username containing valid expression (124.281972ms)\n  ✔ GET user profile falls back gracefully when SSTI payload throws (119.212921ms)\n  ✔ should be solved when origin header matches configured CSRF URL (38.672385ms)\n  ✔ should have the configured CSRF URL in the challenge description (0.395638ms)\n  ✔ should NOT be solved when origin header does NOT match configured CSRF URL (36.039905ms)\n✖ /profile (1732.597518ms)\nℹ tests 9\nℹ suites 1\nℹ pass 8\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5933.605032\n\n✖ failing tests:\n\ntest at test/api/user-profile.test.ts:2:2898\n✖ GET user profile renders evaluated SSTI payload for username containing valid expression (124.281972ms)\n  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(res.text.includes('>49<'))\n  \n      at TestContext.<anonymous> (test/api/user-profile.test.ts:79:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 5.160000000614673e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/userProfile.ts"
+    ],
+    "grupos": [
+      "profile"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 11.83
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "profile",
+      "status": "executada",
+      "duracao_s": 13.53
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "profile"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 11.83
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "profile",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > GET user profile falls back gracefully when SSTI payload throws",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > GET user profile falls back gracefully when SSTI payload throws",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > GET user profile is forbidden for unauthenticated user",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > GET user profile is forbidden for unauthenticated user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > GET user profile of authenticated user",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > GET user profile of authenticated user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > GET user profile renders evaluated SSTI payload for username containing valid expression",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > POST update profile is forbidden for unauthenticated user",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > POST update profile is forbidden for unauthenticated user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > POST update username of authenticated user",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > POST update username of authenticated user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > should NOT be solved when origin header does NOT match configured CSRF URL",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > should NOT be solved when origin header does NOT match configured CSRF URL",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > should be solved when origin header matches configured CSRF URL",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > should be solved when origin header matches configured CSRF URL",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/user-profile.test.ts :: /profile > should have the configured CSRF URL in the challenge description",
+            "arquivo": "test/api/user-profile.test.ts",
+            "nome": "/profile > should have the configured CSRF URL in the challenge description",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+        ],
+        "falhos_novos": [
+          "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+        ],
+        "falhos_novos_observados": [
+          "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/user-profile.test.ts :: /profile > GET user profile falls back gracefully when SSTI payload throws",
+          "test/api/user-profile.test.ts :: /profile > GET user profile is forbidden for unauthenticated user",
+          "test/api/user-profile.test.ts :: /profile > GET user profile of authenticated user",
+          "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression",
+          "test/api/user-profile.test.ts :: /profile > POST update profile is forbidden for unauthenticated user",
+          "test/api/user-profile.test.ts :: /profile > POST update username of authenticated user",
+          "test/api/user-profile.test.ts :: /profile > should NOT be solved when origin header does NOT match configured CSRF URL",
+          "test/api/user-profile.test.ts :: /profile > should be solved when origin header matches configured CSRF URL",
+          "test/api/user-profile.test.ts :: /profile > should have the configured CSRF URL in the challenge description"
+        ],
+        "esperados": [
+          "test/api/user-profile.test.ts :: /profile > GET user profile falls back gracefully when SSTI payload throws",
+          "test/api/user-profile.test.ts :: /profile > GET user profile is forbidden for unauthenticated user",
+          "test/api/user-profile.test.ts :: /profile > GET user profile of authenticated user",
+          "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression",
+          "test/api/user-profile.test.ts :: /profile > POST update profile is forbidden for unauthenticated user",
+          "test/api/user-profile.test.ts :: /profile > POST update username of authenticated user",
+          "test/api/user-profile.test.ts :: /profile > should NOT be solved when origin header does NOT match configured CSRF URL",
+          "test/api/user-profile.test.ts :: /profile > should be solved when origin header matches configured CSRF URL",
+          "test/api/user-profile.test.ts :: /profile > should have the configured CSRF URL in the challenge description"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/user-profile.test.ts :: /profile > GET user profile falls back gracefully when SSTI payload throws",
+          "test/api/user-profile.test.ts :: /profile > GET user profile is forbidden for unauthenticated user",
+          "test/api/user-profile.test.ts :: /profile > GET user profile of authenticated user",
+          "test/api/user-profile.test.ts :: /profile > GET user profile renders evaluated SSTI payload for username containing valid expression",
+          "test/api/user-profile.test.ts :: /profile > POST update profile is forbidden for unauthenticated user",
+          "test/api/user-profile.test.ts :: /profile > POST update username of authenticated user",
+          "test/api/user-profile.test.ts :: /profile > should NOT be solved when origin header does NOT match configured CSRF URL",
+          "test/api/user-profile.test.ts :: /profile > should be solved when origin header matches configured CSRF URL",
+          "test/api/user-profile.test.ts :: /profile > should have the configured CSRF URL in the challenge description"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/user-profile.test.ts :: /profile > GET user profile of authenticated user"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 13.53,
+        "espera_api_s": 5.160000000614673e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_4ouj7ssy/profile/primeira.xml",
+            "test/api/user-profile.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 13.53,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /profile\n  ✔ GET user profile is forbidden for unauthenticated user (40.437016ms)\n  ✔ GET user profile of authenticated user (394.945919ms)\n  ✔ POST update username of authenticated user (42.6003ms)\n  ✔ POST update profile is forbidden for unauthenticated user (24.028774ms)\n  ✖ GET user profile renders evaluated SSTI payload for username containing valid expression (124.281972ms)\n  ✔ GET user profile falls back gracefully when SSTI payload throws (119.212921ms)\n  ✔ should be solved when origin header matches configured CSRF URL (38.672385ms)\n  ✔ should have the configured CSRF URL in the challenge description (0.395638ms)\n  ✔ should NOT be solved when origin header does NOT match configured CSRF URL (36.039905ms)\n✖ /profile (1732.597518ms)\nℹ tests 9\nℹ suites 1\nℹ pass 8\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5933.605032\n\n✖ failing tests:\n\ntest at test/api/user-profile.test.ts:2:2898\n✖ GET user profile renders evaluated SSTI payload for username containing valid expression (124.281972ms)\n  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(res.text.includes('>49<'))\n  \n      at TestContext.<anonymous> (test/api/user-profile.test.ts:79:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/profile\" time=\"1.732598\" disabled=\"0\" errors=\"0\" tests=\"9\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET user profile is forbidden for unauthenticated user\" time=\"0.040437\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"GET user profile of authenticated user\" time=\"0.394946\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"POST update username of authenticated user\" time=\"0.042600\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"POST update profile is forbidden for unauthenticated user\" time=\"0.024029\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"GET user profile renders evaluated SSTI payload for username containing valid expression\" time=\"0.124282\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\" failure=\"The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('>49&lt;'))&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('>49&lt;'))\">\n[Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(res.text.includes('>49&lt;'))\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(res.text.includes('>49&lt;'))\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/user-profile.test.ts:79:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET user profile falls back gracefully when SSTI payload throws\" time=\"0.119213\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"should be solved when origin header matches configured CSRF URL\" time=\"0.038672\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"should have the configured CSRF URL in the challenge description\" time=\"0.000396\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"should NOT be solved when origin header does NOT match configured CSRF URL\" time=\"0.036040\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 9 -->\n\t<!-- suites 1 -->\n\t<!-- pass 8 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5933.605032 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/profile\" time=\"3.263342\" disabled=\"0\" errors=\"0\" tests=\"9\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET user profile is forbidden for unauthenticated user\" time=\"0.055026\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"GET user profile of authenticated user\" time=\"0.657761\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"POST update username of authenticated user\" time=\"0.092654\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"POST update profile is forbidden for unauthenticated user\" time=\"0.047957\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"GET user profile renders evaluated SSTI payload for username containing valid expression\" time=\"0.306862\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\" failure=\"The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('>49&lt;'))&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"The expression evaluated to a falsy value:&#10;&#10;  assert.ok(res.text.includes('>49&lt;'))\">\n[Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(res.text.includes('>49&lt;'))\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n  \n    assert.ok(res.text.includes('>49&lt;'))\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/user-profile.test.ts:79:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET user profile falls back gracefully when SSTI payload throws\" time=\"0.225578\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"should be solved when origin header matches configured CSRF URL\" time=\"0.080613\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"should have the configured CSRF URL in the challenge description\" time=\"0.000816\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t\t<testcase name=\"should NOT be solved when origin header does NOT match configured CSRF URL\" time=\"0.070557\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/user-profile.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 9 -->\n\t<!-- suites 1 -->\n\t<!-- pass 8 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 7423.645394 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

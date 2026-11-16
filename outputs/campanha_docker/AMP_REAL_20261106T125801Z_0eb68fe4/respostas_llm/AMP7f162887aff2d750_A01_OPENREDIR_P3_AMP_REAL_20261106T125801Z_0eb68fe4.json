@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open redirect (CWE-601) no redirecionamento baseado em `query.to`.\",\"causa_da_vulnerabilidade\":\"O destino fornecido pelo usuário é passado diretamente a `res.redirect` após uma validação cuja implementação não é demonstrada neste arquivo e que pode aceitar destinos externos não confiáveis ou URLs ambíguas.\",\"estrategia_de_correcao\":\"Validar o destino com o parser `URL`, permitindo somente URLs HTTPS com host e porta explicitamente autorizados pela lista existente, sem userinfo, e redirecionar para a URL validada. A lista atual continua sendo a fonte dos destinos legítimos.\",\"edicoes\":[{\"arquivo\":\"routes/redirect.ts\",\"trecho_original\":\"    const toUrl: string = query.to as string\\n    if (security.isRedirectAllowed(toUrl)) {\\n      challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })\\n      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\\n      res.redirect(toUrl)\\n    } else {\",\"trecho_corrigido\":\"    const toUrl: string = query.to as string\\n    let validatedUrl: string | undefined\\n    try {\\n      const parsedUrl = new URL(toUrl)\\n      if (parsedUrl.protocol === 'https:' && parsedUrl.username === '' && parsedUrl.password === '' && parsedUrl.port === '' && security.redirectAllowlist.some((allowedUrl) => {\\n        const allowed = new URL(allowedUrl)\\n        return parsedUrl.hostname === allowed.hostname && parsedUrl.port === allowed.port\\n      })) {\\n        validatedUrl = parsedUrl.href\\n      }\\n    } catch {}\\n    if (validatedUrl !== undefined && security.isRedirectAllowed(validatedUrl)) {\\n      challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })\\n      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\\n      res.redirect(validatedUrl)\\n    } else {\"}],\"justificativa_tecnica\":\"A URL é analisada estruturalmente, em vez de ser comparada por prefixo ou substring. O código rejeita esquemas diferentes de HTTPS, credenciais embutidas, portas explícitas e hosts fora da allowlist. O redirecionamento usa exatamente a URL normalizada e validada, impedindo que entradas como `//host`, userinfo ou hosts parecidos sejam aceitas como destinos confiáveis. O tratamento de rejeição permanece inalterado, incluindo o status 406 e a mensagem de erro existente.\",\"limitacoes_da_correcao\":\"A correção pressupõe que `security.redirectAllowlist` contenha URLs HTTPS válidas e represente todos os destinos legítimos atuais. Ela permite qualquer caminho e consulta em um host permitido; se isso não for desejado, a allowlist deverá restringir também caminho e parâmetros. A autorização do recurso de destino continua sendo responsabilidade das rotas correspondentes.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1797,
+  "tokens_saida": 850,
+  "latencia_s": 9.04,
+  "custo_usd": 0.001469,
+  "hash_prompt": "0859167ae207316c086002aad2ab6d97bc0c8d941de18170f01c730b942df831",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1794
+}

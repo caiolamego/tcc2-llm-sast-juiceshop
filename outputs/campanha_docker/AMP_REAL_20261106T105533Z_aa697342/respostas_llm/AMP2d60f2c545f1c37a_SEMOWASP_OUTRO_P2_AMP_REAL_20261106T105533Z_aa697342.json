@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Criação de conta sem autorização nos endpoints gerados automaticamente para o modelo User, permitindo registro administrativo não autorizado.\",\n  \"causa_da_vulnerabilidade\": \"O recurso User é criado por finale.resource com endpoints de criação e leitura, mas não há middleware de autorização associado a esses endpoints. O hook create.send.before apenas cria uma carteira após a criação do usuário; ele não verifica se a requisição está autorizada. Assim, um cliente pode enviar uma requisição de criação de User diretamente à API.\",\n  \"estrategia_de_correcao\": \"Adicionar middleware de autorização aos endpoints gerados para User, exigindo que a requisição esteja autenticada e autorizada antes de permitir operações sobre esse recurso.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include\\n    })\",\n      \"trecho_corrigido\": \"    const resource = finale.resource({\\n      model,\\n      endpoints: [`/api/${name}s`, `/api/${name}s/:id`],\\n      excludeAttributes: exclude,\\n      pagination: false,\\n      include\\n    })\\n\\n    if (name === 'User') {\\n      app.use(`/api/${name}s`, security.isAuthorized())\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O middleware é registrado para o caminho base do recurso User antes de os hooks e demais configurações do recurso serem concluídos. No Express, app.use nesse caminho também corresponde a rotas descendentes, incluindo /api/Users/:id, e interrompe requisições não autorizadas antes que alcancem os endpoints gerados. Isso impede a criação anônima de usuários e protege as demais operações do recurso sem alterar o comportamento de requisições autorizadas.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que security.isAuthorized() seja a política adequada para todas as operações do recurso User. Se o registro público de contas for um requisito, ele deve ser implementado por um endpoint específico com validação e campos permitidos, em vez de expor diretamente o recurso gerado. A autorização não substitui controles de autorização por objeto ou restrições de campos para usuários autenticados.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2160,
+  "tokens_saida": 527,
+  "latencia_s": 6.537,
+  "custo_usd": 0.000533,
+  "hash_prompt": "e9e9a2ea6a6efc2193635b4e2291305e1d9bc471908fce054ec85bef31105fad",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2157
+}

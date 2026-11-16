@@ -1,0 +1,19 @@
+rules:
+  - id: tcc.validation.security.quantity-upper-bound-only
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Verificacao de estoque libera fluxo por limite superior de quantidade.
+      Revise se quantidade positiva inteira e obrigatoria antes de persistir.
+    metadata:
+      category: security
+      cwe: ['CWE-20: Improper Input Validation']
+      confidence: LOW
+    patterns:
+      - pattern: |
+          if ($STOCK.quantity >= $AMOUNT) {
+            $NEXT();
+          } else { ... }
+      - pattern-not-inside: |
+          if ($AMOUNT <= 0) { ... return ...; }
+          ...

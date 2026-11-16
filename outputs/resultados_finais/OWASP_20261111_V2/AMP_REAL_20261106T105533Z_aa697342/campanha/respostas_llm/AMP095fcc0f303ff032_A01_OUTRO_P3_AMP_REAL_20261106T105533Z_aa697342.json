@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível falta de autorização para atualizar produtos pela rota PUT /api/Products/:id (CWE-862).\",\n  \"causa_da_vulnerabilidade\": \"O trecho mostra um bloqueio explícito para DELETE /api/Products/:id, mas não mostra proteção equivalente para PUT. A regra do Semgrep é um sinal de auditoria; o trecho não permite confirmar se a rota PUT é registrada em outro ponto ou protegida por middleware global ou roteador externo.\",\n  \"estrategia_de_correcao\": \"Não alterar o código com base apenas neste alerta. A rota PUT está comentada e não há evidência suficiente de que exista uma operação de atualização desprotegida. Confirmar no restante da aplicação se a rota é registrada e, caso exista, aplicar nela a autorização apropriada, preservando as permissões legítimas.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"A única referência a PUT para produtos no trecho é `// app.put('/api/Products/:id', security.isAuthorized())`, que está comentada. Portanto, não há uma rota PUT ativa demonstrada para corrigir. Descomentar essa linha ou adicionar um bloqueio poderia alterar o comportamento funcional sem comprovar a existência da falha; além disso, autenticação isolada não necessariamente implementa autorização por objeto ou papel.\",\n  \"limitacoes_da_correcao\": \"O restante de server.ts e os roteadores externos não foram fornecidos. É necessário verificar onde /api/Products/:id é registrado e quais middlewares o protegem. Se a atualização estiver ativa, confirmar também se a autorização atende à regra de negócio, incluindo permissões por papel ou propriedade do produto, conforme aplicável.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2964,
+  "tokens_saida": 368,
+  "latencia_s": 5.118,
+  "custo_usd": 0.000554,
+  "hash_prompt": "58f3c8ad1f9e95bfbc31a2872909a4cc015727e91c82df7b1e86091820c869bd",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2961
+}

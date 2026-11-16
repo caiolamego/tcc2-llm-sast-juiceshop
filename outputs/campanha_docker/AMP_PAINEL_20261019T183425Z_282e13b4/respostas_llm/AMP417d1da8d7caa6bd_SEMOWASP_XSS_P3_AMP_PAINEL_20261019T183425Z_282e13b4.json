@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro da função bypassSecurityTrustHtml para exibir conteúdo potencialmente controlado pelo usuário, permitindo Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O método bypassSecurityTrustHtml desativa a sanitização automática do Angular, permitindo que conteúdo HTML malicioso presente em payload.data.lastLoginIp seja interpretado e executado no navegador.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o valor lastLoginIp como texto simples, utilizando bindings seguros do Angular que aplicam automaticamente a sanitização e escapam caracteres especiais, prevenindo a execução de scripts maliciosos.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"        this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)\\n\",\"trecho_corrigido\":\"        this.lastLoginIp = `<small>${payload.data.lastLoginIp}</small>`\\n\"}],\"justificativa_tecnica\":\"O Angular automaticamente escapa valores interpolados em templates quando usados como texto, prevenindo XSS. Ao remover bypassSecurityTrustHtml, o valor lastLoginIp será tratado como texto simples, evitando a execução de código malicioso. A exibição em um elemento <small> pode ser mantida no template, garantindo a formatação visual sem comprometer a segurança.\",\"limitacoes_da_correcao\":\"Se o valor lastLoginIp contiver tags HTML legítimas que precisam ser renderizadas, esta correção as exibirá como texto literal, não como HTML formatado. Caso seja necessário renderizar HTML confiável, deve-se implementar uma sanitização adequada ou validar estritamente o conteúdo antes de confiar nele.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1352,
+  "tokens_saida": 367,
+  "latencia_s": 3.849,
+  "custo_usd": 0.001128,
+  "hash_prompt": "6c45dd430cd6a8fff8a905031f23e1410adb041234e29f0441dccf9330e605d0",
+  "do_cache": false
+}

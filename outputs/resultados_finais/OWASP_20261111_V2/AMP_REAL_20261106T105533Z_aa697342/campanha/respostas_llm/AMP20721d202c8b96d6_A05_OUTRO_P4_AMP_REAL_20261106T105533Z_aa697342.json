@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL por uso de JavaScript dinâmico em uma consulta MongoDB ($where), CWE-943.\",\n  \"causa_da_vulnerabilidade\": \"A consulta interpola o valor de `id` em uma expressão JavaScript: `find({ $where: `this.orderId === '${id}'` })`. Embora `id` seja sanitizado em alguns casos, quando o desafio de XSS está habilitado ele é apenas truncado, não neutralizado para a sintaxe JavaScript do `$where`. Assim, entrada controlada pelo cliente pode alterar a expressão executada pelo MongoDB.\",\n  \"estrategia_de_correcao\": \"Substituir a expressão `$where` por um filtro declarativo do MongoDB que compare o campo `orderId` diretamente com o valor escalar `id`, sem executar JavaScript.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/trackOrder.ts\",\n      \"trecho_original\": \"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\n      \"trecho_corrigido\": \"    db.ordersCollection.find({ orderId: id }).then((order: any) => {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O filtro `{ orderId: id }` usa a consulta estruturada padrão do MongoDB e trata `id` como valor, não como código JavaScript. Isso elimina a interpretação de sintaxe controlada pelo cliente e mantém a comparação de igualdade do campo `orderId`, preservando o processamento e o formato do resultado existentes.\",\n  \"limitacoes_da_correcao\": \"A correção remove a execução de JavaScript na consulta. O comportamento pressupõe que `orderId` e `id` tenham tipos compatíveis, como na comparação anterior; se o banco armazenar IDs em tipos diferentes, a igualdade tipada do MongoDB pode retornar resultados distintos. A sanitização existente para o desafio de XSS permanece inalterada e não substitui a codificação apropriada no contexto de saída.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2336,
+  "tokens_saida": 449,
+  "latencia_s": 5.329,
+  "custo_usd": 0.000516,
+  "hash_prompt": "869264f0d8e994d84f06c2fb5130d242f994dc034661081e08c22ad69fc81cbf",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2333
+}

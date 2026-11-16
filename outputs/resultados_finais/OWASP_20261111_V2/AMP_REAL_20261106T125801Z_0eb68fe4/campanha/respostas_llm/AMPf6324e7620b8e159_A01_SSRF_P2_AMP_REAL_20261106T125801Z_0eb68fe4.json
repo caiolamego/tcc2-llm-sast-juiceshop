@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Server-Side Request Forgery (SSRF) no download da imagem de perfil, permitindo que o servidor faça requisições para destinos escolhidos pelo usuário.\",\"causa_da_vulnerabilidade\":\"O valor controlado por req.body.imageUrl é passado diretamente para fetch(url), sem validação de esquema, host, endereço IP ou destino após resolução DNS. Assim, um usuário autenticado pode induzir o servidor a acessar serviços internos ou endereços locais.\",\"estrategia_de_correcao\":\"Validar a URL antes de chamar fetch, permitindo somente URLs HTTP(S) com hostname público e rejeitando hosts locais, loopback, privados, link-local, multicast, não especificados e demais faixas reservadas, tanto para IPv4 quanto para IPv6. A validação também deve resolver o hostname e verificar os endereços retornados, reduzindo bypasses por DNS.\",\"edicoes\":[{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"import fs from 'node:fs'\\nimport { Readable } from 'node:stream'\",\"trecho_corrigido\":\"import fs from 'node:fs'\\nimport dns from 'node:dns/promises'\\nimport net from 'node:net'\\nimport { Readable } from 'node:stream'\"},{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"      const url = req.body.imageUrl\\n      if (url.match(/(.)*solve\\\\/challenges\\\\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true\\n      const loggedInUser = security.authenticatedUsers.get(req.cookies.token)\",\"trecho_corrigido\":\"      const url = req.body.imageUrl\\n      if (url.match(/(.)*solve\\\\/challenges\\\\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true\\n      const parsedUrl = new URL(url)\\n      if (!['http:', 'https:'].includes(parsedUrl.protocol) || !parsedUrl.hostname || net.isIP(parsedUrl.hostname) && (parsedUrl.hostname === '0.0.0.0' || parsedUrl.hostname === '::' || parsedUrl.hostname.startsWith('127.') || parsedUrl.hostname.startsWith('10.') || parsedUrl.hostname.startsWith('192.168.') || parsedUrl.hostname.startsWith('169.254.') || parsedUrl.hostname.startsWith('172.') && Number(parsedUrl.hostname.split('.')[1]) >= 16 && Number(parsedUrl.hostname.split('.')[1]) <= 31 || parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '::1')) {\\n        throw new Error('url returned a non-OK status code or an empty body')\\n      }\\n      if (!net.isIP(parsedUrl.hostname)) {\\n        const addresses = await dns.lookup(parsedUrl.hostname, { all: true })\\n        if (addresses.some(({ address }) => address === '0.0.0.0' || address === '::' || address === '::1' || address.startsWith('127.') || address.startsWith('10.') || address.startsWith('192.168.') || address.startsWith('169.254.') || address.startsWith('172.') && Number(address.split('.')[1]) >= 16 && Number(address.split('.')[1]) <= 31)) {\\n          throw new Error('url returned a non-OK status code or an empty body')\\n        }\\n      }\\n      const loggedInUser = security.authenticatedUsers.get(req.cookies.token)\"},{\"arquivo\":\"routes/profileImageUrlUpload.ts\",\"trecho_original\":\"          const response = await fetch(url)\",\"trecho_corrigido\":\"          const response = await fetch(parsedUrl.toString())\"}],\"justificativa_tecnica\":\"A URL é analisada antes da requisição e somente os esquemas HTTP e HTTPS são aceitos. Endereços IP diretamente fornecidos e endereços obtidos por resolução DNS pertencentes a faixas locais ou reservadas são rejeitados antes de fetch, impedindo o acesso direto a serviços internos comuns e reduzindo bypasses por nomes DNS apontando para redes privadas. O fetch usa a URL validada, preservando o fluxo existente de download, armazenamento e fallback para o link original.\",\"limitacoes_da_correcao\":\"A implementação mantém listas explícitas de faixas IPv4 e IPv6 e não cobre todas as faixas reservadas possíveis. Além disso, uma validação prévia de DNS pode sofrer alteração posterior do resultado (TOCTOU), pois o fetch pode resolver novamente o hostname. Para uma proteção completa, seria necessário usar um agente HTTP com resolução controlada e bloqueio por conexão, além de limites de tamanho, tempo e redirecionamentos; redirecionamentos também podem levar a destinos internos após a validação inicial.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1167,
+  "tokens_saida": 995,
+  "latencia_s": 10.88,
+  "custo_usd": 0.001486,
+  "hash_prompt": "43bc145c80b0bf8f9b1e0bae3f887ec4b84b653c5f13496b90f5f1a176dcd5b4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1164
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção SQL (CWE-89) na busca de produtos.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em req.query.q é interpolado diretamente na instrução SQL. Aspas e outros elementos SQL podem alterar a estrutura da consulta.\",\n  \"estrategia_de_correcao\": \"Substituir a interpolação por parâmetros vinculados do Sequelize, mantendo os curingas LIKE, os filtros, a ordenação e o limite existente para o critério.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/search.ts\",\n      \"trecho_original\": \"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\",\n      \"trecho_corrigido\": \"    models.sequelize.query('SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name', { replacements: { criteria: `%${criteria}%` } }) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O texto da consulta agora é constante e o valor de busca é enviado separadamente por replacements, sendo tratado como dado pelo Sequelize em vez de sintaxe SQL. O padrão `%...%` continua permitindo buscas parciais, inclusive com aspas e caracteres internacionais, sem permitir que o conteúdo altere a consulta.\",\n  \"limitacoes_da_correcao\": \"A correção depende do suporte a replacements nomeados na versão do Sequelize usada pelo projeto. O limite de 200 caracteres e a semântica de LIKE existentes foram preservados; curingas LIKE fornecidos pelo usuário continuam tendo seu significado de busca.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2624,
+  "tokens_saida": 402,
+  "latencia_s": 4.729,
+  "custo_usd": 0.000529,
+  "hash_prompt": "774553b412649ac23d3be414d01c7489afd915e900794238efa14455c20aabb9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2621
+}

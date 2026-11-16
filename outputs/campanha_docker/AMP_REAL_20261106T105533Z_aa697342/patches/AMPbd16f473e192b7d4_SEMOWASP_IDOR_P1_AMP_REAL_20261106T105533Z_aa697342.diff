@@ -1,0 +1,45 @@
+diff --git a/routes/order.ts b/routes/order.ts
+index 53190ee17..def8f6013 100644
+--- a/routes/order.ts
++++ b/routes/order.ts
+@@ -32,10 +32,15 @@ interface Product {
+ export function placeOrder () {
+   return (req: Request, res: Response, next: NextFunction) => {
+     const id = req.params.id
+-    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
++    const customer = security.authenticatedUsers.from(req)
++    const userId = customer?.data?.id
++    if (userId == null) {
++      next(new Error(`Basket with id=${id} does not exist.`))
++      return
++    }
++    BasketModel.findOne({ where: { id, UserId: userId }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
+       .then(async (basket: BasketModel | null) => {
+         if (basket != null) {
+-          const customer = security.authenticatedUsers.from(req)
+           const email = customer ? customer.data ? customer.data.email : '' : ''
+           const orderId = security.hash(email).slice(0, 4) + '-' + utils.randomHexString(16)
+           const pdfFile = `order_${orderId}.pdf`
+@@ -143,18 +148,18 @@ export function placeOrder () {
+ 
+           challengeUtils.solveIf(challenges.negativeOrderChallenge, () => { return totalPrice < 0 })
+ 
+-          if (req.body.UserId) {
++          if (userId != null) {
+             if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {
+-              const wallet = await WalletModel.findOne({ where: { UserId: req.body.UserId } })
++              const wallet = await WalletModel.findOne({ where: { UserId: userId } })
+               if ((wallet != null) && wallet.balance >= totalPrice) {
+-                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: req.body.UserId } })
++                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: userId } })
+               } else {
+                 next(new Error('Insufficient wallet balance.'))
+                 return
+               }
+             }
+             try {
+-              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: req.body.UserId } })
++              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: userId } })
+             } catch (error: unknown) {
+               next(error)
+               return

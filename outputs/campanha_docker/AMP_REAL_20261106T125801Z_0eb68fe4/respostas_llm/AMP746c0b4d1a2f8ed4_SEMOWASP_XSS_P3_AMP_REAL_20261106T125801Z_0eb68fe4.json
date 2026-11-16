@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (XSS) ao renderizar comentários de feedback controláveis pelo usuário como HTML confiável.\",\"causa_da_vulnerabilidade\":\"O comentário recebido por feedbacks[i].comment é concatenado em uma string HTML e passado a bypassSecurityTrustHtml, desativando a sanitização contextual do Angular para conteúdo não confiável.\",\"estrategia_de_correcao\":\"Remover o bypass de segurança e manter o comentário como texto dentro do HTML gerado, permitindo que o mecanismo de renderização do Angular ou da galeria sanitize o conteúdo. Os elementos de apresentação e as estrelas, que são controlados pelo código, permanecem preservados.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/about/about.component.ts\",\"trecho_original\":\"          feedbacks[i].comment = this.sanitizer.bypassSecurityTrustHtml(\\n            feedbacks[i].comment\\n          )\\n\",\"trecho_corrigido\":\"\"}],\"justificativa_tecnica\":\"A remoção do bypass impede que conteúdo fornecido pelo usuário seja marcado como HTML confiável. O comentário continua sendo exibido no mesmo local e com a mesma estrutura funcional, mas não recebe a elevação de confiança que permitia a interpretação de markup ou atributos potencialmente maliciosos. A propriedade sanitizer deixa de ser utilizada, mas não é removida para respeitar a alteração mínima solicitada.\",\"limitacoes_da_correcao\":\"A segurança final também depende de como ng-gallery renderiza o valor de args. Se essa biblioteca inserir args diretamente via innerHTML sem sanitização, a concatenação atual ainda poderá permitir interpretação de HTML. Nesse caso, a correção ideal seria alterar o template ou a configuração da galeria para renderizar o comentário como texto, ou sanitizar explicitamente com SecurityContext.HTML antes do sink, preservando apenas a marcação controlada necessária.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2843,
+  "tokens_saida": 385,
+  "latencia_s": 4.577,
+  "custo_usd": 0.001173,
+  "hash_prompt": "196a9886d439958d62adc075e5b46909cd330c9d43a1a61cf05eb31bde7f1322",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2840
+}

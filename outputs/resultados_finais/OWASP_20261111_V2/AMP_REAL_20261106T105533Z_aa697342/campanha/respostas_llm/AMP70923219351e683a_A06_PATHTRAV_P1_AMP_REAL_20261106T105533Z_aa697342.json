@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Path traversal e leitura local de arquivos (LFR) por meio do parâmetro layout.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em req.body.layout é passado diretamente a res.render como caminho de layout. A validação baseada em procurar algumas strings proibidas não impede caminhos relativos ou absolutos para outros arquivos, nem variações de codificação e separadores. Além disso, path.resolve é aplicado sem uma raiz confiável, portanto não restringe o caminho a layouts autorizados.\",\n  \"estrategia_de_correcao\": \"Não aceitar caminhos de layout fornecidos pelo cliente. Remover layout do objeto enviado a res.render e usar o layout padrão da aplicação, preservando os demais dados do formulário e o fluxo de resposta existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\",\n      \"trecho_corrigido\": \"        const { layout, ...renderData } = req.body\\n        res.render('dataErasureResult', {\\n          ...renderData,\\n          ...themeVars\\n        }, (error, html) => {\"\n    },\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"          } else {\\n            const sendlfrResponse: string = html.slice(0, 100) + '......'\\n            res.send(sendlfrResponse)\\n            challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n          }\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\",\n      \"trecho_corrigido\": \"        } else {\\n          const sendlfrResponse: string = html.slice(0, 100) + '......'\\n          res.send(sendlfrResponse)\\n          challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n        })\\n      } else {\"\n    },\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\",\n      \"trecho_corrigido\": \"        const { layout, ...renderData } = req.body\\n        res.render('dataErasureResult', {\\n          ...renderData,\\n          ...themeVars\\n        })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O mecanismo de renderização deixa de receber um caminho de layout controlado pelo cliente, eliminando a possibilidade de usar traversal para selecionar arquivos locais. A desestruturação exclui layout dos dados passados ao template, enquanto mantém os demais campos do corpo da requisição e as variáveis de tema. O caminho de renderização com callback continua preservando o comportamento de resposta existente.\",\n  \"limitacoes_da_correcao\": \"A correção impede a seleção de layout pelo parâmetro layout, mas não revisa outras fontes de caminhos controlados pelo usuário nem a configuração global de layouts do mecanismo de templates. O import de node:path pode ficar sem uso e exigir ajuste caso o projeto aplique verificação de imports não utilizados.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1547,
+  "tokens_saida": 780,
+  "latencia_s": 7.371,
+  "custo_usd": 0.000583,
+  "hash_prompt": "48df92ce2cb8900d749efcd87a09b83b8ca28411319226a65d27b260f7829d91",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1544
+}

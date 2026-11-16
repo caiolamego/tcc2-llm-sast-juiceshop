@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml para desabilitar a sanitização do Angular em conteúdo HTML dinâmico potencialmente controlado por usuários, resultando em vulnerabilidade de Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O método trustProductDescription utiliza sanitizer.bypassSecurityTrustHtml para marcar descrições de produtos como seguras sem realizar qualquer sanitização ou validação do conteúdo. Isso permite que scripts maliciosos inseridos nas descrições sejam executados no contexto do navegador, pois o Angular não aplica sua sanitização padrão.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e permitir que o Angular realize sua sanitização padrão ao exibir as descrições dos produtos. Isso pode ser feito atribuindo diretamente o conteúdo da descrição sem usar bypassSecurityTrustHtml, garantindo que qualquer conteúdo malicioso seja neutralizado automaticamente pelo Angular.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/search-result/search-result.component.ts\",\"trecho_original\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\",\"trecho_corrigido\":\"  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge\\n    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge\\n      // Removido bypassSecurityTrustHtml para permitir sanitização padrão do Angular\\n      tableData[i].description = tableData[i].description\\n    } // vuln-code-snippet neutral-line restfulXssChallenge\\n  } // vuln-code-snippet neutral-line restfulXssChallenge\"}],\"justificativa_tecnica\":\"O Angular aplica sanitização automática ao usar bindings padrão para propriedades como [innerHTML], removendo scripts e conteúdo malicioso. O uso de bypassSecurityTrustHtml desativa essa proteção, transferindo a responsabilidade para o desenvolvedor. Ao remover o bypass, o Angular volta a sanitizar o conteúdo, prevenindo a execução de scripts maliciosos e mitigando a vulnerabilidade XSS.\",\"limitacoes_da_correcao\":\"Se as descrições dos produtos contiverem HTML legítimo que precise ser renderizado, a remoção do bypass pode resultar na remoção ou escape desse conteúdo, afetando a formatação visual. Para preservar formatação segura, seria necessário implementar uma sanitização customizada que permita apenas tags e atributos seguros, o que não está contemplado nesta correção mínima.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 3526,
+  "tokens_saida": 607,
+  "latencia_s": 6.063,
+  "custo_usd": 0.001498,
+  "hash_prompt": "8e676b6d826b146f32f75bc741e58619c1808e0a51e8322b5efa413a6c664c01",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2944,
+  "tokens_escrita_cache": 0
+}

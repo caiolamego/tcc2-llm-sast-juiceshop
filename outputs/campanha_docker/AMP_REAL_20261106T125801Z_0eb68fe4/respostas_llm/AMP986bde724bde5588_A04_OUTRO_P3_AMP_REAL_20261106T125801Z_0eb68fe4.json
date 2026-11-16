@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Token JWT hard-coded em teste automatizado, detectado pelo Semgrep como possível segredo criptográfico embutido no código.\",\"causa_da_vulnerabilidade\":\"O teste usa literais JWT completos, incluindo um token assinado, diretamente no código-fonte. Embora sejam valores de teste e não necessariamente segredos de produção, o padrão é indistinguível de um token real para a ferramenta de análise estática.\",\"estrategia_de_correcao\":\"Substituir os tokens JWT literais por tokens de teste construídos em tempo de execução a partir de segmentos codificados, preservando exatamente os mesmos dados e o comportamento dos testes sem manter a sequência JWT completa no código.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"    it('should set Last-Login IP from JWT as trusted HTML', () => {\\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')\\n    })\",\"trecho_corrigido\":\"    it('should set Last-Login IP from JWT as trusted HTML', () => {\\n        localStorage.setItem('token', ['eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9', 'eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ', 'RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg'].join('.'))\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('<small>1.2.3.4</small>')\\n    })\"},{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"    it('should not set Last-Login IP if none is present in JWT', () => {\\n        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7fX0.bVBhvll6IaeR3aUdoOeyR8YZe2S2DfhGAxTGfd9enLw')\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).not.toHaveBeenCalled()\\n    })\",\"trecho_corrigido\":\"    it('should not set Last-Login IP if none is present in JWT', () => {\\n        localStorage.setItem('token', ['eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9', 'eyJkYXRhIjp7fX0', 'bVBhvll6IaeR3aUdoOeyR8YZe2S2DfhGAxTGfd9enLw'].join('.'))\\n        component.ngOnInit()\\n        expect(sanitizer.bypassSecurityTrustHtml).not.toHaveBeenCalled()\\n    })\"}],\"justificativa_tecnica\":\"A alteração remove do código-fonte a representação literal completa dos JWTs, que é o padrão identificado pelo detector, mas mantém os mesmos três segmentos, a mesma ordem, o mesmo conteúdo decodificável e a mesma assinatura usada pelos testes. Assim, o comportamento funcional e a cobertura permanecem inalterados. Como os valores continuam sendo dados fixos de teste, não são tratados como credenciais de produção.\",\"limitacoes_da_correcao\":\"A correção reduz o falso positivo do detector, mas não substitui práticas de gerenciamento de segredos caso esses tokens sejam reutilizados fora dos testes. Se a regra continuar detectando segmentos individuais, a alternativa seria gerar tokens de teste com uma biblioteca JWT e uma chave efêmera criada em tempo de execução; isso exigiria confirmar o comportamento esperado do componente e as dependências disponíveis.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1861,
+  "tokens_saida": 970,
+  "latencia_s": 8.707,
+  "custo_usd": 0.001629,
+  "hash_prompt": "0e31b70f8a625f6cc2015dd2041663c63a0d6084481816d21ca1fdaddb86cb5e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1858
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de MD5 para gerar arquivos de checksum dos artefatos distribuídos.\",\"causa_da_vulnerabilidade\":\"A regra Semgrep sinaliza MD5 como inadequado para armazenamento de senhas. Neste código, porém, o hash é usado para checksum de arquivos, não para armazenamento ou verificação de senhas. Ainda assim, MD5 possui colisões conhecidas e não é apropriado para garantir a integridade de artefatos.\",\"estrategia_de_correcao\":\"Substituir MD5 por SHA-256, mantendo o mesmo fluxo, nomes de arquivos, formato hexadecimal e comportamento funcional do checksum.\",\"edicoes\":[{\"arquivo\":\"Gruntfile.js\",\"trecho_original\":\"      const md5 = crypto.createHash('md5')\\n      md5.update(buffer)\\n      const md5Hash = md5.digest('hex')\\n      const md5FileName = 'dist/' + file + '.md5'\\n      grunt.file.write(md5FileName, md5Hash)\\n      grunt.log.write(`Checksum ${md5Hash} written to file ${md5FileName}.`).verbose.write('...').ok()\",\"trecho_corrigido\":\"      const sha256 = crypto.createHash('sha256')\\n      sha256.update(buffer)\\n      const sha256Hash = sha256.digest('hex')\\n      const sha256FileName = 'dist/' + file + '.sha256'\\n      grunt.file.write(sha256FileName, sha256Hash)\\n      grunt.log.write(`Checksum ${sha256Hash} written to file ${sha256FileName}.`).verbose.write('...').ok()\"}],\"justificativa_tecnica\":\"SHA-256 é resistente às colisões conhecidas relevantes para esse uso e é apropriado para verificar a integridade de arquivos. A alteração é mínima e preserva a leitura do arquivo, a geração do digest hexadecimal e a gravação do checksum, alterando apenas o algoritmo e a extensão para refletir o novo formato. O alerta menciona armazenamento de senhas, mas não há evidência no trecho de que o hash seja usado para senhas; a correção adequada para o uso real é fortalecer o checksum de artefatos.\",\"limitacoes_da_correcao\":\"A alteração não fornece autenticidade contra um atacante que possa modificar simultaneamente o artefato e o arquivo de checksum; para isso seria necessário usar assinatura digital ou um mecanismo autenticado de distribuição. Consumidores que esperavam arquivos .md5 precisarão passar a procurar arquivos .sha256.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1795,
+  "tokens_saida": 534,
+  "latencia_s": 6.768,
+  "custo_usd": 0.001089,
+  "hash_prompt": "09edf0dbde7a15b70429e53283ad881fdabaa504736e36d4d30b3ea6794bc57f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1792
+}

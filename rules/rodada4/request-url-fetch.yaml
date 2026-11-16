@@ -1,0 +1,17 @@
+rules:
+  - id: tcc.http.security.request-url-fetch
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      URL recebida da requisicao alcanca fetch no servidor. Restrinja esquema,
+      host e destinos internos antes da chamada para evitar SSRF.
+    metadata:
+      category: security
+      cwe:
+        - "CWE-918: Server-Side Request Forgery (SSRF)"
+      confidence: MEDIUM
+    mode: taint
+    pattern-sources:
+      - pattern: $REQ.body.$FIELD
+    pattern-sinks:
+      - pattern: fetch($URL)

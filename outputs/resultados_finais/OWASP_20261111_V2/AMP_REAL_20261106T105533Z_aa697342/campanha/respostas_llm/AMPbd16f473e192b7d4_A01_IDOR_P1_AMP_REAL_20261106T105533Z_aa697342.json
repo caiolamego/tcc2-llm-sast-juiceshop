@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Acesso não autorizado a cestas de compras e cobrança/crédito de carteira usando um UserId controlado pelo cliente (IDOR e falha de autorização).\",\n  \"causa_da_vulnerabilidade\": \"A rota carrega a cesta apenas pelo ID recebido na URL, sem verificar se ela pertence ao usuário autenticado. Além disso, usa req.body.UserId para debitar ou creditar a carteira, permitindo que o cliente escolha a conta afetada.\",\n  \"estrategia_de_correcao\": \"Vincular a consulta da cesta ao usuário autenticado e usar exclusivamente o ID desse usuário para operações de carteira. Se não houver usuário autenticado, não permitir a finalização do pedido.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"    const id = req.params.id\\n    BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\",\n      \"trecho_corrigido\": \"    const id = req.params.id\\n    const customer = security.authenticatedUsers.from(req)\\n    const userId = customer?.data?.id\\n    if (userId == null) {\\n      next(new Error(`Basket with id=${id} does not exist.`))\\n      return\\n    }\\n    BasketModel.findOne({ where: { id, UserId: userId }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })\"\n    },\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"          const customer = security.authenticatedUsers.from(req)\\n          const email = customer ? customer.data ? customer.data.email : '' : ''\",\n      \"trecho_corrigido\": \"          const email = customer ? customer.data ? customer.data.email : '' : ''\"\n    },\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"          if (req.body.UserId) {\\n            if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {\\n              const wallet = await WalletModel.findOne({ where: { UserId: req.body.UserId } })\\n              if ((wallet != null) && wallet.balance >= totalPrice) {\\n                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: req.body.UserId } })\",\n      \"trecho_corrigido\": \"          if (userId != null) {\\n            if (req.body.orderDetails && req.body.orderDetails.paymentId === 'wallet') {\\n              const wallet = await WalletModel.findOne({ where: { UserId: userId } })\\n              if ((wallet != null) && wallet.balance >= totalPrice) {\\n                await WalletModel.decrement({ balance: totalPrice }, { where: { UserId: userId } })\"\n    },\n    {\n      \"arquivo\": \"routes/order.ts\",\n      \"trecho_original\": \"            try {\\n              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: req.body.UserId } })\",\n      \"trecho_corrigido\": \"            try {\\n              await WalletModel.increment({ balance: totalPoints }, { where: { UserId: userId } })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A condição UserId na consulta impede que um usuário finalize a cesta de outra pessoa. A identidade autenticada passa a ser a única fonte do identificador usado em consultas, débitos e créditos da carteira, eliminando a confiança em req.body.UserId. A resposta de cesta inexistente é mantida para não revelar se uma cesta alheia existe.\",\n  \"limitacoes_da_correcao\": \"A correção pressupõe que o modelo BasketModel associe a cesta ao usuário por meio do campo UserId e que customer.data.id corresponda ao identificador usado pelo modelo de carteira. A validação de autorização de outros recursos, como endereço e método de pagamento, não é alterada.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2937,
+  "tokens_saida": 865,
+  "latencia_s": 7.925,
+  "custo_usd": 0.0008,
+  "hash_prompt": "e3642fb3840f9f8e8b45d897e2b02c2d691c1db0ba77d4008c48ef9a8cc72e83",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2934
+}

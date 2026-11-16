@@ -1,0 +1,15 @@
+diff --git a/models/feedback.ts b/models/feedback.ts
+index 4790dbf00..58f799f3b 100644
+--- a/models/feedback.ts
++++ b/models/feedback.ts
+@@ -57,6 +57,10 @@ const FeedbackModelInit = (sequelize: Sequelize) => {
+       rating: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
++        validate: {
++          min: 0,
++          max: 5
++        },
+         set (rating: number) {
+           this.setDataValue('rating', rating)
+           challengeUtils.solveIf(challenges.zeroStarsChallenge, () => {

@@ -1,0 +1,17 @@
+diff --git a/lib/insecurity.ts b/lib/insecurity.ts
+index 4a60a901b..c0b3e3e72 100644
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -147,7 +147,11 @@ export const roles = {
+ }
+ 
+ export const deluxeToken = (email: string) => {
+-  const hmac = crypto.createHmac('sha256', privateKey)
++  const deluxeTokenHmacKey = process.env.DELUXE_TOKEN_HMAC_KEY
++  if (!deluxeTokenHmacKey) {
++    throw new Error('Missing deluxe token HMAC key')
++  }
++  const hmac = crypto.createHmac('sha256', deluxeTokenHmacKey)
+   return hmac.update(email + roles.deluxe).digest('hex')
+ }
+ 

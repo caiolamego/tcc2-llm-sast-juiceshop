@@ -1,0 +1,69 @@
+{
+  "schema_versao": "1.0",
+  "controles": [
+    {
+      "id": "vulnerable_positions",
+      "grupo": "coding_challenges",
+      "arquivo": "lib/codingChallenges.ts",
+      "antes": "vulnLines.push(i + 1)",
+      "depois": "vulnLines.push(i)",
+      "teste_esperado": "assigns vulnerable and neutral lines to their own dynamic challenge keys"
+    },
+    {
+      "id": "neutral_positions",
+      "grupo": "coding_challenges",
+      "arquivo": "lib/codingChallenges.ts",
+      "antes": "neutralLines.push(i + 1)",
+      "depois": "neutralLines.push(i)",
+      "teste_esperado": "assigns vulnerable and neutral lines to their own dynamic challenge keys"
+    },
+    {
+      "id": "vulnerable_key",
+      "grupo": "coding_challenges",
+      "arquivo": "lib/codingChallenges.ts",
+      "antes": "new RegExp(`vuln-code-snippet vuln-line.*${challengeKey}`)",
+      "depois": "new RegExp('vuln-code-snippet vuln-line')",
+      "teste_esperado": "assigns vulnerable and neutral lines to their own dynamic challenge keys"
+    },
+    {
+      "id": "neutral_key",
+      "grupo": "coding_challenges",
+      "arquivo": "lib/codingChallenges.ts",
+      "antes": "new RegExp(`vuln-code-snippet neutral-line.*${challengeKey}`)",
+      "depois": "new RegExp('vuln-code-snippet neutral-line')",
+      "teste_esperado": "assigns vulnerable and neutral lines to their own dynamic challenge keys"
+    },
+    {
+      "id": "hidden_lines",
+      "grupo": "coding_challenges",
+      "arquivo": "lib/codingChallenges.ts",
+      "antes": "snippet = snippet.replace(/.*[/#]{0,2} vuln-code-snippet hide-line[\\r\\n]{0,2}/g, '')",
+      "depois": "snippet = snippet",
+      "teste_esperado": "removes hidden lines and blocks before numbering the visible snippet"
+    },
+    {
+      "id": "broken_boundary",
+      "grupo": "coding_challenges",
+      "arquivo": "lib/codingChallenges.ts",
+      "antes": "throw new BrokenBoundary('Broken code snippet boundaries for: ' + challengeKey)",
+      "depois": "return { challengeKey, snippet: source, vulnLines: [], neutralLines: [] }",
+      "teste_esperado": "rejects a snippet with a missing closing boundary"
+    },
+    {
+      "id": "cache",
+      "grupo": "coding_challenges",
+      "arquivo": "lib/codingChallenges.ts",
+      "antes": "if (_internalCodeChallenges === null) {",
+      "depois": "if (true) {",
+      "teste_esperado": "reuses the completed extraction cache without rereading changed files"
+    },
+    {
+      "id": "recursion",
+      "grupo": "coding_challenges",
+      "arquivo": "lib/codingChallenges.ts",
+      "antes": "matches.push(...moreMatches)",
+      "depois": "void moreMatches",
+      "teste_esperado": "discovers nested marked files and ignores unrelated file contents"
+    }
+  ]
+}

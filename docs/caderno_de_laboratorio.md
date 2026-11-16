@@ -35,13 +35,13 @@ Uma entrada por incidente. Não delete entradas antigas — se algo for revertid
 
 ### 2026-09-08 — `npm ci` falha na preparação do alvo (F2.2)
 
-**Sintoma:** `scripts/setup_target.sh` falhava no passo `[4/4]` (instalação de dependências) com erro do `npm ci` exigindo um lockfile existente.
+**Sintoma:** `scripts/setup/setup_target.sh` falhava no passo `[4/4]` (instalação de dependências) com erro do `npm ci` exigindo um lockfile existente.
 
 **Causa:** o repositório upstream do OWASP Juice Shop lista `package-lock.json` no próprio `.gitignore` — o lockfile não é versionado no projeto. `npm ci` exige um `package-lock.json` presente e falha sem ele. Não é incompatibilidade de plataforma: acontece em qualquer máquina.
 
 Um segundo erro apareceu ao tentar `npm install` manualmente como workaround: falhou por ter sido executado na raiz do repositório do TCC (onde não há `package.json` de aplicação), e não dentro do worktree do alvo (`workspace/wt-1`).
 
-**Correção:** `scripts/setup_target.sh` alterado de `npm ci --no-audit --no-fund` para `npm install --no-audit --no-fund`. O comando roda dentro da subshell `( cd "$WT" && ... )`, então, executado via script, sempre acontece no diretório correto — o segundo erro só ocorre se o comando for repetido manualmente fora do script.
+**Correção:** `scripts/setup/setup_target.sh` alterado de `npm ci --no-audit --no-fund` para `npm install --no-audit --no-fund`. O comando roda dentro da subshell `( cd "$WT" && ... )`, então, executado via script, sempre acontece no diretório correto — o segundo erro só ocorre se o comando for repetido manualmente fora do script.
 
 **Impacto na reprodutibilidade:** sim. Sem lockfile versionado, `npm install` resolve as versões de dependências de acordo com os ranges (`^`, `~`) do `package.json` no momento da execução — o conjunto de versões instalado pode divergir entre execuções feitas em datas diferentes, ou entre as máquinas dos dois integrantes do grupo.
 
@@ -67,7 +67,7 @@ Precisa constar na seção de Limitações do TCC 2 como fonte de não determini
 
 **Correção:** duas mudanças, de natureza diferente:
 
-- `scripts/measure_validation_cost.py` alterado para não subir servidor antes de T4 — ele passa a rodar no mesmo grupo de T0/T2/T3, sem servidor pré-iniciado. Servidor pré-iniciado fica reservado só para T5 (Cypress), que precisa de uma URL real para o navegador visitar. Resolve o item 3.
+- `scripts/experiment/measure_validation_cost.py` alterado para não subir servidor antes de T4 — ele passa a rodar no mesmo grupo de T0/T2/T3, sem servidor pré-iniciado. Servidor pré-iniciado fica reservado só para T5 (Cypress), que precisa de uma URL real para o navegador visitar. Resolve o item 3.
 - **Decisão do grupo:** padronizar `TZ=UTC` como variável de ambiente fixa em todo comando que roda testes do Juice Shop (T2 a T5), em vez de implementar comparação de baseline no runner de validação. Resolve o item 1 (confirmado: 333/333 com `TZ=UTC`, 0 falhas). Registrar em `config/config.yaml` e nos comandos de `src/pipeline/validation/runner.py` quando F4 for construído.
 
 **Impacto na reprodutibilidade:** sim.
@@ -76,7 +76,7 @@ Sobre o item 1 (fuso horário): resolvido pela padronização de `TZ=UTC`. Preci
 
 Sobre o item 2 (rede externa): **`TZ=UTC` não resolve isso.** O grupo decidiu, por ora, não implementar o mecanismo de baseline por conjunto de falhas (comparar testes que já falhavam antes da correção vs. depois) que resolveria também esse caso. Ou seja: testes com dependência de rede externa (como o do StackOverflow) continuam sendo uma fonte de ruído não tratada — se aparecerem de novo durante a execução completa do experimento, vão gerar falsos `Fⱼ = 0`. Fica como risco conhecido e aceito, não como pendência esquecida.
 
-**Correção de acompanhamento (mesmo dia):** a decisão de `TZ=UTC` tinha sido registrada aqui e no guia, mas não tinha sido de fato aplicada em `scripts/measure_validation_cost.py` — o script continuou chamando os comandos sem a variável. Confirmado numa segunda execução em `workspace/wt-1`: T3 falhou de novo com o mesmo erro de fuso horário, e T4 já mostrava só a falha de rede isolada (confirmando que a correção do conflito de porta, essa sim, funcionou). Corrigido adicionando `os.environ["TZ"] = "UTC"` logo após os imports do script, antes de qualquer `subprocess.run`/`Popen` — processos filhos herdam o ambiente do pai, então isso basta para propagar a variável para `npm`, `npx` e `node` sem precisar alterar cada chamada individualmente. **Confirmado numa terceira execução via script** (não mais manual): T0/T2/T3/T5 passaram, T3 fechou em 0 falhas — só T4 manteve a falha de rede já conhecida e aceita. Incidente encerrado.
+**Correção de acompanhamento (mesmo dia):** a decisão de `TZ=UTC` tinha sido registrada aqui e no guia, mas não tinha sido de fato aplicada em `scripts/experiment/measure_validation_cost.py` — o script continuou chamando os comandos sem a variável. Confirmado numa segunda execução em `workspace/wt-1`: T3 falhou de novo com o mesmo erro de fuso horário, e T4 já mostrava só a falha de rede isolada (confirmando que a correção do conflito de porta, essa sim, funcionou). Corrigido adicionando `os.environ["TZ"] = "UTC"` logo após os imports do script, antes de qualquer `subprocess.run`/`Popen` — processos filhos herdam o ambiente do pai, então isso basta para propagar a variável para `npm`, `npx` e `node` sem precisar alterar cada chamada individualmente. **Confirmado numa terceira execução via script** (não mais manual): T0/T2/T3/T5 passaram, T3 fechou em 0 falhas — só T4 manteve a falha de rede já conhecida e aceita. Incidente encerrado.
 
 **Fase do guia:** F2.4 → decisão nova incorporada a D6 e ao escopo de F4.
 
@@ -112,7 +112,7 @@ Sobre o item 2 (rede externa): **`TZ=UTC` não resolve isso.** O grupo decidiu, 
 
 **Causa:** confirmado contra a documentação oficial do Semgrep — a ferramenta passou a suportar dois esquemas de severidade que **coexistem na mesma execução**: o legado de 3 níveis (`ERROR`/`WARNING`/`INFO`) e o atual de 4 níveis (`CRITICAL`/`HIGH`/`MEDIUM`/`LOW`), com `ERROR = HIGH`, `WARNING = MEDIUM`, `INFO = LOW`. Regras diferentes do mesmo scan (mesmo dentro do mesmo ruleset) podem usar nomenclaturas diferentes dependendo de quando foram escritas/atualizadas no registro. O código de `build_issue_catalog.py` (`SEVERIDADES_ACEITAS = {"ERROR", "WARNING"}`) só reconhecia o esquema legado, então os 2 findings `MEDIUM` — que são exatamente o nível `WARNING` que o protocolo D1 manda manter — foram descartados por engano.
 
-**Correção:** `SEVERIDADES_ACEITAS` em `scripts/build_issue_catalog.py` ampliado para `{"ERROR", "WARNING", "CRITICAL", "HIGH", "MEDIUM"}`, cobrindo os dois esquemas e excluindo apenas o nível mais baixo em qualquer um deles (`INFO`/`LOW`). O passo 3 do protocolo de filtragem em D1 do guia também foi reescrito para descrever essa equivalência explicitamente.
+**Correção:** `SEVERIDADES_ACEITAS` em `scripts/experiment/build_issue_catalog.py` ampliado para `{"ERROR", "WARNING", "CRITICAL", "HIGH", "MEDIUM"}`, cobrindo os dois esquemas e excluindo apenas o nível mais baixo em qualquer um deles (`INFO`/`LOW`). O passo 3 do protocolo de filtragem em D1 do guia também foi reescrito para descrever essa equivalência explicitamente.
 
 **Impacto na reprodutibilidade:** sim, mesma categoria de risco já registrada na D2 (rulesets do registro não versionados) — só que desta vez não é o *conjunto* de regras que mudou, é a *taxonomia* usada para descrever severidade. Precisa constar nas Limitações do TCC 2: um protocolo de filtragem escrito contra uma única nomenclatura de severidade pode excluir findings válidos silenciosamente se a ferramenta migrar de esquema entre a escrita do protocolo e a execução. Mitigação: aceitar explicitamente ambos os esquemas, não só o observado no momento da escrita.
 
@@ -217,7 +217,7 @@ O item 3 (escopo) ainda está em aberto — aguardando a contagem exata de quant
 
 **Causa:** o teste busca a página real do StackOverflow, que agora responde 403 a requisições automatizadas em todas as tentativas. Antes registrado como falha intermitente ("falha às vezes"); hoje é permanente. Com o T4 bloqueante, nenhuma correção conseguiria F=1.
 
-**Correção (decisão do grupo, opção 2):** linha de base de referência. `scripts/baseline_testes.py` roda T3 e T4 num worktree sem alteração e grava `outputs/baseline_testes.json` (commit do alvo, data, versão do Node, nome de cada teste falho). No runner, cada tier de teste passa quando o conjunto de testes falhos está contido no da linha de base; cada validação registra `testes_falhos_novos`. Nenhum teste é pulado por nome. Os nomes vêm do reporter JUnit do `node --test`, chamado com os mesmos argumentos dos scripts `test:server`/`test:api` do `package.json` (o `npm run ... --` colocaria as flags depois do glob). O runner confere que a linha de base foi gerada no mesmo commit do worktree.
+**Correção (decisão do grupo, opção 2):** linha de base de referência. `scripts/experiment/baseline_testes.py` roda T3 e T4 num worktree sem alteração e grava `outputs/baseline_testes.json` (commit do alvo, data, versão do Node, nome de cada teste falho). No runner, cada tier de teste passa quando o conjunto de testes falhos está contido no da linha de base; cada validação registra `testes_falhos_novos`. Nenhum teste é pulado por nome. Os nomes vêm do reporter JUnit do `node --test`, chamado com os mesmos argumentos dos scripts `test:server`/`test:api` do `package.json` (o `npm run ... --` colocaria as flags depois do glob). O runner confere que a linha de base foi gerada no mesmo commit do worktree.
 
 **Achado no mesmo dia:** `test/api/erasure-request.test.ts :: ... POST erasure request does not actually delete the user` falhou 1 vez em 8 execuções do T4 sem alteração (`socket hang up`, ECONNRESET). Por não estar na linha de base, essa falha derrubou o cenário 1 numa rodada. A linha de base de uma execução só não captura testes intermitentes. **Em aberto para o grupo:** gerar a linha de base com N execuções (união das falhas), ou repetir uma vez o tier quando só aparecem falhas novas.
 
@@ -255,6 +255,352 @@ O item 3 (escopo) ainda está em aberto — aguardando a contagem exata de quant
 
 ---
 
+### 2026-10-18 — Ambiente dependente da máquina; adoção de um ambiente único em Docker (F2)
+
+**Sintoma:** na branch `semgrep-findings`, o preflight no Mac do Caio falhou com `FileNotFoundError: workspace/wt-1/package-lock.json`, e 15 testes Python falharam ou deram erro no macOS: a publicação exclusiva das métricas usa `renameat2`, que não existe fora do Linux (ENOTSUP), e há caminhos comparados como `/var` × `/private/var`. O baseline funcional `outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE` só vale no ambiente em que foi gerado, porque registra as versões, o hash do lockfile e o hash das dependências instaladas.
+
+**Causa:** o ambiente variava de máquina para máquina. O Node local era v26.7.0 e o do baseline, v24.14.0. O Juice Shop não versiona lockfile (o `.npmrc` tem `package-lock=false`), então cada `npm install` resolve as dependências na data em que roda. E o `renameat2` só existe no Linux.
+
+**Correção:** ambiente único em Docker (branch `feat/docker`, guia em `docs/docker.md`). Arquivos: `Dockerfile`, `compose.yaml`, `.dockerignore`, `docker/gerar_lockfiles.sh`, `docker/preparar_workspace.sh` e alvos `docker-*` no `Makefile`. O que fica fixo:
+- plataforma `linux/amd64` (Rosetta nos Macs Apple Silicon);
+- imagem `node:24.14.0-bookworm`, fixada pelo digest;
+- Python 3.11.2 da imagem, com os pacotes Python (incluindo o Semgrep 1.177.0) travados em `requirements.lock.txt`;
+- Juice Shop no commit `f915bddd…`, com lockfiles gerados uma única vez (2026-10-18T20:06:59Z, npm 11.9.0) e versionados em `docker/juice-shop/`;
+- `TZ=UTC`.
+
+As worktrees `wt-1..wt-K` são cópias exatas (`cp -a`) do Juice Shop de referência da imagem, num volume do Docker. O `preparar_workspace.sh` também cria `workspace/catalogo-alvo` (checkout limpo), exigido pelo teste `test_recompare_archived_scans`. O painel ganhou `--endereco 0.0.0.0`, usado só dentro do container; o compose publica a porta apenas em `127.0.0.1`.
+
+Verificação no container:
+- imagem construída;
+- 315 testes Python OK, incluindo 2 que eram pulados no Mac;
+- `semgrep --test rules` 28/28;
+- identidade de ambiente igual nas 4 worktrees (`b11c70b9…`);
+- consolidação de métricas do piloto `AMP_PAINEL_20261017T064627Z_bf4efba0` refeita: os 14 artefatos saíram idênticos byte a byte aos arquivados;
+- painel respondendo;
+- com o baseline do Docker (`DOCKER_V2`, entrada seguinte), o preflight dos 10 casos do piloto passou: 40 prompts e baseline SAST reproduzido (78 de 78). Os campos do contrato que dependem do ambiente (casos, catálogo, perfil, versão do Semgrep, componentes dos prompts, RAG) são iguais aos do piloto. O `prompts_validacao_sha256` difere só porque o `runner.py` mudou no commit `d03fe57`, depois do piloto;
+- dry-run completo, sem LLM (P1 a P4, K=4, `relacionada_v2`): 40 tentativas, todas `R0F1M1` com comparação SAST conclusiva, 0 erros, US$ 0, 15 artefatos de métricas, 15min34s. As worktrees voltaram limpas. Saída em `.cache/teste_docker/` (não versionada).
+
+**Impacto na reprodutibilidade:** sim, positivo, mas com quebra de continuidade. Daqui em diante, as execuções oficiais devem rodar no container. Os resultados anteriores (E01 a E03 e o piloto de 10 casos) foram gerados em outros ambientes e têm outra identidade de ambiente; não devem ser misturados sem registro. Limitação que continua: os pacotes do sistema (apt) não são fixados, então reconstruir a imagem em outra data pode trazê-los um pouco diferentes. Mitigação proposta: publicar a imagem num registro e citá-la pelo digest.
+
+**Fase do guia:** F2 (ambiente e preparação do alvo). O guia ainda não tem o passo com Docker.
+
+---
+
+### 2026-10-18 — `npm rebuild` executa o `postinstall` da raiz; `libxmljs2` compilado do fonte (F2)
+
+**Sintoma:** no primeiro build da imagem, a checagem `test ! -e frontend/node_modules` falhou depois de `npm ci --package-lock=true --ignore-scripts && npm rebuild`.
+
+**Causa:** o `npm rebuild` também executa os scripts de ciclo de vida do próprio pacote raiz. O `postinstall` do Juice Shop roda `cd frontend && npm install`, o que instalaria o frontend sem lockfile (o `.npmrc` o desliga) e anularia a fixação das versões. A suposição de que o `rebuild` só tocava nas dependências estava errada; o comportamento foi reproduzido num container descartável.
+
+**Correção:** o `postinstall` sai do `package.json` só durante o `npm ci` (`npm pkg delete scripts.postinstall`). O `npm ci` continua rodando os scripts das dependências (binários nativos). Depois, o `package.json` é restaurado com `git checkout` e o build exige `git status` limpo. O frontend é instalado à parte, com `npm ci --package-lock=true`, e os builds usam os mesmos comandos do `postinstall` original. Na mesma investigação: o binário pré-compilado do `libxmljs2` exige GLIBC 2.38 e o bookworm tem 2.36, então o `libxmljs2` é compilado do fonte durante o build da imagem.
+
+**Impacto na reprodutibilidade:** seria alto (frontend sem lockfile), mas foi corrigido antes de qualquer execução. O binário compilado do `libxmljs2` faz parte da imagem: outra construção pode compilá-lo de outro jeito, o que é mais um motivo para citar a imagem pelo digest.
+
+**Fase do guia:** F2.
+
+---
+
+### 2026-10-18 — No Docker, o Juice Shop desliga sozinho 17 desafios (`safetyMode: auto`) (F2/F4)
+
+**Sintoma:** o primeiro baseline funcional gerado no container (`outputs/revalidacoes/DOCKER_V1/BASELINE`) teve os 39 grupos comparáveis. Mas, comparado ao baseline do piloto (`outputs/revalidacoes/PILOTO10_CORRECAO_V1/BASELINE`), havia 10 testes em 8 grupos que passavam no ambiente do Matheus e falhavam no container:
+- b2b (3 testes);
+- current_user, feedback, login, product, profile, track e upload (1 cada).
+
+Exemplo: o teste de login "saved as remote IP when True-Client-IP is not present" recebeu `''` em vez de `'127.0.0.1'`. A comparação completa está em `outputs/revalidacoes/DOCKER_V1/comparacao_baseline_piloto10.json`.
+
+**Causa:** o `config/default.yml` do Juice Shop traz `challenges.safetyMode: auto`. Nesse modo, `lib/utils.ts` (`isChallengeEnabled`) desliga os desafios cujo `disabledEnv` inclui `Docker` quando `lib/is-docker.ts` detecta um container (`/.dockerenv`, cgroup ou mountinfo). O `data/static/challenges.yml` marca 17 desafios assim:
+
+> restfulXss, fileWrite, rce, usernameXss, persistedXssUser, httpHeaderXss, noSqlCommand, noSqlOrders, reflectedXss, ssti, persistedXssFeedback, rceOccupy, videoXss, xxeFileDisclosure, xxeDos, yamlBomb e lfr
+
+Os 10 testes que falharam correspondem a 9 desses desafios. Fora de container, o modo `auto` mantém todos ligados; por isso o ambiente do Matheus não tinha o problema. Sem correção, o alvo no Docker teria 17 vulnerabilidades desativadas em tempo de execução. O SAST, que é estático, não muda, mas os testes funcionais e o conjunto D mudam, e o alvo deixa de ser o alvo estudado.
+
+**Correção:** o `Dockerfile` define `ENV NODE_CONFIG='{"challenges":{"safetyMode":"disabled"}}'`. É a opção oficial do Juice Shop, a mesma de `config/unsafe.yml` e `config/ctf.yml`, e o pacote `config` (3.3.12) a aplica por cima de `config/test.yml`. A trava tem três partes:
+1. o build confere o valor efetivo com `NODE_ENV=test` e falha se não for `disabled`;
+2. o valor fica registrado em `/opt/ambiente.json`;
+3. a variável já faz parte de `identity.ambiente` (`variaveis_sha256`), então um container sem ela é recusado pelo preflight.
+
+O runner repassa as variáveis do processo aos testes (`llm/provider.py::ambiente_alvo`, que remove só as credenciais da LLM). O baseline foi refeito em `outputs/revalidacoes/DOCKER_V2/BASELINE`: os 39 grupos são equivalentes aos do piloto (mesmos testes, estados, falhas e obrigatórios aprovados). A comparação está em `outputs/revalidacoes/DOCKER_V2/comparacao_baseline_piloto10.json`, gerada por `scripts/audit/compare_functional_baselines.py`. O `DOCKER_V1` fica como evidência deste incidente e não deve ser usado; o preflight o recusaria, porque o `variaveis_sha256` dele é outro.
+
+**Impacto na reprodutibilidade:** alto, se não for corrigido. Quem rodar o Juice Shop em container sem `safetyMode: disabled`, inclusive com a imagem oficial do projeto, mede um alvo diferente. Isso precisa constar no protocolo como cuidado obrigatório.
+
+**Fase do guia:** F2 (ambiente) e F4 (validação, linha de base do F).
+
+---
+
+### 2026-10-26 — Reorganização do repositório sem mudança de funcionamento (F1)
+
+**Sintoma:** os autores não conseguiam mais se localizar no repositório:
+- 7.049 dos ~7.400 arquivos versionados estavam em `outputs/`, misturando a campanha oficial, pilotos, testes de desenvolvimento e o histórico E01–E03;
+- 30 documentos, mais `features/` e um README de 31 KB, se sobrepunham;
+- `frontend/` na raiz era o painel, não o frontend do Juice Shop;
+- nenhum lugar ligava o código às etapas do §3.8 do TCC.
+
+**Causa:** o repositório cresceu por acúmulo durante as features 01–07, sem uma regra de onde cada tipo de arquivo deveria ficar.
+
+**Correção:** o Caio escolheu duas opções combinadas: arquitetura "dutos e filtros" para o código e organização do repositório pelo papel de cada coisa (compêndio de pesquisa). A exigência era não alterar nada no funcionamento.
+
+O levantamento mostrou que boa parte do repositório faz parte da identidade científica e não pode mudar de nome, pasta ou conteúdo:
+- **baseline oficial:** guarda o nome e o conteúdo de 5 arquivos de `validation/`;
+- **referência Docker:** confere 17 arquivos por caminho;
+- **contrato da execução:** registra os caminhos de `validation/`, `sast/`, `target/`, `patching/` e de 4 módulos da raiz de `src/pipeline/`;
+- **caminhos fixos no código:** `config/conjunto_d.json` e `outputs/baseline_testes.json`;
+- **arquivos congelados que citam documentos:** `docs/docker.md`, `docs/criterios_conjunto_d.md` e `docs/conjunto_d.md`.
+
+Por isso, ficaram onde estavam `src/pipeline/` (módulos), `config/`, `tests/`, `rules/`, `scripts/` (seus nomes aparecem em centenas de registros de `outputs/` como comando gerador) e `outputs/`.
+
+Feito:
+- **Arquitetura documentada por etapa.** `src/pipeline/README.md`: etapa do TCC → filtros (módulos) → artefatos de entrada e saída, com a explicação dos nomes fixos.
+- **Índices novos:** `README.md` (curto), `docs/README.md`, `config/README.md`, `scripts/README.md`, `outputs/README.md` e `docs/historico/README.md`, com a tabela caminho antigo → novo.
+- **Arquivos movidos:**
+  - `features/` → `docs/historico/features/`;
+  - 4 guias de uso → `docs/guias/`;
+  - `GUIA_CONTINUIDADE_TCC2.md` → `docs/planejamento/`;
+  - `estrutura_projeto.md` → `docs/historico/`;
+  - README anterior → `docs/guias/referencia_detalhada.md`;
+  - `frontend/painel/` → `src/pipeline/painel/web/`.
+- **Código alterado:** só uma linha, o caminho da interface em `src/pipeline/painel/server.py`.
+- **Links:** corrigidos em 24 documentos. Nos documentos históricos só os links mudaram; os comandos registrados ficaram como foram executados.
+- **Modo histórico** (E01–E03): ficou no lugar, marcado como legado nos índices.
+
+Achado durante o levantamento: `config/perfis/ampliado_v1/` não carrega com o código atual ("Hash de regra inválido"). Nenhuma configuração o usa; a campanha usa `ampliado_piloto_v1`.
+
+Verificação antes × depois (imagem local e baseline `DOCKER_V2`, sem LLM), com evidência em `outputs/revalidacoes/REORGANIZACAO_20261026/`. Ficou idêntico:
+- a identidade científica: componentes, cobertura, prompts, RAG, perfis, catálogo e as 17 entradas da referência Docker;
+- os 358 testes Python e os 28 testes de regras;
+- o preflight dos 52 casos, com 208 prompts idênticos byte a byte;
+- a reconsolidação das métricas da campanha oficial, idêntica ao arquivado;
+- o dry-run de 10 casos: 40 tentativas com os mesmos R, F, M e classificação, e prompts, respostas, patches, códigos corrigidos e comparações idênticos byte a byte;
+- o painel, o `make -n` de todos os alvos e os comandos do `executar.py`;
+- os links: 0 internos quebrados, e os 3 externos com o mesmo destino.
+
+As únicas diferenças entre execuções foram tempos, a pasta temporária, o ID do container e a worktree sorteada para cada tentativa. Elas aparecem também entre duas execuções seguidas sem mudança nenhuma.
+
+**Impacto na reprodutibilidade:** nenhum na execução. Registros antigos em `outputs/` e relatórios de auditoria continuam citando caminhos antigos de documentação; a correspondência está em `docs/historico/README.md`. A conferência da imagem oficial (`make docker-check`) não pôde rodar nesta máquina, porque a imagem está só com o Matheus. Mas as 17 entradas que ela confere ficaram com o mesmo caminho e o mesmo hash.
+
+**Fase do guia:** F1 (repositório).
+
+---
+
+### 2026-10-26 — Reorganização do código por etapas e referência oficial v2 (F1/F2)
+
+**Sintoma:** na reorganização anterior (mesmo dia), os módulos de código não puderam ser movidos nem renomeados, porque o nome e o conteúdo de parte deles entram na identidade científica (baseline oficial, referência Docker, contrato). A arquitetura de dutos e filtros ficou só documentada, e os nomes continuaram misturando português e inglês.
+
+**Causa:** a identidade científica amarra o código ao baseline. Qualquer mudança em `validation/coverage.py`, `coverage_runner.py`, `conjunto_d.py`, `preparacao_api.py`, `coverage_api_setup.mjs`, `runner.py` ou `identity.py` invalida o baseline e a referência oficiais, cuja imagem estava só na máquina do Matheus.
+
+**Correção:** com autorização do Caio para gerar um baseline novo:
+
+1. **Código** (`src/pipeline/`), movido para uma pasta por etapa:
+   - `etapas/e01_analise_sast` … `e09_metricas`;
+   - `orquestracao/` (`campanha.py`, `preflight.py`), `comum/` e `legado/`;
+   - nomes em português (tabela completa em `docs/historico/README.md`);
+   - nenhuma função, classe ou lógica mudou: só arquivos, pastas, imports, alvos de `mock.patch` e os nomes de arquivo usados nas identidades (`provedor.py` do Colab, adaptadores de `cobertura.py`, `componentes.py`, `docker/referencia.py`);
+   - quatro módulos recalculam a raiz do projeto a partir de `__file__` e tiveram a profundidade ajustada.
+2. **Scripts:** pastas `preparacao/`, `experimento/`, `relatorios/`, `auditoria/` e nomes em português.
+3. **O que ficou no lugar:** `config/`, `knowledge_base/`, `rules/`, `tests/` e `outputs/`. O catálogo arquivado e o leitor de métricas conferem esses caminhos, e mudá-los impediria reconsolidar a campanha de 19/10.
+4. **Referência Docker:**
+   - a anterior foi arquivada em `docker/historico/referencia_oficial_v1.json`;
+   - `make docker-baseline` gerou `outputs/baselines/docker/oficial_v2/`, com a imagem local (`sha256:81fe6403…`, mesmo `Dockerfile` e mesmos lockfiles);
+   - a trava de equivalência de `docker/referencia.py` passou a aceitar diferença **só** em `adaptadores_sha256`, os hashes do código; para isso, `comparar_baselines_funcionais.py` passou a informar quais campos da cobertura diferem;
+   - continua exigindo os 39 grupos equivalentes, as compilações aprovadas e a revisão, o mapa, o conjunto D e os testes adicionais iguais.
+   - Resultado: 39/39 grupos equivalentes ao `DOCKER_V2`, ambiente idêntico, ambiente e grupos conferidos, referência congelada.
+5. **Configurações:** `config/execucao_docker_preparados.yaml` e `execucao_docker_78.yaml` passaram a apontar para `oficial_v2`.
+
+Verificação antes × depois (sem LLM; evidência em `outputs/revalidacoes/REORGANIZACAO_20261026/fase2_codigo/`). Ficou idêntico:
+- os textos e a política de contexto dos prompts, o roteiro, a base RAG, os perfis SAST e o catálogo;
+- a identidade de cobertura, fora os hashes dos 5 adaptadores renomeados;
+- as 10 entradas não-código da referência;
+- os 358 testes Python, com os mesmos resultados, e os 28 testes de regras;
+- o preflight dos 52 casos, com 208 prompts idênticos byte a byte;
+- o dry-run de 10 casos: 40 tentativas com os mesmos R, F, M, classificação e hash do prompt, e prompts, respostas, patches, códigos corrigidos e comparações idênticos byte a byte;
+- os CSVs de métricas;
+- a reconsolidação da campanha oficial, idêntica ao arquivado;
+- o painel, o `make -n` (fora o ID da imagem) e os comandos do `executar.py` (fora os nomes novos);
+- os 99 módulos e scripts, que importam um a um;
+- os links: 0 internos quebrados.
+
+Mudaram só as identidades esperadas: `validacao`, `prompts_validacao_sha256`, `inferencia` e `baseline_testes_sha256` no contrato. `make docker-check` passou a funcionar nesta máquina.
+
+**Impacto na reprodutibilidade:** a campanha de 19/10 continua ligada à referência v1 (imagem do Matheus, baseline `oficial_v1`) e foi reconsolidada sem diferença. Execuções novas usam a v2, e o Matheus e a banca precisam da imagem nova (`make docker-export` / `make docker-import`). Execuções antigas não podem ser retomadas com o código novo, o que é esperado, porque estão concluídas. As respostas da OpenAI em cache continuam válidas, porque a chave é só prompt, modelo e seed. O cache do Colab inclui a identidade da implementação e deixa de ser reaproveitado; ele não foi usado na campanha. Registros antigos em `outputs/` e relatórios de auditoria citam nomes antigos; a correspondência está em `docs/historico/README.md`.
+
+**Fase do guia:** F1 (repositório) e F2 (ambiente).
+
+---
+
+### 2026-11-01 — Retirada do modo histórico (E01–E03) do código (F1)
+
+**Sintoma:** `src/pipeline/etapas/e01_analise_sast/semgrep.py` tinha duas gerações de código: rulesets do registro com assinatura `sha256(check_id|caminho)` (D6) e a varredura por perfil congelado. O orquestrador mantinha os dois modos, e o histórico ainda era o padrão de `--catalogo`. Só a campanha atual (catálogo por ocorrência) é executada.
+
+**Causa:** na reorganização de 26/10, o modo histórico ficou no lugar, só marcado como legado. Depois disso, ele só servia para refazer E01–E03. Para isso, de todo modo, é preciso voltar ao commit de cada execução, porque o código já tinha mudado de caminho.
+
+**Correção:** decisão do Caio, retirar o que o modo atual não usa.
+- **Tags git** nos commits de cada execução: `e01-preliminar` (`3b7ef48`), `e02-oficial-catalogo-v1` (`da10b26`), `e03-catalogo-v2` (`fa7b644`, só na `feat/p3-p4`), e `modo-historico-final` (`b52356e`), o último commit com o modo histórico na estrutura reorganizada.
+- **Código retirado:**
+  - de `semgrep.py`: `RULESETS`, `assinatura`, `ler_exclusoes`, `executar` e `carregar_resultados`;
+  - `legado/filtro.py`;
+  - `resposta_falsa`;
+  - do orquestrador: a varredura da sessão e o ramo não ampliado. `--catalogo` passou a ser obrigatório, e o catálogo histórico é recusado com mensagem que indica a tag.
+- **Scripts retirados:** `gerar_catalogo_historico.py`, `marcar_desafios_historicos.py`, `validar_cenarios_camadas.py`, `medir_custo_validacao.py` e `relatorio_baseline_historico.py`.
+- **`tentar_um_caso.py` e `sondagem_sast.py`:** perderam só o ramo histórico; já funcionavam com o catálogo atual.
+- **Mantidos, apesar do rótulo "legado":**
+  - `legado/comparacao_v1.py`, que o comparador v2, o preflight e a medição importam;
+  - `camadas.py`, conferido pela referência Docker;
+  - `gerar_linha_de_base_historica.py`, citado por `camadas.py`;
+  - `metricas_historicas.py` e a leitura de E01/E02 em `e09_metricas`, que os testes usam para conferir os números arquivados;
+  - `preparar_alvo.sh`, porque `config/execucao.yaml` ainda roda fora do Docker.
+- **Testes:** dois testes montavam o orquestrador no modo histórico (`test_colab_contract`, `test_painel`). Mudou só a preparação; as asserções são as mesmas.
+
+Verificação antes × depois (Docker, sem LLM; evidência em `outputs/revalidacoes/LIMPEZA_MODO_HISTORICO_20261101/`). Ficou idêntico:
+- os 358 testes Python e os 28 testes de regras;
+- o preflight dos 52 casos, com 208 prompts idênticos byte a byte;
+- o dry-run de 10 casos: as 40 tentativas têm registros iguais campo a campo, fora tempos e hashes derivados. Prompts, respostas, patches, códigos corrigidos e comparações são idênticos byte a byte;
+- a reconsolidação da campanha oficial, idêntica ao arquivado;
+- o painel, o `make -n` e os comandos do `executar.py`;
+- a referência Docker e o baseline oficial;
+- os links: 0 internos quebrados.
+
+Mudaram só a lista de arquivos do código no contrato (de 30 para 29) e o que deriva dela: `contrato_execucao_sha256` e as chaves do cache de validação.
+
+**Impacto na reprodutibilidade:** nenhum nas execuções atuais. Uma execução iniciada com o código anterior não pode ser retomada com o atual, porque o contrato mudou. E01–E03 se refazem a partir das tags; os resultados arquivados em `outputs/` não mudaram.
+
+**Fase do guia:** F1 (repositório).
+
+---
+
+### 2026-11-02 — Primeiro incremento para ampliar os casos com cobertura funcional
+
+**Sintoma:** 26 das 78 ocorrências permaneciam bloqueadas por lacunas de avaliação funcional.
+
+**Causa:** em CAPTCHA faltava verificar a conta independentemente da resposta retornada; em ZIP faltavam
+asserções dos arquivos e bytes extraídos; em campanhas de desconto não havia asserção do valor final
+persistido. O ambiente Docker, por si só, não resolve essas lacunas.
+
+**Correção:** três avaliações externas ao alvo, com 16 testes, em `tests/functional/juice_shop/`:
+`captcha_arithmetic.test.ts`, `zip_contents.test.ts` e `campaign_discount.test.ts`. A revisão
+`config/cobertura_funcional_v2.yaml` e o mapa `config/mapa_testes_relacionados_v3.yaml` incluem os novos
+grupos. Os testes do código original passaram; cinco mutações deliberadas foram detectadas como falhas
+dos testes esperados, sem falha operacional. O executor de controles restaura apenas os bytes que
+escreveu e recusa alterações desconhecidas. Não houve chamadas à LLM.
+
+**Impacto na reprodutibilidade:** a ampliação tem revisão, baseline, imagem e evidências próprios em
+`outputs/cobertura_funcional/AMPLIACAO_20261102/`. A revisão v1, o baseline e os resultados da campanha
+anterior são preservados. Não se somam medições de campanhas com coberturas distintas sem reconciliação.
+O estado final da auditoria e os comandos estão em `docs/cobertura_funcional_v2.md`.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
+### 2026-11-02 — Segundo incremento: recursos gerados e medidor de startup de server.ts
+
+**Sintoma:** a união por arquivo mantinha 12 casos de `server.ts` bloqueados, mesmo quando a ocorrência
+individual já tinha cobertura revisada.
+
+**Causa:** faltavam contratos de parte dos 14 modelos de `autoModels`, seus hooks e o caminho de
+erro de `collectDurationPromise`. Testes HTTP normais não comprovam propagação de erro na função de
+inicialização.
+
+**Correção:** dois grupos independentes em `server_resources.test.ts` (21 testes de API/banco) e
+`server_startup.unit.test.ts` (três testes da função real extraída por AST). Cobrem modelos gerados,
+carteira, formatos, exclusão de atributos, associações, paginação, tradução e medição/log/rethrow.
+Os 24 testes passaram no código original; os 14 controles da rodada revisada detectaram as regressões
+esperadas, sem falha operacional e com restauração dos originais. O controle inicial de paginação
+apontava ao teste de usuários, cuja população era menor que o limite de 100; o truncamento já era
+detectado pelo teste de dicas, que passou a ser o alvo nominal do controle. A rodada inicial reprovada
+foi preservada, sem ser apresentada como resultado final.
+
+**Impacto na reprodutibilidade:** revisão `cobertura_funcional_v3.yaml`, mapa
+`mapa_testes_relacionados_v4.yaml` e evidências em `outputs/cobertura_funcional/SERVER_20261102/`.
+Revisões anteriores e conjunto D preservados. A função de startup é avaliada isoladamente; não se
+alega teste de recuperação de uma inicialização completa. Baseline, auditoria e comandos da revisão
+estão em `docs/cobertura_funcional_v3.md`. Nenhuma chamada à LLM nesta ampliação.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
+### 2026-11-02 — Terceiro incremento: extração dos desafios de código
+
+**Sintoma:** dois casos de `lib/codingChallenges.ts` sem avaliação independente da extração de
+marcadores vulneráveis/neutros. Os testes de seleção de respostas não comprovavam esse contrato.
+
+**Causa:** ausência de entradas conhecidas que exercitassem as funções públicas de descoberta e
+extração do módulo, inclusive múltiplas chaves e numeração após remoção de linhas ocultas.
+
+**Correção:** grupo `coding_challenges`, com 11 testes do módulo real completo transpilado e executado
+com filesystem/logger controlados. Verifica snippets, índices por chave, ocultação, quebras de linha,
+comentários `#`, recursão, erros e cache. Os 11 testes passaram e os oito controles de regressão foram
+detectados. A primeira validação revelou somente uma comparação de arrays com protótipos distintos
+entre contextos; foi ajustada no avaliador, sem alterar o alvo. A evidência inicial foi preservada.
+
+**Impacto na reprodutibilidade:** revisão `cobertura_funcional_v4.yaml`, mapa
+`mapa_testes_relacionados_v5.yaml` e evidências em `outputs/cobertura_funcional/CODING_CHALLENGES_20261102/`.
+Baselines e conjunto D anteriores preservados. Não se demonstra I/O físico ou segurança de regex por
+esses testes F. Baseline, auditoria e comandos em `docs/cobertura_funcional_v4.md`; nenhuma chamada LLM.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
+### 2026-11-02 — Quarto incremento: seed e autenticação TOTP
+
+**Sintoma:** caso de segredo TOTP em `data/static/users.yml` sem avaliação específica da persistência
+do seed e do segundo fator da conta identificada por `timo`.
+
+**Causa:** os testes gerais de login não demonstravam preservação desse vínculo. Fixar o segredo
+antigo no avaliador impediria aceitar uma rotação válida.
+
+**Correção:** nove testes independentes de seed, banco e login HTTP em duas etapas, com gerador TOTP
+separado do verificador da aplicação e conferido com os vetores SHA1 da RFC 6238. Sete controles
+negativos foram detectados. Um controle positivo rotacionou temporariamente o segredo para outra
+fixture válida: os mesmos nove testes passaram e o original foi restaurado. Não houve chamada LLM
+nem alteração definitiva de credenciais do alvo. Na revisão final, o avaliador passou a exigir as
+23 chaves originais de conta, independentemente do YAML candidato; o oitavo controle detectou a perda
+de uma chave. A rotação válida continuou passando. As saídas finais têm sufixo `_final`/`_finais`,
+preservando a primeira verificação como desenvolvimento.
+
+**Impacto na reprodutibilidade:** revisão `cobertura_funcional_v5.yaml`, mapa
+`mapa_testes_relacionados_v6.yaml` e evidências em `outputs/cobertura_funcional/SEED_TOTP_20261102/`.
+Revisões e conjunto D anteriores preservados. O controle positivo não é tentativa de remediação;
+funcionalidade de login não comprova armazenamento seguro. Método e resultados em
+`docs/cobertura_funcional_v5.md`.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
+
+---
+
+### 2026-11-02 — Fechamento dos seis casos restantes do catálogo
+
+**Sintoma:** restavam chat, template de legendas, Grunt e três ocorrências em specs frontend. Um spec
+alterado não pode ser a única prova da própria integridade.
+
+**Causa:** faltavam contratos específicos e um avaliador externo dos cenários dos specs candidatos.
+
+**Correção:** cinco grupos, 27 testes externos. O chat executa SDK/banco/SSE reais com transporte
+simulado. Legendas executam o JavaScript do Pug real com interfaces de vídeo controladas. Grunt gera
+um pacote real de fixture e seus sidecars. Os specs candidatos são executados no Angular, com inventário
+completo e sem skips, e precisam detectar mutações temporárias nos métodos reais de produção; um
+segundo grupo Angular independente valida guards e renderização. Nenhum adaptador do pipeline foi
+alterado nem proteção de avaliador foi desativada.
+
+Os 14 controles negativos detectaram as regressões, inclusive remoção de asserções. Os controles
+positivos aceitaram JWTs gerados nos dois specs, SHA-256 com sidecar coerente, separação literal de
+legendas e consulta estruturada de avaliações do chat. Os originais foram restaurados. A suíte de
+365 testes unitários passou. Nenhuma chamada real a LLM.
+
+**Limitação observada:** o parser original produziu cue sem texto para CRLF na validação inicial.
+O grupo final usa VTT/SRT em LF e não declara suporte comprovado a CRLF ou cues iniciados em zero.
+O alvo não foi modificado para aprovar o baseline; essa evidência inicial foi preservada. As demais
+correções iniciais foram no avaliador: comparação de arrays entre contextos, enumeração de testes e
+fixture de cupom compatível com o encoder existente.
+
+**Impacto na reprodutibilidade:** revisão `cobertura_funcional_v6.yaml`, mapa
+`mapa_testes_relacionados_v7.yaml` e evidências em `outputs/cobertura_funcional/FINAIS_20261102/`.
+JUnit/logs internos ficam em `subavaliacoes/`, com hash do spec candidato. A configuração existente
+`execucao_docker_78.yaml` aponta à nova revisão; o modo real original foi preservado e não executado.
+Método, baseline e auditoria em `docs/cobertura_funcional_v6.md`. Conjunto D e resultados anteriores
+permanecem preservados.
+
+**Fase do guia:** cobertura funcional e validação do critério F.
 ### 2026-10-07 — Reexecução com interseção para testes intermitentes (F4/F5)
 
 **Sintoma:** `test/api/erasure-request.test.ts` (`POST erasure request does not actually delete the user`) falhou 1 vez em 8 execuções do T4 sem alteração (`socket hang up`) e, por não estar na linha de base, reprovou o cenário 1 numa rodada.
@@ -477,3 +823,87 @@ T2_arquivo_unico: 0.2s (passou)
 T3_suite_unitaria: 1.9s (passou)
 T4_api: 13.0s (FALHOU)
 T5_desafio_cypress: 7.3s (passou)
+# 02/11/2026 — Cache de respostas e finalização após falha da API
+
+**Sintoma:** o piloto Colab `AMP_REAL_20261017T222912Z_abd18103` registrou HTTP 503,
+sem tentativa científica concluída e sem consolidação de métricas. O código também
+reutilizava respostas locais por padrão.
+
+**Causa:** falha operacional Colab encerrava a fila; o terminal e o painel só
+iniciavam a consolidação após código zero. O cliente OpenAI não repetia timeout
+ou conexão interrompida. O piloto sem respostas não tinha `execucoes.jsonl`.
+
+**Correção:** cache local optativo com `LLM_CACHE=desligado` por padrão nos dois
+provedores; classificação segura dos erros; retentativas OpenAI limitadas a três
+envios e continuidade dos demais pares após falhas não fatais. Colab conserva
+reenvio somente para 429. Terminal e painel tentam consolidar dados verificáveis
+mesmo após falhas. Eventos operacionais são separados das tentativas científicas.
+
+**Impacto:** relatórios parciais não convertem ausência de resposta em R/F/M=0;
+CR mantém o conjunto solicitado. Envios sem uso confirmado têm consumo desconhecido.
+Orçamento, autenticação e identidade continuam interrompendo novos envios. O piloto
+foi consolidado por leitura em `outputs/resiliencia_llm/RECUPERACAO_PILOTO_20261102_METRICAS/`,
+sem modificar a origem. Não houve chamadas reais à LLM nesta validação.
+
+Detalhes, mapa de erros e testes: [feature 09](historico/features/09-resiliencia-llm/README.md).
+
+
+# 05/11/2026 — Testes que exigem a vulnerabilidade reprovavam correções
+
+**Sintoma:** no piloto de 34 tentativas com os três modelos, 19 removeram o alerta sem criar outro e ainda assim ficaram com F=0. Em 18 delas, os únicos testes reprovados exigiam o próprio comportamento vulnerável, como `bypassSecurityTrustHtml` chamado com `<script>alert("XSS")</script>` e a página de listagem de `/ftp`.
+
+**Causa:** a regra do conjunto D diz que entram os testes cujas asserções só valem com a vulnerabilidade presente, mas as formas (a), (b) e (c) não alcançavam esses testes, e a regra dos mocks os deixava em F. O mesmo ocorria com testes que usam a falha como preparação, como os de feedback que leem o `answer` do CAPTCHA.
+
+**Correção:** critério (d), ligado a casos, em `docs/criterios_conjunto_d.md`. A lista está em `config/conjunto_d_cobertura_v2.json` (41 testes, 20 casos), com a revisão de cobertura v7, o mapa v8 e novo baseline. `conjunto_d.py`, `execucao_cobertura.py`, `camadas.py` e `medicao.py` passaram a informar o caso à classificação.
+
+**Impacto na reprodutibilidade:** a definição de F usada nas execuções muda em relação às campanhas de teste de outubro. Como `camadas.py`, `conjunto_d.py` e `execucao_cobertura.py` são entradas de `docker/referencia.json`, `make docker-check` recusa essas alterações, e a execução passa a usar `docker compose run` direto até uma nova referência. Sem o teste, um patch que apague a funcionalidade inteira de um desses casos deixa de ser reprovado por ele; por isso a conferência manual das correções aceitas é obrigatória na análise.
+
+**Fase do guia:** F4 (validação).
+
+# 06/11/2026 — Campanha completa descartada: testes ainda exigiam a vulnerabilidade
+
+**Sintoma:** a campanha de 78 casos com os três modelos terminou sem erro (41, 36 e 31 casos aceitos), mas correções certas foram reprovadas. O caso mais claro foi a proteção de `PUT /api/Products/:id` reativada pelo GPT-6 Luna e rejeitada pelo teste `PUT update existing product is possible due to Missing Function-Level Access Control vulnerability`.
+
+**Causa:** a separação de 05/11 cobriu os testes vistos no piloto de 3 casos. Dois tipos ficaram de fora: testes que nenhum patch do piloto tinha alcançado e testes mantidos em F de propósito (sandbox breakout, entidades XML). Além disso, a ligação por caso não protegia uma correção que removesse a falha de outro caso.
+
+**Correção:** revisão dos 172 pares de caso e teste reprovados. Critério (e), que vale em todos os casos, ampliação do critério (d), `conjunto_d_cobertura_v3.json`, revisão de cobertura v8, mapa v9 e baseline `IMAGEM_81FE_D3_20261106`. Foi corrigido `server_startup.unit.test.ts`, que exigia a forma concatenada do log, e criado `contratos_legitimos.test.ts`. A opção de inverter o resultado foi rejeitada: qualquer outra falha viraria aprovação. Detalhes em `docs/conjunto_d.md`, seção Versão 3.
+
+**Impacto na reprodutibilidade:** os resultados da campanha de 05 e 06/11 foram descartados pelo grupo e não entram como evidência; a execução dos três modelos foi refeita com chamadas reais. Os critérios mudaram depois de vermos resultados, por isso a mudança vale igual para os três modelos e fica declarada no protocolo. Permanecem sem conclusão as correções que exigem uma variável de ambiente nova para o módulo carregar.
+
+**Fase do guia:** F4 (validação).
+
+# 06/11/2026 — Comparador deixava sem conclusão alertas que só mudaram de linha
+
+**Sintoma:** 89 tentativas da campanha ficaram com `indeterminada_sast`, e 65 delas com F=1. Em 7 tentativas, o alerta alvo saiu e os testes passaram, mas M ficou sem conclusão.
+
+**Causa:** a v2 tratava como ambíguo qualquer alerta sem par, mesmo com a mesma regra, no mesmo arquivo e na mesma quantidade antes e depois. Em 84 das 89 tentativas o motivo foi esse; em nenhuma a contagem caiu com o alvo no grupo. As outras 5 vieram de problema de leitura do arquivo.
+
+**Correção:** `ocorrencias_contexto_v3`, que decide pela contagem da regra no arquivo. Testes em `tests/unit/test_comparacao_v2.py` atualizados; a decisão anterior era não adivinhar pela contagem, e foi revista porque o resultado da tentativa fica rejeitado nos dois sentidos quando o alvo está no grupo.
+
+**Impacto na reprodutibilidade:** o contrato registra o nome do comparador, então execuções v2 não podem ser retomadas com a v3. Um alerta removido e outro igual criado no mesmo arquivo contam como o mesmo; isso está declarado no protocolo.
+
+**Fase do guia:** F4 (validação).
+
+# 06/11/2026 — Teste nosso ainda reprovou a correção oficial de `PUT /api/Products/:id`
+
+**Sintoma:** na campanha final, o GPT-6 Luna (P4, caso `AMP095fcc0f303ff032`) trocou a rota por `security.denyAll()`, que é a correção oficial do Juice Shop, e ficou com R=1, M=1 e F=0.
+
+**Causa:** `creates reads and updates a product through its generated endpoints`, em `tests/functional/juice_shop/server_resources.test.ts`, exige `PUT` autenticado. Ele só apareceu nesta campanha, porque antes a validação parava no teste de `PUT` do Juice Shop.
+
+**Correção:** nenhuma. O grupo decidiu manter o resultado desta campanha, com 49 casos para o GPT-6 Luna. O teste foi conferido sem LLM: reaplicando o patch, só ele falha nos grupos `server_resources` e `server_startup`.
+
+**Impacto na reprodutibilidade:** o GPT-6 Luna fica com um caso a menos do que teria sem esse teste (49 em vez de 50). Foi 1 das 834 tentativas. Os outros modelos corrigiram esse caso com `isAuthorized()`, que o teste aceita.
+
+**Fase do guia:** F4 (validação).
+
+# 06/11/2026 — RRIS: redução medida, mas conjunto sem aprovação nos testes
+
+**Sintoma:** a primeira execução real de `avaliacao_conjunta_rris.py` recusou todos os patches e, corrigido isso, marcou os 49 patches como conflito. Depois de corrigido, a RRIS saiu para os três modelos (GPT-5.6 Luna 70,5%, GPT-6 Luna 60,3%, GPT-4.1 mini 48,7%), mas nenhum conjunto passou em todos os testes.
+
+**Causa:** dois erros do script, que os testes unitários não cobriam: o hash do patch era procurado sem o prefixo `patches/`, e o caminho relativo do patch não valia dentro da worktree. Nos conjuntos, falharam três testes. `POST login newly created user` cria usuário sem `passwordRepeat` e falha só com a correção do caso `AMP8655da69167e4466`. `persists and lists normal feedback through the generated resource` usa o `answer` da resposta e falha só com a correção do caso `AMP4d38adc404310ebe`. Esses dois dependem da falha e ficaram fora do conjunto D porque, testando cada correção sozinha, seus grupos não rodam para esses casos. O terceiro, `keeps every last IP scenario...`, falha só com as correções dos casos `AMP986bde724bde5588` e `AMP417d1da8d7caa6bd` aplicadas juntas, então é uma interação entre elas.
+
+**Correção:** os dois erros do script foram corrigidos e cobertos por testes. O script passou a rodar também os grupos depois da primeira falha, para mostrar o resultado completo. Os três testes não foram alterados: a campanha fica como foi medida, e a RRIS é reportada como redução estática, sem validação funcional do conjunto.
+
+**Impacto na reprodutibilidade:** a evidência está em `outputs/rris/`, sem LLM. Patches em conflito ficam fora do conjunto (9, 8 e 4), por isso a RRIS não é a soma das correções aceitas. A ordem de aplicação é a do início das tentativas e influencia quais patches entram.
+
+**Fase do guia:** F7 (métricas).

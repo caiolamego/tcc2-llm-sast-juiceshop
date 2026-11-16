@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Condição de corrida no processamento de curtidas, que permite a um usuário curtir a mesma avaliação mais de uma vez por meio de requisições concorrentes.\",\n  \"causa_da_vulnerabilidade\": \"A verificação de que o usuário ainda não curtiu a avaliação ocorre separadamente das atualizações de likesCount e likedBy. Requisições simultâneas podem passar pela verificação antes de qualquer uma registrar o usuário, incrementando a contagem mais de uma vez. A espera artificial amplia essa janela.\",\n  \"estrategia_de_correcao\": \"Substituir a verificação e as atualizações separadas por uma única atualização condicional e atômica: incrementar likesCount e adicionar o email a likedBy somente se o usuário ainda não estiver na lista. Verificar o resultado da operação para preservar as respostas de sucesso e de conflito.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/likeProductReviews.ts\",\n      \"trecho_original\": \"      const likedBy = review.likedBy\\n      if (likedBy.includes(user.data.email)) {\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\\n\\n      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\\n\\n      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n        updatedLikedBy.push(user.data.email)\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\\n        res.json(result)\\n      } catch (err) {\\n        res.status(500).json(err)\\n      }\",\n      \"trecho_corrigido\": \"      const result = await db.reviewsCollection.update(\\n        { _id: id, likedBy: { $ne: user.data.email } },\\n        { $inc: { likesCount: 1 }, $addToSet: { likedBy: user.data.email } }\\n      )\\n      if (result.n === 0) {\\n        return res.status(403).json({ error: 'Not allowed' })\\n      }\\n\\n      // Artificial wait for timing attack challenge\\n      await sleep(150)\\n      try {\\n        const updatedReview: Review = await db.reviewsCollection.findOne({ _id: id })\\n        const updatedLikedBy = updatedReview.likedBy\\n\\n        const count = updatedLikedBy.filter(email => email === user.data.email).length\\n        challengeUtils.solveIf(challenges.timingAttackChallenge, () => count > 2)\\n\\n        res.json(result)\\n      } catch (err) {\\n        res.status(500).json(err)\\n      }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O filtro _id + likedBy: { $ne: email } e a atualização combinada são executados atomicamente pelo MongoDB para o documento. Assim, entre requisições concorrentes, somente uma pode corresponder ao filtro e incrementar likesCount; $addToSet também impede duplicatas em likedBy. A resposta 403 existente é mantida quando a atualização não modifica documento algum, e a resposta de sucesso continua sendo enviada após a espera artificial.\",\n  \"limitacoes_da_correcao\": \"A verificação de resultado usa result.n, compatível com a forma de retorno da API de atualização já utilizada neste arquivo; se a versão do driver MongoDB retornar outro formato, essa propriedade deverá ser adaptada. A espera artificial e a lógica do desafio de timing attack permanecem intencionalmente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1010,
+  "tokens_saida": 879,
+  "latencia_s": 7.447,
+  "custo_usd": 0.00054,
+  "hash_prompt": "01e1563e775fc48d97e32cbb5ed9bcbb3935125af7359d9d01a4b459fa2ef5cb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

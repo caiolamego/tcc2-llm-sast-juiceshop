@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações por listagem de diretórios (CWE-548) nas rotas que utilizam `serveIndex`, especialmente `/ftp`, permitindo a enumeração de nomes e da estrutura de arquivos.\",\"causa_da_vulnerabilidade\":\"O middleware `serveIndex('ftp', { icons: true })` habilita a geração de uma página de listagem para o diretório `ftp`, expondo seus arquivos e subdiretórios a qualquer cliente que acesse a rota.\",\"estrategia_de_correcao\":\"Remover somente o middleware `serveIndex` da rota `/ftp`, preservando o middleware de reescrita necessário e o download direto dos arquivos por `servePublicFiles()`.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\",\"trecho_corrigido\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\"}],\"justificativa_tecnica\":\"A remoção de `serveIndex` impede a geração da página de índice e, portanto, evita a enumeração de nomes, datas e estrutura dos arquivos. O acesso direto aos arquivos continua sendo atendido por `servePublicFiles()`, preservando a funcionalidade de download existente. A alteração é mínima e não modifica mensagens, identificadores ou assinaturas.\",\"limitacoes_da_correcao\":\"Arquivos ainda podem permanecer acessíveis quando o caminho direto for conhecido, pois o download foi preservado conforme o requisito funcional. A correção trata a listagem em `/ftp`; outras listagens existentes, como `/.well-known`, `/encryptionkeys` e `/support/logs`, devem ser avaliadas separadamente quanto à necessidade de autorização e exposição de conteúdo.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3222,
+  "tokens_saida": 491,
+  "latencia_s": 7.147,
+  "custo_usd": 0.001395,
+  "hash_prompt": "95535ee892fcdcb7aff6794a6ebf749a10707c594e5fc2810bd40531635eeeb3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3219
+}

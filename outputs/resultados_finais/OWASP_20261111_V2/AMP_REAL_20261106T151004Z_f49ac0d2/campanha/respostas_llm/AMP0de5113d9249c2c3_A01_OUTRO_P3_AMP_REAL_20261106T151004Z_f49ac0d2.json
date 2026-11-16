@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Controle de acesso incorreto ao buscar pedidos do usuário autenticado usando email mascarado.\",\"causa_da_vulnerabilidade\":\"O código substitui vogais do email do usuário por asteriscos antes de usar como filtro na consulta ao banco, o que pode causar colisões e permitir acesso a pedidos de outros usuários com emails semelhantes.\",\"estrategia_de_correcao\":\"Utilizar o identificador único do usuário (user id) para filtrar os pedidos no banco de dados, garantindo que apenas os pedidos pertencentes ao usuário autenticado sejam retornados.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ email: updatedEmail })\",\"trecho_corrigido\":\"      const userId = loggedInUser.data.id\\n      const order = await ordersCollection.find({ userId })\"}],\"justificativa_tecnica\":\"A autenticação garante a identidade do usuário, mas a autorização deve garantir que o usuário só acesse seus próprios dados. Usar email mascarado como filtro é inseguro e pode causar vazamento de dados. Filtrar pelo identificador único do usuário (userId) é uma prática segura e eficaz para garantir o escopo correto dos dados retornados.\",\"limitacoes_da_correcao\":\"Assume que o banco de dados armazena o campo 'userId' em cada pedido para associar o pedido ao usuário. Se isso não existir, será necessário adaptar o esquema do banco de dados. A correção não altera o comportamento funcional visível ao usuário.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1740,
+  "tokens_saida": 346,
+  "latencia_s": 3.781,
+  "custo_usd": 0.00125,
+  "hash_prompt": "d2be02446f070f4ce70af21683a2681a99d9f61d91b02d5c4be2d1075babde1e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

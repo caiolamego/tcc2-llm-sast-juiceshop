@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Possível falta de autorização para atualizar produtos pela rota PUT /api/Products/:id (CWE-862). O trecho mostra uma proteção para POST e bloqueia DELETE, mas a proteção de PUT está comentada.\",\n  \"causa_da_vulnerabilidade\": \"A linha que aplicaria security.isAuthorized() a PUT /api/Products/:id está comentada. Assim, se essa rota for registrada por outro middleware ou pela API gerada sem uma verificação equivalente, a atualização poderá ocorrer sem autenticação. O alerta é um sinal de auditoria: o trecho, isoladamente, não confirma como a rota PUT é efetivamente registrada nem se há controles globais.\",\n  \"estrategia_de_correcao\": \"Ativar a proteção de autorização já indicada para PUT /api/Products/:id, sem alterar os demais métodos ou o comportamento das outras rotas.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  app.post('/api/Products', security.isAuthorized()) // vuln-code-snippet neutral-line changeProductChallenge\\n  // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\\n  app.delete('/api/Products/:id', security.denyAll())\",\n      \"trecho_corrigido\": \"  app.post('/api/Products', security.isAuthorized()) // vuln-code-snippet neutral-line changeProductChallenge\\n  app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\\n  app.delete('/api/Products/:id', security.denyAll())\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Descomentar o middleware aplica a verificação de autorização à rota PUT antes de sua execução, evitando que uma atualização de produto dependa apenas da existência da rota ou de controles não evidenciados neste trecho. A alteração é mínima e usa o mecanismo de autorização já empregado para POST. Ela exige autenticação, mas não demonstra, por si só, autorização por objeto: se usuários autenticados só puderem atualizar produtos próprios, será necessário confirmar e aplicar essa regra na camada que executa a atualização.\",\n  \"limitacoes_da_correcao\": \"O trecho fornecido não mostra a configuração completa da API gerada, os middlewares globais nem o handler de atualização. Portanto, é necessário verificar se a rota PUT é registrada e se há controles adicionais. security.isAuthorized() protege contra acesso não autenticado, mas não garante autorização por produto nem restringe a operação a um papel específico. Se a atualização deve ser limitada por propriedade ou função, essa regra precisa ser aplicada no handler ou na consulta ao recurso, usando a identidade validada pelo servidor.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3185,
+  "tokens_saida": 581,
+  "latencia_s": 6.948,
+  "custo_usd": 0.000689,
+  "hash_prompt": "51ede959cbce3c73ed86046784d4cc04d3cc1cb59a51748bad1a99add80ced9a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3182
+}

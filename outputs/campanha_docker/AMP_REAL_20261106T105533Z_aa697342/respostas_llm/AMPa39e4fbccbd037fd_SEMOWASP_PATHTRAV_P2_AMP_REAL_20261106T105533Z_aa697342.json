@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Path traversal (LFR) no parâmetro layout, permitindo renderizar um template localizado fora do diretório de templates permitido.\",\n  \"causa_da_vulnerabilidade\": \"O código aceita req.body.layout, aplica path.resolve() e bloqueia apenas caminhos que contenham determinadas strings. Essa lista de bloqueio não restringe o caminho ao diretório de templates: caminhos relativos com ../ ou caminhos absolutos podem escapar da área esperada sem conter ftp, ctf.key ou encryptionkeys. O valor é então passado ao res.render() como nome do template.\",\n  \"estrategia_de_correcao\": \"Resolver o layout em relação ao diretório de templates da aplicação e aceitar somente caminhos cuja resolução permaneça dentro desse diretório. Manter a lista de bloqueio existente e o fluxo de renderização para layouts permitidos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/dataErasure.ts\",\n      \"trecho_original\": \"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\",\n      \"trecho_corrigido\": \"      if (req.body.layout) {\\n        const viewsPath = path.resolve('views')\\n        const filePath: string = path.resolve(viewsPath, req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (!filePath.startsWith(viewsPath.toLowerCase() + path.sep) || filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A resolução do caminho passa a usar o diretório views como base. A verificação de prefixo, incluindo o separador de diretório, rejeita caminhos que escapem desse diretório, inclusive caminhos absolutos e tentativas com ../; a comparação em minúsculas mantém compatibilidade com a normalização já existente e evita diferenças de maiúsculas e minúsculas na verificação. A lista de bloqueio original continua aplicada, e layouts válidos dentro de views seguem pelo mesmo fluxo de renderização.\",\n  \"limitacoes_da_correcao\": \"A proteção pressupõe que os templates permitidos estejam no diretório views relativo ao diretório de trabalho do processo, como esperado pela configuração usual do Express. A validação lexical do caminho não resolve possíveis escapes por links simbólicos dentro de views; se usuários não confiáveis puderem criar ou alterar arquivos ou links nesse diretório, será necessário validar também o caminho real no sistema de arquivos.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1655,
+  "tokens_saida": 599,
+  "latencia_s": 6.306,
+  "custo_usd": 0.000316,
+  "hash_prompt": "37f2c4be3c246be46f5168f1b56d4a7d1116d476e5f6e4e557b8bfd0e3e850c3",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1652,
+  "tokens_escrita_cache": 0
+}

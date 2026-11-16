@@ -1,0 +1,238 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 45.866083904000334,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 8.42,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/validation/coverage_api_setup.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_w43co3so/track/primeira.xml",
+        "test/api/track-result.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 9.65,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId"
+      ],
+      "testes_falhos_novos": [
+        "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /rest/track-order/:id\n  ✔ GET tracking results for the order id (71.837711ms)\n  ✖ GET all orders by injecting into orderId (26.68553ms)\n✖ /rest/track-order/:id (977.572559ms)\nℹ tests 2\nℹ suites 1\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4888.663243\n\n✖ failing tests:\n\ntest at test/api/track-result.test.ts:2:1394\n✖ GET all orders by injecting into orderId (26.68553ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.<anonymous> (test/api/track-result.test.ts:34:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 16.809569081999143,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/trackOrder.ts"
+    ],
+    "grupos": [
+      "track"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 8.42
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "track",
+      "status": "executada",
+      "duracao_s": 9.65
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "track"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 8.42
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "track",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId",
+            "arquivo": "test/api/track-result.test.ts",
+            "nome": "/rest/track-order/:id > GET all orders by injecting into orderId",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/track-result.test.ts :: /rest/track-order/:id > GET tracking results for the order id",
+            "arquivo": "test/api/track-result.test.ts",
+            "nome": "/rest/track-order/:id > GET tracking results for the order id",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId"
+        ],
+        "falhos_novos": [
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId"
+        ],
+        "falhos_novos_observados": [
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId",
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET tracking results for the order id"
+        ],
+        "esperados": [
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId",
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET tracking results for the order id"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET all orders by injecting into orderId",
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET tracking results for the order id"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/track-result.test.ts :: /rest/track-order/:id > GET tracking results for the order id"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 9.65,
+        "espera_api_s": 16.809569081999143,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/validation/coverage_api_setup.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_w43co3so/track/primeira.xml",
+            "test/api/track-result.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 9.65,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /rest/track-order/:id\n  ✔ GET tracking results for the order id (71.837711ms)\n  ✖ GET all orders by injecting into orderId (26.68553ms)\n✖ /rest/track-order/:id (977.572559ms)\nℹ tests 2\nℹ suites 1\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4888.663243\n\n✖ failing tests:\n\ntest at test/api/track-result.test.ts:2:1394\n✖ GET all orders by injecting into orderId (26.68553ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.<anonymous> (test/api/track-result.test.ts:34:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/track-order/:id\" time=\"0.977573\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET tracking results for the order id\" time=\"0.071838\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/track-result.test.ts\"/>\n\t\t<testcase name=\"GET all orders by injecting into orderId\" time=\"0.026686\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/track-result.test.ts\" failure=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'undefined'&#10;- 'string'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'undefined'&#10;- 'string'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'undefined'\n- 'string'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/track-result.test.ts:34:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 2 -->\n\t<!-- suites 1 -->\n\t<!-- pass 1 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 4888.663243 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/track-order/:id\" time=\"0.882185\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"1\" skipped=\"0\" hostname=\"031a0d852d24\">\n\t\t<testcase name=\"GET tracking results for the order id\" time=\"0.077110\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/track-result.test.ts\"/>\n\t\t<testcase name=\"GET all orders by injecting into orderId\" time=\"0.029693\" classname=\"test\" file=\"/repo/workspace/wt-2/test/api/track-result.test.ts\" failure=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'undefined'&#10;- 'string'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'undefined'&#10;- 'string'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'undefined'\n- 'string'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'undefined'\n  - 'string'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-2/test/api/track-result.test.ts:34:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'undefined',\n    expected: 'string',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t</testsuite>\n\t<!-- tests 2 -->\n\t<!-- suites 1 -->\n\t<!-- pass 1 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 4572.286042 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "52ef071b1d8f35cf63e547c5d79cd03644e98656f907180a3d90089d16b46def",
+    "suficiente": true
+  }
+}

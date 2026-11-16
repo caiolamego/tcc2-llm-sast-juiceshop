@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open redirect em isRedirectAllowed, permitindo que uma URL controlada pelo atacante seja aceita quando apenas contém uma URL permitida como substring.\",\"causa_da_vulnerabilidade\":\"A validação usa url.includes(allowedUrl), que não verifica igualdade exata nem a origem, caminho e demais componentes da URL. Assim, valores como https://github.com/juice-shop/juice-shop.evil.example podem ser considerados permitidos.\",\"estrategia_de_correcao\":\"Substituir a comparação por igualdade exata entre a URL recebida e cada entrada da allowlist, preservando a allowlist, a assinatura da função e o comportamento para URLs exatamente permitidas.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\"trecho_corrigido\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url === allowedUrl // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\"}],\"justificativa_tecnica\":\"A igualdade estrita impede que uma URL arbitrária contendo uma entrada válida como substring seja aceita. Dessa forma, somente os valores completos e exatamente iguais aos membros de redirectAllowlist continuam autorizados, eliminando o bypass de validação que possibilita redirecionamentos para domínios controlados por terceiros.\",\"limitacoes_da_correcao\":\"A correção exige correspondência textual exata; variações semanticamente equivalentes, como diferenças de barra final, codificação ou capitalização, continuarão sendo rejeitadas. Isso é intencional para manter uma política de allowlist restritiva. A segurança também depende de os valores da allowlist permanecerem confiáveis.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2976,
+  "tokens_saida": 435,
+  "latencia_s": 5.596,
+  "custo_usd": 0.000582,
+  "hash_prompt": "42ee8309f1060cfba4caa458bcbf9047a5336f1a7bb45a8a422c55adaff14658",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 2973,
+  "tokens_escrita_cache": 0
+}

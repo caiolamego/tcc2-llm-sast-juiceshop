@@ -1,0 +1,419 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 28.04510963699431,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+    "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+    "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 8.44,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_js1x17go/search/primeira.xml",
+        "test/api/search.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 17.46,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+        "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+        "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+        "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability"
+      ],
+      "testes_falhos_novos": [
+        "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+        "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+        "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+        "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+        "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "0 !== 500\n  \n      at TestContext.<anonymous> (test/api/search.test.ts:72:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:4627\n✖ GET product search can create UNION SELECT with Users table and fixed columns (88.712167ms)\n  AssertionError [ERR_ASSERTION]: Expected to find a row with fixed column values from UNION SELECT\n      at TestContext.<anonymous> (test/api/search.test.ts:88:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:5318\n✖ GET product search can create UNION SELECT with Users table and required columns (86.103375ms)\n  AssertionError [ERR_ASSERTION]: Expected admin user in UNION SELECT results\n      at TestContext.<anonymous> (test/api/search.test.ts:100:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:7292\n✖ GET product search can create UNION SELECT with sqlite_master table and required column (96.592875ms)\n  AssertionError [ERR_ASSERTION]: Expected BasketItems CREATE TABLE in UNION SELECT results\n      at TestContext.<anonymous> (test/api/search.test.ts:137:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:9307\n✖ GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause (59.316792ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (test/api/search.test.ts:166:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:9835\n✖ GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause (87.886458ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (test/api/search.test.ts:175:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 6.0829988797195256e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+    "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+    "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+    "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/search.ts"
+    ],
+    "grupos": [
+      "search"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 8.44
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "search",
+      "status": "executada",
+      "duracao_s": 17.46
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "search"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 8.44
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "search",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search by description cannot select logically deleted christmas special due to forced early where-clause termination",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search by description cannot select logically deleted christmas special due to forced early where-clause termination",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search cannot select logically deleted christmas special by default",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search cannot select logically deleted christmas special by default",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search with empty search parameter returns all products",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search with empty search parameter returns all products",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search with no matches returns no products",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search with no matches returns no products",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search with one match returns found product",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search with one match returns found product",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/search.test.ts :: /rest/products/search > GET product search without search parameter returns all products",
+            "arquivo": "test/api/search.test.ts",
+            "nome": "/rest/products/search > GET product search without search parameter returns all products",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability"
+        ],
+        "falhos_novos": [
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability"
+        ],
+        "falhos_novos_observados": [
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search by description cannot select logically deleted christmas special due to forced early where-clause termination",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search cannot select logically deleted christmas special by default",
+          "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with empty search parameter returns all products",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with no matches returns no products",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with one match returns found product",
+          "test/api/search.test.ts :: /rest/products/search > GET product search without search parameter returns all products"
+        ],
+        "esperados": [
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search by description cannot select logically deleted christmas special due to forced early where-clause termination",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search cannot select logically deleted christmas special by default",
+          "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with empty search parameter returns all products",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with no matches returns no products",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with one match returns found product",
+          "test/api/search.test.ts :: /rest/products/search > GET product search without search parameter returns all products"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from one missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search SQL Injection fails from two missing closing parenthesis",
+          "test/api/search.test.ts :: /rest/products/search > GET product search by description cannot select logically deleted christmas special due to forced early where-clause termination",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and fixed columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with Users table and required columns",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can create UNION SELECT with sqlite_master table and required column",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause",
+          "test/api/search.test.ts :: /rest/products/search > GET product search cannot select logically deleted christmas special by default",
+          "test/api/search.test.ts :: /rest/products/search > GET product search fails with error message that exposes ins SQL Injection vulnerability",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with empty search parameter returns all products",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with no matches returns no products",
+          "test/api/search.test.ts :: /rest/products/search > GET product search with one match returns found product",
+          "test/api/search.test.ts :: /rest/products/search > GET product search without search parameter returns all products"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/search.test.ts :: /rest/products/search > GET product search with one match returns found product"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 17.46,
+        "espera_api_s": 6.0829988797195256e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_js1x17go/search/primeira.xml",
+            "test/api/search.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 17.46,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "0 !== 500\n  \n      at TestContext.<anonymous> (test/api/search.test.ts:72:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:4627\n✖ GET product search can create UNION SELECT with Users table and fixed columns (88.712167ms)\n  AssertionError [ERR_ASSERTION]: Expected to find a row with fixed column values from UNION SELECT\n      at TestContext.<anonymous> (test/api/search.test.ts:88:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:5318\n✖ GET product search can create UNION SELECT with Users table and required columns (86.103375ms)\n  AssertionError [ERR_ASSERTION]: Expected admin user in UNION SELECT results\n      at TestContext.<anonymous> (test/api/search.test.ts:100:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:7292\n✖ GET product search can create UNION SELECT with sqlite_master table and required column (96.592875ms)\n  AssertionError [ERR_ASSERTION]: Expected BasketItems CREATE TABLE in UNION SELECT results\n      at TestContext.<anonymous> (test/api/search.test.ts:137:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:9307\n✖ GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause (59.316792ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (test/api/search.test.ts:166:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/search.test.ts:2:9835\n✖ GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause (87.886458ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (test/api/search.test.ts:175:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/products/search\" time=\"4.385631\" disabled=\"0\" errors=\"0\" tests=\"15\" failures=\"9\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET product search with no matches returns no products\" time=\"0.093596\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search with one match returns found product\" time=\"0.115014\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search fails with error message that exposes ins SQL Injection vulnerability\" time=\"0.114974\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:45:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search SQL Injection fails from two missing closing parenthesis\" time=\"0.127044\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:54:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search SQL Injection fails from one missing closing parenthesis\" time=\"0.128069\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:63:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns\" time=\"0.101061\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:72:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search can create UNION SELECT with Users table and fixed columns\" time=\"0.088712\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected to find a row with fixed column values from UNION SELECT\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected to find a row with fixed column values from UNION SELECT\">\n[Error [ERR_TEST_FAILURE]: Expected to find a row with fixed column values from UNION SELECT] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected to find a row with fixed column values from UNION SELECT\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:88:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search can create UNION SELECT with Users table and required columns\" time=\"0.086103\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected admin user in UNION SELECT results\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected admin user in UNION SELECT results\">\n[Error [ERR_TEST_FAILURE]: Expected admin user in UNION SELECT results] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected admin user in UNION SELECT results\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:100:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search can create UNION SELECT with sqlite_master table and required column\" time=\"0.096593\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected BasketItems CREATE TABLE in UNION SELECT results\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected BasketItems CREATE TABLE in UNION SELECT results\">\n[Error [ERR_TEST_FAILURE]: Expected BasketItems CREATE TABLE in UNION SELECT results] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected BasketItems CREATE TABLE in UNION SELECT results\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:137:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search cannot select logically deleted christmas special by default\" time=\"0.091690\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search by description cannot select logically deleted christmas special due to forced early where-clause termination\" time=\"0.067682\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause\" time=\"0.059317\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0 !== 1\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:166:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause\" time=\"0.087886\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0 !== 1\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:175:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search with empty search parameter returns all products\" time=\"0.264134\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search without search parameter returns all products\" time=\"0.076408\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 15 -->\n\t<!-- suites 1 -->\n\t<!-- pass 6 -->\n\t<!-- fail 9 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 10887.280088 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/products/search\" time=\"1.512145\" disabled=\"0\" errors=\"0\" tests=\"15\" failures=\"9\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET product search with no matches returns no products\" time=\"0.073659\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search with one match returns found product\" time=\"0.062313\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search fails with error message that exposes ins SQL Injection vulnerability\" time=\"0.039967\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:45:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search SQL Injection fails from two missing closing parenthesis\" time=\"0.037655\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:54:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search SQL Injection fails from one missing closing parenthesis\" time=\"0.032065\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:63:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search SQL Injection fails for SELECT * FROM attack due to wrong number of returned columns\" time=\"0.030078\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;200 !== 500&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;200 !== 500\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n200 !== 500\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  200 !== 500\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:72:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 200,\n    expected: 500,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search can create UNION SELECT with Users table and fixed columns\" time=\"0.027263\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected to find a row with fixed column values from UNION SELECT\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected to find a row with fixed column values from UNION SELECT\">\n[Error [ERR_TEST_FAILURE]: Expected to find a row with fixed column values from UNION SELECT] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected to find a row with fixed column values from UNION SELECT\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:88:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search can create UNION SELECT with Users table and required columns\" time=\"0.027545\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected admin user in UNION SELECT results\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected admin user in UNION SELECT results\">\n[Error [ERR_TEST_FAILURE]: Expected admin user in UNION SELECT results] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected admin user in UNION SELECT results\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:100:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search can create UNION SELECT with sqlite_master table and required column\" time=\"0.026476\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected BasketItems CREATE TABLE in UNION SELECT results\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected BasketItems CREATE TABLE in UNION SELECT results\">\n[Error [ERR_TEST_FAILURE]: Expected BasketItems CREATE TABLE in UNION SELECT results] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected BasketItems CREATE TABLE in UNION SELECT results\n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:137:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search cannot select logically deleted christmas special by default\" time=\"0.039842\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search by description cannot select logically deleted christmas special due to forced early where-clause termination\" time=\"0.023779\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search can select logically deleted christmas special by forcibly commenting out the remainder of where clause\" time=\"0.023694\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0 !== 1\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:166:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search can select logically deleted unsafe product by forcibly commenting out the remainder of where clause\" time=\"0.023586\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;0 !== 1\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  0 !== 1\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-1/test/api/search.test.ts:175:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"GET product search with empty search parameter returns all products\" time=\"0.087556\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t\t<testcase name=\"GET product search without search parameter returns all products\" time=\"0.071228\" classname=\"test\" file=\"/repo/workspace/wt-1/test/api/search.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 15 -->\n\t<!-- suites 1 -->\n\t<!-- pass 6 -->\n\t<!-- fail 9 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5434.643169 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

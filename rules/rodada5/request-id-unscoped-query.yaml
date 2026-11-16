@@ -1,0 +1,23 @@
+rules:
+  - id: tcc.orm.security.request-id-unscoped-query
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Consulta seleciona objeto pelo ID da requisicao sem escopo de proprietario
+      no where. Revisar autorizacao na rota e antes de devolver o objeto;
+      este padrao sozinho nao comprova IDOR.
+    metadata:
+      category: security
+      cwe: ['CWE-639: Authorization Bypass Through User-Controlled Key']
+      confidence: LOW
+    mode: taint
+    pattern-sources:
+      - pattern: $REQ.params.$PARAM
+    pattern-sinks:
+      - patterns:
+          - pattern: '$MODEL.findOne({where: {id: $ID}, ...})'
+          - pattern: '$MODEL.findOne({where: $WHERE, ...})'
+          - metavariable-regex:
+              metavariable: $WHERE
+              regex: '^\{\s*id\s*(?::\s*[^,{}]+)?\s*,?\s*\}$'
+          - focus-metavariable: $ID

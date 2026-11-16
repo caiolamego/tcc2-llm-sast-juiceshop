@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Configuração permissiva de CORS: a aplicação permite requisições de qualquer origem.\",\n  \"causa_da_vulnerabilidade\": \"O middleware `cors()` é instalado sem opções tanto para requisições preflight (`app.options('*', cors())`) quanto para as demais requisições (`app.use(cors())`). Por padrão, isso permite qualquer origem, refletindo a origem solicitante no cabeçalho `Access-Control-Allow-Origin`.\",\n  \"estrategia_de_correcao\": \"Restringir CORS a origens explicitamente confiáveis, usando a configuração já existente `application.corsOrigins` como lista de permissões. Aplicar a mesma política às requisições preflight e às demais requisições.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* Bludgeon solution for possible CORS problems: Allow everything! */\\n  app.options('*', cors())\\n  app.use(cors())\",\n      \"trecho_corrigido\": \"  /* Bludgeon solution for possible CORS problems: Allow everything! */\\n  const corsOptions = { origin: config.get<string[]>('application.corsOrigins') || [] }\\n  app.options('*', cors(corsOptions))\\n  app.use(cors(corsOptions))\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A opção `origin` limita os cabeçalhos CORS às origens configuradas; origens não listadas não recebem autorização CORS. Reutilizar as mesmas opções no tratamento de preflight evita que uma origem não confiável obtenha permissão por meio de uma requisição OPTIONS. A lista vazia como padrão falha de forma restritiva, sem conceder acesso cross-origin quando a configuração estiver ausente.\",\n  \"limitacoes_da_correcao\": \"A configuração `application.corsOrigins` deve ser definida com as origens legítimas, incluindo esquema e porta quando aplicável. CORS é uma política aplicada por navegadores e não substitui autenticação, autorização ou proteção contra requisições forjadas; clientes que não sejam navegadores não são impedidos de chamar a API.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1831,
+  "tokens_saida": 468,
+  "latencia_s": 5.514,
+  "custo_usd": 0.000463,
+  "hash_prompt": "f6f2712a78898dd911424e9d8bf8bf60323af03d61ffcc533fb7800a158f0e1d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1828
+}

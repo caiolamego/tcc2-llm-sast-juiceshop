@@ -1,0 +1,375 @@
+{
+  "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+  "semgrep_versao": "1.177.0",
+  "perfil_candidato": [
+    "p/default",
+    "rules/angular-sanitizer-bypass.yaml",
+    "rules/mongodb-untrusted-multi-update.yaml",
+    "rules/redirect-substring-allowlist.yaml"
+  ],
+  "aviso": "Perfil remoto p/default ainda nao congelado; nenhum caso pronto para executar LLM.",
+  "total_casos": 16,
+  "total_desafios": 20,
+  "colisoes_assinatura_legada": [
+    {
+      "regra": "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing",
+      "arquivo": "server.ts",
+      "casos": [
+        "EXP003",
+        "EXP004"
+      ]
+    },
+    {
+      "regra": "tcc.angular.security.bypass-security-trust-html",
+      "arquivo": "frontend/src/app/administration/administration.component.ts",
+      "casos": [
+        "EXP011",
+        "EXP012"
+      ]
+    },
+    {
+      "regra": "tcc.angular.security.bypass-security-trust-html",
+      "arquivo": "frontend/src/app/search-result/search-result.component.ts",
+      "casos": [
+        "EXP009",
+        "EXP010"
+      ]
+    }
+  ],
+  "casos": [
+    {
+      "id": "EXP001",
+      "causa": "SQL injection na autenticacao",
+      "desafios": [
+        "loginAdminChallenge",
+        "loginBenderChallenge",
+        "loginJimChallenge"
+      ],
+      "prioridade": "piloto",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "default",
+          "regra": "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection",
+          "arquivo": "routes/login.ts",
+          "inicio": 34,
+          "fim": 34,
+          "alerta_id": "79df7034bcfa0770"
+        }
+      ]
+    },
+    {
+      "id": "EXP002",
+      "causa": "SQL injection na busca de produtos",
+      "desafios": [
+        "unionSqlInjectionChallenge",
+        "dbSchemaChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "default",
+          "regra": "javascript.sequelize.security.audit.sequelize-injection-express.express-sequelize-injection",
+          "arquivo": "routes/search.ts",
+          "inicio": 23,
+          "fim": 23,
+          "alerta_id": "0fa3fd6feb358d46"
+        }
+      ]
+    },
+    {
+      "id": "EXP003",
+      "causa": "listagem publica do FTP",
+      "desafios": [
+        "directoryListingChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "default",
+          "regra": "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing",
+          "arquivo": "server.ts",
+          "inicio": 269,
+          "fim": 269,
+          "alerta_id": "cc64fd32831c8958"
+        }
+      ]
+    },
+    {
+      "id": "EXP004",
+      "causa": "listagem e leitura publica de logs",
+      "desafios": [
+        "accessLogDisclosureChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "default",
+          "regra": "javascript.express.security.audit.express-check-directory-listing.express-check-directory-listing",
+          "arquivo": "server.ts",
+          "inicio": 281,
+          "fim": 281,
+          "alerta_id": "0768874b7cc36f64"
+        },
+        {
+          "scan": "default",
+          "regra": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+          "arquivo": "routes/logfileServer.ts",
+          "inicio": 14,
+          "fim": 14,
+          "alerta_id": "c234047237cca32a"
+        }
+      ]
+    },
+    {
+      "id": "EXP005",
+      "causa": "extensao validada antes de remover null byte codificado",
+      "desafios": [
+        "nullByteChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "default",
+          "regra": "javascript.express.security.audit.express-res-sendfile.express-res-sendfile",
+          "arquivo": "routes/fileServer.ts",
+          "inicio": 33,
+          "fim": 33,
+          "alerta_id": "19372701db8e6add"
+        }
+      ]
+    },
+    {
+      "id": "EXP006",
+      "causa": "selecao remota de campo sensivel na resposta",
+      "desafios": [
+        "passwordHashLeakChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "default",
+          "regra": "javascript.express.security.audit.remote-property-injection.remote-property-injection",
+          "arquivo": "routes/currentUser.ts",
+          "inicio": 31,
+          "fim": 31,
+          "alerta_id": "e39c92d0726352c2"
+        }
+      ]
+    },
+    {
+      "id": "EXP007",
+      "causa": "URL externa aceita por substring da allowlist",
+      "desafios": [
+        "redirectChallenge"
+      ],
+      "prioridade": "piloto",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.redirect.security.substring-allowlist",
+          "arquivo": "lib/insecurity.ts",
+          "inicio": 135,
+          "fim": 137,
+          "alerta_id": "a4dfc3e955e8bdb2"
+        },
+        {
+          "scan": "default",
+          "regra": "javascript.express.security.audit.express-open-redirect.express-open-redirect",
+          "arquivo": "routes/redirect.ts",
+          "inicio": 19,
+          "fim": 19,
+          "alerta_id": "0e5ef5d352a342b0"
+        }
+      ]
+    },
+    {
+      "id": "EXP008",
+      "causa": "seletor MongoDB controlado pelo corpo com multi true",
+      "desafios": [
+        "noSqlReviewsChallenge"
+      ],
+      "prioridade": "piloto",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.mongodb.security.untrusted-id-multi-update",
+          "arquivo": "routes/updateProductReviews.ts",
+          "inicio": 17,
+          "fim": 21,
+          "alerta_id": "55ed8338a3f3636f"
+        }
+      ]
+    },
+    {
+      "id": "EXP009",
+      "causa": "descricao de produto exibida como HTML confiavel",
+      "desafios": [
+        "restfulXssChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.angular.security.bypass-security-trust-html",
+          "arquivo": "frontend/src/app/search-result/search-result.component.ts",
+          "inicio": 110,
+          "fim": 110,
+          "alerta_id": "cf939d19682c95b5"
+        }
+      ]
+    },
+    {
+      "id": "EXP010",
+      "causa": "parametro q exibido como HTML confiavel",
+      "desafios": [
+        "localXssChallenge",
+        "xssBonusChallenge"
+      ],
+      "prioridade": "piloto",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.angular.security.bypass-security-trust-html",
+          "arquivo": "frontend/src/app/search-result/search-result.component.ts",
+          "inicio": 143,
+          "fim": 143,
+          "alerta_id": "b84040c755e0d664"
+        }
+      ]
+    },
+    {
+      "id": "EXP011",
+      "causa": "feedback persistido exibido como HTML confiavel em duas telas",
+      "desafios": [
+        "persistedXssFeedbackChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.angular.security.bypass-security-trust-html",
+          "arquivo": "frontend/src/app/about/about.component.ts",
+          "inicio": 119,
+          "fim": 121,
+          "alerta_id": "a4186b1b916756a2"
+        },
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.angular.security.bypass-security-trust-html",
+          "arquivo": "frontend/src/app/administration/administration.component.ts",
+          "inicio": 91,
+          "fim": 91,
+          "alerta_id": "239798589a68eae4"
+        }
+      ]
+    },
+    {
+      "id": "EXP012",
+      "causa": "email persistido exibido como HTML confiavel",
+      "desafios": [
+        "persistedXssUserChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.angular.security.bypass-security-trust-html",
+          "arquivo": "frontend/src/app/administration/administration.component.ts",
+          "inicio": 73,
+          "fim": 73,
+          "alerta_id": "7bcbee563087888b"
+        }
+      ]
+    },
+    {
+      "id": "EXP013",
+      "causa": "IP do header exibido como HTML confiavel",
+      "desafios": [
+        "httpHeaderXssChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.angular.security.bypass-security-trust-html",
+          "arquivo": "frontend/src/app/last-login-ip/last-login-ip.component.ts",
+          "inicio": 39,
+          "fim": 39,
+          "alerta_id": "7004ef7a880eba6a"
+        }
+      ]
+    },
+    {
+      "id": "EXP014",
+      "causa": "ID de rastreio exibido como HTML confiavel",
+      "desafios": [
+        "reflectedXssChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "custom-rules",
+          "regra": "tcc.angular.security.bypass-security-trust-html",
+          "arquivo": "frontend/src/app/track-result/track-result.component.ts",
+          "inicio": 48,
+          "fim": 48,
+          "alerta_id": "d919a88af0de3417"
+        }
+      ]
+    },
+    {
+      "id": "EXP015",
+      "causa": "nome de usuario interpolado em JavaScript executavel",
+      "desafios": [
+        "usernameXssChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "default",
+          "regra": "javascript.browser.security.eval-detected.eval-detected",
+          "arquivo": "routes/userProfile.ts",
+          "inicio": 61,
+          "fim": 61,
+          "alerta_id": "c1fb5ed14fbf04bb"
+        }
+      ]
+    },
+    {
+      "id": "EXP016",
+      "causa": "legenda concatenada dentro de tag script",
+      "desafios": [
+        "videoXssChallenge"
+      ],
+      "prioridade": "posterior",
+      "status": "aguarda_teste_regressao",
+      "evidencias": [
+        {
+          "scan": "default",
+          "regra": "javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag",
+          "arquivo": "routes/videoHandler.ts",
+          "inicio": 71,
+          "fim": 71,
+          "alerta_id": "2bdd41c4332aaa4d"
+        }
+      ]
+    }
+  ],
+  "sha256_matriz": "dc53386286d3cf0c3d1162e3d6f184dd855a95907d41793a8cda2f2f2bda8744",
+  "sha256_config": "f8065e9ac9f820243aaf8c64b9fcab92e8393d994f32a874f796cc663ea5e336"
+}

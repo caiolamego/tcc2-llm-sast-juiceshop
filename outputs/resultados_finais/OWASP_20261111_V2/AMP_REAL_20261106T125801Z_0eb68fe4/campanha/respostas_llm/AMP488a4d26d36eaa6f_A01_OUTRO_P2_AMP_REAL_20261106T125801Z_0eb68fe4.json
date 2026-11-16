@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição não autenticada do endpoint /metrics, que disponibiliza métricas internas da aplicação.\",\"causa_da_vulnerabilidade\":\"A rota GET /metrics é registrada diretamente com metrics.serveMetrics() e não possui middleware de autenticação ou autorização. Além disso, ela é registrada no escopo global, tornando-se acessível a qualquer cliente que consiga alcançar o servidor.\",\"estrategia_de_correcao\":\"Restringir o endpoint de métricas ao acesso local, permitindo a resposta somente quando a requisição for originada de loopback IPv4 ou IPv6. Requisições externas devem ser rejeitadas antes da execução do handler de métricas.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\",\"trecho_corrigido\":\"app.get('/metrics', (req: Request, res: Response, next: NextFunction) => {\\n  const remoteAddress = req.socket.remoteAddress\\n  if (remoteAddress !== '127.0.0.1' && remoteAddress !== '::1' && remoteAddress !== '::ffff:127.0.0.1') {\\n    return res.sendStatus(404)\\n  }\\n  return utils.asyncHandler(metrics.serveMetrics())(req, res, next)\\n}) // vuln-code-snippet vuln-line exposedMetricsChallenge\"}],\"justificativa_tecnica\":\"O endpoint passa a aceitar métricas somente de conexões cujo endereço remoto seja loopback. Assim, clientes externos não conseguem consultar os dados expostos pelo Prometheus, que podem revelar nomes de rotas, contadores, tempos de resposta, estado operacional e outras informações úteis para reconhecimento e ataques. A alteração preserva o handler existente e o formato da resposta para consumidores locais, sem modificar mensagens visíveis da aplicação. O status 404 também evita revelar explicitamente a existência do endpoint a clientes não autorizados.\",\"limitacoes_da_correcao\":\"A proteção depende de o processo receber o endereço real da conexão. Se a aplicação estiver atrás de um proxy reverso que encaminhe requisições externas por uma conexão local, essa verificação isolada não será suficiente; nesse cenário, o endpoint também deve ser protegido no proxy ou por autenticação/autorização forte. A correção restringe por endereço de rede, não por identidade de consumidor.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1822,
+  "tokens_saida": 503,
+  "latencia_s": 6.931,
+  "custo_usd": 0.001059,
+  "hash_prompt": "c18ec1e43dec27c66e1dd62ccd021f3ed22554082a99b7d0d4bca0ed708b03ec",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1819
+}

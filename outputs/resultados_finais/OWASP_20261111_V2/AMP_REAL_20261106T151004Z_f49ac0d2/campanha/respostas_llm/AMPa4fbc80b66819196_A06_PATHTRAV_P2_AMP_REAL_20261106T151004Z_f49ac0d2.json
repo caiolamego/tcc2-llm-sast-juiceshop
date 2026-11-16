@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path Traversal (Directory Traversal)\",\"causa_da_vulnerabilidade\":\"O código permite que o parâmetro 'file' seja usado diretamente em path.resolve sem sanitização adequada. A única verificação é se 'file' contém '/', mas isso não impede o uso de '\\\\\\\\' (barra invertida) em sistemas Windows ou sequências como '../' que podem permitir acesso a arquivos fora do diretório 'ftp/quarantine/'.\",\"estrategia_de_correcao\":\"Sanitizar o parâmetro 'file' para garantir que ele não contenha caracteres ou sequências que possam permitir path traversal, como '../' ou '\\\\\\\\'. Uma abordagem simples é verificar se 'file' contém '..' ou '\\\\\\\\' e rejeitar nesses casos, além da verificação já existente para '/'.\",\"edicoes\":[{\"arquivo\":\"routes/quarantineServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    if (!file.includes('/') && !file.includes('..') && !file.includes('\\\\\\\\')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"Ao adicionar verificações para '..' e '\\\\\\\\', impedimos que o parâmetro 'file' contenha sequências que possam ser usadas para navegar para diretórios superiores ou usar barras invertidas que podem ser interpretadas como separadores de diretórios em sistemas Windows. Isso elimina a possibilidade de path traversal, garantindo que apenas arquivos dentro do diretório 'ftp/quarantine/' possam ser acessados.\",\"limitacoes_da_correcao\":\"A solução é simples e eficaz para o cenário atual, mas não cobre casos mais complexos de codificação de URL ou caracteres Unicode que possam ser usados para bypass. Para maior segurança, recomenda-se usar bibliotecas específicas para sanitização de caminhos ou restringir a lista de arquivos acessíveis a um conjunto pré-definido.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 777,
+  "tokens_saida": 473,
+  "latencia_s": 5.366,
+  "custo_usd": 0.001068,
+  "hash_prompt": "1ea89b070f86ebae2a07dc1444fe94c3bef55c1c5de63015ec14b352592fd090",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

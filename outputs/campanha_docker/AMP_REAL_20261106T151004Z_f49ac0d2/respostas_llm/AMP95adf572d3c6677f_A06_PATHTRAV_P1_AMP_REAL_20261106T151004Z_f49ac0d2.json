@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path Traversal\",\"causa_da_vulnerabilidade\":\"O código permite que o parâmetro 'file' contenha caracteres que podem ser usados para navegar para diretórios superiores (como '..'), possibilitando acesso a arquivos fora do diretório 'encryptionkeys/'.\",\"estrategia_de_correcao\":\"Validar o caminho resolvido para garantir que ele esteja dentro do diretório 'encryptionkeys/' antes de servir o arquivo. Se o caminho resolvido estiver fora desse diretório, negar o acesso.\",\"edicoes\":[{\"arquivo\":\"routes/keyServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\",\"trecho_corrigido\":\"    if (!file.includes('/')) {\\n      const resolvedPath = path.resolve('encryptionkeys/', file)\\n      if (!resolvedPath.startsWith(path.resolve('encryptionkeys/') + path.sep)) {\\n        res.status(403)\\n        next(new Error('File names cannot contain forward slashes!'))\\n        return\\n      }\\n      res.sendFile(resolvedPath)\\n    } else {\"}],\"justificativa_tecnica\":\"A validação original apenas verifica se o nome do arquivo contém uma barra '/', mas não impede que o parâmetro contenha sequências como '..' que podem levar a um caminho fora do diretório permitido. Ao resolver o caminho absoluto e verificar se ele começa com o caminho absoluto do diretório base, garantimos que o arquivo servido está dentro do diretório 'encryptionkeys/'.\",\"limitacoes_da_correcao\":\"A correção assume que o sistema de arquivos utiliza separadores padrão e que o método startsWith é suficiente para validar o caminho. Em sistemas com links simbólicos ou configurações especiais, pode ser necessário um controle mais rigoroso.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 665,
+  "tokens_saida": 384,
+  "latencia_s": 5.357,
+  "custo_usd": 0.00088,
+  "hash_prompt": "41039cb51a27740f522e0ee614fce76946feffd0e7dddf585d848fa7ceb6db50",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

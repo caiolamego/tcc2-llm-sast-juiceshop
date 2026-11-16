@@ -1,0 +1,24 @@
+diff --git a/routes/profileImageUrlUpload.ts b/routes/profileImageUrlUpload.ts
+index 55184083e..422424c5c 100644
+--- a/routes/profileImageUrlUpload.ts
++++ b/routes/profileImageUrlUpload.ts
+@@ -17,6 +17,19 @@ export function profileImageUrlUpload () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+     if (req.body.imageUrl !== undefined) {
+       const url = req.body.imageUrl
++      const allowedDomains = ['example.com', 'images.example.com']
++      try {
++        const parsedUrl = new URL(url)
++        const hostname = parsedUrl.hostname.toLowerCase()
++        const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1'
++        const isPrivateIp = /^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\.|^192\.168\./.test(hostname)
++        if (isLocalhost || isPrivateIp || !allowedDomains.some(domain => hostname.endsWith(domain))) {
++          throw new Error('URL domain is not allowed')
++        }
++      } catch {
++        next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
++        return
++      }
+       if (url.match(/(.)*solve\/challenges\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true
+       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
+       if (loggedInUser) {

@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso de token JWT codificado diretamente no código fonte de teste, expondo um segredo criptográfico (token JWT) que pode ser reutilizado indevidamente.\",\"causa_da_vulnerabilidade\":\"O código contém um token JWT hard-coded na linha 72 do arquivo de teste, o que significa que o token está embutido diretamente no código fonte. Isso viola boas práticas de segurança, pois segredos e tokens não devem estar expostos em código fonte, mesmo em testes, para evitar exposição acidental e reutilização maliciosa.\",\"estrategia_de_correcao\":\"Remover o token JWT hard-coded do código fonte e substituí-lo por um valor dinâmico ou simulado que não contenha segredos reais. Como se trata de um teste, pode-se usar um mock ou um token dummy que não represente um segredo real, evitando assim a exposição de dados sensíveis no código.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.spec.ts\",\"trecho_original\":\"localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imxhc3RMb2dpbklwIjoiMS4yLjMuNCJ9fQ.RAkmdqwNypuOxv3SDjPO4xMKvd1CddKvDFYDBfUt3bg')\",\"trecho_corrigido\":\"localStorage.setItem('token', 'dummy.jwt.token.for.testing.purposes')\"}],\"justificativa_tecnica\":\"Ao substituir o token JWT hard-coded por um valor dummy que não representa um segredo real, eliminamos a exposição de um segredo criptográfico no código fonte. Isso impede que o token seja reutilizado maliciosamente e atende às boas práticas de segurança para gerenciamento de segredos, mesmo em ambientes de teste.\",\"limitacoes_da_correcao\":\"A correção remove o token real do teste, o que pode limitar a validade do teste se ele depender da decodificação real do token JWT. No entanto, como se trata de um teste unitário, o uso de um token dummy é suficiente para validar o comportamento do componente sem expor segredos. Para testes mais completos, recomenda-se usar mocks ou fixtures apropriados.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1972,
+  "tokens_saida": 485,
+  "latencia_s": 5.308,
+  "custo_usd": 0.001565,
+  "hash_prompt": "02c575024ce062bccfbd75db088088c0290c2ee80961be7c110480029ddbc831",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

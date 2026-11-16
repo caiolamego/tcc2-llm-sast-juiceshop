@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal (travessia de diretórios) no parâmetro `file`, permitindo acessar arquivos fora do diretório `encryptionkeys`.\",\"causa_da_vulnerabilidade\":\"A validação bloqueia apenas o caractere `/`. Ela não bloqueia travessias usando `..` com separadores alternativos ou outras formas de resolução de caminho, e o caminho fornecido ao `sendFile` é resolvido sem verificar se o resultado permanece dentro do diretório permitido.\",\"estrategia_de_correcao\":\"Resolver o caminho solicitado e verificar que ele permanece dentro do diretório `encryptionkeys`, preservando o fluxo existente e a mensagem de erro. A validação também deve rejeitar caminhos cujo resultado canônico escape do diretório permitido.\",\"edicoes\":[{\"arquivo\":\"routes/keyServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const keyDirectory = path.resolve('encryptionkeys')\\n    const keyFile = path.resolve(keyDirectory, file)\\n\\n    if (!file.includes('/') && (keyFile === keyDirectory || keyFile.startsWith(`${keyDirectory}${path.sep}`))) {\\n      res.sendFile(keyFile)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"`path.resolve(keyDirectory, file)` normaliza o caminho, incluindo segmentos `..`. A comparação exige que o caminho final seja o próprio diretório permitido ou esteja sob ele, usando `path.sep` para evitar falsos positivos como `encryptionkeys-evil`. A checagem original de `/` é mantida para preservar o comportamento funcional e a mensagem de erro existente, enquanto a validação do caminho impede que entradas como `..\\\\arquivo` em plataformas que usam separador de barra invertida escapem do diretório autorizado.\",\"limitacoes_da_correcao\":\"A correção mantém a rejeição de nomes contendo `/` e, portanto, não altera esse comportamento existente. Ela também não aborda outras questões independentes, como controle de acesso aos arquivos, links simbólicos dentro de `encryptionkeys` ou tratamento de erros assíncronos do `sendFile`; um link simbólico pode permitir escape após a resolução lexical do caminho.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 662,
+  "tokens_saida": 536,
+  "latencia_s": 7.157,
+  "custo_usd": 0.000776,
+  "hash_prompt": "9ace83dc8321b22671eda8023ec105d2b094a3fbb3740a37b5e1bd70accea081",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

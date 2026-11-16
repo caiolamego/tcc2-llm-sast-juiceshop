@@ -1,0 +1,31 @@
+{
+  "arquivo": "data/static/users.yml",
+  "arquivo_rag_recuperado": null,
+  "estrategia": "P2_raciocinio_guiado",
+  "hash_prompt": "edf2ce585ec7316bb28451a30ec8f6e5382071a65fc71a6d6d0f44b7d02871c1",
+  "linha_fim_contexto": 211,
+  "linha_ini_contexto": 91,
+  "mensagens": [
+    {
+      "content": "Voce e um engenheiro de seguranca de aplicacoes especializado em TypeScript, Node.js e Express.",
+      "role": "system"
+    },
+    {
+      "content": "Tarefa: identifique e corrija a vulnerabilidade de seguranca presente no codigo abaixo.\n\nArquivo: data/static/users.yml (trecho das linhas 91 a 211 de 283; o restante do arquivo nao foi mostrado)\n```typescript\n  role: 'admin'\n  address:\n    - fullName: 'Bjoern Kimminich'\n      mobileNum: 4917000001\n      zipCode: '25436'\n      streetAddress: 'Am Lokalhorst 42'\n      city: 'Uetersen'\n      state: 'Schleswig-Holstein'\n      country: 'Germany'\n  card:\n    - fullName: 'Bjoern Kimminich'\n      cardNum: 4815205605542754\n      expMonth: 12\n      expYear: 2092\n-\n  email: ciso\n  password: 'mDLx?94T~1CfVfZMzw@sJ9f?s3L6lbMqE70FfI8^54jbNikY5fymx7c!YbJb'\n  key: ciso\n  role: 'deluxe'\n  securityQuestion:\n    id: 7\n    answer: 'Brd?j8sEMziOvvBf§Be?jFZ77H?hgm'\n-\n  email: support\n  password: 'J6aVjTgOpRs@?5l!Zkq2AYnCE@RF$P'\n  key: support\n  role: 'admin'\n  securityQuestion:\n    id: 10\n    answer: 'SC OLEA SRL' # http://www.olea.com.ro/\n-\n  email: morty\n  password: 'focusOnScienceMorty!focusOnScience'\n  key: morty\n  role: 'customer'\n  walletBalance: 100\n  securityQuestion:\n    id: 7\n    answer: '5N0wb41L' # http://rickandmorty.wikia.com/wiki/Snuffles\n-\n  email: mc.safesearch\n  password: 'Mr. N00dles'\n  key: rapper\n  role: 'customer'\n  walletBalance: 13337\n  securityQuestion:\n    id: 8\n    answer: 'I even shared my pizza bagels with you!'\n-\n  email: J12934\n  password: '0Y8rMnww$*9VFYE§59-!Fg1L6t&6lB'\n  key: jannik\n  role: 'admin'\n  securityQuestion:\n    id: 1\n    answer: 'azjTLprq2im6p86RbFrA41L'\n-\n  email: wurstbrot\n  username: wurstbrot\n  password: 'EinBelegtesBrotMitSchinkenSCHINKEN!'\n  totpSecret: IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH\n  key: timo\n  role: 'admin'\n  securityQuestion:\n    id: 1\n    answer: 'NZMJLjEinU7TFElDIYW8'\n-\n  email: amy\n  password: 'K1f.....................'\n  key: amy\n  role: 'customer'\n  walletBalance: 48\n  securityQuestion:\n    id: 8\n    answer: 'Dr. Dr. Dr. Dr. Zoidberg'\n-\n  email: bjoern\n  password: 'monkey summer birthday are all bad passwords but work just fine in a long passphrase'\n  key: bjoern\n  profileImage: '12.png'\n  role: 'admin'\n  isAdmin: true\n  securityQuestion:\n    id: 9\n    answer: 'West-2082' # http://www.alte-postleitzahlen.de/uetersen\n-\n  email: bjoern@owasp.org\n  password: 'kitten lesser pooch karate buffoon indoors'\n  customDomain: true\n  key: bjoernOwasp\n  role: 'deluxe'\n  profileImage: '13.jpg'\n  securityQuestion:\n    id: 7\n    answer: 'Zaya' # https://www.youtube.com/watch?v=Lu0-kDdtVf4\n-\n  email: chris.pike\n  password: 'uss enterprise'\n  key: chris\n  role: 'customer'\n  deletedFlag: true\n  securityQuestion:\n    id: 1\n    answer: 'greenwood'\n-\n  email: accountant\n  password: 'i am an awesome accountant'\n  key: accountant\n  role: 'accounting'\n  lastLoginIp: '123.456.789'\n  securityQuestion:\n    id: 7\n    answer: 'sdAffsdfrefrbgreq3423'\n-\n  email: uvogin\n  password: 'muda-muda > ora-ora' # https://www.youtube.com/watch?v=vnJv8IoLMwc\n  key: uvogin\n  role: 'customer'\n  walletBalance: 100\n  securityQuestion:\n    id: 12\n```\n\nAntes de responder, percorra as cinco etapas abaixo, nesta ordem:\n\n1. Identifique a vulnerabilidade presente no código.\n2. Explique a causa da vulnerabilidade: que construção do código a torna\n   possível e por quê.\n3. Descreva o impacto de segurança: o que um atacante consegue obter ou fazer\n   explorando essa falha.\n4. Proponha a correção no código.\n5. Justifique tecnicamente por que a solução proposta remove ou mitiga a\n   vulnerabilidade identificada.\n\nRestricoes obrigatorias:\n- Altere o minimo necessario para corrigir a vulnerabilidade. Nao refatore, nao reformate e nao renomeie nada.\n- Não altere mensagens de erro, textos visíveis ao usuário, nomes de identificadores nem assinaturas de funções existentes.\n- Nao altere arquivos de teste.\n- Cada \"trecho_original\" deve ser copiado LITERALMENTE do codigo fornecido (mesmos espacos, quebras de linha e pontuacao) e deve aparecer UMA unica vez no arquivo. Inclua linhas vizinhas se precisar para torna-lo unico.\n- Preserve o comportamento funcional existente.\n- Em \"arquivo\", use exatamente o caminho relativo informado acima.\n\nFormato da resposta: um objeto JSON com os campos\nvulnerabilidade_identificada, causa_da_vulnerabilidade, estrategia_de_correcao,\nedicoes (lista de {arquivo, trecho_original, trecho_corrigido}),\njustificativa_tecnica e limitacoes_da_correcao.",
+      "role": "user"
+    }
+  ],
+  "modo_contexto": "janela_contexto",
+  "rag_base_sha256": null,
+  "rag_categoria_recuperada": null,
+  "rag_corpo_sha256": null,
+  "rag_cwe_selecionada": null,
+  "rag_documento_sha256": null,
+  "rag_documento_versao": null,
+  "rag_index_sha256": null,
+  "rag_motivo_recuperacao": null,
+  "roteiro_sha256": "6ac34725379427176081f7a9488e880475cd2bc0004cc085728232ee3d5e9a22",
+  "roteiro_status": "APROVADO",
+  "total_linhas_arquivo": 283,
+  "usa_rag": false
+}

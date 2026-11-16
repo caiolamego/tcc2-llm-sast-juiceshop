@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml que desativa a sanitização HTML do Angular, permitindo possível Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O método bypassSecurityTrustHtml é utilizado para inserir diretamente HTML no DOM sem sanitização, e o conteúdo inserido vem de dados externos (results.data[0].orderId) que podem conter código malicioso.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e exibir o orderId como texto puro, utilizando bindings seguros do Angular que aplicam automaticamente a sanitização e escapam caracteres especiais, prevenindo execução de scripts maliciosos.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n\",\"trecho_corrigido\":\"this.results.orderNo = `<code>${results.data[0].orderId}</code>`\\n\"}],\"justificativa_tecnica\":\"O Angular automaticamente escapa conteúdo interpolado em templates, prevenindo XSS. Ao remover bypassSecurityTrustHtml e usar interpolação padrão, garantimos que o orderId seja exibido como texto seguro, mantendo a funcionalidade visual (exibição dentro da tag <code>) sem risco de injeção de código malicioso.\",\"limitacoes_da_correcao\":\"Se o template espera um objeto SafeHtml para renderizar corretamente, pode ser necessário ajustar o template para usar interpolação de texto simples. Esta correção assume que a exibição do orderId pode ser feita como texto simples dentro da tag <code> sem necessidade de HTML dinâmico adicional.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1710,
+  "tokens_saida": 360,
+  "latencia_s": 4.552,
+  "custo_usd": 0.00126,
+  "hash_prompt": "5010ce7d80b9834cc2f34b7542cad04665a41abed8329b046ffd9fd960940839",
+  "do_cache": false
+}

@@ -1,0 +1,114 @@
+{
+  "version": "1.177.0",
+  "results": [
+    {
+      "check_id": "tcc.mongodb.security.unscoped-document-write",
+      "path": "routes/updateProductReviews.ts",
+      "start": {
+        "line": 18,
+        "col": 14,
+        "offset": 661
+      },
+      "end": {
+        "line": 18,
+        "col": 25,
+        "offset": 672
+      },
+      "extra": {
+        "message": "Escrita seleciona documento somente pelo _id recebido. Revisar autorizacao do proprietario antes da escrita; autenticacao e validacao do formato do identificador nao substituem essa verificacao.",
+        "metadata": {
+          "category": "security",
+          "confidence": "MEDIUM",
+          "cwe": [
+            "CWE-639: Authorization Bypass Through User-Controlled Key"
+          ]
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      ".gitignore",
+      "routes/updateProductReviews.ts"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.3036680221557617,
+    "profiling_times": {
+      "config_time": 10.900646924972534,
+      "core_time": 0.5705595016479492,
+      "ignores_time": 0.0020334720611572266,
+      "total_time": 11.481371879577637
+    },
+    "parsing_time": {
+      "total_time": 0.0,
+      "per_file_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.016204833984375,
+      "per_file_time": {
+        "mean": 0.003240966796875,
+        "std_dev": 3.445976593866362e-05
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 0.9894736842105263,
+      "rules_selected_ratio": 0.03859649122807018,
+      "rules_matched_ratio": 0.03859649122807018
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 736173248
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}

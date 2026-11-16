@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key na atualização do documento MongoDB sem verificar a propriedade do recurso.\",\"causa_da_vulnerabilidade\":\"O código realiza a atualização do documento no banco de dados MongoDB usando apenas o _id recebido do corpo da requisição, sem verificar se o usuário autenticado é o proprietário do review. A consulta para update é feita somente com { _id: id }, permitindo que um usuário autenticado possa modificar reviews de outros usuários.\",\"estrategia_de_correcao\":\"Adicionar uma verificação de propriedade no filtro da operação de update, incluindo a identificação do usuário autenticado (por exemplo, email) para garantir que apenas o proprietário do review possa atualizá-lo. Isso deve ser aplicado nas duas operações de update para incrementar likesCount e para atualizar likedBy.\",\"edicoes\":[{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"      await db.reviewsCollection.update(\\n        { _id: id },\\n        { $inc: { likesCount: 1 } }\\n      )\",\"trecho_corrigido\":\"      await db.reviewsCollection.update(\\n        { _id: id, email: user.data.email },\\n        { $inc: { likesCount: 1 } }\\n      )\"},{\"arquivo\":\"routes/likeProductReviews.ts\",\"trecho_original\":\"        const result = await db.reviewsCollection.update(\\n          { _id: id },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\",\"trecho_corrigido\":\"        const result = await db.reviewsCollection.update(\\n          { _id: id, email: user.data.email },\\n          { $set: { likedBy: updatedLikedBy } }\\n        )\"}],\"justificativa_tecnica\":\"Ao incluir o campo 'email' do usuário autenticado no filtro da operação de update, garantimos que somente o proprietário do review possa modificar seu conteúdo. Isso impede que usuários autenticados alterem reviews de terceiros, mitigando a vulnerabilidade de autorização inadequada. A autenticação e validação do formato do identificador não são suficientes para garantir autorização, portanto a verificação explícita da propriedade é necessária.\",\"limitacoes_da_correcao\":\"Esta correção assume que o campo 'email' no documento do review representa o proprietário do review e que este campo está corretamente definido e imutável. Se a propriedade do review for representada por outro campo ou mecanismo, a correção deve ser ajustada. Além disso, se houver usuários com privilégios administrativos que possam modificar reviews de outros usuários, essa lógica precisaria ser adaptada para permitir exceções autorizadas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1689,
+  "tokens_saida": 551,
+  "latencia_s": 5.505,
+  "custo_usd": 0.001557,
+  "hash_prompt": "908d841088ca2c667aa6a9abfbb2991f3614142072650132650dea3d638cb73d",
+  "do_cache": false
+}

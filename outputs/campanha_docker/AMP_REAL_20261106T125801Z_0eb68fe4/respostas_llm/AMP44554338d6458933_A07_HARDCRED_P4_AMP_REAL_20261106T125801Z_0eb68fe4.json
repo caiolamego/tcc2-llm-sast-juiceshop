@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Credenciais e respostas de perguntas de segurança armazenadas em texto puro no arquivo data/static/users.yml, incluindo a senha do usuário ciso na linha sinalizada pelo Semgrep.\",\"causa_da_vulnerabilidade\":\"O arquivo contém valores literais de autenticação diretamente no código-fonte, como o campo password e respostas de securityQuestion. Qualquer pessoa ou processo com acesso ao repositório, artefato ou cópia desse arquivo pode recuperar essas credenciais e utilizá-las para autenticação.\",\"estrategia_de_correcao\":\"Remover o segredo literal do arquivo estático e exigir que a credencial seja fornecida por configuração externa protegida. Como este arquivo é YAML de dados de usuários e não contém lógica para ler variáveis de ambiente, substituir a senha por uma referência explícita a variável de ambiente não preservaria o contrato de autenticação sem uma alteração no carregador. Portanto, a correção mínima segura é remover o usuário de teste com credencial hard-coded; a aplicação deve provisionar esse usuário por mecanismo seguro de configuração ou migração fora deste arquivo.\",\"edicoes\":[{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"-\\n  email: ciso\\n  password: 'mDLx?94T~1CfVfZMzw@sJ9f?s3L6lbMqE70FfI8^54jbNikY5fymx7c!YbJb'\\n  key: ciso\\n  role: 'deluxe'\\n  securityQuestion:\\n    id: 7\\n    answer: 'Brd?j8sEMziOvvBf§Be?jFZ77H?hgm'\",\"trecho_corrigido\":\"\"}],\"justificativa_tecnica\":\"A remoção impede que a senha e a resposta de recuperação continuem expostas no repositório e elimina o segredo detectado pelo Semgrep. Não é seguro substituir a senha por um hash fixo neste arquivo, pois o hash ainda seria uma credencial reutilizável em ataques offline e não resolveria a exposição da resposta de segurança. Também não é possível inserir process.env diretamente em YAML sem modificar o mecanismo de carregamento. O provisionamento externo deve usar um gerenciador de segredos ou variável de ambiente, armazenar senhas com Argon2id ou mecanismo equivalente e manter respostas de recuperação protegidas como credenciais.\",\"limitacoes_da_correcao\":\"A edição remove o usuário ciso do conjunto estático, podendo afetar fluxos que dependam dessa conta. Para preservar a funcionalidade, é necessário provisionar a conta em etapa de inicialização ou migração usando configuração externa segura, sem registrar o segredo no repositório. Os demais usuários e segredos hard-coded presentes no trecho fornecido continuam vulneráveis e devem ser tratados em alterações separadas; a rotação das credenciais já expostas também é obrigatória.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2227,
+  "tokens_saida": 606,
+  "latencia_s": 8.846,
+  "custo_usd": 0.001284,
+  "hash_prompt": "11a4043a935d1b3921eefc273395d4cc372b27dccdcd770fec37ba19c9716acb",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2224
+}

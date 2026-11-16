@@ -1,0 +1,492 @@
+rules:
+- id: tcc.angular.security.bypass-security-trust-html
+  languages:
+  - typescript
+  message: bypassSecurityTrustHtml desativa a sanitizacao HTML do Angular. Revise a origem do valor e evite o bypass para conteudo nao confiavel.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-79: Improper Neutralization of Input During Web Page Generation (''Cross-site Scripting'')'
+  pattern: $SANITIZER.bypassSecurityTrustHtml($VALUE)
+  severity: WARNING
+- id: tcc.archive.security.entry-path-write
+  languages:
+  - typescript
+  - javascript
+  message: Caminho vindo de entrada de arquivo compactado alcanca criacao de arquivo. Normalize e restrinja o caminho ao diretorio de extracao.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-22: Improper Limitation of a Pathname to a Restricted Directory'
+  mode: taint
+  pattern-sanitizers:
+  - pattern: path.basename(...)
+  pattern-sinks:
+  - pattern: fs.createWriteStream(...)
+  pattern-sources:
+  - pattern: $ENTRY.path
+  severity: WARNING
+- id: tcc.auth.security.optional-current-password
+  languages:
+  - typescript
+  - javascript
+  message: A comparacao com a senha armazenada so ocorre quando o valor atual foi informado. Verifique se a ausencia desse valor impede a troca de senha.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-620: Unverified Password Change'
+  patterns:
+  - pattern-either:
+    - pattern: 'if ($CURRENT && $HASH($CURRENT) !== $ACCOUNT.password) { ... }
+
+        '
+    - pattern: 'if ($CURRENT && $HASH($CURRENT) != $ACCOUNT.password) { ... }
+
+        '
+  severity: WARNING
+- id: tcc.authorization.security.asymmetric-method-guard
+  languages:
+  - typescript
+  - javascript
+  message: 'DELETE possui bloqueio sem PUT ou USE imediatamente anterior. Sinal de auditoria, nao prova de falha: verificar API gerada, middlewares globais e roteadores externos antes de confirmar atualizacao desprotegida.'
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-862: Missing Authorization'
+  patterns:
+  - pattern: $APP.delete($PATH, $SEC.denyAll())
+  - pattern-not-inside: '$APP.put($PATH, ...);
+
+      $APP.delete($PATH, ...);
+
+      '
+  - pattern-not-inside: '$APP.use($PATH, ...);
+
+      $APP.delete($PATH, ...);
+
+      '
+  severity: WARNING
+- id: tcc.business.security.optional-mode-role-update
+  languages:
+  - typescript
+  - javascript
+  message: Dois modos da requisicao sao tratados em ifs independentes antes de uma atualizacao de role. Verifique se um modo ausente ou desconhecido pode alcancar a mudanca de privilegio sem passar pelas precondicoes.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-841: Improper Enforcement of Behavioral Workflow'
+  patterns:
+  - pattern-inside: 'if ($REQ.body.$MODE === $FIRST) { ... }
+
+      ...
+
+      if ($REQ.body.$MODE === $SECOND) { ... }
+
+      ...
+
+      '
+  - metavariable-comparison:
+      comparison: $FIRST != $SECOND
+      metavariable: $FIRST
+  - pattern: '$ENTITY.update({..., role: $ROLE, ...})'
+  - pattern-not-inside: "if ($REQ.body.$MODE !== $FIRST && $REQ.body.$MODE !== $SECOND) {\n  ...\n  return ...;\n}\n...\n"
+  severity: WARNING
+- id: tcc.captcha.security.answer-in-response
+  languages:
+  - typescript
+  - javascript
+  message: A resposta envia o CAPTCHA junto com sua resposta. Mantenha a solucao exclusivamente no servidor e revise reutilizacao e limitacao de tentativas.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+  pattern-either:
+  - pattern: '$RES.json({..., captcha: $CHALLENGE, answer: $ANSWER, ...})'
+  - patterns:
+    - pattern-inside: 'const $PAYLOAD = { ..., captcha: $CHALLENGE, answer: $ANSWER, ... };
+
+        ...
+
+        '
+    - pattern: $RES.json($PAYLOAD)
+  severity: WARNING
+- id: tcc.concurrency.security.delayed-counter-update
+  languages:
+  - typescript
+  - javascript
+  message: Contador atualizado antes de espera assincrona; revisar atomicidade da verificacao e registro de elegibilidade.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization'
+  patterns:
+  - pattern: 'await $COL.update($FILTER, {$inc: $INC})'
+  - pattern-inside: 'await $COL.update($FILTER, {$inc: $INC});
+
+      ...
+
+      await $WAIT(...);
+
+      ...
+
+      '
+  severity: WARNING
+- id: tcc.crypto.security.md5-hash
+  languages:
+  - typescript
+  - javascript
+  message: MD5 nao e adequado para armazenar senhas. Verifique o uso deste hash e, para senhas, use uma funcao de derivacao apropriada com salt.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-916: Use of Password Hash With Insufficient Computational Effort'
+  pattern: $CRYPTO.createHash('md5')
+  severity: WARNING
+- id: tcc.exposure.security.jsonp-response
+  languages:
+  - typescript
+  - javascript
+  message: Resposta JSONP executavel entre origens; verificar dados sensiveis, sessao, cookies e navegador antes de confirmar exposicao.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+  pattern: $RES.jsonp($DATA)
+  severity: WARNING
+- id: tcc.express.security.public-metrics-route
+  languages:
+  - typescript
+  - javascript
+  message: Endpoint de metricas registrado sem middleware de autorizacao explicito. Verifique se o handler ou a infraestrutura restringe o acesso.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+  pattern: $APP.get('/metrics', $HANDLER)
+  severity: WARNING
+- id: tcc.express.security.trust-all-proxies-rate-limit
+  languages:
+  - typescript
+  - javascript
+  message: A aplicacao confia em todos os proxies e usa IP/headers da requisicao como chave do rate limiter. Um cliente pode controlar X-Forwarded-For se o proxy de borda nao o normalizar; restrinja os proxies confiaveis.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-307: Improper Restriction of Excessive Authentication Attempts'
+  pattern: "$APP.enable('trust proxy')\n...\n$APP.use($PATH, rateLimit({\n  ...,\n  keyGenerator($ARGS) { return $HEADERS[$HEADER] ?? $IP },\n  ...\n}))\n"
+  severity: WARNING
+- id: tcc.finale.security.generated-default-writes
+  languages:
+  - typescript
+  - javascript
+  message: Recurso Finale gera escrita por padrao a partir do modelo. Auditar campos de identidade/papel, middleware e hooks ANTES da persistencia; este alerta de superficie de mass assignment nao comprova vulnerabilidade sozinho.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes'
+  patterns:
+  - pattern-inside: 'import * as $REST from ''finale-rest'';
+
+      ...
+
+      '
+  - pattern: '$REST.resource({model: $MODEL, endpoints: $ENDPOINTS, ...})'
+  - pattern-not: '$REST.resource({..., actions: $ACTIONS, ...})'
+  severity: WARNING
+- id: tcc.http.security.request-url-fetch
+  languages:
+  - typescript
+  - javascript
+  message: URL recebida da requisicao alcanca fetch no servidor. Restrinja esquema, host e destinos internos antes da chamada para evitar SSRF.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-918: Server-Side Request Forgery (SSRF)'
+  mode: taint
+  pattern-sinks:
+  - pattern: fetch($URL)
+  pattern-sources:
+  - pattern: $REQ.body.$FIELD
+  severity: WARNING
+- id: tcc.identity.security.masked-email-selector
+  languages:
+  - typescript
+  - javascript
+  message: Email com caracteres substituidos por asterisco chega ao seletor de dados. Mascaramento pode gerar colisoes; use identidade unica para autorizacao.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-863: Incorrect Authorization'
+  mode: taint
+  pattern-sinks:
+  - patterns:
+    - pattern: '$COLLECTION.find({email: $EMAIL})'
+    - pattern: $COLLECTION.find($FILTER)
+    - metavariable-regex:
+        metavariable: $FILTER
+        regex: ^\{\s*email\s*:\s*[^,{}]+\s*,?\s*\}$
+    - focus-metavariable: $EMAIL
+  pattern-sources:
+  - pattern: $VALUE.replace($PATTERN, '*')
+  severity: WARNING
+- id: tcc.integrity.security.encoded-numeric-value
+  languages:
+  - typescript
+  - javascript
+  message: Valor numerico derivado de Z85, uma codificacao sem autenticidade. Revisar integridade e uso sensivel; validacao de formato nao e assinatura. Uma verificacao externa pode tornar este alerta falso positivo.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-345: Insufficient Verification of Data Authenticity'
+  mode: taint
+  pattern-sinks:
+  - pattern: parseInt(...)
+  pattern-sources:
+  - patterns:
+    - pattern-inside: 'import * as $CODEC from ''z85'';
+
+        ...
+
+        '
+    - pattern: $CODEC.decode(...)
+  severity: WARNING
+- id: tcc.mongodb.security.dynamic-where
+  languages:
+  - typescript
+  - javascript
+  message: Consulta MongoDB $where montada dinamicamente executa JavaScript e pode incorporar entrada nao confiavel. Use filtros tipados sem $where.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-943: Improper Neutralization of Special Elements in Data Query Logic'
+  pattern-either:
+  - pattern: '$COLLECTION.find({ $where: $LEFT + $RIGHT })'
+  - pattern: '$COLLECTION.find({ $where: `...${$VALUE}...` })'
+  severity: WARNING
+- id: tcc.mongodb.security.unscoped-document-write
+  languages:
+  - typescript
+  - javascript
+  message: Escrita seleciona documento somente pelo _id recebido. Revisar autorizacao do proprietario antes da escrita; autenticacao e validacao do formato do identificador nao substituem essa verificacao.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-639: Authorization Bypass Through User-Controlled Key'
+  mode: taint
+  pattern-sinks:
+  - patterns:
+    - pattern-either:
+      - pattern: '$COLLECTION.update({_id: $ID}, $CHANGE, ...)'
+      - pattern: '$COLLECTION.updateOne({_id: $ID}, $CHANGE, ...)'
+    - pattern-either:
+      - pattern: $COLLECTION.update($FILTER, $CHANGE, ...)
+      - pattern: $COLLECTION.updateOne($FILTER, $CHANGE, ...)
+    - metavariable-regex:
+        metavariable: $FILTER
+        regex: ^\{\s*_id\s*(?::\s*[^,{}]+)?\s*,?\s*\}$
+    - focus-metavariable: $ID
+  pattern-sources:
+  - pattern: $REQ.body.$FIELD
+  - pattern: $REQ.params.$FIELD
+  severity: WARNING
+- id: tcc.mongodb.security.untrusted-id-multi-update
+  languages:
+  - typescript
+  - javascript
+  message: Um identificador vindo da requisicao seleciona documentos em uma atualizacao multipla. Valide o tipo/valor e limite a atualizacao ao registro autorizado.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-943: Improper Neutralization of Special Elements in Data Query Logic'
+  pattern: '$COLLECTION.update({ _id: $REQUEST.body.$FIELD }, $CHANGE, { multi: true })'
+  severity: WARNING
+- id: tcc.orm.security.request-id-unscoped-query
+  languages:
+  - typescript
+  - javascript
+  message: Consulta seleciona objeto pelo ID da requisicao sem escopo de proprietario no where. Revisar autorizacao na rota e antes de devolver o objeto; este padrao sozinho nao comprova IDOR.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-639: Authorization Bypass Through User-Controlled Key'
+  mode: taint
+  pattern-sinks:
+  - patterns:
+    - pattern: '$MODEL.findOne({where: {id: $ID}, ...})'
+    - pattern: '$MODEL.findOne({where: $WHERE, ...})'
+    - metavariable-regex:
+        metavariable: $WHERE
+        regex: ^\{\s*id\s*(?::\s*[^,{}]+)?\s*,?\s*\}$
+    - focus-metavariable: $ID
+  pattern-sources:
+  - pattern: $REQ.params.$PARAM
+  severity: WARNING
+- id: tcc.redirect.security.substring-allowlist
+  languages:
+  - typescript
+  - javascript
+  message: Validar uma URL de redirecionamento com includes() em uma allowlist aceita URLs maliciosas que apenas contenham um destino permitido como substring. Compare a origem e o caminho de forma estruturada ou use igualdade exata.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-601: URL Redirection to Untrusted Site (''Open Redirect'')'
+  pattern: "for (const $ENTRY of $ALLOWLIST) {\n  ...\n  $URL.includes($ENTRY)\n  ...\n}\n"
+  severity: WARNING
+- id: tcc.template.security.render-request-options
+  languages:
+  - typescript
+  - javascript
+  message: Corpo da requisicao propagado como opcoes de renderizacao. Verificar se layout controlado pelo cliente seleciona arquivos fora dos templates. Protecoes externas e o comportamento do motor exigem revisao manual.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-73: External Control of File Name or Path'
+  pattern: $RES.render($VIEW, {...$REQ.body, ...}, ...)
+  severity: WARNING
+- id: tcc.validation.security.client-campaign-date
+  languages:
+  - typescript
+  - javascript
+  message: Data originada no corpo da requisicao comparada a validade da campanha. Verificar se a elegibilidade usa relogio confiavel do servidor, nao apenas a data declarada pelo cliente. Controle temporal externo exige revisao.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-807: Reliance on Untrusted Inputs in a Security Decision'
+  mode: taint
+  pattern-sinks:
+  - pattern-either:
+    - pattern: $DATE == $CAMPAIGN.validOn
+    - pattern: $DATE === $CAMPAIGN.validOn
+  pattern-sources:
+  - pattern: $REQ.body.$FIELD
+  severity: WARNING
+- id: tcc.validation.security.first-last-mismatch
+  languages:
+  - typescript
+  - javascript
+  message: A condicao verifica o primeiro valor, mas o ramo alternativo usa o ultimo. Revisar parametros duplicados e garantir que o valor usado seja o validado.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-20: Improper Input Validation'
+  patterns:
+  - pattern-inside: "if (<... $VALUES[0] ...>) {\n  ...\n} else {\n  ...\n}\n"
+  - pattern: $VALUES[$VALUES.length - 1]
+  severity: WARNING
+- id: tcc.validation.security.optional-validation-gate
+  languages:
+  - typescript
+  - javascript
+  message: Validacao condicionada a presenca conjunta de campos seguida por next; revisar campos ausentes e validacao semantica antes da persistencia.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-20: Improper Input Validation'
+  pattern: "if ($REQ.body.$A !== undefined && $REQ.body.$B !== undefined && $REQ.body.$C !== undefined) {\n  ...\n}\n$NEXT();\n"
+  severity: WARNING
+- id: tcc.validation.security.quantity-upper-bound-only
+  languages:
+  - typescript
+  - javascript
+  message: Verificacao de estoque libera fluxo por limite superior de quantidade. Revise se quantidade positiva inteira e obrigatoria antes de persistir.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-20: Improper Input Validation'
+  patterns:
+  - pattern: "if ($STOCK.quantity >= $AMOUNT) {\n  $NEXT();\n} else { ... }\n"
+  - pattern-not-inside: 'if ($AMOUNT <= 0) { ... return ...; }
+
+      ...
+
+      '
+  severity: WARNING
+- id: tcc.validation.security.rating-without-range
+  languages:
+  - typescript
+  - javascript
+  message: Rating inteiro sem validate no modelo; conferir intervalo permitido e controles anteriores. allowNull nao verifica valor minimo.
+  metadata:
+    category: security
+    confidence: LOW
+    cwe:
+    - 'CWE-20: Improper Input Validation'
+  patterns:
+  - pattern: '$MODEL.init({..., rating: $DEF, ...}, ...)'
+  - metavariable-pattern:
+      metavariable: $DEF
+      patterns:
+      - pattern: '{type: $T.INTEGER, ...}'
+      - pattern-not: '{..., validate: $VALIDATION, ...}'
+  - focus-metavariable: $DEF
+  severity: WARNING
+- id: tcc.vm.security.untrusted-evaluator
+  languages:
+  - typescript
+  - javascript
+  message: Expressao de requisicao chega a interpretador notevil dentro de contexto VM. Timeout nao substitui formato de dados restrito. Revisar consumo de recursos; este alerta nao demonstra escape do sandbox ou execucao de comandos do SO.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code'
+  patterns:
+  - pattern-inside: 'import { eval as $EVAL } from ''notevil'';
+
+      ...
+
+      '
+  - pattern-inside: 'const $DATA = $BODY.$FIELD || ...;
+
+      ...
+
+      const $CTX = { ..., $EVAL, $DATA, ... };
+
+      ...
+
+      '
+  - pattern: $VM.runInContext($CODE, $CTX, ...)
+  - metavariable-pattern:
+      language: javascript
+      metavariable: $CODE
+      pattern: $EVAL($DATA)
+  severity: WARNING
+- id: tcc.xml.security.external-entity-expansion
+  languages:
+  - typescript
+  - javascript
+  message: Parser XML habilita carregamento de DTD externa e substituicao de entidades. Para XML nao confiavel, isso pode expor arquivos ou causar DoS.
+  metadata:
+    category: security
+    confidence: MEDIUM
+    cwe:
+    - 'CWE-611: Improper Restriction of XML External Entity Reference'
+  pattern: 'const $OPTION = $LIB.ParseOption.XML_PARSE_NOENT | $LIB.ParseOption.XML_PARSE_DTDLOAD | ...
+
+    '
+  severity: WARNING

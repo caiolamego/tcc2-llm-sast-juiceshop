@@ -1,0 +1,26 @@
+{
+  "fixture": {
+    "arquivo": "a.ts",
+    "categoria_rag": null,
+    "check_id": "fixture",
+    "cwe": [],
+    "cwe_ids": [
+      "CWE-999999"
+    ],
+    "linha_fim": 1,
+    "linha_inicio": 1,
+    "mensagem": "Fixture sem CWE mapeada"
+  },
+  "recuperacao": {
+    "arquivo": "knowledge_base/generico.md",
+    "base_sha256": "cf045f301150dcee988daeb0f3bea488073f477f096d656f8b7c1dce7dfe1638",
+    "categoria": "generico",
+    "corpo": "## 1. Descrição e sinais\n\nUm alerta estático identifica um padrão que precisa ser analisado no fluxo real. Comece pelo ponto indicado, pela regra e pelas dependências do comportamento.\n\n## 2. Origem e condições\n\nLocalize origem dos dados, transformações, chamada final e controles anteriores. Separe fatos visíveis de hipóteses que exigem arquivos ou configuração ausentes.\n\n## 3. Impactos e interpretação\n\nExplicite qual capacidade do atacante seria necessária e qual efeito seria possível. Um padrão suspeito pode ser protegido ou inalcançável. Contexto documental não confirma vulnerabilidade.\n\n## 4. Mitigação por mecanismo\n\n### Análise\nVerifique a semântica da API e a fronteira de confiança.\n### Mudança mínima\nSe houver risco sustentado pelo código, preserve a operação legítima e corrija o mecanismo. Não remova chamadas nem adicione comentários para esconder alertas.\n### Evidência insuficiente\nDescreva a limitação em vez de inventar causa ou requisitos; reanálise estática deve ser acompanhada de verificação funcional.\n\n## 5. Preservação funcional\n\nPreserve interfaces, mensagens, tratamento de erros e entradas válidas. Não introduza um requisito de negócio que não exista apenas para produzir um patch.\n\n## 6. Exemplo genérico\n\nExemplo suspeito quando o valor pode não ser texto:\n```typescript\nreturn input.label.trim();\n```\nQuando o contrato exige texto, valide antes de preservar a operação:\n```typescript\nif (typeof input.label !== 'string') return existingFailure();\nreturn input.label.trim();\n```\n\n## 7. Limitações e verificação\n\nO exemplo trata tipos, não todas as vulnerabilidades. Se o tipo já é garantido, a checagem pode ser redundante. Verifique origem, caminhos de erro e requisitos antes de concluir pela correção.\n",
+    "corpo_sha256": "0061e6c5b789df686e5963a14fd43e3f693810c2865975c5d8b89286805e211c",
+    "cwe": null,
+    "documento_sha256": "d2d5e72e6aa1111d68f39da6fe63d1c78a36cdd62d14013d8c3dd8724888a23e",
+    "index_sha256": "8a7f99607a952027759dd6497fc9843e1e6ae515c1970523aeb50e82c44ce24c",
+    "motivo": "fallback",
+    "versao": "1.0"
+  }
+}

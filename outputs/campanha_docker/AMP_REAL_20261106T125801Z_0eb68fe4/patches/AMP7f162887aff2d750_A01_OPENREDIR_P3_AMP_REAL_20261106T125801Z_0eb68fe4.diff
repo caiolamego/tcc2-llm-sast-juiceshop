@@ -1,0 +1,27 @@
+diff --git a/routes/redirect.ts b/routes/redirect.ts
+index 6b4a03da2..aa4708afd 100644
+--- a/routes/redirect.ts
++++ b/routes/redirect.ts
+@@ -13,10 +13,20 @@ import * as utils from '../lib/utils'
+ export function performRedirect () {
+   return ({ query }: Request, res: Response, next: NextFunction) => {
+     const toUrl: string = query.to as string
+-    if (security.isRedirectAllowed(toUrl)) {
++    let validatedUrl: string | undefined
++    try {
++      const parsedUrl = new URL(toUrl)
++      if (parsedUrl.protocol === 'https:' && parsedUrl.username === '' && parsedUrl.password === '' && parsedUrl.port === '' && security.redirectAllowlist.some((allowedUrl) => {
++        const allowed = new URL(allowedUrl)
++        return parsedUrl.hostname === allowed.hostname && parsedUrl.port === allowed.port
++      })) {
++        validatedUrl = parsedUrl.href
++      }
++    } catch {}
++    if (validatedUrl !== undefined && security.isRedirectAllowed(validatedUrl)) {
+       challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })
+       challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })
+-      res.redirect(toUrl)
++      res.redirect(validatedUrl)
+     } else {
+       res.status(406)
+       next(new Error('Unrecognized target URL for redirect: ' + toUrl))

@@ -1,0 +1,374 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 29.36734351299674,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 9.27,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_94phi1fo/feedback/primeira.xml",
+        "test/api/feedback.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 17.57,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively"
+      ],
+      "testes_falhos_novos": [
+        "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ /api/Feedbacks\n  ✔ GET all feedback (220.013251ms)\n  ✔ POST sanitizes unsafe HTML from comment (336.083959ms)\n  ✖ POST fails to sanitize masked XSS-attack by not applying sanitization recursively (229.076542ms)\n  ✔ POST feedback in another users name as anonymous user (156.622792ms)\n  ✔ POST feedback in a non-existing users name as anonymous user fails with constraint error (145.264208ms)\n  ✔ POST feedback is associated with current user (185.053667ms)\n  ✔ POST feedback is associated with any passed user ID (100.037042ms)\n  ✔ POST feedback can be created without actually supplying comment (130.273708ms)\n  ✔ POST feedback cannot be created without actually supplying rating (86.242333ms)\n  ✔ POST feedback cannot be created with wrong CAPTCHA answer (83.681792ms)\n  ✔ POST feedback cannot be created with invalid CAPTCHA id (61.8085ms)\n✖ /api/Feedbacks (3529.314127ms)\n▶ /api/Feedbacks/:id\n  ✔ GET existing feedback by id is forbidden via public API (24.820208ms)\n  ✔ GET existing feedback by id (75.412166ms)\n  ✔ PUT update existing feedback is forbidden via public API (7.251375ms)\n  ✔ PUT update existing feedback (6.310459ms)\n  ✔ DELETE existing feedback is forbidden via public API (2.95ms)\n  ✔ DELETE existing feedback (80.898917ms)\n✔ /api/Feedbacks/:id (198.603958ms)\nℹ tests 17\nℹ suites 2\nℹ pass 16\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 10279.276463\n\n✖ failing tests:\n\ntest at test/api/feedback.test.ts:2:2494\n✖ POST fails to sanitize masked XSS-attack by not applying sanitization recursively (229.076542ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'The sanitize-html module up to at least version 1.4.2 has this issue: '\n  - 'The sanitize-html module up to at least version 1.4.2 has this issue: <iframe src=\"javascript:alert(`xss`)\">'\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:68:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'The sanitize-html module up to at least version 1.4.2 has this issue: ',\n    expected: 'The sanitize-html module up to at least version 1.4.2 has this issue: <iframe src=\"javascript:alert(`xss`)\">',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 7.291004294529557e-06,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "models/feedback.ts"
+    ],
+    "grupos": [
+      "feedback"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 9.27
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "feedback",
+      "status": "executada",
+      "duracao_s": 17.57
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "feedback"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 9.27
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "feedback",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > GET all feedback",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > GET all feedback",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback can be created without actually supplying comment",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback in another users name as anonymous user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback is associated with any passed user ID",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST feedback is associated with current user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks > POST sanitizes unsafe HTML from comment",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > DELETE existing feedback",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > GET existing feedback by id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > PUT update existing feedback",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback is forbidden via public API",
+            "arquivo": "test/api/feedback.test.ts",
+            "nome": "/api/Feedbacks/:id > PUT update existing feedback is forbidden via public API",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively"
+        ],
+        "falhos_novos": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively"
+        ],
+        "falhos_novos_observados": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > GET all feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback is forbidden via public API"
+        ],
+        "esperados": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > GET all feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback is forbidden via public API"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > GET all feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST fails to sanitize masked XSS-attack by not applying sanitization recursively",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback can be created without actually supplying comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with invalid CAPTCHA id",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created with wrong CAPTCHA answer",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in a non-existing users name as anonymous user fails with constraint error",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback in another users name as anonymous user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with any passed user ID",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST sanitizes unsafe HTML from comment",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > DELETE existing feedback is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > GET existing feedback by id is forbidden via public API",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback",
+          "test/api/feedback.test.ts :: /api/Feedbacks/:id > PUT update existing feedback is forbidden via public API"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback cannot be created without actually supplying rating",
+          "test/api/feedback.test.ts :: /api/Feedbacks > POST feedback is associated with current user"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 17.57,
+        "espera_api_s": 7.291004294529557e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_94phi1fo/feedback/primeira.xml",
+            "test/api/feedback.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 17.57,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ /api/Feedbacks\n  ✔ GET all feedback (220.013251ms)\n  ✔ POST sanitizes unsafe HTML from comment (336.083959ms)\n  ✖ POST fails to sanitize masked XSS-attack by not applying sanitization recursively (229.076542ms)\n  ✔ POST feedback in another users name as anonymous user (156.622792ms)\n  ✔ POST feedback in a non-existing users name as anonymous user fails with constraint error (145.264208ms)\n  ✔ POST feedback is associated with current user (185.053667ms)\n  ✔ POST feedback is associated with any passed user ID (100.037042ms)\n  ✔ POST feedback can be created without actually supplying comment (130.273708ms)\n  ✔ POST feedback cannot be created without actually supplying rating (86.242333ms)\n  ✔ POST feedback cannot be created with wrong CAPTCHA answer (83.681792ms)\n  ✔ POST feedback cannot be created with invalid CAPTCHA id (61.8085ms)\n✖ /api/Feedbacks (3529.314127ms)\n▶ /api/Feedbacks/:id\n  ✔ GET existing feedback by id is forbidden via public API (24.820208ms)\n  ✔ GET existing feedback by id (75.412166ms)\n  ✔ PUT update existing feedback is forbidden via public API (7.251375ms)\n  ✔ PUT update existing feedback (6.310459ms)\n  ✔ DELETE existing feedback is forbidden via public API (2.95ms)\n  ✔ DELETE existing feedback (80.898917ms)\n✔ /api/Feedbacks/:id (198.603958ms)\nℹ tests 17\nℹ suites 2\nℹ pass 16\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 10279.276463\n\n✖ failing tests:\n\ntest at test/api/feedback.test.ts:2:2494\n✖ POST fails to sanitize masked XSS-attack by not applying sanitization recursively (229.076542ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'The sanitize-html module up to at least version 1.4.2 has this issue: '\n  - 'The sanitize-html module up to at least version 1.4.2 has this issue: <iframe src=\"javascript:alert(`xss`)\">'\n  \n      at TestContext.<anonymous> (test/api/feedback.test.ts:68:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'The sanitize-html module up to at least version 1.4.2 has this issue: ',\n    expected: 'The sanitize-html module up to at least version 1.4.2 has this issue: <iframe src=\"javascript:alert(`xss`)\">',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Feedbacks\" time=\"3.529314\" disabled=\"0\" errors=\"0\" tests=\"11\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET all feedback\" time=\"0.220013\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST sanitizes unsafe HTML from comment\" time=\"0.336084\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST fails to sanitize masked XSS-attack by not applying sanitization recursively\" time=\"0.229077\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'The sanitize-html module up to at least version 1.4.2 has this issue: '&#10;- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'The sanitize-html module up to at least version 1.4.2 has this issue: '&#10;- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'The sanitize-html module up to at least version 1.4.2 has this issue: '\n- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=\"javascript:alert(`xss`)\">'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'The sanitize-html module up to at least version 1.4.2 has this issue: '\n  - 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=\"javascript:alert(`xss`)\">'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:68:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'The sanitize-html module up to at least version 1.4.2 has this issue: ',\n    expected: 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=\"javascript:alert(`xss`)\">',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback in another users name as anonymous user\" time=\"0.156623\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback in a non-existing users name as anonymous user fails with constraint error\" time=\"0.145264\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback is associated with current user\" time=\"0.185054\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback is associated with any passed user ID\" time=\"0.100037\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback can be created without actually supplying comment\" time=\"0.130274\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback cannot be created without actually supplying rating\" time=\"0.086242\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback cannot be created with wrong CAPTCHA answer\" time=\"0.083682\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback cannot be created with invalid CAPTCHA id\" time=\"0.061809\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Feedbacks/:id\" time=\"0.198604\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET existing feedback by id is forbidden via public API\" time=\"0.024820\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"GET existing feedback by id\" time=\"0.075412\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"PUT update existing feedback is forbidden via public API\" time=\"0.007251\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"PUT update existing feedback\" time=\"0.006310\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"DELETE existing feedback is forbidden via public API\" time=\"0.002950\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"DELETE existing feedback\" time=\"0.080899\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 17 -->\n\t<!-- suites 2 -->\n\t<!-- pass 16 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 10279.276463 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/api/Feedbacks\" time=\"1.545396\" disabled=\"0\" errors=\"0\" tests=\"11\" failures=\"1\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET all feedback\" time=\"0.118101\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST sanitizes unsafe HTML from comment\" time=\"0.094656\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST fails to sanitize masked XSS-attack by not applying sanitization recursively\" time=\"0.071771\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\" failure=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'The sanitize-html module up to at least version 1.4.2 has this issue: '&#10;- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'The sanitize-html module up to at least version 1.4.2 has this issue: '&#10;- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=&amp;quot;javascript:alert(`xss`)&amp;quot;>'\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'The sanitize-html module up to at least version 1.4.2 has this issue: '\n- 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=\"javascript:alert(`xss`)\">'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'The sanitize-html module up to at least version 1.4.2 has this issue: '\n  - 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=\"javascript:alert(`xss`)\">'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-3/test/api/feedback.test.ts:68:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'The sanitize-html module up to at least version 1.4.2 has this issue: ',\n    expected: 'The sanitize-html module up to at least version 1.4.2 has this issue: &lt;iframe src=\"javascript:alert(`xss`)\">',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST feedback in another users name as anonymous user\" time=\"0.070557\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback in a non-existing users name as anonymous user fails with constraint error\" time=\"0.052972\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback is associated with current user\" time=\"0.102827\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback is associated with any passed user ID\" time=\"0.056011\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback can be created without actually supplying comment\" time=\"0.046736\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback cannot be created without actually supplying rating\" time=\"0.025486\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback cannot be created with wrong CAPTCHA answer\" time=\"0.024428\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"POST feedback cannot be created with invalid CAPTCHA id\" time=\"0.021330\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Feedbacks/:id\" time=\"0.085684\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"0\" skipped=\"0\" hostname=\"4e35d0b37386\">\n\t\t<testcase name=\"GET existing feedback by id is forbidden via public API\" time=\"0.008185\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"GET existing feedback by id\" time=\"0.016746\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"PUT update existing feedback is forbidden via public API\" time=\"0.004891\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"PUT update existing feedback\" time=\"0.004843\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"DELETE existing feedback is forbidden via public API\" time=\"0.002223\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t\t<testcase name=\"DELETE existing feedback\" time=\"0.048113\" classname=\"test\" file=\"/repo/workspace/wt-3/test/api/feedback.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 17 -->\n\t<!-- suites 2 -->\n\t<!-- pass 16 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 6330.59846 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

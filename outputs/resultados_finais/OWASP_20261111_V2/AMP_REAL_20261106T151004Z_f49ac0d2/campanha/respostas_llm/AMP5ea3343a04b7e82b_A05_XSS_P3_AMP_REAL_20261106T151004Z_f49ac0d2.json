@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml que desativa a sanitização HTML do Angular, permitindo possível Cross-site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O método bypassSecurityTrustHtml é utilizado para marcar conteúdo HTML como seguro sem realizar sanitização, o que pode permitir a execução de scripts maliciosos se o conteúdo for controlado externamente ou não confiável.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml e atribuir o valor diretamente, permitindo que o Angular realize a sanitização automática do conteúdo HTML. Isso evita a execução de código malicioso e mantém a exibição do conteúdo formatado de forma segura.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/track-result/track-result.component.ts\",\"trecho_original\":\"      this.results.orderNo = this.sanitizer.bypassSecurityTrustHtml(`<code>${results.data[0].orderId}</code>`)\\n      this.results.email = results.data[0].email\",\"trecho_corrigido\":\"      this.results.orderNo = `<code>${results.data[0].orderId}</code>`\\n      this.results.email = results.data[0].email\"}],\"justificativa_tecnica\":\"O Angular já realiza sanitização automática ao usar bindings HTML padrão, protegendo contra XSS. O uso de bypassSecurityTrustHtml desativa essa proteção e deve ser evitado para conteúdo que não é absolutamente confiável. Ao remover o bypass, o conteúdo é sanitizado automaticamente, mitigando a vulnerabilidade sem alterar a funcionalidade ou a apresentação visual.\",\"limitacoes_da_correcao\":\"Se o conteúdo precisar conter HTML legítimo que não seja preservado pela sanitização padrão do Angular, pode ser necessário implementar uma sanitização customizada com bibliotecas especializadas como DOMPurify. Esta correção assume que a formatação com a tag <code> é suficiente e segura para o contexto atual.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2250,
+  "tokens_saida": 395,
+  "latencia_s": 3.926,
+  "custo_usd": 0.001532,
+  "hash_prompt": "35f1eed772f4611c3f8695dd4f43ed859d41e14cdb7793a37fca363fa561ea4f",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"XXE (XML External Entity), incluindo leitura de arquivos locais e possível acesso a recursos externos.\",\n  \"causa_da_vulnerabilidade\": \"O parser habilita substituição de entidades e carregamento de DTDs por meio de XML_PARSE_NOENT e XML_PARSE_DTDLOAD. Além disso, xmlRegisterFsInputProviders() permite que entidades externas acessem o sistema de arquivos do host.\",\n  \"estrategia_de_correcao\": \"Desabilitar a substituição de entidades e o carregamento de DTDs, e deixar de registrar provedores de entrada com acesso ao sistema de arquivos. Manter as demais opções de parsing e a assinatura da função.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/xml.ts\",\n      \"trecho_original\": \"      // Grants the WASM sandbox host filesystem access so external entities\\n      // like file:///etc/passwd resolve - required for the XXE challenges.\\n      const { xmlRegisterFsInputProviders } = await dynamicImport('libxml2-wasm/lib/nodejs.mjs')\\n      xmlRegisterFsInputProviders()\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"lib/xml.ts\",\n      \"trecho_original\": \"  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\\n\",\n      \"trecho_corrigido\": \"  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\\n\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem XML_PARSE_NOENT e XML_PARSE_DTDLOAD, o parser não substitui entidades nem carrega DTDs, impedindo o vetor XXE. A remoção do registro dos provedores de entrada de filesystem também evita conceder acesso ao host para resolver entidades externas. As opções NOBLANKS e NOCDATA permanecem, preservando o comportamento de parsing não relacionado à vulnerabilidade.\",\n  \"limitacoes_da_correcao\": \"Documentos que dependam de DTDs ou da expansão de entidades deixarão de ser processados com esse comportamento. A correção não altera o timeout nem trata outros riscos de disponibilidade decorrentes de XMLs excessivamente grandes.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1023,
+  "tokens_saida": 513,
+  "latencia_s": 5.118,
+  "custo_usd": 0.000359,
+  "hash_prompt": "4e6f039767fd06564ace80fbb7ca71cc6797243c9aa8fbb097c47c2fa8585ba9",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

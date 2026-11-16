@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Possível ausência de autorização para a operação PUT em /api/Products/:id. A rota DELETE possui bloqueio explícito, mas a rota PUT correspondente não está protegida no trecho analisado.\",\"causa_da_vulnerabilidade\":\"A autorização foi aplicada de forma assimétrica: existe security.denyAll() para DELETE, enquanto a proteção de PUT está comentada. Caso não exista um middleware posterior ou roteador externo que faça essa verificação, usuários não autorizados poderão alterar produtos.\",\"estrategia_de_correcao\":\"Descomentar a proteção security.isAuthorized() da rota PUT /api/Products/:id, alterando somente a linha responsável pela autorização e preservando o restante do fluxo da aplicação.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\",\"trecho_corrigido\":\"  app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge\"}],\"justificativa_tecnica\":\"A autorização deve ser aplicada explicitamente à operação de alteração do recurso, e autenticação isolada não garante permissão para modificar produtos. A correção mantém a rota existente, o método, o caminho, o middleware previsto e os comentários, removendo apenas o comentário que desabilitava a proteção. Assim, a operação PUT exige uma identidade autenticada antes de prosseguir, enquanto a proteção existente para DELETE permanece inalterada.\",\"limitacoes_da_correcao\":\"O trecho fornecido não mostra o handler final da rota nem as regras de autorização por papel ou propriedade. Portanto, esta correção garante autenticação, mas não confirma se qualquer usuário autenticado pode alterar qualquer produto. Se a regra exigir autorização por função ou escopo do produto, o handler ou middleware correspondente também deverá validar o papel e/ou a propriedade usando dados confiáveis da sessão. Deve ser verificado ainda se não há roteadores posteriores ou middleware global que alterem o comportamento da rota.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2964,
+  "tokens_saida": 429,
+  "latencia_s": 5.922,
+  "custo_usd": 0.001256,
+  "hash_prompt": "5072fb8007f44a735c60113461e5a6f84a96ac977d3e7c6e7ead62f630c08e12",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2961
+}

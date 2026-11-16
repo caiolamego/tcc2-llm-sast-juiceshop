@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"CWE-73: controle externo do caminho de template e propagação do corpo da requisição como opções de renderização. O campo layout pode fazer o Express/EJS tentar carregar um template arbitrário fora do diretório esperado.\",\"causa_da_vulnerabilidade\":\"O código usa req.body.layout em path.resolve e, em seguida, passa ...req.body diretamente para res.render. A verificação existente apenas bloqueia algumas substrings e não confina o caminho a uma raiz de templates nem impede caminhos absolutos, traversal, codificação alternativa ou outros arquivos legíveis pelo processo.\",\"estrategia_de_correcao\":\"Remover o uso de layout controlado pelo cliente como nome de template e renderizar sempre o template fixo dataErasureResult. Também deixar de propagar o corpo inteiro da requisição, preservando somente os campos esperados e já utilizados pela página.\",\"edicoes\":[{\"arquivo\":\"routes/dataErasure.ts\",\"trecho_original\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\\n      }\",\"trecho_corrigido\":\"      res.render('dataErasureResult', {\\n        email: req.body.email,\\n        securityAnswer: req.body.securityAnswer,\\n        ...themeVars\\n      })\"}],\"justificativa_tecnica\":\"O template passado a res.render deixa de depender de qualquer valor fornecido pelo cliente; portanto, o cliente não consegue selecionar um arquivo arbitrário nem explorar path.resolve com caminho absoluto ou traversal. A propagação de ...req.body também é removida, impedindo que campos adicionais controlem opções do mecanismo de renderização. Os campos funcionais email e securityAnswer continuam disponíveis ao template, e a solicitação de exclusão continua sendo criada antes da renderização.\",\"limitacoes_da_correcao\":\"A correção elimina o fluxo de resposta truncada e a chamada de resolução do desafio que existiam apenas no ramo controlado por layout; isso é necessário para remover a seleção arbitrária de template, mas pode alterar esse comportamento específico. A validação de conteúdo de email e securityAnswer não faz parte do alerta de caminho e permanece inalterada. A importação de path pode tornar-se não utilizada e deverá ser removida apenas se o compilador ou o lint do projeto exigir, embora isso constitua uma alteração adicional não necessária para a mitigação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2694,
+  "tokens_saida": 705,
+  "latencia_s": 8.465,
+  "custo_usd": 0.001519,
+  "hash_prompt": "6cc0a7196fd3f2196eea4b01af91b5c17cf3844ea7e825cc5a5db11d4796b902",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2691
+}

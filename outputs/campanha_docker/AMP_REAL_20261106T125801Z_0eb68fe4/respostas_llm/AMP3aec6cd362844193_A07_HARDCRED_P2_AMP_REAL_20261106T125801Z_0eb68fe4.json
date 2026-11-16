@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open redirect na validação de URLs de redirecionamento.\",\"causa_da_vulnerabilidade\":\"A função isRedirectAllowed usa url.includes(allowedUrl), aceitando qualquer URL que contenha uma URL permitida como substring. Assim, uma URL controlada pelo atacante, como https://evil.example/?redirect=https://github.com/juice-shop/juice-shop, é considerada permitida apesar de o destino real ser externo.\",\"estrategia_de_correcao\":\"Substituir a comparação por includes por uma comparação exata com a allowlist, preservando a allowlist, a assinatura da função e o comportamento para URLs explicitamente permitidas.\",\"edicoes\":[{\"arquivo\":\"lib/insecurity.ts\",\"trecho_original\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url.includes(allowedUrl) // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\",\"trecho_corrigido\":\"export const isRedirectAllowed = (url: string) => {\\n  let allowed = false\\n  for (const allowedUrl of redirectAllowlist) {\\n    allowed = allowed || url === allowedUrl // vuln-code-snippet vuln-line redirectChallenge\\n  }\\n  return allowed\\n}\"}],\"justificativa_tecnica\":\"A comparação exata impede que domínios, caminhos ou parâmetros controlados pelo atacante sejam aceitos apenas por conterem uma entrada válida como substring. Somente URLs idênticas às entradas da redirectAllowlist serão autorizadas, eliminando o bypass direto da validação que permitia redirecionamentos para destinos arbitrários.\",\"limitacoes_da_correcao\":\"A proteção depende de os consumidores da função usarem seu resultado antes de redirecionar. A comparação é textual e, portanto, considera diferenças de normalização, como codificação ou barras finais, como URLs distintas; isso é conservador e pode exigir entradas adicionais explícitas na allowlist caso sejam necessárias.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3084,
+  "tokens_saida": 433,
+  "latencia_s": 5.086,
+  "custo_usd": 0.000582,
+  "hash_prompt": "328fc340aab6b2110e7d818d06d4562f25ac7ac50def691d00b8609035e5f70a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 3081,
+  "tokens_escrita_cache": 0
+}

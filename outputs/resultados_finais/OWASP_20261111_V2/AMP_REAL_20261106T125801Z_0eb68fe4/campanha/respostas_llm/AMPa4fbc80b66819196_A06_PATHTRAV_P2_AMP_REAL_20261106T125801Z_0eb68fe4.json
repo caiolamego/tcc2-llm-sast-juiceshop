@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal (travessia de diretórios) no parâmetro `file`, permitindo acessar arquivos fora de `ftp/quarantine/`.\",\"causa_da_vulnerabilidade\":\"A validação bloqueia apenas o caractere `/`, mas não bloqueia sequências de travessia como `..\\\\\\\\` em sistemas Windows. Além disso, `path.resolve('ftp/quarantine/', file)` resolve o caminho fornecido sem verificar se o resultado permanece dentro do diretório permitido.\",\"estrategia_de_correcao\":\"Resolver o caminho solicitado e validar que ele permanece dentro do diretório absoluto `ftp/quarantine`, usando `path.relative` para rejeitar caminhos que escapem do diretório-base. A mensagem de erro existente é preservada.\",\"edicoes\":[{\"arquivo\":\"routes/quarantineServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\"trecho_corrigido\":\"    const quarantinePath = path.resolve('ftp/quarantine/')\\n    const filePath = path.resolve(quarantinePath, file)\\n    const relativePath = path.relative(quarantinePath, filePath)\\n\\n    if (!file.includes('/') && !relativePath.startsWith('..' + path.sep) && relativePath !== '..' && !path.isAbsolute(relativePath)) {\\n      res.sendFile(filePath)\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"}],\"justificativa_tecnica\":\"`path.resolve` normaliza sequências como `..\\\\\\\\` no Windows. Após a resolução, `path.relative(quarantinePath, filePath)` indica se o destino está fora do diretório permitido: caminhos externos começam com `..` seguido do separador, são exatamente `..` ou resultam em caminho absoluto. A validação impede esses casos antes de `sendFile`, mantendo o bloqueio original de barras `/` e preservando a mensagem e o fluxo de erro existentes.\",\"limitacoes_da_correcao\":\"A correção mantém a restrição funcional existente que rejeita nomes contendo `/`, mesmo quando poderiam ser seguros. Ela também não impede que arquivos já existentes dentro de `ftp/quarantine` sejam servidos, nem aborda alterações posteriores no sistema de arquivos, como links simbólicos apontando para fora do diretório; para proteção contra symlinks seria necessária uma validação adicional baseada no caminho real (`realpath`) e controles apropriados de concorrência.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 774,
+  "tokens_saida": 561,
+  "latencia_s": 7.578,
+  "custo_usd": 0.000828,
+  "hash_prompt": "59cc612d1dbcd0c93a085749ade9996e1bfc1c7ef20026797d997bb50c8fedaa",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

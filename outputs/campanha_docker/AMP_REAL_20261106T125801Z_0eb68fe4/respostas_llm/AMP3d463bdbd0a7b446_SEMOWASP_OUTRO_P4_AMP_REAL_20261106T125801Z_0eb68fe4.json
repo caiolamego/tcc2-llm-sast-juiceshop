@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de seletor NoSQL com atualização múltipla (CWE-943). O valor controlado pelo cliente em req.body.id é usado diretamente no filtro de update, permitindo que um objeto com operadores MongoDB selecione documentos além do registro pretendido.\",\"causa_da_vulnerabilidade\":\"O código usa { _id: req.body.id } sem validar que req.body.id seja um identificador escalar válido. Como o filtro é passado a uma operação update com { multi: true }, um atacante pode fornecer operadores NoSQL ou um valor que corresponda a múltiplos documentos, causando alterações indevidas em avaliações.\",\"estrategia_de_correcao\":\"Validar que o identificador recebido seja uma string escalar e convertê-lo para um ObjectId válido antes de construir o filtro. Rejeitar entradas inválidas com status 400 e manter a atualização múltipla apenas para o identificador validado, preservando o comportamento esperado para IDs válidos.\",\"edicoes\":[{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"import { type Request, type Response, type NextFunction } from 'express'\\n\\nimport * as challengeUtils from '../lib/challengeUtils'\",\"trecho_corrigido\":\"import { type Request, type Response, type NextFunction } from 'express'\\nimport { ObjectId } from 'mongodb'\\n\\nimport * as challengeUtils from '../lib/challengeUtils'\"},{\"arquivo\":\"routes/updateProductReviews.ts\",\"trecho_original\":\"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\",\"trecho_corrigido\":\"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    if (typeof req.body.id !== 'string' || !ObjectId.isValid(req.body.id)) {\\n      return res.status(400).json({ error: 'Invalid review id' })\\n    }\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: new ObjectId(req.body.id) }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\"}],\"justificativa_tecnica\":\"A validação de typeof impede que objetos controlados pelo cliente sejam interpretados como seletores contendo operadores MongoDB. ObjectId.isValid restringe o valor ao formato aceito para o identificador e new ObjectId cria um valor escalar tipado, impedindo a injeção de operadores no campo _id. Assim, a operação continua atualizando o registro correspondente ao ID válido, enquanto entradas inválidas são rejeitadas antes de alcançar o banco. A opção multi permanece inalterada para preservar o comportamento funcional existente.\",\"limitacoes_da_correcao\":\"A correção pressupõe que os valores de _id da coleção sejam ObjectId e que a versão do driver MongoDB exponha ObjectId a partir do pacote mongodb. Se a aplicação usar IDs string em vez de ObjectId, a validação deve usar o formato real desses IDs e manter o valor como string, sem aceitar objetos. A mensagem de erro introduzida deve ser alinhada ao padrão existente da aplicação caso haja um contrato específico para respostas 400.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2401,
+  "tokens_saida": 715,
+  "latencia_s": 8.631,
+  "custo_usd": 0.001458,
+  "hash_prompt": "f1273f2f22f07f03ef553f955fe166d2bf5ae1806ca8735b84b9430cf20614e0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2398
+}

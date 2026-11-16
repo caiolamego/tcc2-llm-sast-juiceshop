@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"CWE-73: controle externo do caminho de arquivo, permitindo tentativa de traversal de diretório ao servir arquivos de quarentena.\",\n  \"causa_da_vulnerabilidade\": \"O valor controlado pelo usuário em params.file é passado diretamente a res.sendFile após path.resolve. A verificação existente rejeita apenas barras '/', mas não barras invertidas nem outras formas de caminho. Além disso, path.resolve não confina o resultado ao diretório ftp/quarantine; segmentos como '..' podem fazer o caminho resolvido apontar para fora da raiz pretendida.\",\n  \"estrategia_de_correcao\": \"Usar a raiz absoluta ftp/quarantine como opção root de res.sendFile e passar o nome recebido como caminho relativo. Manter a rejeição existente de barras e encaminhar erros de envio ao middleware existente.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/quarantineServer.ts\",\n      \"trecho_original\": \"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('ftp/quarantine/', file))\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\",\n      \"trecho_corrigido\": \"    if (!file.includes('/')) {\\n      res.sendFile(file, { root: path.resolve('ftp/quarantine/') }, (err) => {\\n        if (err) next(err)\\n      })\\n    } else {\\n      res.status(403)\\n      next(new Error('File names cannot contain forward slashes!'))\\n    }\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A opção root do Express faz com que res.sendFile valide que o caminho relativo permanece dentro da raiz especificada, impedindo que segmentos de traversal escapem de ftp/quarantine. A raiz continua sendo resolvida a partir do mesmo diretório relativo usado anteriormente, e nomes legítimos, inclusive em subpastas, continuam sendo servidos. O callback encaminha falhas de envio ao middleware de erro, em vez de deixá-las sem tratamento.\",\n  \"limitacoes_da_correcao\": \"A opção root confina o caminho lexicalmente, mas não impede que links simbólicos existentes dentro de ftp/quarantine apontem para arquivos externos. A validação existente também continua rejeitando nomes com '/' e não foi ampliada para outras políticas de nome; a proteção contra escape da raiz é fornecida pelo root do Express.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1837,
+  "tokens_saida": 528,
+  "latencia_s": 5.508,
+  "custo_usd": 0.000494,
+  "hash_prompt": "7ebcd9dffdc8c416ef240aaee68aa4becfc3884a3dbef084e30596c34f8b9f0c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1834
+}

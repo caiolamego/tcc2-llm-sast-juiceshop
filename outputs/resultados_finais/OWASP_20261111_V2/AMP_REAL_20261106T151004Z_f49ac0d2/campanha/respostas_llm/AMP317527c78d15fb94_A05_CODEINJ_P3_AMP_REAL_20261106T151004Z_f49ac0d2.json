@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Execução insegura de código dinâmico via 'safeEval' com entrada não confiável dentro do contexto VM, permitindo possível execução arbitrária de código (CWE-95).\",\"causa_da_vulnerabilidade\":\"O código recebe diretamente a entrada do usuário ('orderLinesData') e a executa usando 'safeEval' dentro de um contexto criado por 'vm', sem validação ou restrição adequada do conteúdo, permitindo que código malicioso seja executado.\",\"estrategia_de_correcao\":\"Remover a execução dinâmica do código recebido ('safeEval(orderLinesData)') e substituir por uma validação estrita do formato esperado dos dados, por exemplo, parsear como JSON e validar sua estrutura, evitando a execução de código arbitrário.\",\"edicoes\":[{\"arquivo\":\"routes/b2bOrder.ts\",\"trecho_original\":\"        const sandbox = { safeEval, orderLinesData }\\n        vm.createContext(sandbox)\\n        vm.runInContext('safeEval(orderLinesData)', sandbox, { timeout: 2000 })\",\"trecho_corrigido\":\"        // Validar orderLinesData como JSON para evitar execução de código\\n        JSON.parse(orderLinesData)\"}],\"justificativa_tecnica\":\"A execução de código arbitrário via 'safeEval' mesmo dentro de um sandbox VM não garante segurança, pois o sandbox pode ser contornado ou abusado. A melhor prática é evitar avaliação dinâmica de código recebido do usuário. Ao validar e parsear os dados como JSON, garantimos que apenas dados estruturados sejam aceitos, eliminando a possibilidade de execução de código malicioso.\",\"limitacoes_da_correcao\":\"A correção assume que 'orderLinesData' é um JSON válido representando os dados do pedido. Se o formato esperado for diferente, será necessário adaptar a validação. Além disso, a remoção da execução dinâmica pode impactar funcionalidades que dependam da avaliação do código, mas isso é necessário para garantir segurança.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_10c0f82833",
+  "seed": 42,
+  "tokens_entrada": 2417,
+  "tokens_saida": 405,
+  "latencia_s": 5.262,
+  "custo_usd": 0.001615,
+  "hash_prompt": "3732956a3fee7d9a60d1d5948bb5a9217622778de875c145aec213c76f8c1d6e",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

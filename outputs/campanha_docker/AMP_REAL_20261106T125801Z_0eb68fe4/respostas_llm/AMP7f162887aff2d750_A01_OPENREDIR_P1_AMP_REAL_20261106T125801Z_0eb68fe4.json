@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Open redirect causado por validação de destino baseada em prefixo, permitindo que URLs controladas pelo atacante sejam aceitas quando começam com uma URL permitida.\",\"causa_da_vulnerabilidade\":\"A função security.isRedirectAllowed(toUrl) aceita destinos com base em uma verificação permissiva de prefixo, e o código redireciona diretamente para toUrl sem validar a origem e o destino com comparação exata ou parsing seguro de URL.\",\"estrategia_de_correcao\":\"Validar o destino usando a allowlist existente com comparação exata, preservando os destinos funcionais permitidos e impedindo sufixos controlados pelo atacante, como credenciais, portas, caminhos ou domínios semelhantes.\",\"edicoes\":[{\"arquivo\":\"routes/redirect.ts\",\"trecho_original\":\"    if (security.isRedirectAllowed(toUrl)) {\\n      challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })\\n      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\\n      res.redirect(toUrl)\\n    } else {\",\"trecho_corrigido\":\"    if (security.redirectAllowlist.some((allowedUrl) => toUrl === allowedUrl)) {\\n      challengeUtils.solveIf(challenges.redirectCryptoCurrencyChallenge, () => { return toUrl === 'https://explorer.dash.org/address/Xr556RzuwX6hg5EGpkybbv5RanJoZN17kW' || toUrl === 'https://blockchain.info/address/1AbKfgvw9psQ41NbLi8kufDQTezwG8DRZm' || toUrl === 'https://etherscan.io/address/0x0f933ab9fcaaa782d0279c300d73750e1311eae6' })\\n      challengeUtils.solveIf(challenges.redirectChallenge, () => { return isUnintendedRedirect(toUrl) })\\n      res.redirect(toUrl)\\n    } else {\"}],\"justificativa_tecnica\":\"A comparação exata elimina a ambiguidade de validações por prefixo. Assim, uma entrada como https://dominio-permitido.exemplo.attacker.tld, https://dominio-permitido.exemplo@attacker.tld ou https://dominio-permitido.exemplo:443@attacker.tld não será considerada permitida. A alteração é localizada, mantém a assinatura, as mensagens, os identificadores e o fluxo de redirecionamento existentes.\",\"limitacoes_da_correcao\":\"A correção considera que security.redirectAllowlist contém as URLs completas que devem ser destinos válidos. Se a aplicação precisar permitir variações legítimas de caminho, consulta ou porta, elas deverão ser modeladas explicitamente com parsing de URL e validação de protocolo, hostname, porta e caminho, em vez de usar prefixos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 900,
+  "tokens_saida": 714,
+  "latencia_s": 7.605,
+  "custo_usd": 0.001037,
+  "hash_prompt": "e97bd9157a51e1e3c7b8f5e2bfa95805c87ab4ddd64d3d6e01bcb88447659bcf",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

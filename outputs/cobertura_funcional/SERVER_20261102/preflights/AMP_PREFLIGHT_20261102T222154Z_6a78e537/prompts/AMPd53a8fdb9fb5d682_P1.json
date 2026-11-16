@@ -1,0 +1,31 @@
+{
+  "arquivo": "frontend/src/hacking-instructor/helpers/helpers.ts",
+  "arquivo_rag_recuperado": null,
+  "estrategia": "P1_simples",
+  "hash_prompt": "4a328d5338ee13a8e34151a61d742bcf79fd40686c374e4bbebdbfeca8c0877e",
+  "linha_fim_contexto": 109,
+  "linha_ini_contexto": 1,
+  "mensagens": [
+    {
+      "content": "Voce e um engenheiro de seguranca de aplicacoes especializado em TypeScript, Node.js e Express.",
+      "role": "system"
+    },
+    {
+      "content": "Tarefa: identifique e corrija a vulnerabilidade de seguranca presente no codigo abaixo.\n\nArquivo: frontend/src/hacking-instructor/helpers/helpers.ts (trecho das linhas 1 a 109 de 272; o restante do arquivo nao foi mostrado)\n```typescript\n/*\n * Copyright (c) 2014-2026 Bjoern Kimminich & the OWASP Juice Shop contributors.\n * SPDX-License-Identifier: MIT\n */\n\nimport { jwtDecode } from 'jwt-decode'\n\nlet config\nconst playbackDelays = {\n  faster: 0.5,\n  fast: 0.75,\n  normal: 1.0,\n  slow: 1.25,\n  slower: 1.5\n}\n\nexport async function isChallengeSolved (challengeName: string): Promise<boolean> {\n  try {\n    const res = await fetch('/api/Challenges/')\n    const json = await res.json()\n    const challenges: { name: string, solved: boolean }[] = json.data || []\n    return challenges.some(c => c.name === challengeName && c.solved)\n  } catch {\n    return false\n  }\n}\n\nexport async function sleep (timeInMs: number): Promise<void> {\n  await new Promise((resolve) => {\n    setTimeout(resolve, timeInMs)\n  })\n}\n\nexport function waitForInputToHaveValue (inputSelector: string, value: string, options: any = { ignoreCase: true, replacement: [] }) {\n  return async () => {\n    const inputElement: HTMLInputElement = document.querySelector(\n      inputSelector\n    )\n\n    if (options.replacement?.length === 2) {\n      if (!config) {\n        const res = await fetch('/rest/admin/application-configuration')\n        const json = await res.json()\n        config = json.config\n      }\n      const propertyChain = options.replacement[1].split('.')\n      let replacementValue = config\n      for (const property of propertyChain) {\n        replacementValue = replacementValue[property]\n      }\n      value = value.replace(options.replacement[0], replacementValue)\n    }\n\n    while (true) {\n      if (options.ignoreCase && inputElement.value.toLowerCase() === value.toLowerCase()) {\n        break\n      } else if (!options.ignoreCase && inputElement.value === value) {\n        break\n      }\n      await sleep(100)\n    }\n  }\n}\n\nexport function waitForInputToNotHaveValue (inputSelector: string, value: string, options = { ignoreCase: true }) {\n  return async () => {\n    const inputElement: HTMLInputElement = document.querySelector(\n      inputSelector\n    )\n\n    while (true) {\n      if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {\n        break\n      } else if (!options.ignoreCase && inputElement.value !== value) {\n        break\n      }\n      await sleep(100)\n    }\n  }\n}\n\nexport function waitForInputToNotHaveValueAndNotBeEmpty (inputSelector: string, value: string, options = { ignoreCase: true }) {\n  return async () => {\n    const inputElement: HTMLInputElement = document.querySelector(\n      inputSelector\n    )\n\n    while (true) {\n      if (inputElement.value !== '') {\n        if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {\n          break\n        } else if (!options.ignoreCase && inputElement.value !== value) {\n          break\n        }\n      }\n      await sleep(100)\n    }\n  }\n}\n\nexport function waitForInputToNotBeEmpty (inputSelector: string) {\n  return async () => {\n    const inputElement: HTMLInputElement = document.querySelector(\n      inputSelector\n    )\n\n    while (true) {\n      if (inputElement.value && inputElement.value !== '') {\n        break\n```\n\nRestricoes obrigatorias:\n- Altere o minimo necessario para corrigir a vulnerabilidade. Nao refatore, nao reformate e nao renomeie nada.\n- Não altere mensagens de erro, textos visíveis ao usuário, nomes de identificadores nem assinaturas de funções existentes.\n- Nao altere arquivos de teste.\n- Cada \"trecho_original\" deve ser copiado LITERALMENTE do codigo fornecido (mesmos espacos, quebras de linha e pontuacao) e deve aparecer UMA unica vez no arquivo. Inclua linhas vizinhas se precisar para torna-lo unico.\n- Preserve o comportamento funcional existente.\n- Em \"arquivo\", use exatamente o caminho relativo informado acima.\n\nFormato da resposta: um objeto JSON com os campos\nvulnerabilidade_identificada, causa_da_vulnerabilidade, estrategia_de_correcao,\nedicoes (lista de {arquivo, trecho_original, trecho_corrigido}),\njustificativa_tecnica e limitacoes_da_correcao.",
+      "role": "user"
+    }
+  ],
+  "modo_contexto": "janela_contexto",
+  "rag_base_sha256": null,
+  "rag_categoria_recuperada": null,
+  "rag_corpo_sha256": null,
+  "rag_cwe_selecionada": null,
+  "rag_documento_sha256": null,
+  "rag_documento_versao": null,
+  "rag_index_sha256": null,
+  "rag_motivo_recuperacao": null,
+  "roteiro_sha256": null,
+  "roteiro_status": null,
+  "total_linhas_arquivo": 272,
+  "usa_rag": false
+}

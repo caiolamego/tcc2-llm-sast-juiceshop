@@ -1,0 +1,230 @@
+{
+  "F_criterio": true,
+  "F_marcador": true,
+  "F_sem_separacao": true,
+  "duracao_s": 86.71,
+  "duracao_selecao_s": 0.04819627600045351,
+  "etapas": [
+    {
+      "duracao_s": 8.98,
+      "status": "executada",
+      "tier": "T0"
+    },
+    {
+      "duracao_s": 0.47,
+      "status": "executada",
+      "tier": "T2"
+    },
+    {
+      "duracao_s": 4.74,
+      "status": "executada",
+      "tier": "T2_API"
+    },
+    {
+      "duracao_s": 7.42,
+      "status": "executada",
+      "tier": "T3"
+    },
+    {
+      "duracao_s": 65.03,
+      "status": "executada",
+      "tier": "T4"
+    }
+  ],
+  "linha_de_base": "outputs/feature02/validacao/baseline_testes.json",
+  "passou": true,
+  "reexecucoes": 0,
+  "selecao": {
+    "api": [
+      "test/api/file-serving.test.ts"
+    ],
+    "arquivos": [
+      "routes/keyServer.ts"
+    ],
+    "fallback": false,
+    "motivos": [],
+    "unitarios": [
+      "test/server/keyServer.unit.test.ts"
+    ]
+  },
+  "t2_pulado": false,
+  "testes_falhos_d_criterio": [],
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_f_criterio": [],
+  "testes_falhos_f_marcador": [],
+  "testes_falhos_intermitentes": [],
+  "testes_falhos_novos": [],
+  "testes_t2": [
+    "test/server/keyServer.unit.test.ts"
+  ],
+  "tier_falha": null,
+  "tier_falha_criterio": null,
+  "tier_falha_marcador": null,
+  "tier_falha_sem_separacao": null,
+  "tiers": [
+    {
+      "codigo_saida": 0,
+      "comando": [
+        "npx",
+        "tsc",
+        "--noEmit"
+      ],
+      "duracao_s": 8.98,
+      "espera_api_s": 0.0,
+      "motivo": null,
+      "passou": true,
+      "reexecucoes": 0,
+      "repeticao_seletiva": null,
+      "saida": "",
+      "saida_reexecucao": "",
+      "testes_falhos": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [],
+      "testes_falhos_reexecucao": [],
+      "tier": "T0",
+      "timeout_na_primeira_rodada": false
+    },
+    {
+      "codigo_saida": 0,
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/keyServer.unit.test.ts"
+      ],
+      "duracao_s": 0.47,
+      "espera_api_s": 0.0,
+      "motivo": null,
+      "passou": true,
+      "reexecucoes": 0,
+      "repeticao_seletiva": null,
+      "saida": "▶ keyServer\n  ✔ should serve requested file from folder /encryptionkeys (2.995879ms)\n  ✔ should raise error for slashes in filename (0.766066ms)\n✔ keyServer (5.861983ms)\nℹ tests 2\nℹ suites 1\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 390.784992\n",
+      "saida_reexecucao": "",
+      "testes_falhos": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [],
+      "testes_falhos_reexecucao": [],
+      "tier": "T2",
+      "timeout_na_primeira_rodada": false
+    },
+    {
+      "codigo_saida": 0,
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/api/file-serving.test.ts"
+      ],
+      "duracao_s": 4.74,
+      "espera_api_s": 3.721001121448353e-06,
+      "motivo": null,
+      "passou": true,
+      "reexecucoes": 0,
+      "repeticao_seletiva": null,
+      "saida": "▶ Server\n  ✔ GET responds with index.html when visiting application URL (48.070244ms)\n  ✔ GET responds with index.html when visiting application URL with any path (90.751601ms)\n  ✔ GET a restricted file directly from file system path on server via URL-encoded Directory Traversal attack loads index.html instead (29.98295ms)\n  ✔ GET serves a security.txt file (11.631685ms)\n  ✔ GET serves a security.txt file under well-known subfolder (6.747247ms)\n  ✔ GET serves a robots.txt file (5.181296ms)\n  ✔ GET serves a csaf provider-metadata.json (7.514404ms)\n  ✔ GET serves a csaf index.txt (5.878147ms)\n  ✔ GET serves a csaf changes.csv (5.742355ms)\n  ✔ GET serves a csaf juice-shop-sa-20200513-express-jwt.json (8.164337ms)\n✔ Server (1555.27722ms)\n▶ /public/images/padding\n  ✔ GET tracking image for \"Score Board\" page access challenge (6.569483ms)\n  ✔ GET tracking image for \"Administration\" page access challenge (5.605327ms)\n  ✔ GET tracking image for \"Token Sale\" page access challenge (12.431574ms)\n  ✔ GET tracking image for \"Privacy Policy\" page access challenge (5.859396ms)\n✔ /public/images/padding (31.081706ms)\n▶ /encryptionkeys\n  ✔ GET serves a directory listing (45.053224ms)\n  ✔ GET a non-existing file in will return a 404 error (9.368833ms)\n  ✔ GET the Premium Content AES key (4.679839ms)\n  ✔ GET a key file whose name contains a \"/\" fails with a 403 error (6.894858ms)\n✔ /encryptionkeys (66.595611ms)\n▶ Hidden URL\n  ✔ GET the second easter egg by visiting the Base64>ROT13-decrypted URL (23.733874ms)\n  ✔ GET the premium content by visiting the AES decrypted URL (23.191646ms)\n  ✔ GET the missing \"Thank you!\" image for assembling the URL hidden in the Privacy Policy (22.5702ms)\n  ✔ GET Klingon translation file for \"Extra Language\" challenge (23.036261ms)\n  ✔ GET blueprint file for \"Retrieve Blueprint\" challenge (17.610092ms)\n  ✔ GET crazy cat photo for \"Missing Encoding\" challenge (5.579186ms)\n  ✔ GET folder containing access log files for \"Access Log\" challenge (95.416982ms)\n✔ Hidden URL (212.059286ms)\nℹ tests 25\nℹ suites 4\nℹ pass 25\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4661.639811\n",
+      "saida_reexecucao": "",
+      "testes_falhos": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [],
+      "testes_falhos_reexecucao": [],
+      "tier": "T2_API",
+      "timeout_na_primeira_rodada": false
+    },
+    {
+      "codigo_saida": 0,
+      "comando": [
+        "node",
+        "--import",
+        "./test/server/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/server/**/*.unit.test.ts"
+      ],
+      "duracao_s": 7.42,
+      "espera_api_s": 0.0,
+      "motivo": null,
+      "passou": true,
+      "reexecucoes": 0,
+      "repeticao_seletiva": null,
+      "saida": "solved when the 56px.png transpixel is requested (0.426211ms)\n    ✔ \"extraLanguageChallenge\" is solved when the Klingon translation file is requested (0.447243ms)\n    ✔ \"retrieveBlueprintChallenge\" is solved when the blueprint file is requested (0.530732ms)\n    ✔ \"missingEncodingChallenge\" is solved when the crazy cat photo is requested (0.634513ms)\n    ✔ \"accessLogDisclosureChallenge\" is solved when any server access log file is requested (0.58667ms)\n  ✔ accessControlChallenges (5.347186ms)\n  ▶ \"errorHandlingChallenge\"\n    ✔ is solved when an error occurs on a response with OK 200 status code (0.646377ms)\n    ▶ is solved when an error occurs on a response with error\n      ✔ 402 status code (0.429436ms)\n      ✔ 403 status code (0.376602ms)\n      ✔ 404 status code (0.888697ms)\n      ✔ 500 status code (0.38279ms)\n    ✔ is solved when an error occurs on a response with error (2.6181ms)\n    ✔ is not solved when no error occurs on a response with OK 200 status code (0.372854ms)\n    ▶ is not solved when no error occurs on a response with error\n      ✔ 401 status code (0.400227ms)\n      ✔ 402 status code (0.388258ms)\n      ✔ 404 status code (0.301636ms)\n      ✔ 500 status code (0.219587ms)\n    ✔ is not solved when no error occurs on a response with error (1.5894ms)\n    ✔ should pass occurred error on to next route (0.44299ms)\n  ✔ \"errorHandlingChallenge\" (6.028513ms)\n  ▶ databaseRelatedChallenges\n    ▶ \"changeProductChallenge\"\n      ✔ is solved when the link in the O-Saft product goes to https://owasp.slack.com (1.076121ms)\n      ✔ is not solved when the link in the O-Saft product is changed to an arbitrary URL (0.350216ms)\n      ✔ is not solved when the link in the O-Saft product remained unchanged (0.334414ms)\n    ✔ \"changeProductChallenge\" (2.007623ms)\n  ✔ databaseRelatedChallenges (2.177437ms)\n  ▶ jwtChallenges\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has email jwtn3d@juice-sh.op in the payload (3.940064ms)\n    ✔ \"jwtUnsignedChallenge\" is solved when forged unsigned token has string \"jwtn3d@\" in the payload (1.097995ms)\n    ✔ \"jwtUnsignedChallenge\" is not solved via regularly signed token even with email jwtn3d@juice-sh.op in the payload (5.422782ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has email rsa_lord@juice-sh.op in the payload (1.991231ms)\n    ✔ \"jwtForgedChallenge\" is solved when forged token HMAC-signed with public RSA-key has string \"rsa_lord@\" in the payload (1.379504ms)\n    ✔ \"jwtForgedChallenge\" is not solved when token regularly signed with private RSA-key has email rsa_lord@juice-sh.op in the payload (2.383691ms)\n  ✔ jwtChallenges (16.685665ms)\n  ▶ diceCoefficient\n    ✔ should return 1 for identical strings (0.523494ms)\n    ✔ should return 1 for identical strings even if they are short (0.192218ms)\n    ✔ should return 0 for different strings if at least one is less than 2 characters (0.27716ms)\n    ✔ should return 0 for completely different strings (0.216054ms)\n    ✔ should return correct coefficient for partially overlapping strings (0.24895ms)\n  ✔ diceCoefficient (1.753934ms)\n  ▶ checkSystemPromptSimilarity\n    ✔ should return true if similarity is above threshold (0.452915ms)\n    ✔ should return false if similarity is below threshold (0.27818ms)\n  ✔ checkSystemPromptSimilarity (0.920852ms)\n✔ verify (42.637773ms)\n▶ webhook\n  ▶ notify\n    ✔ ignores errors where no webhook URL is provided via environment variable (3.070547ms)\n    ✔ fails when supplied webhook is not a valid URL (47.606753ms)\n    ✔ submits POST with payload to existing URL (87.276064ms)\n  ✔ notify (140.516148ms)\n✔ webhook (141.484707ms)\n▶ xml\n  ✔ should parse a simple XML string (1335.837792ms)\n  ✔ should expand internal entities (9.188013ms)\n  ✔ should throw error on malformed XML (19.945734ms)\n  ✔ should timeout on entity expansion bomb (6.480013ms)\n✔ xml (1375.097923ms)\nℹ tests 335\nℹ suites 109\nℹ pass 333\nℹ fail 0\nℹ cancelled 0\nℹ skipped 2\nℹ todo 0\nℹ duration_ms 7322.616944\n",
+      "saida_reexecucao": "",
+      "testes_falhos": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [],
+      "testes_falhos_reexecucao": [],
+      "tier": "T3",
+      "timeout_na_primeira_rodada": false
+    },
+    {
+      "codigo_saida": 1,
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "test/api/**/*.test.ts"
+      ],
+      "duracao_s": 65.03,
+      "espera_api_s": 3.098999513895251e-06,
+      "motivo": "so_falhas_da_linha_de_base",
+      "passou": true,
+      "reexecucoes": 0,
+      "repeticao_seletiva": null,
+      "saida": "✔ DELETE existing user is forbidden via API even when authenticated (7.202203ms)\n✔ /api/Users/:id (86.24109ms)\n▶ /rest/user/whoami\n  ✔ GET own user id and email on who-am-i request (122.069183ms)\n  ✔ GET who-am-i request returns nothing on missing auth token (24.13857ms)\n  ✔ GET who-am-i request returns nothing on invalid auth token (21.724985ms)\n  ✔ GET who-am-i request returns nothing on broken auth token (20.878147ms)\n  ✔ GET who-am-i request returns nothing on expired auth token (18.613881ms)\n  ✔ GET who-am-i with fields parameter returns only requested fields (141.394957ms)\n  ✔ GET who-am-i with fields parameter does not return password by default (67.001856ms)\n  ✔ GET who-am-i with fields parameter can be tricked into returning password (67.878156ms)\n✔ /rest/user/whoami (485.072677ms)\n▶ /snippets/fixes/:key\n  ✔ GET fixes for unknown challenge key throws error (131.478415ms)\n  ✔ GET fixes for existing challenge key (53.653207ms)\n✔ /snippets/fixes/:key (4492.534929ms)\n▶ /snippets/fixes\n  ✔ POST fix for non-existing challenge key throws error (133.179642ms)\n  ✔ POST wrong fix for existing challenge key gives negative verdict and explanation (69.307202ms)\n  ✔ POST non-existing fix for existing challenge key gives negative verdict and no explanation (75.405695ms)\n  ✔ POST correct fix for existing challenge key gives positive verdict and explanation (184.447556ms)\n✔ /snippets/fixes (463.797589ms)\n▶ /snippets/:challenge\n  ✔ GET code snippet retrieval for unknown challenge key throws error (130.458783ms)\n  ✔ GET code snippet retrieval for challenge without code snippet throws error (51.527373ms)\n  ✔ GET code snippet retrieval for challenge with code snippet (118.586648ms)\n✔ /snippets/:challenge (4238.474505ms)\n▶ snippets/verdict\n  ✔ should check for the incorrect lines (147.660762ms)\n  ✔ should check for the correct lines (168.208319ms)\n  ✔ POST with unknown challenge key returns 404 (97.819664ms)\n  ✔ POST without selectedLines returns false verdict (51.667112ms)\n  ✔ POST with empty selectedLines array returns false verdict (55.112975ms)\n✔ snippets/verdict (522.400187ms)\n▶ snippets/verdict (hint progression for loginAdminChallenge)\n  ✔ returns no hint on the first wrong attempt (38.406332ms)\n  ✔ returns the first hint text on the second wrong attempt (38.829879ms)\n  ✔ returns a line-number hint after all text hints are exhausted (108.669528ms)\n✔ snippets/verdict (hint progression for loginAdminChallenge) (186.749167ms)\n▶ /api/Wallets\n  ✔ GET wallet is forbidden via public API (46.027139ms)\n  ✔ GET wallet retrieves wallet amount of requesting user (95.341962ms)\n  ✔ PUT wallet is forbidden via public API (36.359037ms)\n  ✔ PUT charge wallet from credit card of requesting user (160.344799ms)\n  ✔ PUT charge wallet from foreign credit card is forbidden (64.201044ms)\n  ✔ PUT charge wallet without credit card is forbidden (29.604875ms)\n  ✔ GET wallet balance for user without a wallet returns 404 (204.303468ms)\n✔ /api/Wallets (5327.532362ms)\n﹣ /rest/web3/walletExploitAddress (1.734408ms) # ALCHEMY_API_KEY not set\nℹ tests 555\nℹ suites 114\nℹ pass 548\nℹ fail 1\nℹ cancelled 0\nℹ skipped 6\nℹ todo 0\nℹ duration_ms 64918.566035\n\n✖ failing tests:\n\ntest at test/api/internet-resources.test.ts:2:4679\n✖ StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available (218.165682ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  403 !== 200\n  \n      at TestContext.<anonymous> (test/api/internet-resources.test.ts:78:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 403,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "testes_falhos": [
+        "test/api/internet-resources.test.ts :: Required Internet resource > StackOverflow question \"Less verbose access logs using expressjs/morgan\" with log snippet and PasteBin paste URL spoiler available"
+      ],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_novos": [],
+      "testes_falhos_reexecucao": [],
+      "tier": "T4",
+      "timeout_na_primeira_rodada": false
+    }
+  ]
+}

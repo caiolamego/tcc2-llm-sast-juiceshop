@@ -1,0 +1,14 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path Traversal (Directory Traversal)\",\"causa_da_vulnerabilidade\":\"O código permite que o parâmetro 'file' seja utilizado diretamente para construir o caminho do arquivo a ser servido, sem validação adequada para impedir que o usuário acesse arquivos fora do diretório 'ftp/'. A única restrição é que o nome do arquivo não contenha barras ('/'), mas isso não impede o uso de sequências como '..' que podem navegar para diretórios superiores.\",\"estrategia_de_correcao\":\"Adicionar uma validação para garantir que o caminho resolvido do arquivo esteja dentro do diretório permitido ('ftp/'). Isso pode ser feito resolvendo o caminho absoluto do arquivo solicitado e verificando se ele começa com o caminho absoluto do diretório base 'ftp/'. Se não começar, rejeitar a requisição com erro 403.\",\"edicoes\":[{\"arquivo\":\"routes/fileServer.ts\",\"trecho_original\":\"      res.sendFile(path.resolve('ftp/', file))\",\"trecho_corrigido\":\"      const basePath = path.resolve('ftp/')\\n      const requestedPath = path.resolve(basePath, file)\\n      if (!requestedPath.startsWith(basePath + path.sep)) {\\n        res.status(403)\\n        next(new Error('Only .md and .pdf files are allowed!'))\\n        return\\n      }\\n      res.sendFile(requestedPath)\"}],\"justificativa_tecnica\":\"Ao verificar se o caminho absoluto do arquivo solicitado começa com o caminho absoluto do diretório base, garantimos que o arquivo está dentro do diretório permitido e não em diretórios superiores ou arbitrários. Isso impede ataques de path traversal que poderiam acessar arquivos sensíveis do sistema.\",\"limitacoes_da_correcao\":\"A correção assume que o sistema de arquivos utiliza separadores padrão e que o método startsWith é suficiente para validar o caminho. Em sistemas com links simbólicos ou configurações especiais, pode ser necessário um tratamento adicional para evitar bypass. Além disso, a validação atual ainda permite arquivos com nomes contendo caracteres especiais, mas isso não compromete a segurança do path traversal.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1198,
+  "tokens_saida": 433,
+  "latencia_s": 4.559,
+  "custo_usd": 0.001172,
+  "hash_prompt": "6216171ebebb9a117364476b7cc573362a0525324b67640c80e82ac36f5350b3",
+  "do_cache": false
+}

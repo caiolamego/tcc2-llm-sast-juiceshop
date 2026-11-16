@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Local File Read/Server-Side Template Injection via o parâmetro controlado pelo usuário `layout`, passado indiretamente a `res.render` após uma validação baseada apenas em substrings proibidas.\",\"causa_da_vulnerabilidade\":\"`path.resolve(req.body.layout)` não restringe o caminho a um diretório confiável nem valida que ele corresponda a um template permitido. Além disso, `res.render('dataErasureResult', ...)` recebe `req.body` com a propriedade `layout`, permitindo que o mecanismo de renderização interprete valores controlados pelo usuário como opções de renderização, incluindo a possibilidade de alterar o caminho de busca do template.\",\"estrategia_de_correcao\":\"Remover a propriedade controlada pelo usuário antes de passá-la aos dados do template e eliminar o uso de `layout` como mecanismo de seleção de arquivo. O template permanece fixo como `dataErasureResult`, preservando o comportamento funcional esperado sem permitir que o cliente influencie o caminho ou as opções de renderização.\",\"edicoes\":[{\"arquivo\":\"routes/dataErasure.ts\",\"trecho_original\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          res.render('dataErasureResult', {\\n            ...req.body,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\\n      }\",\"trecho_corrigido\":\"      if (req.body.layout) {\\n        const filePath: string = path.resolve(req.body.layout).toLowerCase()\\n        const isForbiddenFile: boolean = (filePath.includes('ftp') || filePath.includes('ctf.key') || filePath.includes('encryptionkeys'))\\n        if (!isForbiddenFile) {\\n          const { layout, ...safeBody } = req.body\\n          res.render('dataErasureResult', {\\n            ...safeBody,\\n            ...themeVars\\n          }, (error, html) => {\\n            if (!html || error) {\\n              next(new Error(error.message))\\n            } else {\\n              const sendlfrResponse: string = html.slice(0, 100) + '......'\\n              res.send(sendlfrResponse)\\n              challengeUtils.solveIf(challenges.lfrChallenge, () => { return true })\\n            }\\n          })\\n        } else {\\n          next(new Error('File access not allowed'))\\n        }\\n      } else {\\n        res.render('dataErasureResult', {\\n          ...req.body,\\n          ...themeVars\\n        })\\n      }\"}],\"justificativa_tecnica\":\"Em Express, as propriedades fornecidas no objeto de dados de `res.render` podem ser interpretadas pelo mecanismo de views como opções de renderização. Ao remover `layout` antes da chamada, o cliente deixa de controlar essa opção, enquanto o nome do template continua fixo em `dataErasureResult`. A alteração é mínima e mantém o fluxo existente, inclusive a resposta truncada e a resolução do desafio.\",\"limitacoes_da_correcao\":\"A validação e o cálculo de `filePath` permanecem no código para respeitar a alteração mínima, embora não sejam mais usados para selecionar o template. A correção cobre o vetor decorrente de `layout`; outros templates ou rotas que espalhem diretamente objetos de requisição em `res.render` devem ser avaliados separadamente. O import de `path` permanece utilizado apenas nesse código legado.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1547,
+  "tokens_saida": 912,
+  "latencia_s": 9.856,
+  "custo_usd": 0.001126,
+  "hash_prompt": "1c707e42d5773b3dd4de8f55a5bd0c8598edc8a752047ffe3d5f64b741fb394c",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 1544,
+  "tokens_escrita_cache": 0
+}

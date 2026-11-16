@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Zip Slip (travessia de diretórios) na extração de arquivos ZIP, permitindo que entradas controladas pelo atacante sejam gravadas fora de uploads/complaints.\",\"causa_da_vulnerabilidade\":\"O caminho da entrada é concatenado diretamente em 'uploads/complaints/' e usado no createWriteStream. A validação existente compara apenas absolutePath.includes(path.resolve('.')), que não garante que o caminho esteja dentro do diretório de destino; além disso, a gravação usa o caminho não validado original. Entradas como '../arquivo' podem escapar do diretório pretendido.\",\"estrategia_de_correcao\":\"Resolver o diretório de destino uma única vez e aceitar somente entradas cujo caminho absoluto esteja dentro dele, usando uma comparação com separador de diretório. Ignorar entradas fora do diretório permitido antes de criar o arquivo.\",\"edicoes\":[{\"arquivo\":\"routes/fileUpload.ts\",\"trecho_original\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve('uploads/complaints/' + fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath.includes(path.resolve('.'))) {\\n      await pipeline(entry.stream(), fs.createWriteStream('uploads/complaints/' + fileName))\\n    }\\n  }\\n}\",\"trecho_corrigido\":\"async function extractZipBuffer (buffer: Buffer) {\\n  const directory = await unzipper.Open.buffer(buffer)\\n  const uploadDirectory = path.resolve('uploads/complaints')\\n  for (const entry of directory.files) {\\n    const fileName = entry.path\\n    const absolutePath = path.resolve(uploadDirectory, fileName)\\n    challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })\\n    if (absolutePath === uploadDirectory || absolutePath.startsWith(uploadDirectory + path.sep)) {\\n      await pipeline(entry.stream(), fs.createWriteStream(absolutePath))\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"path.resolve normaliza segmentos '..'. A condição exige que o caminho seja exatamente o diretório de upload ou comece pelo diretório seguido de path.sep, impedindo falsos positivos como uploads/complaints-evil e bloqueando caminhos que escapem por travessia. O createWriteStream passa a usar o caminho absoluto já validado, eliminando a divergência entre o caminho verificado e o caminho efetivamente gravado. O comportamento funcional para arquivos legítimos permanece preservado.\",\"limitacoes_da_correcao\":\"A correção impede a travessia de diretórios, mas não impõe limites de tamanho, quantidade de entradas, compressão ou espaço em disco do ZIP. Também não impede outros riscos operacionais de arquivos legítimos, como sobrescrita dentro de uploads/complaints ou links simbólicos pré-existentes no sistema de arquivos.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2039,
+  "tokens_saida": 663,
+  "latencia_s": 8.501,
+  "custo_usd": 0.001305,
+  "hash_prompt": "74989adf75a0a93a7a948a528c8d2ec944b97d5dcee4e6fe7e57ef40a2ff4c76",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2036
+}

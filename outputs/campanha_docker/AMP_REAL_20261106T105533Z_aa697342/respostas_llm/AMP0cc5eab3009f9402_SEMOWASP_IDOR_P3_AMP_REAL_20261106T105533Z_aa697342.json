@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"CWE-639: bypass de autorização por referência direta a objeto. A atualização de uma avaliação é selecionada apenas pelo identificador recebido na requisição, sem restringir a escrita à avaliação autorizada para o usuário autenticado.\",\n  \"causa_da_vulnerabilidade\": \"A rota autentica o usuário, mas isso não estabelece que ele pode alterar qualquer avaliação. A escrita de likedBy usa somente { _id: id }, e o código não verifica propriedade nem outra regra de autorização por objeto. O trecho não informa qual usuário é proprietário da avaliação nem define uma regra de acesso que permita restringir a escrita sem presumir comportamento.\",\n  \"estrategia_de_correcao\": \"Não é possível aplicar uma correção de autorização por proprietário com segurança usando apenas o código fornecido: o modelo Review e a regra de acesso a avaliações não estão especificados. Não inventar um campo de proprietário ou bloquear a funcionalidade inteira. A escrita deve ser condicionada a um critério de autorização por objeto confiável no servidor, definido conforme o modelo e a regra de negócio do repositório.\",\n  \"edicoes\": [],\n  \"justificativa_tecnica\": \"A autenticação existente identifica o usuário, mas não demonstra autorização para modificar a avaliação indicada por id. Uma correção efetiva deve incluir a identidade autenticada e a regra de acesso ao objeto no filtro da escrita, ou verificar a autorização do objeto antes de alterá-lo. Como não há no trecho um campo de proprietário, papel ou regra que permita determinar esse critério, qualquer alteração concreta exigiria inventar semântica e poderia quebrar o comportamento legítimo.\",\n  \"limitacoes_da_correcao\": \"Nenhuma edição foi proposta porque o contexto fornecido não permite identificar o proprietário ou a política de autorização das avaliações. É necessário consultar o modelo Review e a regra de negócio do repositório para implementar e testar a restrição, incluindo tentativas de usuários distintos sobre a mesma avaliação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1873,
+  "tokens_saida": 416,
+  "latencia_s": 6.198,
+  "custo_usd": 0.000442,
+  "hash_prompt": "5f6b0ff8bde8d9e0816872490a0eec36ffdd84d8327b5178c3d4f2662b38d5df",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1870
+}

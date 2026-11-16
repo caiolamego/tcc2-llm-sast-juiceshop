@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"XXE (CWE-611): o parser XML permite carregar entidades externas e substituir entidades.\",\n  \"causa_da_vulnerabilidade\": \"A função habilita XML_PARSE_NOENT e XML_PARSE_DTDLOAD, permitindo a substituição de entidades e o carregamento de DTDs externas. Além disso, registra provedores de entrada do sistema de arquivos, possibilitando que referências externas acessem arquivos locais.\",\n  \"estrategia_de_correcao\": \"Desabilitar a substituição de entidades e o carregamento de DTDs, e deixar de registrar provedores de entrada do sistema de arquivos. Rejeitar explicitamente documentos que contenham DOCTYPE, pois a configuração segura do parser não deve depender de suporte implícito a opções de segurança.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"lib/xml.ts\",\n      \"trecho_original\": \"      // Grants the WASM sandbox host filesystem access so external entities\\n      // like file:///etc/passwd resolve - required for the XXE challenges.\\n      const { xmlRegisterFsInputProviders } = await dynamicImport('libxml2-wasm/lib/nodejs.mjs')\\n      xmlRegisterFsInputProviders()\\n\",\n      \"trecho_corrigido\": \"\"\n    },\n    {\n      \"arquivo\": \"lib/xml.ts\",\n      \"trecho_original\": \"// Parses XML with entity substitution and external entity loading enabled\\n// (intentionally vulnerable to XXE for the related challenges). The parse runs\\n// in a vm context with a timeout so entity-expansion bombs surface as a\\n// \\\"Script execution timed out\\\" error instead of hanging the process.\\nexport async function parseXmlString (data: string, timeoutMs = 2000): Promise<string> {\\n  const libxml2 = await loadLibxml2()\\n  const option = libxml2.ParseOption.XML_PARSE_NOENT | libxml2.ParseOption.XML_PARSE_DTDLOAD | libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\\n\",\n      \"trecho_corrigido\": \"// Parses XML with external entity loading and substitution disabled. The parse runs\\n// in a vm context with a timeout so entity-expansion bombs surface as a\\n// \\\"Script execution timed out\\\" error instead of hanging the process.\\nexport async function parseXmlString (data: string, timeoutMs = 2000): Promise<string> {\\n  if (/<!DOCTYPE\\\\b/i.test(data)) {\\n    throw new Error('DOCTYPE is not allowed')\\n  }\\n  const libxml2 = await loadLibxml2()\\n  const option = libxml2.ParseOption.XML_PARSE_NOBLANKS | libxml2.ParseOption.XML_PARSE_NOCDATA\\n\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem XML_PARSE_NOENT, o parser não substitui entidades; sem XML_PARSE_DTDLOAD, não carrega DTDs externas. A rejeição de DOCTYPE também impede declarações internas de entidades e torna explícita a política de não aceitar DTDs. Remover o registro dos provedores de entrada do sistema de arquivos evita habilitar acesso a arquivos locais para resolução de entidades. As opções de preservação de espaços e CDATA permanecem inalteradas, assim como a assinatura e o fluxo de serialização da função.\",\n  \"limitacoes_da_correcao\": \"A rejeição de DOCTYPE pode afetar documentos legítimos que dependam de DTDs ou entidades declaradas. A expressão regular é uma barreira adicional, não substitui a configuração segura do parser; a versão instalada de libxml2-wasm deve ser verificada para confirmar que as opções mantidas não habilitam resolução externa por padrão. O timeout em node:vm não é uma fronteira de segurança para código ou trabalho executado fora do controle do mecanismo de timeout.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2412,
+  "tokens_saida": 816,
+  "latencia_s": 7.611,
+  "custo_usd": 0.000709,
+  "hash_prompt": "ab0f5ad04ffde603c235e7ad213c78d88a1f78044d00f62ba5c2163943f38880",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2409
+}

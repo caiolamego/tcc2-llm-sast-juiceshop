@@ -1,0 +1,584 @@
+{
+  "passou": true,
+  "tier_falha": null,
+  "duracao_s": 55.91581440100708,
+  "F_sem_separacao": false,
+  "F_marcador": false,
+  "F_criterio": true,
+  "tier_falha_sem_separacao": "T2_API",
+  "tier_falha_marcador": "T2_API",
+  "tier_falha_criterio": null,
+  "testes_falhos_d_marcador": [],
+  "testes_falhos_d_criterio": [
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout"
+  ],
+  "testes_falhos_f_marcador": [
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout"
+  ],
+  "testes_falhos_f_criterio": [],
+  "tiers": [
+    {
+      "tier": "T0",
+      "comando": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "passou": true,
+      "duracao_s": 10.33,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "",
+      "saida_reexecucao": "",
+      "espera_api_s": 0.0,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_l3r296mf/basket/primeira.xml",
+        "test/api/basket.test.ts"
+      ],
+      "passou": false,
+      "duracao_s": 12.530000000000001,
+      "motivo": "falha",
+      "codigo_saida": 1,
+      "testes_falhos": [
+        "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+        "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+        "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout"
+      ],
+      "testes_falhos_novos": [
+        "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+        "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+        "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout"
+      ],
+      "reexecucoes": 1,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "al cost is possible (48.261542ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.<anonymous> (test/api/basket.test.ts:151:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/basket.test.ts:2:7379\n✖ should return 500 if QuantityModel.findOne fails during checkout (65.984334ms)\n  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Quantity error/. Input:\n  \n  '<html>\\n' +\n    '  <head>\\n' +\n    \"    <meta charset='utf-8'> \\n\" +\n    '    <title>Error: Basket with id=4 does not exist.</title>\\n' +\n    '    <style>* {\\n' +\n    '  margin: 0;\\n' +\n    '  padding: 0;\\n' +\n    '  outline: 0;\\n' +\n    '}\\n' +\n    '\\n' +\n    'body {\\n' +\n    '  padding: 80px 100px;\\n' +\n    '  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n' +\n    '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +\n    '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +\n    '  background-repeat: no-repeat;\\n' +\n    '  color: #555;\\n' +\n    '  -webkit-font-smoothing: antialiased;\\n' +\n    '}\\n' +\n    'h1, h2 {\\n' +\n    '  font-size: 22px;\\n' +\n    '  color: #343434;\\n' +\n    '}\\n' +\n    'h1 em, h2 em {\\n' +\n    '  padding: 0 5px;\\n' +\n    '  font-weight: normal;\\n' +\n    '}\\n' +\n    'h1 {\\n' +\n    '  font-size: 60px;\\n' +\n    '}\\n' +\n    'h2 {\\n' +\n    '  margin-top: 10px;\\n' +\n    '}\\n' +\n    'ul li {\\n' +\n    '  list-style: none;\\n' +\n    '}\\n' +\n    '#stacktrace {\\n' +\n    '  margin-left: 60px;\\n' +\n    '}\\n' +\n    '</style>\\n' +\n    '  </head>\\n' +\n    '  <body>\\n' +\n    '    <div id=\"wrapper\">\\n' +\n    '      <h1>OWASP Juice Shop (Express ^4.22.1)</h1>\\n' +\n    '      <h2><em>500</em> Error: Basket with id=4 does not exist.</h2>\\n' +\n    '      <ul id=\"stacktrace\"><li> &nbsp; &nbsp;at &lt;anonymous&gt; (routes/order.ts:183:16)</li></ul>\\n' +\n    '    </div>\\n' +\n    '  </body>\\n' +\n    '</html>\\n'\n  \n      at TestContext.<anonymous> (test/api/basket.test.ts:177:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: `<html>\\n  <head>\\n    <meta charset='utf-8'> \\n    <title>Error: Basket with id=4 does not exist.</title>\\n    <style>* {\\n  margin: 0;\\n  padding: 0;\\n  outline: 0;\\n}\\n\\nbody {\\n  padding: 80px 100px;\\n  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n  background-repeat: no-repeat;\\n  color: #555;\\n  -webkit-font-smoothing: antialiased;\\n}\\nh1, h2 {\\n  font-size: 22px;\\n  color: #343434;\\n}\\nh1 em, h2 em {\\n  padding: 0 5px;\\n  font-weight: normal;\\n}\\nh1 {\\n  font-size: 60px;\\n}\\nh2 {\\n  margin-top: 10px;\\n}\\nul li {\\n  list-style: none;\\n}\\n#stacktrace {\\n  margin-left: 60px;\\n}\\n</style>\\n  </head>\\n  <body>\\n    <div id=\"wrapper\">\\n      <h1>OWASP Juice Shop (Express ^4.22.1)</h1>\\n      <h2><em>500</em> Error: Basket with id=4 does not exist.</h2>\\n      <ul id=\"stacktrace\"><li> &nbsp; &nbsp;at &lt;anonymous&gt; (routes/order.ts:183:16)</li></ul>\\n    </div>\\n  </body>\\n</html>\\n`,\n    expected: /Quantity error/,\n    operator: 'match',\n    diff: 'simple'\n  }\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 7.000002369750291e-06,
+      "repeticao_seletiva": null
+    },
+    {
+      "tier": "T2_API",
+      "comando": [
+        "node",
+        "--import",
+        "./test/api/helpers/test-env.mjs",
+        "--import",
+        "tsx",
+        "--import",
+        "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+        "--test",
+        "--test-force-exit",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=/tmp/tcc_cobertura_l3r296mf/campaign_discount/primeira.xml",
+        "test/api/tcc_coverage_campaign_discount.test.ts"
+      ],
+      "passou": true,
+      "duracao_s": 6.09,
+      "motivo": null,
+      "codigo_saida": 0,
+      "testes_falhos": [],
+      "testes_falhos_novos": [],
+      "reexecucoes": 0,
+      "timeout_na_primeira_rodada": false,
+      "testes_falhos_intermitentes": [],
+      "testes_falhos_reexecucao": [],
+      "testes_falhos_d_marcador": [],
+      "testes_falhos_d_criterio": [],
+      "testes_falhos_f_marcador": [],
+      "testes_falhos_f_criterio": [],
+      "saida": "▶ TCC campaign discount contracts\n  ✔ applies the campaign discount to the persisted order total (264.152291ms)\n  ✔ does not discount a campaign with a mismatched date (75.262501ms)\n  ✔ does not discount an unknown campaign (150.999166ms)\n  ✔ preserves the normal total without campaign data (100.293875ms)\n✔ TCC campaign discount contracts (1541.342042ms)\nℹ tests 4\nℹ suites 1\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5713.860336\n",
+      "saida_reexecucao": "",
+      "espera_api_s": 22.22517001000233,
+      "repeticao_seletiva": null
+    }
+  ],
+  "t2_pulado": false,
+  "testes_t2": [],
+  "testes_falhos_novos": [
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+    "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout"
+  ],
+  "reexecucoes": 0,
+  "testes_falhos_intermitentes": [],
+  "linha_de_base": null,
+  "selecao": {
+    "arquivos": [
+      "routes/order.ts"
+    ],
+    "grupos": [
+      "basket",
+      "campaign_discount"
+    ],
+    "dominios": [
+      "api"
+    ],
+    "motivos": [],
+    "suficiente": true
+  },
+  "etapas": [
+    {
+      "tier": "T0",
+      "status": "executada",
+      "duracao_s": 10.33
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "basket",
+      "status": "executada",
+      "duracao_s": 12.530000000000001
+    },
+    {
+      "tier": "T2_API",
+      "grupo": "campaign_discount",
+      "status": "executada",
+      "duracao_s": 6.09
+    }
+  ],
+  "duracao_selecao_s": 0.0,
+  "escopo": "relacionado_v2",
+  "cobertura_insuficiente": false,
+  "cobertura_detalhada": {
+    "dominios": [
+      "api"
+    ],
+    "grupos_selecionados": [
+      "basket",
+      "campaign_discount"
+    ],
+    "compilacoes": [
+      {
+        "dominio": "servidor",
+        "tier": "T0",
+        "passou": true,
+        "motivo": null,
+        "duracao_s": 10.33
+      }
+    ],
+    "grupos": [
+      {
+        "grupo": "basket",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets > GET all baskets is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets > POST new basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > DELETE existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > GET existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/api/Baskets/:id > PUT update existing basket is not part of API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET basket should accept forged JWTs",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET empty basket when requesting non-existing basket id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket by id is not allowed via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket of another user",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id > GET existing basket with contained products by id",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+            "estado": "falhou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+            "estado": "passou"
+          },
+          {
+            "id": "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error",
+            "arquivo": "test/api/basket.test.ts",
+            "nome": "/rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout"
+        ],
+        "falhos_novos": [
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout"
+        ],
+        "falhos_novos_observados": [
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout"
+        ],
+        "intermitentes": [],
+        "reexecucoes": 1,
+        "descobertos": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "esperados": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "ignorados": [],
+        "executados": [
+          "test/api/basket.test.ts :: /api/Baskets > GET all baskets is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets > POST new basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > DELETE existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > GET existing basket is not part of API",
+          "test/api/basket.test.ts :: /api/Baskets/:id > PUT update existing basket is not part of API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET basket should accept forged JWTs",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET empty basket when requesting non-existing basket id",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket by id is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket of another user",
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket is not allowed via public API",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with 99% discount is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a basket with a negative total cost is possible",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for a non-existing basket fails",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > POST placing an order for an existing basket returns orderId",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if QuantityModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if WalletModel.findOne fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/checkout > error cases > should return 500 if ordersCollection.insert fails during checkout",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply invalid coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply outdated coupon is not accepted",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to existing basket",
+          "test/api/basket.test.ts :: /rest/basket/:id/coupon/:coupon > PUT apply valid coupon to non-existing basket throws error"
+        ],
+        "obrigatorios_aprovados": [
+          "test/api/basket.test.ts :: /rest/basket/:id > GET existing basket with contained products by id"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": false,
+        "duracao_s": 12.530000000000001,
+        "espera_api_s": 7.000002369750291e-06,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_l3r296mf/basket/primeira.xml",
+            "test/api/basket.test.ts"
+          ],
+          "passou": false,
+          "duracao_s": 12.530000000000001,
+          "motivo": "falha",
+          "codigo_saida": 1,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "al cost is possible (48.261542ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.<anonymous> (test/api/basket.test.ts:151:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at test/api/basket.test.ts:2:7379\n✖ should return 500 if QuantityModel.findOne fails during checkout (65.984334ms)\n  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Quantity error/. Input:\n  \n  '<html>\\n' +\n    '  <head>\\n' +\n    \"    <meta charset='utf-8'> \\n\" +\n    '    <title>Error: Basket with id=4 does not exist.</title>\\n' +\n    '    <style>* {\\n' +\n    '  margin: 0;\\n' +\n    '  padding: 0;\\n' +\n    '  outline: 0;\\n' +\n    '}\\n' +\n    '\\n' +\n    'body {\\n' +\n    '  padding: 80px 100px;\\n' +\n    '  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n' +\n    '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +\n    '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +\n    '  background-repeat: no-repeat;\\n' +\n    '  color: #555;\\n' +\n    '  -webkit-font-smoothing: antialiased;\\n' +\n    '}\\n' +\n    'h1, h2 {\\n' +\n    '  font-size: 22px;\\n' +\n    '  color: #343434;\\n' +\n    '}\\n' +\n    'h1 em, h2 em {\\n' +\n    '  padding: 0 5px;\\n' +\n    '  font-weight: normal;\\n' +\n    '}\\n' +\n    'h1 {\\n' +\n    '  font-size: 60px;\\n' +\n    '}\\n' +\n    'h2 {\\n' +\n    '  margin-top: 10px;\\n' +\n    '}\\n' +\n    'ul li {\\n' +\n    '  list-style: none;\\n' +\n    '}\\n' +\n    '#stacktrace {\\n' +\n    '  margin-left: 60px;\\n' +\n    '}\\n' +\n    '</style>\\n' +\n    '  </head>\\n' +\n    '  <body>\\n' +\n    '    <div id=\"wrapper\">\\n' +\n    '      <h1>OWASP Juice Shop (Express ^4.22.1)</h1>\\n' +\n    '      <h2><em>500</em> Error: Basket with id=4 does not exist.</h2>\\n' +\n    '      <ul id=\"stacktrace\"><li> &nbsp; &nbsp;at &lt;anonymous&gt; (routes/order.ts:183:16)</li></ul>\\n' +\n    '    </div>\\n' +\n    '  </body>\\n' +\n    '</html>\\n'\n  \n      at TestContext.<anonymous> (test/api/basket.test.ts:177:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: `<html>\\n  <head>\\n    <meta charset='utf-8'> \\n    <title>Error: Basket with id=4 does not exist.</title>\\n    <style>* {\\n  margin: 0;\\n  padding: 0;\\n  outline: 0;\\n}\\n\\nbody {\\n  padding: 80px 100px;\\n  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n  background-repeat: no-repeat;\\n  color: #555;\\n  -webkit-font-smoothing: antialiased;\\n}\\nh1, h2 {\\n  font-size: 22px;\\n  color: #343434;\\n}\\nh1 em, h2 em {\\n  padding: 0 5px;\\n  font-weight: normal;\\n}\\nh1 {\\n  font-size: 60px;\\n}\\nh2 {\\n  margin-top: 10px;\\n}\\nul li {\\n  list-style: none;\\n}\\n#stacktrace {\\n  margin-left: 60px;\\n}\\n</style>\\n  </head>\\n  <body>\\n    <div id=\"wrapper\">\\n      <h1>OWASP Juice Shop (Express ^4.22.1)</h1>\\n      <h2><em>500</em> Error: Basket with id=4 does not exist.</h2>\\n      <ul id=\"stacktrace\"><li> &nbsp; &nbsp;at &lt;anonymous&gt; (routes/order.ts:183:16)</li></ul>\\n    </div>\\n  </body>\\n</html>\\n`,\n    expected: /Quantity error/,\n    operator: 'match',\n    diff: 'simple'\n  }\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/basket/:id\" time=\"1.121480\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket by id is not allowed via public API\" time=\"0.026725\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET empty basket when requesting non-existing basket id\" time=\"0.063994\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET existing basket with contained products by id\" time=\"0.051425\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET basket should accept forged JWTs\" time=\"0.042047\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets\" time=\"0.051154\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"POST new basket is not part of API\" time=\"0.028688\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET all baskets is not part of API\" time=\"0.021639\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets/:id\" time=\"0.077309\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket is not part of API\" time=\"0.020956\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT update existing basket is not part of API\" time=\"0.023353\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"DELETE existing basket is not part of API\" time=\"0.030863\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id\" time=\"0.123809\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket of another user\" time=\"0.123426\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/checkout\" time=\"0.744860\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"3\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"POST placing an order for a basket is not allowed via public API\" time=\"0.006117\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for an existing basket returns orderId\" time=\"0.031021\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/basket.test.ts:133:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST placing an order for a non-existing basket fails\" time=\"0.060481\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a basket with a negative total cost is possible\" time=\"0.048262\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/basket.test.ts:151:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST placing an order for a basket with 99% discount is possible\" time=\"0.360989\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testsuite name=\"error cases\" time=\"0.237106\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"1\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t\t<testcase name=\"should return 500 if QuantityModel.findOne fails during checkout\" time=\"0.065984\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\" failure=\"The input did not match the regular expression /Quantity error/. Input:&#10;&#10;'&lt;html>\\n' +&#10;  '  &lt;head>\\n' +&#10;  &amp;quot;    &lt;meta charset='utf-8'> \\n&amp;quot; +&#10;  '    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n' +&#10;  '    &lt;style>* {\\n' +&#10;  '  margin: 0;\\n' +&#10;  '  padding: 0;\\n' +&#10;  '  outline: 0;\\n' +&#10;  '}\\n' +&#10;  '\\n' +&#10;  'body {\\n' +&#10;  '  padding: 80px 100px;\\n' +&#10;  '  font: 13px &amp;quot;Helvetica Neue&amp;quot;, &amp;quot;Lucida Grande&amp;quot;, &amp;quot;Arial&amp;quot;;\\n' +&#10;  '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +&#10;  '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +&#10;  '  background-repeat: no-repeat;\\n' +&#10;  '  color: #555;\\n' +&#10;  '  -webkit-font-smoothing: antialiased;\\n' +&#10;  '}\\n' +&#10;  'h1, h2 {\\n' +&#10;  '  font-size: 22px;\\n' +&#10;  '  color: #343434;\\n' +&#10;  '}\\n' +&#10;  'h1 em, h2 em {\\n' +&#10;  '  padding: 0 5px;\\n' +&#10;  '  font-weight: normal;\\n' +&#10;  '}\\n' +&#10;  'h1 {\\n' +&#10;  '  font-size: 60px;\\n' +&#10;  '}\\n' +&#10;  'h2 {\\n' +&#10;  '  margin-top: 10px;\\n' +&#10;  '}\\n' +&#10;  'ul li {\\n' +&#10;  '  list-style: none;\\n' +&#10;  '}\\n' +&#10;  '#stacktrace {\\n' +&#10;  '  margin-left: 60px;\\n' +&#10;  '}\\n' +&#10;  '&lt;/style>\\n' +&#10;  '  &lt;/head>\\n' +&#10;  '  &lt;body>\\n' +&#10;  '    &lt;div id=&amp;quot;wrapper&amp;quot;>\\n' +&#10;  '      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n' +&#10;  '      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n' +&#10;  '      &lt;ul id=&amp;quot;stacktrace&amp;quot;>&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n' +&#10;  '    &lt;/div>\\n' +&#10;  '  &lt;/body>\\n' +&#10;  '&lt;/html>\\n'&#10;\">\n\t\t\t\t<failure type=\"testCodeFailure\" message=\"The input did not match the regular expression /Quantity error/. Input:&#10;&#10;'&lt;html>\\n' +&#10;  '  &lt;head>\\n' +&#10;  &amp;quot;    &lt;meta charset='utf-8'> \\n&amp;quot; +&#10;  '    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n' +&#10;  '    &lt;style>* {\\n' +&#10;  '  margin: 0;\\n' +&#10;  '  padding: 0;\\n' +&#10;  '  outline: 0;\\n' +&#10;  '}\\n' +&#10;  '\\n' +&#10;  'body {\\n' +&#10;  '  padding: 80px 100px;\\n' +&#10;  '  font: 13px &amp;quot;Helvetica Neue&amp;quot;, &amp;quot;Lucida Grande&amp;quot;, &amp;quot;Arial&amp;quot;;\\n' +&#10;  '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +&#10;  '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +&#10;  '  background-repeat: no-repeat;\\n' +&#10;  '  color: #555;\\n' +&#10;  '  -webkit-font-smoothing: antialiased;\\n' +&#10;  '}\\n' +&#10;  'h1, h2 {\\n' +&#10;  '  font-size: 22px;\\n' +&#10;  '  color: #343434;\\n' +&#10;  '}\\n' +&#10;  'h1 em, h2 em {\\n' +&#10;  '  padding: 0 5px;\\n' +&#10;  '  font-weight: normal;\\n' +&#10;  '}\\n' +&#10;  'h1 {\\n' +&#10;  '  font-size: 60px;\\n' +&#10;  '}\\n' +&#10;  'h2 {\\n' +&#10;  '  margin-top: 10px;\\n' +&#10;  '}\\n' +&#10;  'ul li {\\n' +&#10;  '  list-style: none;\\n' +&#10;  '}\\n' +&#10;  '#stacktrace {\\n' +&#10;  '  margin-left: 60px;\\n' +&#10;  '}\\n' +&#10;  '&lt;/style>\\n' +&#10;  '  &lt;/head>\\n' +&#10;  '  &lt;body>\\n' +&#10;  '    &lt;div id=&amp;quot;wrapper&amp;quot;>\\n' +&#10;  '      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n' +&#10;  '      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n' +&#10;  '      &lt;ul id=&amp;quot;stacktrace&amp;quot;>&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n' +&#10;  '    &lt;/div>\\n' +&#10;  '  &lt;/body>\\n' +&#10;  '&lt;/html>\\n'\">\nError [ERR_TEST_FAILURE]: The input did not match the regular expression /Quantity error/. Input:\n\n'&lt;html>\\n' +\n  '  &lt;head>\\n' +\n  \"    &lt;meta charset='utf-8'> \\n\" +\n  '    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n' +\n  '    &lt;style>* {\\n' +\n  '  margin: 0;\\n' +\n  '  padding: 0;\\n' +\n  '  outline: 0;\\n' +\n  '}\\n' +\n  '\\n' +\n  'body {\\n' +\n  '  padding: 80px 100px;\\n' +\n  '  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n' +\n  '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +\n  '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +\n  '  background-repeat: no-repeat;\\n' +\n  '  color: #555;\\n' +\n  '  -webkit-font-smoothing: antialiased;\\n' +\n  '}\\n' +\n  'h1, h2 {\\n' +\n  '  font-size: 22px;\\n' +\n  '  color: #343434;\\n' +\n  '}\\n' +\n  'h1 em, h2 em {\\n' +\n  '  padding: 0 5px;\\n' +\n  '  font-weight: normal;\\n' +\n  '}\\n' +\n  'h1 {\\n' +\n  '  font-size: 60px;\\n' +\n  '}\\n' +\n  'h2 {\\n' +\n  '  margin-top: 10px;\\n' +\n  '}\\n' +\n  'ul li {\\n' +\n  '  list-style: none;\\n' +\n  '}\\n' +\n  '#stacktrace {\\n' +\n  '  margin-left: 60px;\\n' +\n  '}\\n' +\n  '&lt;/style>\\n' +\n  '  &lt;/head>\\n' +\n  '  &lt;body>\\n' +\n  '    &lt;div id=\"wrapper\">\\n' +\n  '      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n' +\n  '      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n' +\n  '      &lt;ul id=\"stacktrace\">&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n' +\n  '    &lt;/div>\\n' +\n  '  &lt;/body>\\n' +\n  '&lt;/html>\\n'\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Quantity error/. Input:\n  \n  '&lt;html>\\n' +\n    '  &lt;head>\\n' +\n    \"    &lt;meta charset='utf-8'> \\n\" +\n    '    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n' +\n    '    &lt;style>* {\\n' +\n    '  margin: 0;\\n' +\n    '  padding: 0;\\n' +\n    '  outline: 0;\\n' +\n    '}\\n' +\n    '\\n' +\n    'body {\\n' +\n    '  padding: 80px 100px;\\n' +\n    '  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n' +\n    '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +\n    '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +\n    '  background-repeat: no-repeat;\\n' +\n    '  color: #555;\\n' +\n    '  -webkit-font-smoothing: antialiased;\\n' +\n    '}\\n' +\n    'h1, h2 {\\n' +\n    '  font-size: 22px;\\n' +\n    '  color: #343434;\\n' +\n    '}\\n' +\n    'h1 em, h2 em {\\n' +\n    '  padding: 0 5px;\\n' +\n    '  font-weight: normal;\\n' +\n    '}\\n' +\n    'h1 {\\n' +\n    '  font-size: 60px;\\n' +\n    '}\\n' +\n    'h2 {\\n' +\n    '  margin-top: 10px;\\n' +\n    '}\\n' +\n    'ul li {\\n' +\n    '  list-style: none;\\n' +\n    '}\\n' +\n    '#stacktrace {\\n' +\n    '  margin-left: 60px;\\n' +\n    '}\\n' +\n    '&lt;/style>\\n' +\n    '  &lt;/head>\\n' +\n    '  &lt;body>\\n' +\n    '    &lt;div id=\"wrapper\">\\n' +\n    '      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n' +\n    '      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n' +\n    '      &lt;ul id=\"stacktrace\">&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n' +\n    '    &lt;/div>\\n' +\n    '  &lt;/body>\\n' +\n    '&lt;/html>\\n'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/basket.test.ts:177:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: `&lt;html>\\n  &lt;head>\\n    &lt;meta charset='utf-8'> \\n    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n    &lt;style>* {\\n  margin: 0;\\n  padding: 0;\\n  outline: 0;\\n}\\n\\nbody {\\n  padding: 80px 100px;\\n  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n  background-repeat: no-repeat;\\n  color: #555;\\n  -webkit-font-smoothing: antialiased;\\n}\\nh1, h2 {\\n  font-size: 22px;\\n  color: #343434;\\n}\\nh1 em, h2 em {\\n  padding: 0 5px;\\n  font-weight: normal;\\n}\\nh1 {\\n  font-size: 60px;\\n}\\nh2 {\\n  margin-top: 10px;\\n}\\nul li {\\n  list-style: none;\\n}\\n#stacktrace {\\n  margin-left: 60px;\\n}\\n&lt;/style>\\n  &lt;/head>\\n  &lt;body>\\n    &lt;div id=\"wrapper\">\\n      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n      &lt;ul id=\"stacktrace\">&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n    &lt;/div>\\n  &lt;/body>\\n&lt;/html>\\n`,\n    expected: /Quantity error/,\n    operator: 'match',\n    diff: 'simple'\n  }\n}\n\t\t\t\t</failure>\n\t\t\t</testcase>\n\t\t\t<testcase name=\"should return 500 if WalletModel.findOne fails during checkout\" time=\"0.095510\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if ordersCollection.insert fails during checkout\" time=\"0.074996\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/coupon/:coupon\" time=\"0.103200\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"PUT apply valid coupon to existing basket\" time=\"0.025338\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply invalid coupon is not accepted\" time=\"0.023857\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply outdated coupon is not accepted\" time=\"0.023209\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply valid coupon to non-existing basket throws error\" time=\"0.029806\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 22 -->\n\t<!-- suites 7 -->\n\t<!-- pass 19 -->\n\t<!-- fail 3 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 6600.143336 -->\n</testsuites>\n",
+          "segunda.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"/rest/basket/:id\" time=\"0.867616\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket by id is not allowed via public API\" time=\"0.015508\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET empty basket when requesting non-existing basket id\" time=\"0.038720\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET existing basket with contained products by id\" time=\"0.030488\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET basket should accept forged JWTs\" time=\"0.025847\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets\" time=\"0.031243\" disabled=\"0\" errors=\"0\" tests=\"2\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"POST new basket is not part of API\" time=\"0.017203\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"GET all baskets is not part of API\" time=\"0.013526\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/api/Baskets/:id\" time=\"0.046251\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket is not part of API\" time=\"0.013455\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT update existing basket is not part of API\" time=\"0.011937\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"DELETE existing basket is not part of API\" time=\"0.019872\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id\" time=\"0.081326\" disabled=\"0\" errors=\"0\" tests=\"1\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"GET existing basket of another user\" time=\"0.080978\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/checkout\" time=\"0.380271\" disabled=\"0\" errors=\"0\" tests=\"6\" failures=\"3\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"POST placing an order for a basket is not allowed via public API\" time=\"0.004463\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for an existing basket returns orderId\" time=\"0.020234\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/basket.test.ts:133:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST placing an order for a non-existing basket fails\" time=\"0.038501\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"POST placing an order for a basket with a negative total cost is possible\" time=\"0.024831\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\" failure=\"Expected values to be strictly equal:&#10;&#10;500 !== 200&#10;\">\n\t\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;500 !== 200\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n500 !== 200\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  500 !== 200\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/basket.test.ts:151:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 500,\n    expected: 200,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t\t</failure>\n\t\t</testcase>\n\t\t<testcase name=\"POST placing an order for a basket with 99% discount is possible\" time=\"0.166396\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testsuite name=\"error cases\" time=\"0.125279\" disabled=\"0\" errors=\"0\" tests=\"3\" failures=\"1\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t\t<testcase name=\"should return 500 if QuantityModel.findOne fails during checkout\" time=\"0.033151\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\" failure=\"The input did not match the regular expression /Quantity error/. Input:&#10;&#10;'&lt;html>\\n' +&#10;  '  &lt;head>\\n' +&#10;  &amp;quot;    &lt;meta charset='utf-8'> \\n&amp;quot; +&#10;  '    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n' +&#10;  '    &lt;style>* {\\n' +&#10;  '  margin: 0;\\n' +&#10;  '  padding: 0;\\n' +&#10;  '  outline: 0;\\n' +&#10;  '}\\n' +&#10;  '\\n' +&#10;  'body {\\n' +&#10;  '  padding: 80px 100px;\\n' +&#10;  '  font: 13px &amp;quot;Helvetica Neue&amp;quot;, &amp;quot;Lucida Grande&amp;quot;, &amp;quot;Arial&amp;quot;;\\n' +&#10;  '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +&#10;  '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +&#10;  '  background-repeat: no-repeat;\\n' +&#10;  '  color: #555;\\n' +&#10;  '  -webkit-font-smoothing: antialiased;\\n' +&#10;  '}\\n' +&#10;  'h1, h2 {\\n' +&#10;  '  font-size: 22px;\\n' +&#10;  '  color: #343434;\\n' +&#10;  '}\\n' +&#10;  'h1 em, h2 em {\\n' +&#10;  '  padding: 0 5px;\\n' +&#10;  '  font-weight: normal;\\n' +&#10;  '}\\n' +&#10;  'h1 {\\n' +&#10;  '  font-size: 60px;\\n' +&#10;  '}\\n' +&#10;  'h2 {\\n' +&#10;  '  margin-top: 10px;\\n' +&#10;  '}\\n' +&#10;  'ul li {\\n' +&#10;  '  list-style: none;\\n' +&#10;  '}\\n' +&#10;  '#stacktrace {\\n' +&#10;  '  margin-left: 60px;\\n' +&#10;  '}\\n' +&#10;  '&lt;/style>\\n' +&#10;  '  &lt;/head>\\n' +&#10;  '  &lt;body>\\n' +&#10;  '    &lt;div id=&amp;quot;wrapper&amp;quot;>\\n' +&#10;  '      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n' +&#10;  '      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n' +&#10;  '      &lt;ul id=&amp;quot;stacktrace&amp;quot;>&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n' +&#10;  '    &lt;/div>\\n' +&#10;  '  &lt;/body>\\n' +&#10;  '&lt;/html>\\n'&#10;\">\n\t\t\t\t<failure type=\"testCodeFailure\" message=\"The input did not match the regular expression /Quantity error/. Input:&#10;&#10;'&lt;html>\\n' +&#10;  '  &lt;head>\\n' +&#10;  &amp;quot;    &lt;meta charset='utf-8'> \\n&amp;quot; +&#10;  '    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n' +&#10;  '    &lt;style>* {\\n' +&#10;  '  margin: 0;\\n' +&#10;  '  padding: 0;\\n' +&#10;  '  outline: 0;\\n' +&#10;  '}\\n' +&#10;  '\\n' +&#10;  'body {\\n' +&#10;  '  padding: 80px 100px;\\n' +&#10;  '  font: 13px &amp;quot;Helvetica Neue&amp;quot;, &amp;quot;Lucida Grande&amp;quot;, &amp;quot;Arial&amp;quot;;\\n' +&#10;  '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +&#10;  '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +&#10;  '  background-repeat: no-repeat;\\n' +&#10;  '  color: #555;\\n' +&#10;  '  -webkit-font-smoothing: antialiased;\\n' +&#10;  '}\\n' +&#10;  'h1, h2 {\\n' +&#10;  '  font-size: 22px;\\n' +&#10;  '  color: #343434;\\n' +&#10;  '}\\n' +&#10;  'h1 em, h2 em {\\n' +&#10;  '  padding: 0 5px;\\n' +&#10;  '  font-weight: normal;\\n' +&#10;  '}\\n' +&#10;  'h1 {\\n' +&#10;  '  font-size: 60px;\\n' +&#10;  '}\\n' +&#10;  'h2 {\\n' +&#10;  '  margin-top: 10px;\\n' +&#10;  '}\\n' +&#10;  'ul li {\\n' +&#10;  '  list-style: none;\\n' +&#10;  '}\\n' +&#10;  '#stacktrace {\\n' +&#10;  '  margin-left: 60px;\\n' +&#10;  '}\\n' +&#10;  '&lt;/style>\\n' +&#10;  '  &lt;/head>\\n' +&#10;  '  &lt;body>\\n' +&#10;  '    &lt;div id=&amp;quot;wrapper&amp;quot;>\\n' +&#10;  '      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n' +&#10;  '      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n' +&#10;  '      &lt;ul id=&amp;quot;stacktrace&amp;quot;>&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n' +&#10;  '    &lt;/div>\\n' +&#10;  '  &lt;/body>\\n' +&#10;  '&lt;/html>\\n'\">\nError [ERR_TEST_FAILURE]: The input did not match the regular expression /Quantity error/. Input:\n\n'&lt;html>\\n' +\n  '  &lt;head>\\n' +\n  \"    &lt;meta charset='utf-8'> \\n\" +\n  '    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n' +\n  '    &lt;style>* {\\n' +\n  '  margin: 0;\\n' +\n  '  padding: 0;\\n' +\n  '  outline: 0;\\n' +\n  '}\\n' +\n  '\\n' +\n  'body {\\n' +\n  '  padding: 80px 100px;\\n' +\n  '  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n' +\n  '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +\n  '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +\n  '  background-repeat: no-repeat;\\n' +\n  '  color: #555;\\n' +\n  '  -webkit-font-smoothing: antialiased;\\n' +\n  '}\\n' +\n  'h1, h2 {\\n' +\n  '  font-size: 22px;\\n' +\n  '  color: #343434;\\n' +\n  '}\\n' +\n  'h1 em, h2 em {\\n' +\n  '  padding: 0 5px;\\n' +\n  '  font-weight: normal;\\n' +\n  '}\\n' +\n  'h1 {\\n' +\n  '  font-size: 60px;\\n' +\n  '}\\n' +\n  'h2 {\\n' +\n  '  margin-top: 10px;\\n' +\n  '}\\n' +\n  'ul li {\\n' +\n  '  list-style: none;\\n' +\n  '}\\n' +\n  '#stacktrace {\\n' +\n  '  margin-left: 60px;\\n' +\n  '}\\n' +\n  '&lt;/style>\\n' +\n  '  &lt;/head>\\n' +\n  '  &lt;body>\\n' +\n  '    &lt;div id=\"wrapper\">\\n' +\n  '      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n' +\n  '      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n' +\n  '      &lt;ul id=\"stacktrace\">&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n' +\n  '    &lt;/div>\\n' +\n  '  &lt;/body>\\n' +\n  '&lt;/html>\\n'\n\n    at async Promise.all (index 0) {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Quantity error/. Input:\n  \n  '&lt;html>\\n' +\n    '  &lt;head>\\n' +\n    \"    &lt;meta charset='utf-8'> \\n\" +\n    '    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n' +\n    '    &lt;style>* {\\n' +\n    '  margin: 0;\\n' +\n    '  padding: 0;\\n' +\n    '  outline: 0;\\n' +\n    '}\\n' +\n    '\\n' +\n    'body {\\n' +\n    '  padding: 80px 100px;\\n' +\n    '  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n' +\n    '  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n' +\n    '  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n' +\n    '  background-repeat: no-repeat;\\n' +\n    '  color: #555;\\n' +\n    '  -webkit-font-smoothing: antialiased;\\n' +\n    '}\\n' +\n    'h1, h2 {\\n' +\n    '  font-size: 22px;\\n' +\n    '  color: #343434;\\n' +\n    '}\\n' +\n    'h1 em, h2 em {\\n' +\n    '  padding: 0 5px;\\n' +\n    '  font-weight: normal;\\n' +\n    '}\\n' +\n    'h1 {\\n' +\n    '  font-size: 60px;\\n' +\n    '}\\n' +\n    'h2 {\\n' +\n    '  margin-top: 10px;\\n' +\n    '}\\n' +\n    'ul li {\\n' +\n    '  list-style: none;\\n' +\n    '}\\n' +\n    '#stacktrace {\\n' +\n    '  margin-left: 60px;\\n' +\n    '}\\n' +\n    '&lt;/style>\\n' +\n    '  &lt;/head>\\n' +\n    '  &lt;body>\\n' +\n    '    &lt;div id=\"wrapper\">\\n' +\n    '      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n' +\n    '      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n' +\n    '      &lt;ul id=\"stacktrace\">&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n' +\n    '    &lt;/div>\\n' +\n    '  &lt;/body>\\n' +\n    '&lt;/html>\\n'\n  \n      at TestContext.&lt;anonymous> (/repo/workspace/wt-4/test/api/basket.test.ts:177:14)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1125:7)\n      at async Promise.all (index 0)\n      at async Suite.run (node:internal/test_runner/test:1533:7)\n      at async Suite.processPendingSubtests (node:internal/test_runner/test:787:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: `&lt;html>\\n  &lt;head>\\n    &lt;meta charset='utf-8'> \\n    &lt;title>Error: Basket with id=4 does not exist.&lt;/title>\\n    &lt;style>* {\\n  margin: 0;\\n  padding: 0;\\n  outline: 0;\\n}\\n\\nbody {\\n  padding: 80px 100px;\\n  font: 13px \"Helvetica Neue\", \"Lucida Grande\", \"Arial\";\\n  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));\\n  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);\\n  background-repeat: no-repeat;\\n  color: #555;\\n  -webkit-font-smoothing: antialiased;\\n}\\nh1, h2 {\\n  font-size: 22px;\\n  color: #343434;\\n}\\nh1 em, h2 em {\\n  padding: 0 5px;\\n  font-weight: normal;\\n}\\nh1 {\\n  font-size: 60px;\\n}\\nh2 {\\n  margin-top: 10px;\\n}\\nul li {\\n  list-style: none;\\n}\\n#stacktrace {\\n  margin-left: 60px;\\n}\\n&lt;/style>\\n  &lt;/head>\\n  &lt;body>\\n    &lt;div id=\"wrapper\">\\n      &lt;h1>OWASP Juice Shop (Express ^4.22.1)&lt;/h1>\\n      &lt;h2>&lt;em>500&lt;/em> Error: Basket with id=4 does not exist.&lt;/h2>\\n      &lt;ul id=\"stacktrace\">&lt;li> &amp;nbsp; &amp;nbsp;at &amp;lt;anonymous&amp;gt; (/repo/workspace/wt-4/routes/order.ts:183:16)&lt;/li>&lt;/ul>\\n    &lt;/div>\\n  &lt;/body>\\n&lt;/html>\\n`,\n    expected: /Quantity error/,\n    operator: 'match',\n    diff: 'simple'\n  }\n}\n\t\t\t\t</failure>\n\t\t\t</testcase>\n\t\t\t<testcase name=\"should return 500 if WalletModel.findOne fails during checkout\" time=\"0.051926\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t\t<testcase name=\"should return 500 if ordersCollection.insert fails during checkout\" time=\"0.039910\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t</testsuite>\n\t</testsuite>\n\t<testsuite name=\"/rest/basket/:id/coupon/:coupon\" time=\"0.048416\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"PUT apply valid coupon to existing basket\" time=\"0.012855\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply invalid coupon is not accepted\" time=\"0.011797\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply outdated coupon is not accepted\" time=\"0.011777\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t\t<testcase name=\"PUT apply valid coupon to non-existing basket throws error\" time=\"0.011454\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/basket.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 22 -->\n\t<!-- suites 7 -->\n\t<!-- pass 19 -->\n\t<!-- fail 3 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5038.89971 -->\n</testsuites>\n"
+        }
+      },
+      {
+        "grupo": "campaign_discount",
+        "dominio": "api",
+        "testes": [
+          {
+            "id": "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+            "arquivo": "tests/functional/juice_shop/campaign_discount.test.ts",
+            "nome": "TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+            "arquivo": "tests/functional/juice_shop/campaign_discount.test.ts",
+            "nome": "TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+            "arquivo": "tests/functional/juice_shop/campaign_discount.test.ts",
+            "nome": "TCC campaign discount contracts > does not discount an unknown campaign",
+            "estado": "passou"
+          },
+          {
+            "id": "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data",
+            "arquivo": "tests/functional/juice_shop/campaign_discount.test.ts",
+            "nome": "TCC campaign discount contracts > preserves the normal total without campaign data",
+            "estado": "passou"
+          }
+        ],
+        "falhos": [],
+        "falhos_novos": [],
+        "falhos_novos_observados": [],
+        "intermitentes": [],
+        "reexecucoes": 0,
+        "descobertos": [
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data"
+        ],
+        "esperados": [
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data"
+        ],
+        "ignorados": [],
+        "executados": [
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data"
+        ],
+        "obrigatorios_aprovados": [
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > applies the campaign discount to the persisted order total",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount a campaign with a mismatched date",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > does not discount an unknown campaign",
+          "tests/functional/juice_shop/campaign_discount.test.ts :: TCC campaign discount contracts > preserves the normal total without campaign data"
+        ],
+        "obrigatorios_ausentes_baseline": [],
+        "falha_operacional": null,
+        "comparavel": true,
+        "duracao_s": 6.09,
+        "espera_api_s": 22.22517001000233,
+        "resultado": {
+          "tier": "T2_API",
+          "comando": [
+            "node",
+            "--import",
+            "./test/api/helpers/test-env.mjs",
+            "--import",
+            "tsx",
+            "--import",
+            "src/pipeline/etapas/e07_validacao/preparo_api_cobertura.mjs",
+            "--test",
+            "--test-force-exit",
+            "--test-reporter=spec",
+            "--test-reporter-destination=stdout",
+            "--test-reporter=junit",
+            "--test-reporter-destination=/tmp/tcc_cobertura_l3r296mf/campaign_discount/primeira.xml",
+            "test/api/tcc_coverage_campaign_discount.test.ts"
+          ],
+          "passou": true,
+          "duracao_s": 6.09,
+          "motivo": null,
+          "codigo_saida": 0,
+          "testes_falhos": [],
+          "testes_falhos_novos": [],
+          "reexecucoes": 0,
+          "timeout_na_primeira_rodada": false,
+          "testes_falhos_intermitentes": [],
+          "testes_falhos_reexecucao": [],
+          "testes_falhos_d_marcador": [],
+          "testes_falhos_d_criterio": [],
+          "testes_falhos_f_marcador": [],
+          "testes_falhos_f_criterio": [],
+          "saida": "▶ TCC campaign discount contracts\n  ✔ applies the campaign discount to the persisted order total (264.152291ms)\n  ✔ does not discount a campaign with a mismatched date (75.262501ms)\n  ✔ does not discount an unknown campaign (150.999166ms)\n  ✔ preserves the normal total without campaign data (100.293875ms)\n✔ TCC campaign discount contracts (1541.342042ms)\nℹ tests 4\nℹ suites 1\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5713.860336\n",
+          "saida_reexecucao": "",
+          "espera_api_s": 0.0,
+          "repeticao_seletiva": null
+        },
+        "relatorios_junit": {
+          "primeira.xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testsuite name=\"TCC campaign discount contracts\" time=\"1.541342\" disabled=\"0\" errors=\"0\" tests=\"4\" failures=\"0\" skipped=\"0\" hostname=\"71fcc2b25370\">\n\t\t<testcase name=\"applies the campaign discount to the persisted order total\" time=\"0.264152\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_campaign_discount.test.ts\"/>\n\t\t<testcase name=\"does not discount a campaign with a mismatched date\" time=\"0.075263\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_campaign_discount.test.ts\"/>\n\t\t<testcase name=\"does not discount an unknown campaign\" time=\"0.150999\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_campaign_discount.test.ts\"/>\n\t\t<testcase name=\"preserves the normal total without campaign data\" time=\"0.100294\" classname=\"test\" file=\"/repo/workspace/wt-4/test/api/tcc_coverage_campaign_discount.test.ts\"/>\n\t</testsuite>\n\t<!-- tests 4 -->\n\t<!-- suites 1 -->\n\t<!-- pass 4 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 5713.860336 -->\n</testsuites>\n"
+        }
+      }
+    ],
+    "motivos": [],
+    "baseline_sha256": "06be9b5621b33b54f703f80db4cf7422c99e84da4b61adafdef1a8ebe8b36ceb",
+    "suficiente": true
+  }
+}

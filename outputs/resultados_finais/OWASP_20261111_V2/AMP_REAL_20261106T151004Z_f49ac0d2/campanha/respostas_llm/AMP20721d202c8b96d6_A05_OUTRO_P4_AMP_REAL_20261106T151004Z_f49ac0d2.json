@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Injeção de código JavaScript via consulta MongoDB $where dinâmica que executa código arbitrário no banco de dados.\",\"causa_da_vulnerabilidade\":\"O código utiliza uma consulta MongoDB com o operador $where, que executa uma string JavaScript construída dinamicamente concatenando diretamente a entrada do usuário (id) sem validação adequada, permitindo execução de código arbitrário no banco.\",\"estrategia_de_correcao\":\"Substituir a consulta que utiliza $where por uma consulta padrão do MongoDB que utiliza um filtro tipado e seguro, evitando a execução de código JavaScript no banco. Usar um filtro direto pelo campo orderId com o valor id validado e sanitizado.\",\"edicoes\":[{\"arquivo\":\"routes/trackOrder.ts\",\"trecho_original\":\"    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\",\"trecho_corrigido\":\"    db.ordersCollection.find({ orderId: id }).then((order: any) => {\"}],\"justificativa_tecnica\":\"O operador $where executa código JavaScript no servidor MongoDB, o que é perigoso quando a string é construída com entrada do usuário, pois permite injeção de código. Ao substituir por um filtro padrão { orderId: id }, o MongoDB realiza uma consulta segura e tipada, eliminando a possibilidade de execução arbitrária de código e mitigando a vulnerabilidade de injeção.\",\"limitacoes_da_correcao\":\"A correção assume que o campo orderId é indexado e que a consulta direta pelo campo é funcionalmente equivalente à consulta original. Se existirem casos onde a consulta $where era usada para lógica mais complexa, essa abordagem pode não replicar exatamente o comportamento, mas no contexto atual preserva a funcionalidade e elimina a vulnerabilidade.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 2339,
+  "tokens_saida": 383,
+  "latencia_s": 4.512,
+  "custo_usd": 0.001548,
+  "hash_prompt": "cab88e329506a6f6ecce522a8ea852689467c517ffa14cc028d14334a8e42f81",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

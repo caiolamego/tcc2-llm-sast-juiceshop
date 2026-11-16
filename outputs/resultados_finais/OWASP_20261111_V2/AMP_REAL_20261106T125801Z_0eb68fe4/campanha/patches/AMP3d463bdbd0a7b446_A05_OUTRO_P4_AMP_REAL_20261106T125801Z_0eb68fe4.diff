@@ -1,0 +1,25 @@
+diff --git a/routes/updateProductReviews.ts b/routes/updateProductReviews.ts
+index c5d88cf6b..e95f37174 100644
+--- a/routes/updateProductReviews.ts
++++ b/routes/updateProductReviews.ts
+@@ -4,6 +4,7 @@
+  */
+ 
+ import { type Request, type Response, type NextFunction } from 'express'
++import { ObjectId } from 'mongodb'
+ 
+ import * as challengeUtils from '../lib/challengeUtils'
+ import { challenges } from '../data/datacache'
+@@ -14,8 +15,11 @@ import * as db from '../data/mongodb'
+ export function updateProductReviews () {
+   return (req: Request, res: Response, next: NextFunction) => {
+     const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge
++    if (typeof req.body.id !== 'string' || !ObjectId.isValid(req.body.id)) {
++      return res.status(400).json({ error: 'Invalid review id' })
++    }
+     db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge
+-      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge
++      { _id: new ObjectId(req.body.id) }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge
+       { $set: { message: req.body.message } },
+       { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge
+     ).then(

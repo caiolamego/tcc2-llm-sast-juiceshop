@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Credencial hard-coded no campo `password` do usuário `bjoern`, detectada como segredo genérico na linha 151.\",\"causa_da_vulnerabilidade\":\"Uma senha utilizável está armazenada em texto puro dentro de um arquivo estático versionado, permitindo que qualquer pessoa com acesso ao arquivo obtenha a credencial e potencialmente autentique-se como esse usuário.\",\"estrategia_de_correcao\":\"Remover a senha literal do arquivo e exigir que a credencial seja fornecida por configuração externa protegida, preservando o campo `password` e o formato dos dados. A aplicação deve rejeitar configuração ausente e armazenar senhas reais usando derivação de senha apropriada, como Argon2id, em vez de texto puro.\",\"edicoes\":[{\"arquivo\":\"data/static/users.yml\",\"trecho_original\":\"  email: bjoern\\n  password: 'monkey summer birthday are all bad passwords but work just fine in a long passphrase'\\n  key: bjoern\\n  profileImage: '12.png'\\n  role: 'admin'\\n  isAdmin: true\\n  securityQuestion:\\n    id: 9\\n    answer: 'West-2082' # http://www.alte-postleitzahlen.de/uetersen\",\"trecho_corrigido\":\"  email: bjoern\\n  password: '${BJOERN_PASSWORD}'\\n  key: bjoern\\n  profileImage: '12.png'\\n  role: 'admin'\\n  isAdmin: true\\n  securityQuestion:\\n    id: 9\\n    answer: 'West-2082' # http://www.alte-postleitzahlen.de/uetersen\"}],\"justificativa_tecnica\":\"A alteração remove o valor secreto concreto do repositório e mantém a estrutura e os identificadores existentes, minimizando o impacto funcional. O valor `${BJOERN_PASSWORD}` deve ser resolvido pela camada de configuração da aplicação a partir de um armazenamento seguro, ou a inicialização deve falhar caso não esteja configurado. A senha exposta deve ser considerada comprometida, revogada e substituída; remover o literal do arquivo não remove cópias existentes no histórico do controle de versão.\",\"limitacoes_da_correcao\":\"O trecho fornecido é um arquivo YAML estático; substituir o valor por `${BJOERN_PASSWORD}` só é seguro se a aplicação já realizar interpolação de variáveis nesse arquivo. Caso não realize, a aplicação deve ser ajustada fora deste trecho para carregar a senha por configuração externa e falhar quando ausente. Também é necessário rotacionar a credencial, removê-la do histórico do repositório e revisar os demais campos `password`, `answer` e `totpSecret`, que podem conter outros segredos hard-coded.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 2119,
+  "tokens_saida": 589,
+  "latencia_s": 7.391,
+  "custo_usd": 0.001236,
+  "hash_prompt": "d3fa7c786e2f6f2764c348b1f0c3a7310e5fa2193bce4a5702fe65278f73c19d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 2116
+}

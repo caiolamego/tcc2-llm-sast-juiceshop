@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Acesso não autorizado e alteração indevida de pedidos por ausência de autorização adequada nas rotas `allOrders` e `toggleDeliveryStatus`.\",\"causa_da_vulnerabilidade\":\"`allOrders` retorna todos os pedidos sem verificar autenticação ou privilégios, e `toggleDeliveryStatus` permite alterar qualquer pedido usando apenas o identificador fornecido em `req.params.id`, sem validar a identidade do usuário autenticado nem sua autorização.\",\"estrategia_de_correcao\":\"Adicionar verificação de autenticação e autorização baseada no usuário autenticado antes de consultar ou alterar pedidos. Para o histórico, restringir a consulta ao e-mail do usuário autenticado; para alteração de status, restringir a atualização ao pedido pertencente ao usuário autenticado.\",\"edicoes\":[{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const order = await ordersCollection.find()\\n    res.status(200).json({ status: 'success', data: order.reverse() })\\n  }\\n}\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.email && loggedInUser.data.id) {\\n      const order = await ordersCollection.find({ email: loggedInUser.data.email })\\n      res.status(200).json({ status: 'success', data: order.reverse() })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\\n}\"},{\"arquivo\":\"routes/orderHistory.ts\",\"trecho_original\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const deliveryStatus = !req.body.deliveryStatus\\n    const eta = deliveryStatus ? '0' : '1'\\n    await ordersCollection.update({ _id: req.params.id }, { $set: { delivered: deliveryStatus, eta } })\\n    res.status(200).json({ status: 'success' })\\n  }\\n}\",\"trecho_corrigido\":\"  return async (req: Request, res: Response, next: NextFunction) => {\\n    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))\\n    if (loggedInUser?.data?.email && loggedInUser.data.id) {\\n      const deliveryStatus = !req.body.deliveryStatus\\n      const eta = deliveryStatus ? '0' : '1'\\n      await ordersCollection.update({ _id: req.params.id, email: loggedInUser.data.email }, { $set: { delivered: deliveryStatus, eta } })\\n      res.status(200).json({ status: 'success' })\\n    } else {\\n      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))\\n    }\\n  }\\n}\"}],\"justificativa_tecnica\":\"A consulta de `allOrders` deixa de expor pedidos de outros usuários e exige uma sessão autenticada. A atualização passa a incluir o e-mail autenticado no filtro, impedindo que um usuário altere o pedido de outra pessoa mesmo conhecendo seu `_id`. A mensagem de erro existente foi preservada literalmente e nenhuma assinatura, identificador ou arquivo de teste foi alterado.\",\"limitacoes_da_correcao\":\"A correção pressupõe que os documentos de pedidos possuem o campo `email` com o mesmo valor associado ao usuário autenticado. Ela não adiciona uma verificação específica de privilégios administrativos; portanto, caso `allOrders` ou `toggleDeliveryStatus` devam ser operações administrativas, seria necessário validar também uma permissão ou papel administrativo existente no modelo de autenticação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 890,
+  "tokens_saida": 825,
+  "latencia_s": 8.77,
+  "custo_usd": 0.001168,
+  "hash_prompt": "41d6c86bbdfd2b1f7c409e54fc3e30ee16d62b8b4ce177ac50b0baf38051c661",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

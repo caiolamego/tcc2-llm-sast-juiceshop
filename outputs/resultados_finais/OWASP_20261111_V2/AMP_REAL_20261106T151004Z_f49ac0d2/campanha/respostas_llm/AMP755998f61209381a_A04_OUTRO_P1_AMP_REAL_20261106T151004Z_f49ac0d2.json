@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Uso inseguro de bypassSecurityTrustHtml com conteúdo não sanitizado, permitindo possível Cross-Site Scripting (XSS).\",\"causa_da_vulnerabilidade\":\"O método bypassSecurityTrustHtml está sendo chamado diretamente com uma string que inclui dados extraídos do JWT sem validação ou sanitização adequada, o que pode permitir a injeção de código HTML malicioso.\",\"estrategia_de_correcao\":\"Remover o uso de bypassSecurityTrustHtml para exibir o IP diretamente como texto simples, evitando a interpretação de HTML e prevenindo XSS. Em vez disso, exibir o IP dentro de um elemento seguro, sem usar bypassSecurityTrustHtml.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${ip}</small>`);\",\"trecho_corrigido\":\"this.lastLoginIp = `<small>${ip}</small>`;\"}],\"justificativa_tecnica\":\"O método bypassSecurityTrustHtml deve ser usado apenas com conteúdo confiável e controlado. Como o IP vem de um JWT que pode ser manipulado, não é seguro confiar nele para gerar HTML diretamente. Ao remover bypassSecurityTrustHtml, o Angular tratará o conteúdo como texto simples, evitando a execução de código malicioso.\",\"limitacoes_da_correcao\":\"Esta correção assume que o componente exibirá o IP como texto simples e que o template não usará [innerHTML] para renderizar lastLoginIp. Se o template usar innerHTML, será necessário ajustar para usar interpolação normal para evitar XSS.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1316,
+  "tokens_saida": 341,
+  "latencia_s": 3.998,
+  "custo_usd": 0.001072,
+  "hash_prompt": "cebc7532ea9c1e571efc615cb33f37258c7e47c7cac60be8352a3c3dc2da37b4",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

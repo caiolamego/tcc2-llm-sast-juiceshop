@@ -1,0 +1,122 @@
+[
+  {
+    "caso_id": "AMPff4689848e9b84b8",
+    "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+    "arquivo": "models/feedback.ts",
+    "arquivo_sha256": "6c85fee3bc81653dc65788aa1830444565544120b923514306549a871ff7f54b",
+    "linha_inicio": 57,
+    "linha_fim": 66,
+    "trecho": "          this.setDataValue('comment', sanitizedComment)\n        }\n      },\n      rating: {\n        type: DataTypes.INTEGER,\n        allowNull: false,\n        set (rating: number) {\n          this.setDataValue('rating', rating)\n          challengeUtils.solveIf(challenges.zeroStarsChallenge, () => {\n            return Number(rating) === 0\n          })\n        }\n      }\n    },\n    {\n      tableName: 'Feedbacks',\n",
+    "justificativa_arquivada": "Rating INTEGER allowNull false nao estabelece minimo. Setter apenas persiste e aciona hook, nao rejeita zero. Revisados middleware de CAPTCHA e API gerada. POST com CAPTCHA valido persiste rating zero no SQLite real; controle de intervalo 1-5 rejeita zero e aceita 3. CAPTCHA incorreto retorna 401. Regras sao heuristicas: validate externo pode proteger e gerar falso positivo.",
+    "decisao": {
+      "categoria": "A06",
+      "justificativa": "O modelo persiste rating inteiro sem impor o intervalo de negócio. A triagem arquivada descreve persistência de nota zero. O agrupamento contextual é por ausência da restrição de negócio, conforme o escopo de lógica de negócio de A06; não há evidência de interpretação de entrada como código que sustente chamar este caso de injeção."
+    },
+    "fonte_owasp": "https://top10.owasp.org/2025/A06_2025-Insecure_Design/"
+  },
+  {
+    "caso_id": "AMPaf88892821bf5a51",
+    "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+    "arquivo": "routes/basketItems.ts",
+    "arquivo_sha256": "be2cd01e41b4fc4e2d17c661ddb32d8c2ff9be49dfa13a9c43cc872c413d90e6",
+    "linha_inicio": 42,
+    "linha_fim": 42,
+    "trecho": "    } else {\n      const basketItem = {\n        ProductId: productIds[productIds.length - 1],\n        BasketId: basketIds[basketIds.length - 1],\n        quantity: quantities[quantities.length - 1]\n      }\n      challengeUtils.solveIf(challenges.basketManipulateChallenge, () => { return user && basketItem.BasketId && basketItem.BasketId !== 'undefined' && user.bid != basketItem.BasketId }) // eslint-disable-line eqeqeq\n",
+    "justificativa_arquivada": "server.ts:317 preserva rawBody; lib/utils.ts:186-197 usa clarinet e mantem chaves repetidas. addBasketItem coleta BasketId em array, verifica o primeiro valor em :37, mas constroi e salva BasketItem com o ultimo em :42-49. A autenticacao e a verificacao de estoque de server.ts:427 nao comparam esse ultimo BasketId com user.bid. test/cypress/e2e/basket.spec.ts:56-70 documenta o mesmo caminho com parametro duplicado. Confirmacao estatica; nao reclassifica o alerta intermediario de PUT da rodada 5.",
+    "decisao": {
+      "categoria": "A01",
+      "justificativa": "O fluxo confere o primeiro BasketId, mas persiste o último valor recebido. A justificativa arquivada descreve acesso a carrinho diferente do usuário autenticado. A01 representa o contorno do controle de propriedade, mais especificamente que o CWE-20 genérico registrado."
+    },
+    "fonte_owasp": "https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/"
+  },
+  {
+    "caso_id": "AMPdecc0f9244357cec",
+    "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+    "arquivo": "routes/basketItems.ts",
+    "arquivo_sha256": "be2cd01e41b4fc4e2d17c661ddb32d8c2ff9be49dfa13a9c43cc872c413d90e6",
+    "linha_inicio": 93,
+    "linha_fim": 97,
+    "trecho": "\n  // is product limited per user and order, except if user is deluxe?\n  if (!product.limitPerUser || (product.limitPerUser && product.limitPerUser >= quantity) || security.isDeluxe(req)) {\n    if (product.quantity >= quantity) { // enough in stock?\n      next()\n    } else {\n      res.status(400).json({ error: res.__('We are out of stock! Sorry for the inconvenience.') })\n    }\n  } else {\n    res.status(400).json({ error: res.__('You can order only up to {{quantity}} items of this product.', { quantity: product.limitPerUser.toString() }) })\n  }\n",
+    "justificativa_arquivada": "quantityCheck verifica somente limites superiores; addBasketItem persiste quantidade -2 pelo modelo real BasketItem em SQLite. A rota real placeOrder usa o valor persistido e preco 10, produz total -20 e debito de carteira -20 com dependencias de estoque/carteira/pedidos/PDF simuladas. Controle previo de quantidade positiva bloqueia a entrada; quantidade positiva continua aceita.",
+    "decisao": {
+      "categoria": "A06",
+      "justificativa": "O controle verifica apenas limites superiores e não exige quantidade positiva. A triagem arquivada descreve quantidade negativa persistida e total negativo no fluxo de compra. O agrupamento contextual é pela restrição de negócio ausente, dentro do escopo de A06; não se afirma injeção."
+    },
+    "fonte_owasp": "https://top10.owasp.org/2025/A06_2025-Insecure_Design/"
+  },
+  {
+    "caso_id": "AMP1f800f046503c14c",
+    "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+    "arquivo": "routes/chat.ts",
+    "arquivo_sha256": "c3176cea23bafd937913839c57e8b5b7c3bb8f0052bb39599aafd7d50d80f8e9",
+    "linha_inicio": 149,
+    "linha_fim": 149,
+    "trecho": "        }),\n        execute: async ({ id }) => {\n          const productId = Number(id)\n          return await db.reviewsCollection.find({ $where: 'this.product == ' + productId }) as Review[]\n        }\n      }),\n\n",
+    "justificativa_arquivada": "A entrada id e convertida por Number(id) antes de ser concatenada no $where. O padrao dinamico e encontrado, mas a entrada nao injeta JavaScript nessa consulta.",
+    "decisao": {
+      "categoria": "A05",
+      "justificativa": "A regra sinaliza consulta NoSQL com $where dinâmico. O código converte id por Number(id) antes da concatenação: a triagem arquivada considera esta ocorrência falso positivo. A05 classifica a família do alerta, sem afirmar injeção explorável neste caso."
+    },
+    "fonte_owasp": "https://top10.owasp.org/2025/A05_2025-Injection/"
+  },
+  {
+    "caso_id": "AMP58b496188973b659",
+    "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+    "arquivo": "routes/showProductReviews.ts",
+    "arquivo_sha256": "5159697e5a419fee472b6dba1869c3e6548cbeee435681ee2f8e38c5edc8e61f",
+    "linha_inicio": 36,
+    "linha_fim": 36,
+    "trecho": "    // Measure how long the query takes, to check if there was a nosql dos attack\n    const t0 = new Date().getTime()\n\n    db.reviewsCollection.find({ $where: 'this.product == ' + id }).then((reviews: Review[]) => {\n      const t1 = new Date().getTime()\n      challengeUtils.solveIf(challenges.noSqlCommandChallenge, () => { return (t1 - t0) > 2000 })\n      const user = security.authenticatedUsers.from(req)\n",
+    "justificativa_arquivada": "Quando o desafio esta habilitado, req.params.id nao e convertido a numero antes de ser concatenado no JavaScript de $where. O teste Cypress usa sleep(100) nesse parametro.",
+    "decisao": {
+      "categoria": "A05",
+      "justificativa": "req.params.id é concatenado na expressão JavaScript de $where quando o desafio está habilitado. A05 inclui injeção NoSQL e execução de entrada em interpretadores. A associação depende dessa condição do código, sem novo teste de exploração."
+    },
+    "fonte_owasp": "https://top10.owasp.org/2025/A05_2025-Injection/"
+  },
+  {
+    "caso_id": "AMP20721d202c8b96d6",
+    "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+    "arquivo": "routes/trackOrder.ts",
+    "arquivo_sha256": "1096a1987f09076352a365b8e3efebf0ad5945d2e683e8abf86023757e16235f",
+    "linha_inicio": 18,
+    "linha_fim": 18,
+    "trecho": "    const id = !utils.isChallengeEnabled(challenges.reflectedXssChallenge) ? String(req.params.id).replace(/[^\\w-]+/g, '') : utils.trunc(req.params.id, 60)\n\n    challengeUtils.solveIf(challenges.reflectedXssChallenge, () => { return utils.contains(id, '<iframe src=\"javascript:alert(`xss`)\">') })\n    db.ordersCollection.find({ $where: `this.orderId === '${id}'` }).then((order: any) => {\n      const result = utils.queryResultToJson(order)\n      challengeUtils.solveIf(challenges.noSqlOrdersChallenge, () => { return result.data.length > 1 })\n      if (result.data[0] === undefined) {\n",
+    "justificativa_arquivada": "ID de rota sem sanitizacao quando o desafio esta habilitado e interpolado em string JavaScript de $where; o teste Cypress injeta uma expressao sempre verdadeira.",
+    "decisao": {
+      "categoria": "A05",
+      "justificativa": "O identificador da rota é interpolado em uma string JavaScript de $where; com o desafio habilitado, truncamento não remove a estrutura da expressão. O mecanismo é injeção NoSQL, incluída na descrição de A05."
+    },
+    "fonte_owasp": "https://top10.owasp.org/2025/A05_2025-Injection/"
+  },
+  {
+    "caso_id": "AMP3d463bdbd0a7b446",
+    "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+    "arquivo": "routes/updateProductReviews.ts",
+    "arquivo_sha256": "711928a6d6188c2413e3df62c85db1e77f8fe7ad04e5605e6588de42e9dd6ad2",
+    "linha_inicio": 17,
+    "linha_fim": 21,
+    "trecho": "export function updateProductReviews () {\n  return (req: Request, res: Response, next: NextFunction) => {\n    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\n      { $set: { message: req.body.message } },\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\n    ).then(\n      (result: { modified: number, original: Array<{ author: any }> }) => {\n        challengeUtils.solveIf(challenges.noSqlReviewsChallenge, () => { return result.modified > 1 }) // vuln-code-snippet hide-line\n        challengeUtils.solveIf(challenges.forgedReviewChallenge, () => { return user?.data && result.original[0] && result.original[0].author !== user.data.email && result.modified === 1 }) // vuln-code-snippet hide-line\n",
+    "justificativa_arquivada": "Seletor _id recebe valor bruto da requisicao e a operacao permite multi true; nao comprova sozinho o defeito de autorizacao do desafio Forged Review.",
+    "decisao": {
+      "categoria": "A05",
+      "justificativa": "O seletor _id recebe req.body.id sem restringi-lo a um identificador escalar e a atualização permite multi:true. A associação descreve a possibilidade de manipular a lógica da consulta NoSQL; a ocorrência de autorização no mesmo arquivo é outro caso e não foi fundida a este."
+    },
+    "fonte_owasp": "https://top10.owasp.org/2025/A05_2025-Injection/"
+  },
+  {
+    "caso_id": "AMP8655da69167e4466",
+    "commit_alvo": "f915bddd82790d0f3018902d36ae9b4241a5f51f",
+    "arquivo": "server.ts",
+    "arquivo_sha256": "f743b71c06a5387fcef824bdea6286334db158e20a5d0f6b6e0451f0f77dbb86",
+    "linha_inicio": 409,
+    "linha_fim": 418,
+    "trecho": "  app.post('/api/Feedbacks', verify.captchaBypassChallenge())\n  /* User registration challenge verifications before finale takes over */\n  app.post('/api/Users', (req: Request, res: Response, next: NextFunction) => {\n    if (req.body.email !== undefined && req.body.password !== undefined && req.body.passwordRepeat !== undefined) {\n      if (req.body.email.length !== 0 && req.body.password.length !== 0) {\n        req.body.email = req.body.email.trim()\n        req.body.password = req.body.password.trim()\n        req.body.passwordRepeat = req.body.passwordRepeat.trim()\n      } else {\n        res.status(400).send(res.__('Invalid email/password cannot be empty'))\n      }\n    }\n    next()\n  })\n  app.post('/api/Users', verify.registerAdminChallenge())\n  app.post('/api/Users', verify.passwordRepeatChallenge()) // vuln-code-snippet hide-end\n",
+    "justificativa_arquivada": "A validacao exige que email, password e passwordRepeat estejam todos presentes; se passwordRepeat e omitido, email/password vazios passam ate Finale. Quando presentes, apenas trim e verificacao de tamanho sao realizados, sem igualdade entre senhas. Hooks de desafios chamam next, nao rejeitam. Modelos nao impoem estas restricoes. Integracao HTTP com middlewares/modelos/chamada resource reais e Express/Finale/SQLite reais confirma ambos persistidos. Controles de obrigatoriedade e igualdade retornam 400 sem novas linhas; cadastro valido permanece aceito. Hash, sanitizacao, identidade e carteira simulados; nao E2E completo. Um alerta, dois requisitos e mecanismos de validacao distintos.",
+    "decisao": {
+      "categoria": "A07",
+      "justificativa": "O cadastro condiciona a validação à presença conjunta de campos e não verifica a igualdade de password/passwordRepeat. A triagem arquivada relata persistência com credenciais vazias quando passwordRepeat é omitido. A associação contextual descreve falhas no estabelecimento das credenciais em A07, sem afirmar novo teste ponta a ponta."
+    },
+    "fonte_owasp": "https://top10.owasp.org/2025/A07_2025-Authentication_Failures/"
+  }
+]

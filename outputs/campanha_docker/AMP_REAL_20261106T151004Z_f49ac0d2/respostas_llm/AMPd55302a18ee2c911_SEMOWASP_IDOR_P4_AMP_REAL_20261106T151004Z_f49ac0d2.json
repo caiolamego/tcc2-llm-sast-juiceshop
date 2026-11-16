@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Authorization Bypass Through User-Controlled Key (CWE-639) na função getDeliveryMethod, onde o método de entrega é buscado apenas pelo ID fornecido na requisição sem verificar se o recurso pertence ao usuário autenticado.\",\"causa_da_vulnerabilidade\":\"O código realiza uma consulta ao banco de dados usando apenas o ID recebido via req.params.id, sem escopo ou filtro baseado no usuário autenticado. Isso permite que um usuário autenticado acesse dados de métodos de entrega que não deveriam estar disponíveis para ele, pois não há verificação de propriedade ou permissão.\",\"estrategia_de_correcao\":\"Adicionar um filtro na consulta para garantir que o método de entrega retornado pertence ao usuário autenticado, utilizando um identificador do usuário presente na sessão ou token (exemplo: req.user.id). Caso o modelo DeliveryModel não possua um campo de propriedade, deve-se assumir que há um campo que vincula o método ao usuário, como userId, e filtrar por ele na consulta. Assim, a consulta será feita com escopo do usuário, evitando acesso indevido.\",\"edicoes\":[{\"arquivo\":\"routes/delivery.ts\",\"trecho_original\":\"    const method = await DeliveryModel.findOne({ where: { id: req.params.id } })\",\"trecho_corrigido\":\"    const method = await DeliveryModel.findOne({ where: { id: req.params.id, userId: req.user.id } })\"}],\"justificativa_tecnica\":\"Ao incluir o filtro userId: req.user.id na consulta, garantimos que o método de entrega retornado pertence ao usuário autenticado, mitigando a possibilidade de um usuário acessar dados de outro. Isso implementa o escopo do usuário na consulta, conforme recomendado para evitar Authorization Bypass. A alteração é mínima e preserva o comportamento funcional para usuários legítimos.\",\"limitacoes_da_correcao\":\"A correção assume que existe um campo userId no modelo DeliveryModel que relaciona o método de entrega ao usuário proprietário. Se esse campo não existir, será necessário adaptar o modelo ou a lógica de autorização. Além disso, a correção depende da existência de um middleware que autentique o usuário e disponibilize req.user.id; caso contrário, será necessário implementar essa autenticação. A correção não aborda outras possíveis vulnerabilidades fora do escopo da consulta por ID.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-4.1-mini-2025-04-14",
+  "system_fingerprint": "fp_295d13ce69",
+  "seed": 42,
+  "tokens_entrada": 1865,
+  "tokens_saida": 481,
+  "latencia_s": 12.995,
+  "custo_usd": 0.001516,
+  "hash_prompt": "72c028aadbfadb2232f606c4a1c90fde09d1bb206d37c88f34aae5947bacb19d",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-4.1-mini",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "seed": 42
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

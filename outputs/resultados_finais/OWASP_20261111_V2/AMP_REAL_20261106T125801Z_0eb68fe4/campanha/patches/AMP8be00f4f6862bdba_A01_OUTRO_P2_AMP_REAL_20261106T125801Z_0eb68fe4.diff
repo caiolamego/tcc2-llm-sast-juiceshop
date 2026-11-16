@@ -1,0 +1,22 @@
+diff --git a/server.ts b/server.ts
+index 62e21d12a..518d8c7e1 100644
+--- a/server.ts
++++ b/server.ts
+@@ -673,7 +673,7 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+   app.post('/snippets/fixes', utils.asyncHandler(checkCorrectFix()))
+ 
+   /* Serve metrics before the Angular catch-all so the route is reachable in all environments */
+-  app.get('/metrics', utils.asyncHandler(metrics.serveMetrics()))
++  app.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics()))
+ 
+   app.use(utils.asyncHandler(serveAngularClient()))
+ 
+@@ -726,7 +726,7 @@ logger.info(`Entity models ${colors.bold(Object.keys(sequelize.models).length.to
+ /* Serve metrics */
+ let metricsUpdateLoop: any
+ const Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge
+-app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge
++app.get('/metrics', security.isAuthorized(), utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge
+ errorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`
+ 
+ export async function start (readyCallback?: () => void) {

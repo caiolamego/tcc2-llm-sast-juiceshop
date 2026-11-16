@@ -1,0 +1,26 @@
+diff --git a/routes/profileImageUrlUpload.ts b/routes/profileImageUrlUpload.ts
+index 55184083e..e28538c61 100644
+--- a/routes/profileImageUrlUpload.ts
++++ b/routes/profileImageUrlUpload.ts
+@@ -21,6 +21,21 @@ export function profileImageUrlUpload () {
+       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
+       if (loggedInUser) {
+         try {
++          const parsedUrl = new URL(url)
++          const allowedProtocols = ['http:', 'https:']
++          const forbiddenHosts = ['localhost', '127.0.0.1', '::1']
++          const forbiddenHostPatterns = [/^192\.168\./, /^10\./, /^172\.(1[6-9]|2[0-9]|3[0-1])\./]
++
++          if (!allowedProtocols.includes(parsedUrl.protocol)) {
++            throw new Error('Invalid URL protocol')
++          }
++
++          const hostname = parsedUrl.hostname.toLowerCase()
++
++          if (forbiddenHosts.includes(hostname) || forbiddenHostPatterns.some(pattern => pattern.test(hostname))) {
++            throw new Error('URL host is forbidden')
++          }
++
+           const response = await fetch(url)
+           if (!response.ok || !response.body) {
+             throw new Error('url returned a non-OK status code or an empty body')

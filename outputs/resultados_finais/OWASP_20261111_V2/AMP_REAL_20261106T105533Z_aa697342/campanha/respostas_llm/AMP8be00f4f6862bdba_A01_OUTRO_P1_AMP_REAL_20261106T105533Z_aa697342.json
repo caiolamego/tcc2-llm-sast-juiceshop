@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição pública do endpoint de métricas, que pode revelar informações operacionais e internas da aplicação.\",\n  \"causa_da_vulnerabilidade\": \"O endpoint GET /metrics é registrado sem middleware de autenticação ou autorização. Além disso, há um segundo registro público da mesma rota no trecho vulnerável, permitindo acesso às métricas sem controle de acesso.\",\n  \"estrategia_de_correcao\": \"Remover somente o registro duplicado e vulnerável de /metrics, mantendo o registro anterior, que já serve as métricas antes da rota catch-all e preserva o acesso funcional ao endpoint.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"// vuln-code-snippet start exposedMetricsChallenge\\n/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\napp.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge\\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`\",\n      \"trecho_corrigido\": \"// vuln-code-snippet start exposedMetricsChallenge\\n/* Serve metrics */\\nlet metricsUpdateLoop: any\\nconst Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge\\nerrorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A rota /metrics já está registrada anteriormente, antes do middleware catch-all, por meio de app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())). No Express, a primeira rota correspondente que encerra a resposta impede que o registro posterior seja alcançado. Assim, o registro duplicado não acrescenta funcionalidade e sua remoção elimina a linha identificada como vulnerável sem alterar o comportamento funcional existente.\",\n  \"limitacoes_da_correcao\": \"A rota /metrics que permanece continua sem autenticação ou autorização explícita. Esta alteração corrige o registro duplicado identificado, mas não restringe o acesso ao endpoint; se as métricas não forem destinadas ao público, será necessário definir e aplicar uma política de controle de acesso compatível com os requisitos da aplicação.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1971,
+  "tokens_saida": 490,
+  "latencia_s": 4.942,
+  "custo_usd": 0.000491,
+  "hash_prompt": "e16b5f0a2137358ee29a64ad79b177251d3c69888b86a92363db6434859adbc0",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1968
+}

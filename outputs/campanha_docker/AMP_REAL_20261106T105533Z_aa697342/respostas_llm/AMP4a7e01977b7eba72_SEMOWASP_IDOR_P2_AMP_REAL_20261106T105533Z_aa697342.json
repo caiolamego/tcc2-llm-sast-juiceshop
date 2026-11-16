@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Injeção NoSQL no endpoint de atualização de avaliações, permitindo também a alteração de avaliações de outros usuários.\",\n  \"causa_da_vulnerabilidade\": \"O código usa req.body.id diretamente como valor do filtro MongoDB e habilita multi: true. Como o corpo da requisição é controlado pelo cliente, id pode ser um objeto com operadores MongoDB, em vez de um identificador escalar. Isso pode ampliar o filtro e atualizar várias avaliações. Além disso, o filtro não restringe a atualização ao autor autenticado.\",\n  \"estrategia_de_correcao\": \"Validar que id e message são strings, rejeitar identificadores que não sejam ObjectId válidos e restringir a atualização ao documento cujo _id corresponda ao identificador e cujo author corresponda ao usuário autenticado. Remover a opção multi para limitar a operação a uma avaliação.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/updateProductReviews.ts\",\n      \"trecho_original\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    db.reviewsCollection.update( // vuln-code-snippet neutral-line forgedReviewChallenge\\n      { _id: req.body.id }, // vuln-code-snippet vuln-line noSqlReviewsChallenge forgedReviewChallenge\\n      { $set: { message: req.body.message } },\\n      { multi: true } // vuln-code-snippet vuln-line noSqlReviewsChallenge\",\n      \"trecho_corrigido\": \"    const user = security.authenticatedUsers.from(req) // vuln-code-snippet vuln-line forgedReviewChallenge\\n    if (typeof req.body.id !== 'string' || !/^[a-fA-F0-9]{24}$/.test(req.body.id) || typeof req.body.message !== 'string' || !user?.data?.email) {\\n      return res.sendStatus(400)\\n    }\\n    db.reviewsCollection.update(\\n      { _id: req.body.id, author: user.data.email },\\n      { $set: { message: req.body.message } }\\n    )\"\n    }\n  ],\n  \"justificativa_tecnica\": \"A validação de tipos impede que objetos contendo operadores NoSQL sejam usados como id ou message, e a validação do formato limita id a uma representação escalar de ObjectId. O filtro inclui o autor autenticado, impedindo que um usuário altere avaliações de terceiros. A remoção de multi limita a atualização a um único documento, mesmo que o filtro venha a corresponder a mais de um registro.\",\n  \"limitacoes_da_correcao\": \"A validação pressupõe que os identificadores de avaliações sejam ObjectIds de 24 caracteres hexadecimais e que author armazene o e-mail do usuário. A resposta 400 para entradas inválidas é uma nova resposta para requisições malformadas; o comportamento de atualização para entradas válidas é preservado, mas agora limitado às avaliações do próprio usuário.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1005,
+  "tokens_saida": 634,
+  "latencia_s": 7.323,
+  "custo_usd": 0.000418,
+  "hash_prompt": "4fdd0f21558296b89fc7352239fbeb32e7339f4ad62575a17b80d13d33e59f54",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

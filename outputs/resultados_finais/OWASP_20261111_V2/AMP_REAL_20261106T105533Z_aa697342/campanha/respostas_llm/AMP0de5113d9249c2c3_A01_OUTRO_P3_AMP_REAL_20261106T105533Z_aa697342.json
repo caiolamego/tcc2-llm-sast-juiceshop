@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Autorização incorreta ao selecionar o histórico de pedidos usando um email mascarado, que não é um identificador único.\",\n  \"causa_da_vulnerabilidade\": \"A substituição de vogais por asteriscos pode fazer com que emails distintos resultem no mesmo valor. A consulta pode, portanto, retornar pedidos associados a outro usuário, apesar de a requisição estar autenticada.\",\n  \"estrategia_de_correcao\": \"Usar o ID do usuário autenticado no servidor como critério de autorização e consulta, em vez do email mascarado. Isso pressupõe que os documentos de pedidos armazenam o ID do proprietário no campo userId.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"routes/orderHistory.ts\",\n      \"trecho_original\": \"      const email = loggedInUser.data.email\\n      const updatedEmail = email.replace(/[aeiou]/gi, '*')\\n      const order = await ordersCollection.find({ email: updatedEmail })\",\n      \"trecho_corrigido\": \"      const order = await ordersCollection.find({ userId: loggedInUser.data.id })\"\n    }\n  ],\n  \"justificativa_tecnica\": \"O ID obtido da identidade autenticada mantida no servidor evita colisões introduzidas pelo mascaramento e limita a consulta aos pedidos do usuário autenticado. A resposta e o fluxo para usuários não autenticados permanecem inalterados.\",\n  \"limitacoes_da_correcao\": \"A alteração pressupõe que os documentos de pedidos tenham um campo userId correspondente a loggedInUser.data.id. O código fornecido não confirma o esquema nem como os pedidos são gravados; essa suposição deve ser verificada. Se os pedidos não armazenarem esse vínculo, será necessário usar outro identificador único e confiável presente nos documentos, sem recorrer ao email mascarado.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1737,
+  "tokens_saida": 395,
+  "latencia_s": 4.6,
+  "custo_usd": 0.000415,
+  "hash_prompt": "fe462e2782420e4755a1cde8cc258e3cbfab542ecca212321988f7ef2d9c386a",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1734
+}

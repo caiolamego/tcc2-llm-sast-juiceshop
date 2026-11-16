@@ -1,0 +1,26 @@
+{
+  "texto": "{\n  \"vulnerabilidade_identificada\": \"Exposição de nomes e estrutura de arquivos por listagem de diretório na rota /ftp (CWE-548).\",\n  \"causa_da_vulnerabilidade\": \"A rota /ftp usa serveIndex('ftp', ...), que gera uma página com a listagem dos arquivos e diretórios. A rota de listagem está acessível sem autenticação.\",\n  \"estrategia_de_correcao\": \"Remover apenas o middleware serveIndex da rota /ftp, mantendo o middleware de download servePublicFiles() e a rota de quarentena para preservar o acesso funcional aos arquivos.\",\n  \"edicoes\": [\n    {\n      \"arquivo\": \"server.ts\",\n      \"trecho_original\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\",\n      \"trecho_corrigido\": \"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp/quarantine/:file', serveQuarantineFiles()) // vuln-code-snippet neutral-line directoryListingChallenge\"\n    }\n  ],\n  \"justificativa_tecnica\": \"Sem serveIndex, requisições ao diretório /ftp não recebem uma página enumerando seu conteúdo. Os arquivos continuam disponíveis por suas rotas de download existentes, e o acesso à quarentena permanece inalterado. A alteração é restrita à listagem, conforme a mitigação recomendada para CWE-548.\",\n  \"limitacoes_da_correcao\": \"A correção impede a enumeração por listagem, mas não torna privados os arquivos servidos diretamente pelas rotas existentes. Quem conhecer ou descobrir uma URL de arquivo ainda poderá acessá-lo conforme o comportamento atual; a sensibilidade e a autorização desses arquivos devem ser avaliadas separadamente.\"\n}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3240,
+  "tokens_saida": 498,
+  "latencia_s": 5.334,
+  "custo_usd": 0.000654,
+  "hash_prompt": "4d717208a044f2f5cb6c461df3c4c1346f044e298b5d3e432f45371577bc87ce",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3237
+}

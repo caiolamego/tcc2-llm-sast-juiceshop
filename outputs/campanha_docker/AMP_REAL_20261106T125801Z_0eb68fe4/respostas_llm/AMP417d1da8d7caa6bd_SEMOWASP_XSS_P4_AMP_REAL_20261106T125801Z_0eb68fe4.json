@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Cross-site scripting (XSS) na renderização do endereço IP de último login, devido ao uso de bypassSecurityTrustHtml com valor derivado do token armazenado no localStorage.\",\"causa_da_vulnerabilidade\":\"O valor payload.data.lastLoginIp é inserido em uma string HTML e marcado como confiável por meio de bypassSecurityTrustHtml. Isso desativa a sanitização contextual do Angular, permitindo que conteúdo controlado por um atacante seja interpretado como HTML no template.\",\"estrategia_de_correcao\":\"Exibir o endereço IP como texto simples, removendo a construção de HTML e o bypass de sanitização. O template continuará podendo interpolar o valor normalmente, com o escaping padrão do Angular.\",\"edicoes\":[{\"arquivo\":\"frontend/src/app/last-login-ip/last-login-ip.component.ts\",\"trecho_original\":\"        this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)\",\"trecho_corrigido\":\"        this.lastLoginIp = payload.data.lastLoginIp\"}],\"justificativa_tecnica\":\"A atribuição passa a manter o valor como dado textual, sem transformá-lo em HTML confiável. Quando renderizado por interpolação Angular, o conteúdo é escapado automaticamente, impedindo que tags, atributos de evento ou outros elementos maliciosos sejam interpretados pelo navegador. A alteração é mínima e preserva a exibição do endereço de último login, embora remova a formatação HTML criada anteriormente.\",\"limitacoes_da_correcao\":\"A tag <small> deixa de ser aplicada por este componente; se essa formatação for necessária, ela deve ser mantida estaticamente no template, envolvendo a interpolação escapada. A correção pressupõe que lastLoginIp seja renderizado por interpolação ou outro binding textual seguro no template. Ela não valida a autenticidade do JWT nem corrige eventual comprometimento do token armazenado no localStorage.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 1997,
+  "tokens_saida": 409,
+  "latencia_s": 5.927,
+  "custo_usd": 0.00099,
+  "hash_prompt": "6a3b0d3a47c718d70401f8bfcceeb90efd9e050ca610cc3d4dc0e53eb0907751",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 1994
+}

@@ -1,0 +1,13 @@
+diff --git a/frontend/src/app/search-result/search-result.component.ts b/frontend/src/app/search-result/search-result.component.ts
+index 1920febe3..7a84fe68f 100644
+--- a/frontend/src/app/search-result/search-result.component.ts
++++ b/frontend/src/app/search-result/search-result.component.ts
+@@ -107,7 +107,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
+ 
+   trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge
+     for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge
+-      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge
++      tableData[i].description = tableData[i].description // vuln-code-snippet neutral-line restfulXssChallenge
+     } // vuln-code-snippet neutral-line restfulXssChallenge
+   } // vuln-code-snippet neutral-line restfulXssChallenge
+ 

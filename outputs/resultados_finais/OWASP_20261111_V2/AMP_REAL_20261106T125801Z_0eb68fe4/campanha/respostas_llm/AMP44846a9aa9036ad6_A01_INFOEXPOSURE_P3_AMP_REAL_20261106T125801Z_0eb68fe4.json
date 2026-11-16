@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Exposição de informações por listagem de diretório (CWE-548) na rota /ftp.\",\"causa_da_vulnerabilidade\":\"A chamada serveIndex('ftp', { icons: true }) habilita a geração de uma página com os nomes e metadados dos arquivos do diretório ftp, permitindo enumerar seu conteúdo.\",\"estrategia_de_correcao\":\"Remover apenas o middleware serveIndex da rota /ftp, preservando o middleware servePublicFiles() para manter o download direto dos arquivos.\",\"edicoes\":[{\"arquivo\":\"server.ts\",\"trecho_original\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true })) // vuln-code-snippet vuln-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\",\"trecho_corrigido\":\"  /* /ftp directory browsing and file download */ // vuln-code-snippet neutral-line directoryListingChallenge\\n  app.use('/ftp(?!/quarantine)/:file', servePublicFiles()) // vuln-code-snippet vuln-line directoryListingChallenge\"}],\"justificativa_tecnica\":\"A remoção de serveIndex impede a listagem e a enumeração dos arquivos em /ftp. O endpoint existente /ftp(?!/quarantine)/:file continua servindo arquivos solicitados diretamente, preservando a funcionalidade de download. A rota separada /ftp/quarantine/:file permanece inalterada.\",\"limitacoes_da_correcao\":\"Arquivos ainda podem ser acessados quando seus caminhos forem conhecidos por meio das rotas de download existentes. Esta alteração não implementa autorização, filtragem de arquivos ou proteção contra divulgação por URLs previamente descobertas.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 3154,
+  "tokens_saida": 389,
+  "latencia_s": 5.997,
+  "custo_usd": 0.001255,
+  "hash_prompt": "5d9a59e30e1ab1fd36bd3684d2d72a32d46ad286db95fb64b9434e8ffcf5f331",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 3151
+}

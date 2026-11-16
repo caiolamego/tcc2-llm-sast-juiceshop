@@ -1,0 +1,26 @@
+{
+  "texto": "{\"vulnerabilidade_identificada\":\"Path traversal (travessia de diretórios) ao servir arquivos controlados pelo parâmetro `file`.\",\"causa_da_vulnerabilidade\":\"A validação apenas rejeita o caractere `/`, mas não rejeita sequências de travessia como `..\\\\\\\\` em sistemas Windows. Além disso, `path.resolve('encryptionkeys/', file)` normaliza essas sequências e pode resolver o caminho para fora do diretório `encryptionkeys`.\",\"estrategia_de_correcao\":\"Validar o caminho resolvido após a normalização, garantindo que ele permaneça dentro do diretório `encryptionkeys`, sem alterar mensagens, identificadores ou o fluxo funcional existente.\",\"edicoes\":[{\"arquivo\":\"routes/keyServer.ts\",\"trecho_original\":\"    if (!file.includes('/')) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\",\"trecho_corrigido\":\"    if (!file.includes('/') && path.resolve('encryptionkeys/', file).startsWith(path.resolve('encryptionkeys/') + path.sep)) {\\n      res.sendFile(path.resolve('encryptionkeys/', file))\\n    } else {\"}],\"justificativa_tecnica\":\"`path.resolve` normaliza componentes como `..` e separadores específicos do sistema operacional. A comparação com o diretório-base absoluto, acrescido de `path.sep`, impede que o caminho resolvido seja o próprio diretório-base ou qualquer caminho fora dele. Assim, entradas como `..\\\\\\\\arquivo` não conseguem escapar de `encryptionkeys`, enquanto nomes válidos de arquivos nesse diretório continuam sendo servidos. A checagem original de `/` é preservada, mantendo o comportamento existente para esse caso.\",\"limitacoes_da_correcao\":\"A correção protege o confinamento ao diretório `encryptionkeys`, mas não impede que arquivos sensíveis sejam expostos caso já estejam armazenados nesse diretório e sejam acessíveis por nome. Também pressupõe que o caminho-base usado para servir os arquivos seja o mesmo diretório pretendido pela aplicação.\"}",
+  "recusa": null,
+  "finish_reason": "stop",
+  "modelo": "gpt-5.6-luna",
+  "system_fingerprint": null,
+  "seed": null,
+  "tokens_entrada": 770,
+  "tokens_saida": 436,
+  "latencia_s": 6.089,
+  "custo_usd": 0.000677,
+  "hash_prompt": "682a7d4750c3a2001843fc1d3e534b65f726aa74b7e5857a95886c3bd4ea2d7b",
+  "do_cache": false,
+  "chamadas_enviadas": 1,
+  "historico_transporte": [],
+  "consumo_incerto": false,
+  "modelo_solicitado": "gpt-5.6-luna",
+  "parametros_geracao": {
+    "temperature": 0,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "none"
+  },
+  "tokens_raciocinio": 0,
+  "tokens_entrada_cache": 0,
+  "tokens_escrita_cache": 0
+}

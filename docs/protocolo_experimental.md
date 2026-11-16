@@ -10,6 +10,7 @@
 | Commit fixado | `f915bddd82790d0f3018902d36ae9b4241a5f51f` ("Bump to v20.1.1") |
 | Node.js exigido (`engines`) | `22 - 26` |
 | Node.js confirmado no ambiente | `v26.7.0` (confirmado em 2026-10-07; dentro da faixa exigida) |
+| Ambiente de execução a partir de 2026-10-18 | Docker `linux/amd64`, Node `v24.14.0`, npm `11.9.0`, Python `3.11.2` (seção "Ambiente único em Docker") |
 | npm | `11.19.0` |
 | Python | `3.11.16` |
 | git | `2.50.1` |
@@ -138,7 +139,7 @@ Condições fixas de execução:
 
 A suíte do Juice Shop **não passa integralmente** no commit fixado, sem nenhuma alteração: `test/api/internet-resources.test.ts` faz uma requisição real ao StackOverflow, que responde `403` de forma consistente no ambiente utilizado. Um critério F definido como "nenhum teste falhou" tornaria `F = 0` para toda e qualquer correção, zerando a TRV por motivo alheio ao experimento.
 
-**Decisão.** `F = 1` quando o conjunto de testes que falham após a correção está **contido** no conjunto que já falhava sem alteração alguma. A linha de base é gerada uma vez por `scripts/baseline_testes.py`, versionada em `outputs/baseline_testes.json` com commit do alvo, data e nome de cada teste falho, e reconferida a cada mudança de ambiente.
+**Decisão.** `F = 1` quando o conjunto de testes que falham após a correção está **contido** no conjunto que já falhava sem alteração alguma. A linha de base é gerada uma vez por `scripts/experimento/gerar_linha_de_base_historica.py`, versionada em `outputs/baseline_testes.json` com commit do alvo, data e nome de cada teste falho, e reconferida a cada mudança de ambiente.
 
 Vantagens sobre pular o teste pelo nome: cobre qualquer teste instável ou dependente de rede sem precisar enumerá-los, e deixa registrado no repositório o estado exato do alvo. Custo: uma execução de referência (~12 s).
 
@@ -214,6 +215,399 @@ Condições que tornam esse ajuste legítimo e não seleção de resultados favo
 2. A tentativa que motivou o ajuste está arquivada em `outputs/tentativas/JS003_A06_PATHTRAV_P1_EXP01_*` (renomeada de `E01` em 2026-10-07, para deixar `E01` livre para a execução oficial; a tentativa seguinte, já com a restrição, é a `EXP02`) e é reportada no texto como observação preliminar, não descartada.
 3. Após esta data, **nenhuma alteração de prompt é feita com base em resultados da execução completa**. Qualquer necessidade identificada depois entra como trabalho futuro.
 
+A observação em si é resultado: a correção removeria o alerta do SAST (`R = 1`) e seria classificada como bem-sucedida por qualquer avaliação baseada apenas em reanálise estática, mas foi reprovada na camada de testes por uma alteração cosmética. É evidência direta do argumento central do trabalho — remoção de alerta não é prova de correção adequada — e deve ser citada no capítulo de discussão.
+
+## 11. Catálogo ampliado por ocorrência — política escopo_apenas_v1
+
+Implementado em 12/10/2026 na feature 01. Esta seção registra a política do conjunto ampliado;
+as seções anteriores descrevem o catálogo histórico e as execuções E01/E02.
+
+O gerador `scripts/experimento/gerar_catalogo_ampliado.py` lê as quatro fontes da auditoria
+combinada arquivada, verifica hashes, commit, versão do Semgrep e associação por número,
+regra, arquivo e intervalo. A decisão de escopo é a classificação arquivada validada.
+O filtro histórico de severidade/categoria/CWE não é reaplicado ao conjunto ampliado.
+
+A unidade é uma ocorrência (regra normalizada, arquivo e intervalo completo no commit fixado),
+sem deduplicação ou agrupamento por causa. Entram confirmados, falsos positivos e inconclusivos;
+só `fora_escopo` é excluído. O catálogo produzido contém 78 casos: 55 confirmados,
+21 falsos positivos e 2 inconclusivos. Há 46 exclusões rastreáveis, totalizando 124 alertas.
+A presença de um falso positivo permanece como metadado; eventual remoção de seu alerta
+não será interpretada como prova de correção de uma vulnerabilidade real.
+
+Os IDs `AMP…` derivam de SHA-256 sobre commit, regra, arquivo e coordenadas. Eles identificam
+ocorrências no baseline; deslocamentos de linhas após patches exigirão tratamento na integração.
+Trechos são lidos de um checkout limpo, com hash do arquivo e três linhas de contexto por lado.
+Arquivos excluídos não são lidos para extrair trechos. Metadados ausentes não excluem casos;
+CWE desconhecida resulta em `OUTRO`, e RAG sem mapeamento em `generico`.
+
+Saídas oficiais: [catálogo](../outputs/catalogos/ampliado_v1/catalogo_issues.json),
+[exclusões](../outputs/catalogos/ampliado_v1/exclusoes.json) e
+[metadados](../outputs/catalogos/ampliado_v1/catalogo_meta.json).
+A [especificação](historico/features/01-catalogo-ampliado/README.md) e o
+[relatório de entrega](historico/features/01-catalogo-ampliado/ENTREGA.md) detalham o contrato e a reprodução.
+
+Esta geração não altera as entradas do orquestrador. O catálogo histórico, seus resultados e
+os scripts anteriores foram preservados. Congelamento do perfil ampliado, comparação posterior
+R/M e seleção do novo catálogo no pipeline permanecem pendentes.
+
+
+## 12. Integração do catálogo ampliado — feature 02
+
+A execução ampliada seleciona catálogo, perfil e saída explicitamente. O loader verifica
+hashes, schema, IDs, coordenadas e fontes arquivadas. O commit esperado vem do catálogo;
+a configuração de ambiente, quando preenchida, deve coincidir.
+
+O perfil local `config/perfis/ampliado_v1/perfil.json` congela as regras remotas exportadas
+e as regras locais, incluindo hashes, IDs, exclusões e timeouts. Sua exportação remota foi
+obtida após a auditoria e verificada por reprodução do multiconjunto de 78 ocorrências.
+A reprodução dos achados não prova que todo o conteúdo das regras é idêntico à versão
+histórica não arquivada; fixa o detector utilizado nesta nova etapa.
+
+Antes de criar cliente LLM, o preflight exige reprodução completa, verifica o checkout e
+monta prompts. `--somente-preflight` não exige dependências Node, API ou testes funcionais.
+Dry-run e tentativas usam worktrees com dependências e referência funcional selecionada
+por `--baseline-testes`, preservando a referência histórica.
+
+A comparação ampliada realiza scans globais e pareia ocorrências de arquivos inalterados
+por coordenadas. Em arquivos alterados, utiliza blocos de linhas idênticos e únicos nos
+dois arquivos, traduzindo o deslocamento. Grupos com anteriores e posteriores não pareados
+ficam indeterminados. R/M nulos não geram aceite automático.
+
+Avisos de parsing idênticos já presentes em arquivos não alterados permanecem como
+cobertura limitada. Diagnósticos novos, problemas em arquivos alterados, falha operacional
+ou timeout tornam as medições afetadas inconclusivas. Findings em arquivos sem cobertura
+anterior não são declarados novos comprovados. A confirmação dinâmica continua necessária
+para conclusões de segurança.
+
+A retomada exige contrato com commit, hashes de catálogo/metadados/perfil, estratégias,
+casos, comparador, templates e referência funcional. O baseline e os artefatos das linhas
+concluídas são conferidos por hash. As execuções ampliadas não são misturadas a E01/E02.
+
+TRV mantém indeterminados no denominador como tentativas sem remediação validada; as taxas
+auxiliares ampliadas utilizam valores medidos e denominadores explícitos. Os cálculos
+históricos ficam preservados. F continua medindo a cobertura atual do servidor, sem
+alegar validação integral de frontend.
+
+
+## 13. RAG simplificado e preparação das quatro estratégias — feature 03
+
+A base documental 1.0 contém dez documentos originais em português, com exemplos genéricos JS/TS e referências específicas a OWASP, CWE, Node.js, Angular e Sequelize. Os documentos não incorporam soluções do alvo ou patches anteriores. O manifesto congela bytes do índice, documentos e corpos. Frontmatter e fontes são excluídos dos prompts; corpos de até 20.000 caracteres não são truncados.
+
+A base 2.0 (03/11/2026) tem catorze documentos. `broken_access_control` atendia 25 dos 78 casos, com nove CWEs de naturezas diferentes; dele saíram `path_traversal` (CWE-22, CWE-73), `open_redirect` (CWE-601), `ssrf` (CWE-918) e `mass_assignment` (CWE-915), e o documento original ficou restrito a autorização (CWE-639, 862, 863 e 807). A decisão usou a distribuição de CWEs do catálogo e fontes primárias, antes de qualquer tentativa com a nova versão e sem consultar resultados por caso. Os outros nove documentos não mudaram. A base 2.1 (03/11/2026) acrescentou exemplos, alternativas e correções inadequadas em `injection`, `cross_site_scripting` e `security_misconfiguration`: os exemplos desses documentos não cobriam 25 dos 78 casos. Atende também ao comentário M6 da banca nesses três documentos. A mudança usou a distribuição de CWEs e regras do catálogo e fontes primárias, sem código do alvo nem resultados de tentativas. As bases anteriores estão em `knowledge_base/historico/`; as execuções anteriores registram os hashes delas.
+
+A recuperação percorre `cwe_ids` na ordem registrada (ou extrai IDs da lista histórica `cwe`), seleciona a primeira CWE mapeada, depois usa `categoria_rag` se conhecida e por último `generico`. Não consulta auditoria, desafios ou respostas anteriores. Os mapas e o catálogo das features anteriores permanecem intactos. `categoria_rag` e `rag_categoria_recuperada` são registradas separadamente.
+
+P3 inclui tarefa, código, o mesmo bloco SAST de P1L, corpo recuperado, restrições e formato. P4 acrescenta o roteiro existente após o contexto. Papel, restrições, formato, política de janela e mensagens/hashes P1/P2/P1L foram preservados. A base completa é revalidada em cada uso; indisponibilidade não impede estratégias sem RAG.
+
+Novas execuções utilizam contrato 2.0: componentes textuais e política de contexto são identificados por hash, com demais campos científicos preservados. Execuções RAG incluem manifesto, índice e documentos; alteração impede retomada. Para contrato 1.0 sem RAG, a equivalência exige campos científicos, hashes de roteiro/validação e mensagens/hashes de todos os pares caso/estratégia. O contrato antigo não é migrado nem regravado; evidência incompleta exige nova saída. Não adicionar P3/P4 à saída antiga.
+
+O preflight `AMP_RAG_PREFLIGHT_01` produziu 312 prompts e 156 recuperações P3/P4 para os 78 casos. Todos selecionaram por CWE. Os 21 falsos positivos e 49 casos sem OWASP foram mantidos. Fallback e múltiplas CWEs foram testados com fixtures; não há esses casos no conjunto oficial. Oito diagnósticos preexistentes de parsing foram preservados. Nenhum cliente LLM, patch ou teste funcional foi executado nessa preparação.
+
+Recuperação por categoria não confirma vulnerabilidade nem especificidade da recomendação: CWE-915 seleciona documento amplo que não detalha poluição de protótipo. P3/P4 adicionam SAST e documentação juntos; eventual efeito não deve ser atribuído exclusivamente a RAG. Correções reais, custos, R/F/M e validação específica de frontend pertencem às próximas entregas.
+
+Comandos e hashes estão na [entrega](historico/features/03-rag-prompts/ENTREGA.md); a [cobertura](../outputs/feature03/cobertura_rag.json) preserva categoria original/recuperada, motivo, CWE e tamanhos por caso.
+
+
+## 14. Consolidação verificável — feature 04
+
+O consolidado novo usa `criterio` como definição principal de F, exportando sensibilidade para as três definições sobre a mesma cadeia observada. A primeira classificação original de aceite delimita essa cadeia; registros posteriores são conservados como pós-aceite. O comando histórico mantém a cadeia retrospectiva e seus arredondamentos.
+
+TRV inclui tentativas não aplicadas e indeterminadas no denominador da população, sem transformá-las em medições negativas. No ampliado, TRI/TPF/TNINI utilizam denominadores medidos, conforme a política da feature 02; proporções mínimas sobre todas as tentativas são suplementares. TFF usa o mesmo denominador de TPF. Ausência de medição não é falha funcional comprovada. Denominador zero resulta em valor nulo, com motivo.
+
+Casos solicitados vêm do contrato; sem conjunto histórico verificável, reporta-se apenas a taxa por casos observados. P1L, simulações e desenho real são populações separadas. Cache não constitui nova cobrança nem réplica independente. Custos conhecidos e completude são explícitos; durações acumuladas não equivalem ao tempo de parede de workers paralelos.
+
+Os agrupamentos por CWE usam conjunto composto, sem duplicação. Ausência de OWASP e classificação falsa positiva/inconclusiva não excluem tentativas. A seleção sequencial das estratégias impede interpretar taxas brutas como efeito causal.
+
+RRIS é calculada somente de evidência conjunta verificável, com scans globais comparáveis e patches aceitos identificados. Não se somam R ou aceites isolados. Diagnósticos novos, arquivos alterados com parsing limitado, diagnósticos anteriores desaparecidos sem evidência de cobertura e falhas operacionais tornam a comparação indeterminada. Limitação estática idêntica em arquivos inalterados é registrada. Falha funcional conjunta impede chamar o conjunto de remediação validada, mesmo havendo redução estática.
+
+Publicação ocorre em saída nova, com lock, revalidação de fontes e promoção exclusiva. O manifesto registra hashes e políticas, sem timestamp de geração. Os cálculos históricos foram reproduzidos em cópias; as evidências oficiais anteriores não foram regravadas.
+
+A validação encontrou divergência preexistente no YAML remoto do perfil atual. Um snapshot exato do Git, com os hashes do manifesto original, foi arquivado na preparação da feature 04; a divergência permanece registrada. Isso não altera a metodologia nem o detector histórico. Novos scans precisam selecionar um perfil íntegro.
+
+Veja [especificação](historico/features/04-metricas-consolidacao/README.md) e [entrega](historico/features/04-metricas-consolidacao/ENTREGA.md).
+
+## Otimização experimental da validação — feature 05
+
+A feature 05 introduz a política opcional `otimizada_v1`. O padrão permanece
+`historica_v1`, cache desligado e repetição ampla. A política otimizada executa
+compilação e testes relacionados antes da confirmação ampla, mantendo SAST global
+mesmo quando a triagem funcional reprova. R/M negativos ou indeterminados não
+impedem medir F. Aprovar apenas a triagem não autoriza F positivo.
+
+O mapa revisado associa arquivos alterados a testes de servidor/API; arquivos não
+mapeados e componentes compartilhados usam fallback amplo. Esse fallback preserva
+a cobertura existente de servidor/API: não passa a cobrir testes Angular ou Cypress.
+A classificação F/D e a regra de parada da cadeia permanecem inalteradas.
+
+Novas execuções ampliadas registram contrato 3.0, com política, mapa, implementação,
+conjunto D e ambiente efetivo. Contratos 1.0/2.0 continuam legíveis; mudanças
+científicas exigem nova execução, sem migração ou sobrescrita dos artefatos antigos.
+A reserva do workspace impede execuções concorrentes de processos que usam as novas
+entradas do pipeline. Dentro da execução, K controla casos; estratégias do mesmo
+caso continuam sequenciais e as etapas de API compartilham o lock de porta.
+
+Cache de SAST e cache funcional são independentes do cache de respostas LLM. Uma
+observação só é reutilizada com identidade de conteúdo, ambiente e implementação
+compatível, artefatos íntegros e proveniência registrada. R/M são recalculados por
+ocorrência mesmo em um hit de scan. Alterações não explicadas em estado local dos
+testes impedem a publicação funcional. Reutilizações não são novas réplicas de LLM
+nem novas medições independentes de qualidade. Tempos atuais e originais são separados.
+
+A repetição seletiva de API é experimental e fica desligada por padrão. Cobertura
+incompleta ou ambígua retorna à repetição ampla. Sua investigação deve comparar
+resultados e evidências, pois dependências de ordem podem não aparecer isoladamente.
+
+O benchmark da feature usa patches arquivados, sem gerar correções ou chamar a LLM.
+Seus replays ficam fora das populações de remediação e preservam os resultados
+históricos. A recomendação de política/K depende das medições e das limitações
+registradas na entrega; a simples implementação não demonstra aceleração.
+
+
+### Resultado da avaliação da feature 05
+
+A matriz de 96 replays dos oito patches preservou R/M e as três definições de F.
+K=1 frio ficou praticamente empatado com a política histórica (0,443% de redução
+mediana); K=2 frio reduziu 15,970% frente ao otimizado K=1, em três repetições.
+A preparação foi medida separadamente. Cache funcional não teve hits no alvo por
+mudanças de identidade; cache SAST teve três hits frios/oito quentes por rodada.
+Uma diferença de intermitência externa apareceu no K=2 quente. Cache quente e
+repetição seletiva têm observação única e permanecem exploratórios.
+
+A política vigente não foi alterada. Recomenda-se avaliar otimizado/K=2/repetição
+ampla em novo piloto controlado antes de congelar a campanha. A cobertura continua
+sendo a suíte de servidor/API já existente, sem Angular/Cypress. Veja os hashes,
+preparações descartadas e limites na [entrega](historico/features/05-otimizacao-validacao/ENTREGA.md).
+
+
+### Política relacionada, decisão posterior à feature 05 — 16/10/2026
+
+A entrada `config/execucao.yaml` seleciona `relacionada_v1`: T0, união explícita dos
+testes unitários/API dos arquivos alterados e SAST global. Não se exige T3/T4
+amplo. F mede a cobertura relacionada declarada, mantendo as três separações F/D
+e a parada vigente; não representa regressão global verificada. Mapeamento
+insuficiente não aciona suíte ampla e não autoriza F positivo. Antes da LLM,
+recusam-se seleções de casos sem mapa revisado; lacunas adicionais introduzidas
+pelo patch geram indeterminação funcional, preservando R/M.
+
+A política e seu hash de implementação integram o contrato 3.0. Os contratos e
+resultados anteriores não são alterados; a nova política exige outra execução.
+A matriz de desempenho da feature 05 continua descrevendo as políticas históricas
+medidas, não esta cobertura mais restrita. Testes automatizados verificam seleção,
+F/D, SAST mesmo após falha e ausência das chamadas às suítes amplas. Não foram
+executados LLM, scan ou testes do alvo para esta alteração. Consulte a
+[definição operacional](validacao_relacionada.md).
+
+
+### Calibração exploratória com referências dos Coding Challenges — 17/10/2026
+
+Foram avaliadas, fora do pipeline LLM, 63 alternativas de 17 desafios em cópias
+isoladas dos arquivos completos, usando o perfil congelado. São 13 casos distintos
+do catálogo; há alternativas compartilhando casos e fontes. Todos os alertas
+originais avaliados foram reproduzidos; F não foi medido e M_fixture não é M global.
+Das 17 alternativas marcadas corretas, 12 tiveram R=1/M_fixture=1, quatro alguma
+indeterminação e uma manteve o alerta associado. Isso revela limites de pareamento
+e de associação entre desafio e regra, sem estabelecer precisão/recall do SAST.
+
+`codefixes/` permanece excluído dos prompts, RAG e escopo operacional. As referências
+pedagógicas só foram injetadas em fixtures temporárias para esta auditoria; não
+foram aplicadas às worktrees. Os scans brutos e códigos anteriores/posteriores
+ficam em saída separada, com hashes e inventário. Nenhum critério de aceite,
+comparador, regra ou catálogo foi alterado. Este conjunto foi inspecionado e não
+poderá ser apresentado como avaliação independente de um comparador ajustado a ele.
+Veja o [relatório e as mudanças recomendadas](auditoria/avaliacao_referencias_codefixes.md).
+
+### Comparador por contagem — 06/11/2026
+
+Execuções novas usam `ocorrencias_contexto_v3`. A v2 deixava sem conclusão todo alerta sem par, mesmo quando só havia
+mudado de linha. Na campanha descartada, foram 84 de 89 tentativas indeterminadas. A v3 resolve esses alertas pela
+contagem da mesma regra no mesmo arquivo: contagem igual ou maior mantém o alerta alvo (R=0), aumento líquido é
+alerta novo (M=0) e contagem igual não é alerta novo. Com contagem menor e alerta alvo sem par, R segue sem conclusão.
+Problemas de leitura do arquivo continuam sem conclusão. Limitação: um alerta removido e outro igual criado no mesmo
+arquivo contam como o mesmo; quando o alvo está no grupo, a tentativa é rejeitada de qualquer forma, e nos demais casos
+a inspeção manual das correções aceitas cobre esse risco.
+
+### Comparação por contexto e revisão das associações — 17/10/2026
+
+Execuções ampliadas novas passam a usar `ocorrencias_contexto_v2`, mantendo a
+política de cobertura/parsing da v1. Após blocos únicos de linhas, o comparador
+usa blocos de tokens, foco único e chamadas únicas no mesmo escopo com âncora
+lexical verificável. Preserva multiplicidade e pareamento um para um; casos sem
+evidência suficiente continuam indeterminados. R=0 indica persistência do alerta,
+não confirmação de exploração. O contrato identifica o comparador e inclui o
+adaptador sintático na implementação; o ambiente identifica suas dependências.
+
+A reanálise offline dos scans arquivados reduziu indeterminações de 28 para 6
+entre 63 referências e de 4 para 0 entre oito patches. As 17 referências corretas
+tiveram 16 resultados R=1/M_fixture=1 e um R=0/M_fixture=1. F não foi remensurado;
+M_fixture não é global. Este conjunto é de calibração observado, sem inferência
+de precisão/recall. Os artefatos anteriores não são reclassificados.
+
+Revisões de associações são uma camada documental separada e versionada. Nenhuma
+regra, ocorrência, prompt, classificação da auditoria ou critério F/D foi alterado.
+Alternativas incorretas que removem alertas reforçam a necessidade de validação
+funcional independente. Retomadas com comparador divergente são recusadas; novas
+execuções usam outra saída. Veja a [entrega, comandos e evidências](auditoria/comparador_v2.md).
+
+
+### Cobertura funcional por grupos revisados — feature 06, 17/10/2026
+
+A política optativa `relacionada_v2` usa revisão 1.0, mapa derivado 2.0 e baseline
+funcional 2.0. O contrato 4.0 vincula revisão, mapa, D, avaliadores, adaptadores,
+ambiente e baseline. As políticas e os contratos anteriores não são migrados; a
+configuração padrão é preservada. O preflight verifica prontidão antes de criar
+cliente LLM, sem executar testes funcionais.
+
+Depois do patch, a seleção é a união dos comportamentos revisados de todos os
+arquivos alterados, sem fallback amplo. F positivo requer compilação dos domínios,
+execução dos testes obrigatórios e baseline comparável. Lacuna, timeout, skip
+obrigatório ou avaliador alterado impedem aprovação; falha comprovada produz F=0.
+As três definições F/D, comparador SAST e parada da cadeia permanecem vigentes.
+R/M continuam medidos globalmente, independentemente da avaliação funcional.
+
+Angular usa build development com AOT e saída temporária; Vitest/jsdom executa
+arquivos explícitos com JUnit e timeout de 300 segundos por grupo. Não representa
+navegador real nem integração completa entre frontend e servidor. Testes adicionais
+são materializados exclusivamente e removidos antes do scan; falha de limpeza
+interrompe a medição. Arquivos de teste alvo exigem avaliação independente.
+
+O conjunto D novo preserva as 75 entradas anteriores. As 33 asserções Angular
+candidatas revisadas observam mocks/estado, sem demonstração suficiente de
+exploração: nenhuma foi acrescentada a D. Critérios anteriores permanecem iguais.
+
+Em 05/11/2026, antes da execução oficial, o critério (d) foi acrescentado: teste que só passa
+enquanto o alerta de um caso continua sem correção. São 41 testes ligados a 20 casos, e cada um é D
+somente nas tentativas desses casos. A revisão cobriu a suíte, e não apenas os testes que já tinham
+reprovado correções, com decisão pela asserção de cada teste. Os 75 testes anteriores não mudaram.
+Ficaram em F, por poderem passar com a correção: o erro 500 no ataque ao sandbox do B2B, a expansão
+de entidades internas em XML, o histórico de pedidos e as reviews por produto. Os dois alertas
+classificados como falso positivo (CAPTCHA em SVG e `server.ts:273`) também não receberam testes.
+Lista e justificativas: `config/conjunto_d_cobertura_v2.json`.
+
+Em 06/11/2026, depois da campanha completa de 05 e 06/11, que foi descartada, o critério (e) foi acrescentado:
+teste cuja finalidade é a própria falha deixa de contar em F em todos os casos, e o critério (d) foi ampliado.
+A mudança aconteceu depois de ver resultados, mas sem usar nenhuma nota de modelo: a mesma lista vale para os três,
+cada entrada é justificada pela asserção do teste, e os resultados daquela campanha não são usados. Lista e
+justificativas: `config/conjunto_d_cobertura_v3.json`. Inverter o resultado foi rejeitado, e os testes do Juice Shop
+não foram apagados: a falha continua registrada e entra na TCD.
+
+A auditoria concluiu 63 revisões adequadas e 15 insuficientes, com 52 casos
+preparados e 26 bloqueados pela união por arquivo. A campanha dos 78 permanece
+pendente. Baselines compartilhados não são 78 medições independentes. Métricas
+acrescentam agrupamento por alcance funcional, sem mudar denominadores; registros
+antigos não recebem alcance inventado. Consulte a
+[entrega, controles e evidências](historico/features/06-cobertura-funcional/ENTREGA.md).
+
+
+### Correção da medição funcional do piloto K=4 — 17/10/2026
+
+A primeira execução de dez casos revelou ausência de builds ignorados pelo Git
+em duas worktrees. Falhas de startup foram interpretadas como asserções F em
+13 registros. A execução original permanece preservada como evidência do problema,
+sem substituição retrospectiva de métricas.
+
+A política `relacionada_v2` passa a exigir artefatos de inicialização e porta
+disponível, vinculando os hashes desses artefatos ao ambiente. O adaptador de API
+aguarda as pré-condições assíncronas antes de descobrir testes. Falha operacional
+de um grupo não fornece reprovação F; sem outra reprovação comprovada, a medição
+fica nula. As três definições F/D e o tratamento dos desafios permanecem iguais.
+
+Foi gerado baseline novo, seguido de revalidação isolada dos patches existentes.
+A revalidação não gera respostas LLM nem constitui nova amostra independente.
+Mudanças de ambiente/implementação impedem retomadas antigas; os YAMLs atuais
+referenciam a nova evidência. Veja o
+[diagnóstico, comandos e resultados](auditoria/correcao_validacao_piloto10.md).
+
+## Provedor Colab e identidade de inferência
+
+Novas execuções ampliadas podem selecionar Qwen no Colab e usam contrato 5.0. Modelo/revisão/tokenizer/template/quantização/geração são identificados separadamente do endpoint. Preservam-se prompts, critérios R/F/M, denominadores e parada da cadeia. O contador Colab é independente do histórico OpenAI; custos não informados permanecem nulos. Erro operacional interrompe a fila e não é reprovação funcional; resposta truncada não é aplicada. A entrega 07 foi testada offline, sem demonstrar desempenho ou eficácia na GPU. [Preparação e limites](guias/modelo_colab.md).
+
+## Ambiente único em Docker — 18/10/2026
+
+A partir desta data, as execuções oficiais rodam no container definido no repositório (`Dockerfile`, `compose.yaml`,
+guia em [docker.md](docker.md)). O objetivo é que autores, orientadora e banca usem o mesmo ambiente. As respostas da
+LLM continuam podendo variar; o ambiente em que elas são geradas e validadas, não.
+
+Itens fixados:
+- plataforma `linux/amd64`;
+- imagem `node:24.14.0-bookworm`, fixada pelo digest;
+- Python 3.11.2, com os pacotes Python travados em `requirements.lock.txt` (Semgrep 1.177.0, sem login);
+- Juice Shop no commit fixado, com as dependências npm travadas por lockfiles gerados uma única vez e versionados em
+  `docker/juice-shop/`;
+- `TZ=UTC`;
+- `challenges.safetyMode = disabled`.
+
+As worktrees são cópias exatas do Juice Shop de referência da imagem, por isso a identidade de ambiente é a mesma em
+qualquer máquina. As versões efetivas ficam em `/opt/ambiente.json`.
+
+**Modo de segurança do alvo.** Em container, o modo padrão do Juice Shop (`auto`) desliga 17 desafios marcados
+`disabledEnv: Docker` e o código vulnerável deles. Fora de container, eles ficam ligados. O valor `disabled` reproduz
+no container o comportamento de uma máquina comum. Sem ele, 10 testes do baseline funcional mudavam de resultado. É
+um cuidado obrigatório para qualquer reprodução em container.
+
+**Baseline funcional.** O baseline do piloto foi gerado em outro ambiente e não vale no container, porque os lockfiles
+e as dependências instaladas diferem. Foi gerado um baseline novo, sem LLM, em
+`outputs/revalidacoes/DOCKER_V2/BASELINE`. Comparado ao do piloto, os 39 grupos são equivalentes: mesmos testes,
+estados, falhas e obrigatórios aprovados (`outputs/revalidacoes/DOCKER_V2/comparacao_baseline_piloto10.json`). O
+ambiente difere apenas nos hashes dos lockfiles, das dependências e das variáveis; os builds do alvo são idênticos
+byte a byte. No mesmo container, o baseline SAST foi reproduzido (78 de 78 alertas) e a consolidação de métricas do
+piloto reproduziu os 14 artefatos arquivados byte a byte.
+
+**Continuidade.** Os resultados anteriores (E01 a E03, pilotos e revalidação de 17/10) permanecem como foram gerados,
+cada um com a identidade do seu ambiente. Eles não devem ser somados a resultados do container sem que a diferença de
+ambiente seja declarada.
+
+**Limite.** Os pacotes do sistema (apt) não são fixados. Reconstruir a imagem em outra data pode trazê-los um pouco
+diferentes, e o `libxmljs2` é compilado do fonte durante o build. Para a reprodução pela banca, a imagem construída
+deve ser publicada e citada pelo digest.
+
+## Aplicação de âncoras com indentação uniforme (19/10/2026)
+
+O aplicador `ancora_exata_indentacao_uniforme_js_ts_v2` preserva a procura exata
+como primeira opção. Na ausência dela, blocos de duas ou mais linhas JS/TS
+podem ser associados ignorando apenas um prefixo uniforme de espaços/tabs.
+O conteúdo restante de cada linha, inclusive espaços internos e finais, precisa
+coincidir; múltiplos blocos candidatos são recusados. Outras linguagens mantêm
+a aplicação exata.
+
+O fallback exige o parser TypeScript instalado no checkout. Comparações de
+tokens antes/depois do ajuste verificam separadamente a âncora original e a
+solução proposta, recusando alterações em strings/templates, sintaxe inválida
+ou parser indisponível. O código do alvo não é executado nessa conferência.
+O prefixo é ajustado também na substituição, preservando o entorno e finais
+de linha do arquivo. Nenhum arquivo é escrito antes de validar todas as edições.
+
+Registros novos incluem versão do aplicador, método de correspondência, linhas,
+deslocamento e hashes da âncora recebida/real. Os hashes do aplicador e da
+implementação já integram o contrato científico; a mudança exige execução nova,
+sem retomar nem reclassificar a execução anterior. Prompts, respostas brutas,
+regras, comparador SAST e critérios F/D permanecem inalterados.
+
+O replay diagnóstico das oito respostas de `administration.component.ts` da
+execução `AMP_PAINEL_20261019T181245Z_1aca0df2` aplicou oito em cópias temporárias,
+sem LLM, SAST ou testes funcionais. Artefatos em
+`outputs/revalidacoes/ANCORAS_INDENTACAO_V1/`. Esse resultado mede aplicabilidade,
+não remoção da vulnerabilidade nem aceite funcional. Detalhes em
+[aplicacao_ancoras.md](aplicacao_ancoras.md).
+
+## Reorganização do código e referência oficial v2 — 26/10/2026
+
+O código foi reorganizado em pastas por etapa do pipeline (`src/pipeline/etapas/e01_analise_sast` …
+`e09_metricas`, além de `orquestracao/`, `comum/` e `legado/`), com nomes em português; os scripts também. A
+lógica não mudou: só nomes de arquivos, pastas e imports. Como a identidade científica inclui o nome e o
+conteúdo dos módulos de validação, o baseline funcional e a referência Docker foram gerados de novo:
+`outputs/baselines/docker/oficial_v2/`, com a imagem local construída do mesmo `Dockerfile` e dos mesmos
+lockfiles.
+
+Critério para aceitar a referência nova: os 39 grupos de testes com o mesmo resultado do baseline anterior da
+mesma imagem (`DOCKER_V2`), as duas compilações aprovadas, o mesmo ambiente e a mesma identidade de cobertura,
+exceto os hashes dos módulos de código. Antes de aceitar, a bateria de verificação mostrou ainda prompts,
+respostas, patches e comparações idênticos byte a byte num preflight de 52 casos e num dry-run de 10 casos, e a
+reconsolidação da campanha de 19/10 idêntica ao arquivado
+(`outputs/revalidacoes/REORGANIZACAO_20261026/`).
+
+A campanha de 19/10 continua ligada à referência v1 (`docker/historico/referencia_oficial_v1.json` e
+`outputs/baselines/docker/oficial_v1/`). Execuções novas usam a v2. Resultados das duas não devem ser somados
+sem registrar a troca de referência; a troca não altera prompts, respostas armazenadas em cache nem critérios.
 A observação em si é resultado, mas não é uma divergência entre R e F: a sondagem A (Seção 7.3) mostrou que o alerta **persiste nas duas tentativas** (`R = 0` na EXP01 e na EXP02), porque a regra `express-res-sendfile` não reconhece verificações condicionais. O que as duas tentativas mostram é a **troca entre profundidade da correção e preservação funcional**: a correção reprovada (EXP01) também verificava, com `startsWith`, se o caminho resolvido permanece dentro de `encryptionkeys/`; a aceita nos testes (EXP02), escrita sob a restrição de mudança mínima, só bloqueia `..` e `/`, e é defensivamente mais fraca. A restrição elevou a preservação funcional e reduziu a profundidade da correção. Esse efeito deve ser citado no capítulo de discussão sobre engenharia de prompt.
 
 A divergência entre R e F, isto é, remoção do alerta sem aprovação nos testes, é ilustrada pelos casos **JS005, JS006 e JS011 da execução preliminar E01**, que têm evidência real. Em JS005 e JS006, a consulta parametrizada remove o alerta de SQL injection (`R = 1`, `M = 1`) e reprova no T4 só nos testes de `login.test.ts` que executam o ataque e esperam que ele funcione. Em JS011, a correção remove o alerta e reprova só no teste que espera o payload de SSTI ser avaliado. É evidência direta do argumento central do trabalho: remoção de alerta não é prova de correção adequada, e aprovação nos testes também não é, quando os testes verificam a própria vulnerabilidade.
